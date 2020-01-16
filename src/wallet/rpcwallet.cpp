@@ -826,6 +826,45 @@ static UniValue deposittoaddress(const JSONRPCRequest& request)
     return tx->GetHash().GetHex();
 }
 
+static UniValue listnotification(const JSONRPCRequest& request)
+{
+    std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
+    CWallet* const pwallet = wallet.get();
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
+        return NullUniValue;
+    }
+
+    if (IsInitialBlockDownload())
+        throw std::runtime_error(
+            "Please wait until block synchronization has completed.\n"
+        );
+
+    if (request.fHelp || request.params.size() != 0)
+        throw std::runtime_error(
+            "listnotification \n"
+            + HelpRequiringPassphrase(pwallet) + "\n"
+            "\nArguments:\n"
+            "Result:\n"
+            "\"all message \"  (string array)\n"
+            "\nExamples:\n"
+            + HelpExampleCli("listnotification", "")
+            + HelpExampleRpc("listnotification", "")
+        );
+
+    LOCK2(cs_main, pwallet->cs_wallet);
+    UniValue ret(UniValue::VARR);
+
+    std::map<COutPoint, std::string> mapCopy = pwallet->GetOnchainData();
+    for (auto& info : mapCopy){
+        UniValue entry(UniValue::VOBJ);
+
+        entry.push_back(Pair(info.first.ToString(), info.second));
+        ret.push_back(entry);
+    }
+    return ret;
+}
+
 static UniValue listtermdeposits(const JSONRPCRequest& request)
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
@@ -5420,6 +5459,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "infinitynodenotifydata",           &infinitynodenotifydata,        {"amount"} },
     { "wallet",             "decryptAES",                       &decryptAES,                    {"text","passphrase","vSalt","nDeriveIterations"} },
     { "wallet",             "exportaddressnewpass",             &exportaddressnewpass,          {"address","passphrase"} },
+    { "wallet",             "listnotification",                 &listnotification,              {} },
 
     /** Account functions (deprecated) */
     { "wallet",             "getaccountaddress",                &getaccountaddress,             {"account"} },

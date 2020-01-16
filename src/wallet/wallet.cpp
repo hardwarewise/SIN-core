@@ -1039,6 +1039,20 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
                 }
             }
         //
+        // SIN
+            for(unsigned int i = 0; i < wtx.tx->vout.size(); ++i) {
+                std::vector<valtype> vSolutions;
+                txnouttype whichType;
+                Solver(wtx.tx->vout[i].scriptPubKey, whichType, vSolutions);
+
+                if (whichType == TX_BURN_DATA && vSolutions.size() == 2){
+                    if (HaveKey(CKeyID(uint160(vSolutions[0])))){
+                        std::string data(vSolutions[1].begin(), vSolutions[1].end());
+                        mapOnChainData[COutPoint(hash, i)] = data;
+                    }
+                }
+            }
+        //
     }
 
     bool fUpdated = false;
@@ -3654,6 +3668,19 @@ DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
                 setWalletUTXO.insert(COutPoint(pair.first, i));
             }
         }
+        // SIN
+            for(unsigned int i = 0; i <  pair.second.tx->vout.size(); ++i) {
+                std::vector<valtype> vSolutions;
+                txnouttype whichType;
+                Solver(pair.second.tx->vout[i].scriptPubKey, whichType, vSolutions);
+                if (whichType == TX_BURN_DATA && vSolutions.size() == 2){
+                    if (HaveKey(CKeyID(uint160(vSolutions[0])))){
+                        std::string data(vSolutions[1].begin(), vSolutions[1].end());
+                        mapOnChainData[COutPoint(pair.first, i)] = data;
+                    }
+                }
+            }
+        //
     }
     //
 
