@@ -23,10 +23,12 @@
 #include <QDesktopWidget>
 #include <QPainter>
 #include <QRadialGradient>
+#include <QPainter>
 
 SplashScreen::SplashScreen(interfaces::Node& node, Qt::WindowFlags f, const NetworkStyle *networkStyle) :
     QWidget(0, f), curAlignment(0), m_node(node)
 {
+    
     setWindowFlags(Qt::FramelessWindowHint);
 
     // set sizes
@@ -54,15 +56,16 @@ SplashScreen::SplashScreen(interfaces::Node& node, Qt::WindowFlags f, const Netw
     pixmap = QPixmap(480,540);
 
     QPainter pixPaint(&pixmap);
-    pixPaint.setPen(QColor("#ffffff"));
+    pixPaint.setPen(QColor("#333333"));
 
     QRect mainRect(QPoint(0,0), splashSize);
-    pixPaint.fillRect(mainRect, QColor("#030509"));
+    pixPaint.fillRect(mainRect, QColor("#f0f0f0"));
 
     // draw background
     QRect rectBg(QPoint(0, 0), QSize(splashSize.width(), splashSize.height()));
     QPixmap bg(":/images/splash");
     pixPaint.drawPixmap(rectBg, bg);
+
 
     pixPaint.setFont(QFont(font, 28*fontFactor, QFont::Bold));
     QRect rectTitle(QPoint(0,0), QSize(splashSize.width(), (splashSize.height() / 2)));

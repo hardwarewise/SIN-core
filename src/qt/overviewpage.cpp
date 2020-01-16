@@ -32,6 +32,7 @@
 #include <QTimer>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QGraphicsDropShadowEffect>
 
 #define ICON_OFFSET 16
 #define DECORATION_SIZE 54
@@ -253,6 +254,43 @@ void OverviewPage::infinityNodeStat()
     ui->labelBIGNodeSTM->setText(strBIGNodeSTMText);
     ui->labelMIDNodeSTM->setText(strMIDNodeSTMText);
     ui->labelLILNodeSTM->setText(strLILNodeSTMText);
+
+QGraphicsDropShadowEffect *BIGShadow = new QGraphicsDropShadowEffect;
+BIGShadow->setBlurRadius(4.0);
+BIGShadow->setColor(QColor(0, 0, 0, 160));
+BIGShadow->setOffset(2.0);
+ui->frame_7->setGraphicsEffect(BIGShadow);
+
+QGraphicsDropShadowEffect *MIDShadow = new QGraphicsDropShadowEffect;
+MIDShadow->setBlurRadius(4.0);
+MIDShadow->setColor(QColor(0, 0, 0, 160));
+MIDShadow->setOffset(2.0);
+ui->frame_8->setGraphicsEffect(MIDShadow);
+
+QGraphicsDropShadowEffect *LILShadow = new QGraphicsDropShadowEffect;
+LILShadow->setBlurRadius(4.0);
+LILShadow->setColor(QColor(0, 0, 0, 160));
+LILShadow->setOffset(2.0);
+ui->frame_9->setGraphicsEffect(LILShadow);
+
+QGraphicsDropShadowEffect *labelBalanceShadow = new QGraphicsDropShadowEffect;
+labelBalanceShadow->setBlurRadius(3.0);
+labelBalanceShadow->setColor(QColor(0, 0, 0, 160));
+labelBalanceShadow->setOffset(1.0);
+ui->labelBalanceText->setGraphicsEffect(labelBalanceShadow);
+
+QGraphicsDropShadowEffect *labelPendingTextShadow = new QGraphicsDropShadowEffect;
+labelPendingTextShadow->setBlurRadius(3.0);
+labelPendingTextShadow->setColor(QColor(0, 0, 0, 160));
+labelPendingTextShadow->setOffset(1.0);
+ui->labelPendingText->setGraphicsEffect(labelPendingTextShadow);
+
+QGraphicsDropShadowEffect *labelTotalTextShadow = new QGraphicsDropShadowEffect;
+labelTotalTextShadow->setBlurRadius(3.0);
+labelTotalTextShadow->setColor(QColor(0, 0, 0, 160));
+labelTotalTextShadow->setOffset(1.0);
+ui->labelTotalText->setGraphicsEffect(labelTotalTextShadow);
+
 
 }
 

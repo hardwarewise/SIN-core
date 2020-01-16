@@ -113,6 +113,7 @@
 	 <file alias="default">res/css/default.css</file>
 	 </qresource>
 	 <qresource prefix="/images">
+	 <file alias="sinbg">res/images/sinbg.png</file>
 	 <file alias="splash">res/images/splash.png</file>
 	 <file alias="drkblue_walletFrame_bg">res/images/drkblue_walletFrame_bg.png</file>
 	 <file alias="sinovate_logo_horizontal">res/images/sinovate_logo_horizontal.png</file>

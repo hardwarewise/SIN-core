@@ -15,13 +15,13 @@
   </property>
   <property name="styleSheet">
    <string notr="true"> QWidget#RPCConsole {
-background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop:0 #0d0d1a, stop:1 #191b41); color:#020024;
+background-color: #E3E3FF;
 
 }
 QTabWidget {
     /* background-color: #f2f2f2; */
     background-color:transparent;
-   color:#ffffff;
+   color:#333;
 
 }
 QTabWidget::pane {
@@ -32,13 +32,16 @@ QTabWidget::pane {
 }
 QTabBar {
 	background-color: transparent;;
-	color: #ffffff;
+	color: #000000;
 }
 QTabBar::tab:hover:!selected {
-    color:#ffffff;
+	background-color: #A6D8FF;
+    color:#000000;
+   
+
 }
 QTabBar::tab {
-  color:#747c83;
+  color:#333;
   font-size:14px;
   background-color:transparent;
   padding-left: 4px;
@@ -52,44 +55,44 @@ QTabBar::tab {
 }
 
 QTabBar::tab:selected {
-    border-bottom: 3px solid #FF8204;
+    border-bottom: 3px solid #EF3C23;
     background-color:transparent;
+
     }
 QTabBar::tab:pressed {
     outline:0;
 }
 
 .QValidatedLineEdit, .QLineEdit { /* Text Entry Fields */
-border: 1px solid #FF8204;
-border-radius: 10px;
+border: 1px solid #333;
 font-size:14px;
 font-weight: bold;
 min-height:25px;
 outline:0;
 padding:3px;
-color: #ffffff;
-background-color:#364860;
+color: #000;
+background-color:#fff;
 }
 
 QWidget#RPCConsole QTextEdit#messagesWidget {
 	/* Console Messages Window */
 	border: 0;
-	background-color: rgba(0,0,0,0.75);
+	background-color: #000;
 	color: #fff;
 }
 
 QWidget#RPCConsole QWidget#tab_peers QLabel#peerHeading {
 	/* Peers Info Header */
-	color: #FF8204;
+	color: #EF3C23;
 }
 
 QLabel {
-color:white;
+color: #000000;
 }
 
 QWidget#RPCConsole QTableView#peerWidget::item, QTableView#banlistWidget::item  {
 	/* Peers Table Items */
-	color: #fff;
+	color: #000000;
 }
 
 QWidget#RPCConsole QTableView#peerWidget, QTableView#banlistWidget {
@@ -99,14 +102,14 @@ QWidget#RPCConsole QTableView#peerWidget, QTableView#banlistWidget {
 }
 
 QTableView::item:selected { /* Table Item Selected */
-	background: #313d4b;
-		color: #ffffff;
+	background: #D6D7D8;
+		color: #000000;
 }
 
 QWidget#RPCConsole QPushButton#openDebugLogfileButton { /* Open Debug File Button */
-  background-color: transparent;
-  border: 2px solid #707780;
-  color: #707780;
+  background-color: #EF3C23;
+  border: 2px solid #EF3C23;
+  color: #ffffff;
   padding-left: 20px;
   padding-right: 20px;
 font-size: 12px;
@@ -116,8 +119,8 @@ font-size: 12px;
 }
 
 QWidget#RPCConsole QPushButton#openDebugLogfileButton:hover {
-  background-color: #707780;
-  color: #132232;
+  background-color: #E03821;
+  color: #fffff;
 }
 
 QWidget#RPCConsole QPushButton#openDebugLogfileButton:pressed {
@@ -146,7 +149,7 @@ QScrollBar:horizontal {
 }
 QScrollBar::handle:vertical {
 	/* Scroll Bar Slider - vertical */
-	background: #333b46;
+	background:#D6D7D8;
     border-radius: 6px;
     min-height:50px;
     width:3px;
@@ -157,7 +160,7 @@ QScrollBar::handle:vertical {
 
 QScrollBar::handle:horizontal {
 	/* Scroll Bar Slider - horizontal */
-	background: #333b46;
+	background:#D6D7D8;
     min-width: 50px;
     border-radius: 6px;
 }

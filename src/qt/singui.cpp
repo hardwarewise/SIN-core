@@ -294,7 +294,7 @@ void BitcoinGUI::createActions()
     QSettings settings;
     if (settings.value("fShowMasternodesTab").toBool()) {
         masternodeAction = new QAction(platformStyle->SingleColorIcon(":/icons/masternodes"), tr("&Infinity Nodes"), this);
-        masternodeAction->setStatusTip(tr("Browse masternodes"));
+        masternodeAction->setStatusTip(tr("Browse Infinitynodes"));
         masternodeAction->setToolTip(masternodeAction->statusTip());
         masternodeAction->setCheckable(true);
 #ifdef Q_OS_MAC
@@ -1518,7 +1518,7 @@ UnitDisplayStatusBarControl::UnitDisplayStatusBarControl(const PlatformStyle *pl
     }
     setMinimumSize(max_width, 0);
     setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    setStyleSheet(QString("QLabel { color : #FF8204; }").arg(platformStyle->SingleColor().name()));
+    setStyleSheet(QString("QLabel { color : #EF3C23; font-weight: bold; }").arg(platformStyle->SingleColor().name()));
 }
 
 /** So that it responds to button clicks */
