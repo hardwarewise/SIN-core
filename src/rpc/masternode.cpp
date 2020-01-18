@@ -1010,13 +1010,14 @@ static UniValue infinitynodeburnfund(const JSONRPCRequest& request)
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     CWallet* const pwallet = wallet.get();
 
-    if (request.fHelp || request.params.size() != 2)
+    if (request.fHelp || request.params.size() != 3)
        throw std::runtime_error(
             "infinitynodeburnfund amount SINBackupAddress"
             "\nSend an amount to BurnAddress.\n"
             "\nArguments:\n"
-            "1. \"amount\"             (numeric or string, required) The amount in " + CURRENCY_UNIT + " to send. eg 0.1\n"
-            "2. \"NodeOwnerBackupAddress\"  (string, required) The SIN address to send to when you make a notification(new feature soon).\n"
+            "1. \"NodeOwnerAddress\" (string) Address of Collateral."
+            "2. \"amount\"             (numeric or string, required) The amount in " + CURRENCY_UNIT + " to send. eg 0.1\n"
+            "3. \"NodeOwnerBackupAddress\"  (string, required) The SIN address to send to when you make a notification(new feature soon).\n"
             "\nResult:\n"
             "\"BURNtxid\"                  (string) The Burn transaction id. Need to run infinity node\n"
             "\"CollateralAddress\"         (string) Address of Collateral. Please send 10000 to this address.\n"
@@ -1041,7 +1042,12 @@ static UniValue infinitynodeburnfund(const JSONRPCRequest& request)
 
     UniValue results(UniValue::VARR);
     // Amount
-    CAmount nAmount = AmountFromValue(request.params[0]);
+
+    CTxDestination NodeOwnerAddress = DecodeDestination(request.params[0].get_str());
+    if (!IsValidDestination(NodeOwnerAddress))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid SIN address for NodeOwnerAddress");
+
+    CAmount nAmount = AmountFromValue(request.params[1]);
     if (nAmount != Params().GetConsensus().nMasternodeBurnSINNODE_1 * COIN &&
         nAmount != Params().GetConsensus().nMasternodeBurnSINNODE_5 * COIN &&
         nAmount != Params().GetConsensus().nMasternodeBurnSINNODE_10 * COIN)
@@ -1049,7 +1055,7 @@ static UniValue infinitynodeburnfund(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid amount to burn and run Infinitynode");
     }
 
-    CTxDestination BKaddress = DecodeDestination(request.params[1].get_str());
+    CTxDestination BKaddress = DecodeDestination(request.params[2].get_str());
     if (!IsValidDestination(BKaddress))
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid SIN address for Backup");
 
@@ -1082,7 +1088,7 @@ static UniValue infinitynodeburnfund(const JSONRPCRequest& request)
         const CScript& scriptPubKey = out.tx->tx->vout[out.i].scriptPubKey;
         bool fValidAddress = ExtractDestination(scriptPubKey, address);
 
-        if (destinations.size() && (!fValidAddress || !destinations.count(address)))
+        if (!fValidAddress || address != NodeOwnerAddress)
             continue;
 
         UniValue entry(UniValue::VOBJ);
