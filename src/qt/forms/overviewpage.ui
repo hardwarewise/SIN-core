@@ -468,12 +468,8 @@ background-position:bottom right;
           </property>
           <property name="styleSheet">
            <string notr="true">QFrame#frame_7 {
-background-color: #F1F1FF;
-border-radius:20px;
-border-left: 2px solid #00C0F7; 
-border-right: 2px solid #00C0F7; 
-border-top: 2px solid #F1F1FF;
-border-bottom: 2px solid #F1F1FF;
+background-color: #ffffff;
+border-radius:10px;
 padding-right: 10px;
 
 }</string>
@@ -512,7 +508,7 @@ color: #EF3C23;</string>
           <widget class="QLabel" name="labelBIGNode">
            <property name="geometry">
             <rect>
-             <x>20</x>
+             <x>18</x>
              <y>50</y>
              <width>91</width>
              <height>36</height>
@@ -623,7 +619,7 @@ background-color: transparent;</string>
          <widget class="QFrame" name="frame_8">
           <property name="geometry">
            <rect>
-            <x>140</x>
+            <x>150</x>
             <y>10</y>
             <width>125</width>
             <height>125</height>
@@ -631,12 +627,8 @@ background-color: transparent;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">QFrame#frame_8 {
-background-color: #F1F1FF;
-border-radius:20px;
-border-left: 2px solid #00C0F7; 
-border-right: 2px solid #00C0F7; 
-border-top: 2px solid #F1F1FF;
-border-bottom: 2px solid #F1F1FF;
+background-color: #ffffff;
+border-radius:10px;
 padding-right: 10px;
 }</string>
           </property>
@@ -668,7 +660,7 @@ color: #EF3C23;</string>
           <widget class="QLabel" name="labelMIDNode">
            <property name="geometry">
             <rect>
-             <x>20</x>
+             <x>18</x>
              <y>50</y>
              <width>91</width>
              <height>36</height>
@@ -776,7 +768,7 @@ background-color: transparent;</string>
          <widget class="QFrame" name="frame_9">
           <property name="geometry">
            <rect>
-            <x>270</x>
+            <x>290</x>
             <y>10</y>
             <width>125</width>
             <height>125</height>
@@ -784,12 +776,8 @@ background-color: transparent;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">QFrame#frame_9 {
-background-color: #F1F1FF;
-border-radius:20px;
-border-left: 2px solid #00C0F7; 
-border-right: 2px solid #00C0F7; 
-border-top: 2px solid #F1F1FF;
-border-bottom: 2px solid #F1F1FF;
+background-color: #ffffff;
+border-radius:10px;
 padding-right: 10px;
 }</string>
           </property>
@@ -821,7 +809,7 @@ color: #EF3C23;</string>
           <widget class="QLabel" name="labelLILNode">
            <property name="geometry">
             <rect>
-             <x>20</x>
+             <x>18</x>
              <y>50</y>
              <width>91</width>
              <height>36</height>
@@ -938,7 +926,7 @@ background-color: transparent;</string>
           <property name="styleSheet">
            <string notr="true">margin-left: 10px;
 margin-top: 5px;
-font-size: 14px;
+font-size: 16px;
 color:#7982A1;
 
 </string>
