@@ -13,6 +13,7 @@
         <file alias="connect_3">res/icons/connect3.png</file>
         <file alias="connect_4">res/icons/connect4.png</file>
         <file alias="transaction_0">res/icons/transaction0.png</file>
+        <file alias="transaction01">res/icons/transaction01.png</file>
         <file alias="transaction_confirmed">res/icons/transaction2.png</file>
         <file alias="transaction_conflicted">res/icons/transaction_conflicted.png</file>
         <file alias="transaction_1">res/icons/clock1.png</file>
@@ -73,6 +74,27 @@
 		<file alias="youtube">res/icons/youtube.png</file>
 		<file alias="facebook">res/icons/facebook.png</file>
 		<file alias="reddit">res/icons/reddit.png</file>
+        <file alias="reddit1">res/icons/reddit1.png</file>
+        <file alias="btctalk1">res/icons/btctalk1.png</file>
+        <file alias="website1">res/icons/website1.png</file>
+        <file alias="discord1">res/icons/discord1.png</file>
+        <file alias="facebook1">res/icons/facebook1.png</file>
+        <file alias="github1">res/icons/github1.png</file>
+        <file alias="twitter1">res/icons/twitter1.png</file>
+        <file alias="telegram1">res/icons/telegram1.png</file>
+        <file alias="youtube1">res/icons/youtube1.png</file>
+        <file alias="explorer1">res/icons/explorer1.png</file>
+        <file alias="catex">res/icons/catex.png</file>
+        <file alias="chaoex">res/icons/chaoex.png</file>
+        <file alias="citex">res/icons/citex.png</file>
+        <file alias="cmc">res/icons/cmc.png</file>
+        <file alias="coinsbit">res/icons/coinsbit.png</file>
+        <file alias="crex24">res/icons/crex24.png</file>
+        <file alias="stex">res/icons/stex.png</file>
+        <file alias="tradeogre">res/icons/tradeogre.png</file>
+        <file alias="txbit">res/icons/txbit.png</file>
+        <file alias="qbtc">res/icons/qbtc.png</file>
+
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>
@@ -131,6 +153,7 @@
      <file alias="about">res/images/about.png</file>
      <file alias="radio_unchecked">res/images/unchecked_radio.png</file>
      <file alias="radio_checked">res/images/checked_radio.png</file>
+     <file alias="button-bg">res/images/button-bg.png</file>
      </qresource>
    <qresource prefix="/fonts">
        <file alias="Hind-Bold">res/fonts/Hind-Bold.ttf</file>

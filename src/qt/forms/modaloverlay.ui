@@ -34,7 +34,7 @@
      <property name="styleSheet">
       <string notr="true">QWidget#bgWidget {
 background-color:#E3E3FF;
-color: #333;
+color: #fff;
 } 
 </string>
      </property>

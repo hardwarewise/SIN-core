@@ -65,6 +65,9 @@ background-position:bottom right;
           <property name="topMargin">
            <number>21</number>
           </property>
+          <property name="bottomMargin">
+           <number>9</number>
+          </property>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
@@ -117,10 +120,7 @@ background-position:bottom right;
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout">
-            <property name="horizontalSpacing">
-             <number>12</number>
-            </property>
-            <property name="verticalSpacing">
+            <property name="spacing">
              <number>13</number>
             </property>
             <item row="2" column="2">
@@ -226,8 +226,17 @@ background-position:bottom right;
             </item>
             <item row="5" column="0">
              <widget class="QLabel" name="labelTotalText">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
                <string>Total</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
               </property>
              </widget>
             </item>
@@ -460,7 +469,7 @@ background-position:bottom right;
             <x>10</x>
             <y>10</y>
             <width>125</width>
-            <height>125</height>
+            <height>128</height>
            </rect>
           </property>
           <property name="toolTip">
@@ -468,7 +477,8 @@ background-position:bottom right;
           </property>
           <property name="styleSheet">
            <string notr="true">QFrame#frame_7 {
-background-color: #ffffff;
+background-color: #000;
+background-image: url(':/images/button-bg');
 border-radius:10px;
 padding-right: 10px;
 
@@ -509,7 +519,7 @@ color: #EF3C23;</string>
            <property name="geometry">
             <rect>
              <x>18</x>
-             <y>50</y>
+             <y>46</y>
              <width>91</width>
              <height>36</height>
             </rect>
@@ -517,7 +527,7 @@ color: #EF3C23;</string>
            <property name="styleSheet">
             <string notr="true">background-color: transparent;
 font: 75 36px &quot;MS Shell Dlg 2&quot;;
-color: #000000;
+color: #ffffff;
 </string>
            </property>
            <property name="text">
@@ -533,15 +543,15 @@ color: #000000;
           <widget class="QLabel" name="labelBIGNodeQueued">
            <property name="geometry">
             <rect>
-             <x>15</x>
-             <y>90</y>
-             <width>95</width>
+             <x>13</x>
+             <y>85</y>
+             <width>98</width>
              <height>15</height>
             </rect>
            </property>
            <property name="styleSheet">
             <string notr="true">font: 10px &quot;MS Shell Dlg 2&quot;;
-color: rgb(85, 85, 127);
+color: #ffffff;
 background-color: transparent;</string>
            </property>
            <property name="text">
@@ -555,18 +565,18 @@ background-color: transparent;</string>
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>30</y>
+             <y>28</y>
              <width>100</width>
              <height>15</height>
             </rect>
            </property>
            <property name="styleSheet">
             <string notr="true">font: 11px &quot;MS Shell Dlg 2&quot;;
-color: #000000;
+color: #ffffff;
 background-color: transparent;</string>
            </property>
            <property name="text">
-            <string>Total Burnt Matured</string>
+            <string>Burnt</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -584,7 +594,7 @@ background-color: transparent;</string>
            <property name="styleSheet">
             <string notr="true">font: 75 8px &quot;MS Shell Dlg 2&quot;;
 background-color: transparent;
-color: rgb(0, 0, 0);
+color: #ffffff;
 margin-right: 5px;</string>
            </property>
            <property name="text">
@@ -597,15 +607,15 @@ margin-right: 5px;</string>
           <widget class="QLabel" name="labelBIGNodeSTM">
            <property name="geometry">
             <rect>
-             <x>15</x>
+             <x>13</x>
              <y>100</y>
-             <width>95</width>
-             <height>15</height>
+             <width>98</width>
+             <height>20</height>
             </rect>
            </property>
            <property name="styleSheet">
             <string notr="true">font: 10px &quot;MS Shell Dlg 2&quot;;
-color: rgb(85, 85, 127);
+color: #ffffff;
 background-color: transparent;</string>
            </property>
            <property name="text">
@@ -622,12 +632,13 @@ background-color: transparent;</string>
             <x>150</x>
             <y>10</y>
             <width>125</width>
-            <height>125</height>
+            <height>128</height>
            </rect>
           </property>
           <property name="styleSheet">
            <string notr="true">QFrame#frame_8 {
-background-color: #ffffff;
+background-color: #000;
+background-image: url(':/images/button-bg');
 border-radius:10px;
 padding-right: 10px;
 }</string>
@@ -661,7 +672,7 @@ color: #EF3C23;</string>
            <property name="geometry">
             <rect>
              <x>18</x>
-             <y>50</y>
+             <y>46</y>
              <width>91</width>
              <height>36</height>
             </rect>
@@ -669,7 +680,7 @@ color: #EF3C23;</string>
            <property name="styleSheet">
             <string notr="true">background-color: transparent;
 font: 75 36px &quot;MS Shell Dlg 2&quot;;
-color: #000000;
+color: #ffffff;
 </string>
            </property>
            <property name="text">
@@ -682,15 +693,15 @@ color: #000000;
           <widget class="QLabel" name="labelMIDNodeQueued">
            <property name="geometry">
             <rect>
-             <x>15</x>
-             <y>90</y>
-             <width>95</width>
+             <x>13</x>
+             <y>85</y>
+             <width>98</width>
              <height>15</height>
             </rect>
            </property>
            <property name="styleSheet">
             <string notr="true">font: 10px &quot;MS Shell Dlg 2&quot;;
-color: rgb(85, 85, 127);
+color: #ffffff;
 background-color: transparent;</string>
            </property>
            <property name="text">
@@ -704,18 +715,18 @@ background-color: transparent;</string>
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>30</y>
+             <y>28</y>
              <width>100</width>
              <height>15</height>
             </rect>
            </property>
            <property name="styleSheet">
             <string notr="true">font: 11px &quot;MS Shell Dlg 2&quot;;
-color: #000000;
+color: #ffffff;
 background-color: transparent;</string>
            </property>
            <property name="text">
-            <string>Total Burnt Matured</string>
+            <string>Burnt</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -733,7 +744,7 @@ background-color: transparent;</string>
            <property name="styleSheet">
             <string notr="true">font: 75 8px &quot;MS Shell Dlg 2&quot;;
 background-color: transparent;
-color: rgb(0, 0, 0);
+color: #ffffff;
 margin-right: 5px;</string>
            </property>
            <property name="text">
@@ -746,15 +757,15 @@ margin-right: 5px;</string>
           <widget class="QLabel" name="labelMIDNodeSTM">
            <property name="geometry">
             <rect>
-             <x>15</x>
+             <x>13</x>
              <y>100</y>
-             <width>95</width>
-             <height>15</height>
+             <width>98</width>
+             <height>20</height>
             </rect>
            </property>
            <property name="styleSheet">
             <string notr="true">font: 10px &quot;MS Shell Dlg 2&quot;;
-color: rgb(85, 85, 127);
+color: #ffffff;
 background-color: transparent;</string>
            </property>
            <property name="text">
@@ -771,12 +782,13 @@ background-color: transparent;</string>
             <x>290</x>
             <y>10</y>
             <width>125</width>
-            <height>125</height>
+            <height>128</height>
            </rect>
           </property>
           <property name="styleSheet">
            <string notr="true">QFrame#frame_9 {
-background-color: #ffffff;
+background-color: #000;
+background-image: url(':/images/button-bg');
 border-radius:10px;
 padding-right: 10px;
 }</string>
@@ -810,7 +822,7 @@ color: #EF3C23;</string>
            <property name="geometry">
             <rect>
              <x>18</x>
-             <y>50</y>
+             <y>46</y>
              <width>91</width>
              <height>36</height>
             </rect>
@@ -818,7 +830,7 @@ color: #EF3C23;</string>
            <property name="styleSheet">
             <string notr="true">background-color: transparent;
 font: 75 36px &quot;MS Shell Dlg 2&quot;;
-color: #000000;
+color: #ffffff;
 </string>
            </property>
            <property name="text">
@@ -831,15 +843,15 @@ color: #000000;
           <widget class="QLabel" name="labelLILNodeQueued">
            <property name="geometry">
             <rect>
-             <x>15</x>
-             <y>90</y>
-             <width>95</width>
+             <x>13</x>
+             <y>85</y>
+             <width>98</width>
              <height>15</height>
             </rect>
            </property>
            <property name="styleSheet">
             <string notr="true">font: 10px &quot;MS Shell Dlg 2&quot;;
-color: rgb(85, 85, 127);
+color: #ffffff;
 background-color: transparent;</string>
            </property>
            <property name="text">
@@ -853,18 +865,18 @@ background-color: transparent;</string>
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>30</y>
+             <y>28</y>
              <width>100</width>
              <height>15</height>
             </rect>
            </property>
            <property name="styleSheet">
             <string notr="true">font: 11px &quot;MS Shell Dlg 2&quot;;
-color: #000000;
+color: #ffffff;
 background-color: transparent;</string>
            </property>
            <property name="text">
-            <string>Total Burnt Matured</string>
+            <string>Burnt</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -882,7 +894,7 @@ background-color: transparent;</string>
            <property name="styleSheet">
             <string notr="true">font: 75 8px &quot;MS Shell Dlg 2&quot;;
 background-color: transparent;
-color: rgb(0, 0, 0);
+color: #ffffff;
 margin-right: 5px;</string>
            </property>
            <property name="text">
@@ -895,15 +907,15 @@ margin-right: 5px;</string>
           <widget class="QLabel" name="labelLILNodeSTM">
            <property name="geometry">
             <rect>
-             <x>15</x>
+             <x>13</x>
              <y>100</y>
-             <width>95</width>
-             <height>15</height>
+             <width>98</width>
+             <height>20</height>
             </rect>
            </property>
            <property name="styleSheet">
             <string notr="true">font: 10px &quot;MS Shell Dlg 2&quot;;
-color: rgb(85, 85, 127);
+color: #ffffff;
 background-color: transparent;</string>
            </property>
            <property name="text">
@@ -952,300 +964,6 @@ color:#7982A1;
           </size>
          </property>
         </spacer>
-       </item>
-       <item>
-        <widget class="QFrame" name="button_logo_horizontal">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_11">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="leftMargin">
-           <number>20</number>
-          </property>
-          <property name="topMargin">
-           <number>10</number>
-          </property>
-          <property name="bottomMargin">
-           <number>12</number>
-          </property>
-          <item>
-           <widget class="QPushButton" name="pushButton_Website">
-            <property name="minimumSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>sinovate.io</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>:/icons/website</normaloff>:/icons/website</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_Discord">
-            <property name="minimumSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>SINOVATE Discord Channel</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>:/icons/discord</normaloff>:/icons/discord</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_Reddit">
-            <property name="maximumSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>SINOVATE Reddit Channel</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>:/icons/reddit</normaloff>:/icons/reddit</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_Telegram">
-            <property name="minimumSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>SINOVATE Telegram Channel</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>:/icons/telegram</normaloff>:/icons/telegram</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_Facebook">
-            <property name="maximumSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>SINOVATE Facebook Channel</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>:/icons/facebook</normaloff>:/icons/facebook</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_Youtube">
-            <property name="maximumSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>SINOVATE YouTube Channel</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>:/icons/youtube</normaloff>:/icons/youtube</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_Twitter">
-            <property name="minimumSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>SINOVATE Twitter</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>:/icons/twitter</normaloff>:/icons/twitter</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_Btctalk">
-            <property name="maximumSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>SINOVATE BtcTalk Channel</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>:/icons/btctalk</normaloff>:/icons/btctalk</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_Explorer">
-            <property name="minimumSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>SINOVATE  Block Explorer</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>:/icons/explorer</normaloff>:/icons/explorer</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
        </item>
       </layout>
      </item>

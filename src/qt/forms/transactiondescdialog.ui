@@ -20,7 +20,10 @@ background-color: #E3E3FF;
 QPushButton {
 	/* Global Button Style */
 	background-color: #00419A;
-	padding: 0.85em 2em;
+	background: url(':/images/button-bg');
+	background-repeat: no-repeat;
+    background-size: 1000% 1000%;
+ 	padding: 0.85em 2em;
 	font-family: &quot;Montserrat&quot;;
 	letter-spacing: 1px;
 	border: 0;
@@ -31,7 +34,8 @@ QPushButton {
 	text-transform: uppercase;
 }
 QPushButton:hover {
-	background-color: #00419A;
+	/*background-color: #202677;*/
+	color : #EF3C23;
 	
 }
 QPushButton:focus {
@@ -41,7 +45,6 @@ QPushButton:focus {
 QPushButton:pressed {
 	border: 1px solid #333;
 }
-
 
 QTextEdit#detailText {
 background-color: transparent;
