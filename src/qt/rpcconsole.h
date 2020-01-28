@@ -130,6 +130,31 @@ public Q_SLOTS:
     /** set which tab has the focus (is visible) */
     void setTabFocus(enum TabTypes tabType);
 
+    //start Exchanges and Web Links
+    void hyperlinks_slot1();
+    void hyperlinks_slot2();
+    void hyperlinks_slot3();
+    void hyperlinks_slot4();
+    void hyperlinks_slot5();
+    void hyperlinks_slot6();
+    void hyperlinks_slot7();
+    void hyperlinks_slot8();
+    void hyperlinks_slot9();
+    void hyperlinks_slot10();
+
+    void hyperlinks2_slot1();
+    void hyperlinks2_slot2();
+    void hyperlinks2_slot3();
+    void hyperlinks2_slot4();
+    void hyperlinks2_slot5();
+    void hyperlinks2_slot6();
+    void hyperlinks2_slot7();
+    void hyperlinks2_slot8();
+    void hyperlinks2_slot9();
+    void hyperlinks2_slot10();
+    void hyperlinks2_slot11();
+    //end Exchanges and Web Links
+
 Q_SIGNALS:
     // For RPC command executor
     void stopExecutor();
