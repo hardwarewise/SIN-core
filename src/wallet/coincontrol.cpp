@@ -20,6 +20,5 @@ void CCoinControl::SetNull()
     m_signal_bip125_rbf.reset();
     m_fee_mode = FeeEstimateMode::UNSET;
     fUseInstantSend = false;
-    fUsePrivateSend = true;
 }
 

@@ -24,6 +24,9 @@ static const int MASTERNODE_NEW_START_REQUIRED_SECONDS  = 180 * 60;
 
 static const int MASTERNODE_POSE_BAN_MAX_SCORE          = 5;
 
+//IN Vars
+static const int IN_FULL_SCAN_SECONDS                   = 2 * 60;
+
 //
 // The Masternode Ping Class : Contains a different serialize method for sending pings from masternodes throughout the network
 //
@@ -112,6 +115,15 @@ struct masternode_info_t
     int nActiveState = 0;
     int nProtocolVersion = 0;
     int64_t sigTime = 0; //mnb message time
+    //infinitynode information
+    int nSinType = -1;
+    CAmount nBurnAmount = 0;
+    CAmount nCollateralAmount = 0;
+    int nExpireHeight = -1;
+    std::string burnfundAddress = "";
+    std::string nodeBurntoAddress = "";
+    std::string collateralAddress = "";
+    std::string burnTxStandard = "nonstandard";
 
     CTxIn vin{};
     CTxIn vinBurnFund{};
@@ -122,6 +134,7 @@ struct masternode_info_t
 
     int64_t nLastDsq = 0; //the dsq count from the last dsq broadcast of this node
     int64_t nTimeLastChecked = 0;
+    int64_t nTimeLastFullINScan = 0;
     int64_t nTimeLastPaid = 0;
     int64_t nTimeLastPing = 0; //* not in CMN
     bool fInfoValid = false; //* not in CMN
@@ -204,6 +217,7 @@ public:
         READWRITE(sigTime);
         READWRITE(nLastDsq);
         READWRITE(nTimeLastChecked);
+        READWRITE(nTimeLastFullINScan);
         READWRITE(nTimeLastPaid);
         READWRITE(nTimeLastWatchdogVote);
         READWRITE(nActiveState);
@@ -221,14 +235,15 @@ public:
     arith_uint256 CalculateScore(const uint256& blockHash);
 
     bool UpdateFromNewBroadcast(CMasternodeBroadcast& mnb, CConnman& connman);
+    /*this function calcul all informations of infinityNode and update the variable which is init as "NULL" in masternode_info_t*/
+    void updateInfinityNodeInfo(bool fAllowFull);
 
-    bool IsBurnFundExpired(const COutPoint& outpoint);
     CAmount CheckOutPointValue(const COutPoint& outpoint);
     
     static CollateralStatus CheckCollateral(const COutPoint& outpoint);
     static CollateralStatus CheckCollateral(const COutPoint& outpoint, int& nHeightRet);
-    static BurnFundStatus CheckBurnFund(const COutPoint& outpoint);
-    static BurnFundStatus CheckBurnFund(const COutPoint& outpoint, int& nHeightRet);
+    static BurnFundStatus CheckBurnFund(const COutPoint& outpoint, int nExpireHeight, CAmount nBurnAmount);
+    static BurnFundStatus CheckBurnFund(const COutPoint& outpoint, int nExpireHeight, CAmount nBurnAmount, int& nHeightRet);
 	bool CheckCollateralBurnFundRelation(const COutPoint& outpoint, const COutPoint& outpointBurnFund);
     bool CanVoteForReward(); //I can vote or not
 
@@ -296,17 +311,11 @@ public:
     static std::string StateToString(int nStateIn);
     std::string GetStateString() const;
     std::string GetStatus() const;
+    std::string GetBurnFundTxInfo() const;
 
     int GetLastPaidTime() { return nTimeLastPaid; }
     int GetLastPaidBlock() { return nBlockLastPaid; }
     void UpdateLastPaid(const CBlockIndex *pindex, int nMaxBlocksToScanBack);
-
-    // KEEP TRACK OF EACH GOVERNANCE ITEM INCASE THIS NODE GOES OFFLINE, SO WE CAN RECALC THEIR STATUS
-    void AddGovernanceVote(uint256 nGovernanceObjectHash);
-    // RECALCULATE CACHED STATUS FLAGS FOR ALL AFFECTED OBJECTS
-    void FlagGovernanceItemsAsDirty();
-
-    void RemoveGovernanceObject(uint256 nGovernanceObjectHash);
 
     void UpdateWatchdogVoteTime(uint64_t nVoteTime = 0);
 
@@ -382,7 +391,6 @@ public:
     bool SimpleCheck(int& nDos);
     bool Update(CMasternode* pmn, int& nDos, CConnman& connman);
     bool CheckOutpoint(int& nDos);
-
     bool Sign(const CKey& keyCollateralAddress);
     bool CheckSignature(int& nDos);
     void Relay(CConnman& connman);

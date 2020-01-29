@@ -6,16 +6,12 @@
 
 #include <activemasternode.h>
 #include <addrman.h>
-#include <governance.h>
 #include <masternode-payments.h>
 #include <masternode-sync.h>
 #include <masternodeman.h>
 #include <messagesigner.h>
 #include <netfulfilledman.h>
 #include <netmessagemaker.h>
-#ifdef ENABLE_WALLET
-#include <privatesend-client.h>
-#endif // ENABLE_WALLET
 #include <script/standard.h>
 #include <util.h>
 
@@ -28,6 +24,15 @@ struct CompareLastPaidBlock
 {
     bool operator()(const std::pair<int, CMasternode*>& t1,
                     const std::pair<int, CMasternode*>& t2) const
+    {
+        return (t1.first != t2.first) ? (t1.first < t2.first) : (t1.second->vin < t2.second->vin);
+    }
+};
+
+struct CompareSigTime
+{
+    bool operator()(const std::pair<int64_t, CMasternode*>& t1,
+                    const std::pair<int64_t, CMasternode*>& t2) const
     {
         return (t1.first != t2.first) ? (t1.first < t2.first) : (t1.second->vin < t2.second->vin);
     }
@@ -74,9 +79,7 @@ CMasternodeMan::CMasternodeMan()
 bool CMasternodeMan::Add(CMasternode &mn)
 {
     LOCK(cs);
-
     if (Has(mn.vin.prevout)) return false;
-
     LogPrint(BCLog::MASTERNODE, "CMasternodeMan::Add -- Adding new Masternode: addr=%s, %i now\n", mn.addr.ToString(), size() + 1);
     mapMasternodes[mn.vin.prevout] = mn;
     fMasternodesAdded = true;
@@ -156,8 +159,11 @@ void CMasternodeMan::Check()
 
     LogPrint(BCLog::MASTERNODE, "CMasternodeMan::Check -- nLastWatchdogVoteTime=%d, IsWatchdogActive()=%d\n", nLastWatchdogVoteTime, IsWatchdogActive());
 
-    for (auto& mnpair : mapMasternodes) {
-        mnpair.second.Check();
+    std::map<COutPoint, CMasternode>::iterator it = mapMasternodes.begin();
+    while (it != mapMasternodes.end()) {
+        it->second.updateInfinityNodeInfo(true);
+        it->second.Check();
+        ++it;
     }
 }
 
@@ -212,6 +218,7 @@ void CMasternodeMan::CheckAndRemoveBurnFundNotUniqueNode(CConnman& connman)
                         //new masternode with unique burntx. So add him
                         nBurnFundMap.insert(std::pair<COutPoint, CMasternode>(mnb.vinBurnFund.prevout, mnb));
                     }
+                    //add node in vector and check nLimitNode to ban
             }
             //Ban node
             LogPrint(BCLog::MASTERNODE, "CMasternodeMan::CheckAndRemoveBurnFundNotUniqueNode -- ban vector %d\n",(int)vpMasternodesToBan.size());
@@ -221,6 +228,12 @@ void CMasternodeMan::CheckAndRemoveBurnFundNotUniqueNode(CConnman& connman)
                 for (auto pmn : vpMasternodesToBan) {
                     std::map<COutPoint, CMasternode>::iterator it;
                     it = mapMasternodes.find(pmn.vin.prevout);
+
+                    CMasternodeBroadcast mnb = CMasternodeBroadcast(it->second);
+                    uint256 hash = mnb.GetHash();
+                    // erase all of the broadcasts we've seen from this txin, ...
+                    mapSeenMasternodeBroadcast.erase(hash);
+                    mWeAskedForMasternodeListEntry.erase(pmn.vin.prevout);
                     mapMasternodes.erase(it);
 
                     LogPrint(BCLog::MASTERNODE, "CMasternodeMan::CheckAndRemoveBurnFundNotUniqueNode -- banning...%s\n", pmn.addr.ToString());
@@ -232,10 +245,7 @@ void CMasternodeMan::CheckAndRemoveBurnFundNotUniqueNode(CConnman& connman)
                                 bool absolute = false;
                                 connman.Ban(pnode->addr, BanReasonManuallyAdded, banTime, absolute);
                                 LogPrint(BCLog::MASTERNODE, "CMasternodeMan::CheckAndRemoveBurnFundNotUniqueNode -- banned\n");
-								/*
-                                LogPrint(BCLog::MASTERNODE, "CMasternodeMan::CheckAndRemoveBurnFundNotUniqueNode -- reusing dest node: peer=%d addr=%s nRefCount=%d fNetworkNode=%$",pnode->GetId(), pnode->addr.ToString(), pnode->GetRefCount(), pnode->fNetworkNode, pnode->fInbound, pnode->fMasternode);                      }
-								*/
-						}
+                        }
                     }
                 }
                 // looped through all nodes, release them
@@ -244,6 +254,60 @@ void CMasternodeMan::CheckAndRemoveBurnFundNotUniqueNode(CConnman& connman)
             }
     }
 }
+
+void CMasternodeMan::CheckAndRemoveLimitNumberNode(CConnman& connman, int nSinType, int nLimit)
+{
+    if(!masternodeSync.IsMasternodeListSynced()) return;
+
+    std::vector<std::pair<int64_t, CMasternode*> > vecSigTimeType;
+    std::vector<CMasternode> vpMasternodesToBan; //list node will be banned
+
+    for (auto& mnpair : mapMasternodes) {
+        if (mnpair.second.GetSinTypeInt() == nSinType) {
+            vecSigTimeType.push_back(std::make_pair(mnpair.second.sigTime, &mnpair.second));
+        }
+    }
+
+    // Sort them low to high
+    sort(vecSigTimeType.begin(), vecSigTimeType.end(), CompareSigTime());
+
+    //at fork heigh, limit will very high, node will not removed
+    if (nCachedBlockHeight >= 330000){nLimit=5000;}
+    //in testnet, limit is removed from block 500
+    if (Params().NetworkIDString() == CBaseChainParams::TESTNET && nCachedBlockHeight >= 1000) {
+        nLimit=5000;
+    }
+
+    if ((int)vecSigTimeType.size() <= nLimit) return;
+
+	int count=0;
+    for (std::pair<int64_t, CMasternode*>& p : vecSigTimeType){
+        count++;
+        if (count >= nLimit) {
+            CMasternode mn = *p.second;
+            vpMasternodesToBan.push_back(mn);
+        }
+    }
+
+    if ((int)vpMasternodesToBan.size() > 0) {
+        LogPrint(BCLog::MASTERNODE, "CMasternodeMan::CheckAndRemoveBurnFundNotUniqueNode -- removing...\n");
+        std::vector<CNode*> vNodesCopy = connman.CopyNodeVector();
+        for (auto pmn : vpMasternodesToBan) {
+            std::map<COutPoint, CMasternode>::iterator it;
+            it = mapMasternodes.find(pmn.vin.prevout);
+
+            CMasternodeBroadcast mnb = CMasternodeBroadcast(it->second);
+            uint256 hash = mnb.GetHash();
+            // erase all of the broadcasts we've seen from this txin, ...
+            mapSeenMasternodeBroadcast.erase(hash);
+            mWeAskedForMasternodeListEntry.erase(pmn.vin.prevout);
+            mapMasternodes.erase(it);
+        }
+
+        NotifyMasternodeUpdates(connman);
+    }
+}
+
 
 void CMasternodeMan::CheckAndRemove(CConnman& connman)
 {
@@ -273,9 +337,6 @@ void CMasternodeMan::CheckAndRemove(CConnman& connman)
                 // erase all of the broadcasts we've seen from this txin, ...
                 mapSeenMasternodeBroadcast.erase(hash);
                 mWeAskedForMasternodeListEntry.erase(it->first);
-
-                // and finally remove it from the list
-                it->second.FlagGovernanceItemsAsDirty();
                 mapMasternodes.erase(it++);
                 fMasternodesRemoved = true;
             } else {
@@ -469,6 +530,19 @@ int CMasternodeMan::CountEnabled(int nProtocolVersion)
     return nCount;
 }
 
+int CMasternodeMan::CountSinType(int nSinType)
+{
+    LOCK(cs);
+    int nCount = 0;
+
+    for (auto& mnpair : mapMasternodes) {
+        if(mnpair.second.GetSinTypeInt() != nSinType) continue;
+        nCount++;
+    }
+
+    return nCount;
+}
+
 /* Only IPv4 masternodes are allowed in 12.1, saving this for later
 int CMasternodeMan::CountByIP(int nNetworkType)
 {
@@ -579,21 +653,6 @@ void CMasternodeMan::LocalDiagnostic(int nBlockHeight, int& nSINNODE_1Ret, int& 
     nSINNODE_1Ret = 0; nSINNODE_5Ret = 0; nSINNODE_10Ret = 0;
     
     for (auto& mnpair : mapMasternodes) {
-		/*
-        if(!mnpair.second.IsValidForPayment()) continue;
-        
-        //check protocol version
-        if(mnpair.second.nProtocolVersion < mnpayments.GetMinMasternodePaymentsProto()) continue;
-
-        //it's in the list (up to 8 entries ahead of current block to allow propagation) -- so let's skip it
-        if(mnpayments.IsScheduled(mnpair.second, nBlockHeight)) continue;
-
-        //it's too new, wait for a cycle
-        if(mnpair.second.sigTime + (nMnCount*2.6*60) > GetAdjustedTime()) continue;
-
-        //make sure it has at least as many confirmations as there are masternodes
-        if(GetUTXOConfirmations(mnpair.first) < nMnCount) continue;
-        */
         //found SINNODE_1 in network
         if (mnpair.second.GetSinType() == CMasternode::SinType::SINNODE_1) {
             nSINNODE_1Ret = 1;
@@ -705,9 +764,10 @@ masternode_info_t CMasternodeMan::FindRandomNotInVec(const std::vector<COutPoint
 
     int nCountEnabled = CountEnabled(nProtocolVersion);
     int nCountNotExcluded = nCountEnabled - vecToExclude.size();
-
+/*
     LogPrintf("CMasternodeMan::FindRandomNotInVec -- %d enabled masternodes, %d masternodes to choose from\n", nCountEnabled, nCountNotExcluded);
-    if(nCountNotExcluded < 1) return masternode_info_t();
+*/
+if(nCountNotExcluded < 1) return masternode_info_t();
 
     // fill a vector of pointers
     std::vector<CMasternode*> vpMasternodesShuffled;
@@ -832,11 +892,7 @@ void CMasternodeMan::ProcessMasternodeConnections(CConnman& connman)
     if(Params().NetworkIDString() == CBaseChainParams::REGTEST) return;
 
     connman.ForEachNode(CConnman::AllNodes, [](CNode* pnode) {
-#ifdef ENABLE_WALLET
-        if(pnode->fMasternode && !privateSendClient.IsMixingMasternode(pnode)) {
-#else
         if(pnode->fMasternode) {
-#endif // ENABLE_WALLET
             pnode->fDisconnect = true;
         }
     });
@@ -996,14 +1052,13 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, const std::string& strCommand,
             mapSeenMasternodePing.insert(std::make_pair(hashMNP, mnp));
 
             if (vin.prevout == mnpair.first) {
-                LogPrintf("DSEG -- Sent 1 Masternode inv to peer %d\n", pfrom->GetId());
                 return;
             }
         }
 
         if(vin == CTxIn()) {
             connman.PushMessage(pfrom, CNetMsgMaker(pfrom->GetSendVersion()).Make(NetMsgType::SYNCSTATUSCOUNT, MASTERNODE_SYNC_LIST, nInvCount));
-            LogPrintf("DSEG -- Sent %d Masternode invs to peer %d\n", nInvCount, pfrom->GetId());
+            /*LogPrintf("DSEG -- Sent %d Masternode invs to peer %d\n", nInvCount, pfrom->GetId());*/
             return;
         }
         // smth weird happen - someone asked us for vin we have no idea about?
@@ -1620,25 +1675,6 @@ bool CMasternodeMan::IsWatchdogActive()
     return (GetTime() - nLastWatchdogVoteTime) <= MASTERNODE_WATCHDOG_MAX_SECONDS;
 }
 
-bool CMasternodeMan::AddGovernanceVote(const COutPoint& outpoint, uint256 nGovernanceObjectHash)
-{
-    LOCK(cs);
-    CMasternode* pmn = Find(outpoint);
-    if(!pmn) {
-        return false;
-    }
-    pmn->AddGovernanceVote(nGovernanceObjectHash);
-    return true;
-}
-
-void CMasternodeMan::RemoveGovernanceObject(uint256 nGovernanceObjectHash)
-{
-    LOCK(cs);
-    for(auto& mnpair : mapMasternodes) {
-        mnpair.second.RemoveGovernanceObject(nGovernanceObjectHash);
-    }
-}
-
 void CMasternodeMan::CheckMasternode(const CPubKey& pubKeyMasternode, bool fForce)
 {
     LOCK2(cs_main, cs);
@@ -1702,14 +1738,6 @@ void CMasternodeMan::NotifyMasternodeUpdates(CConnman& connman)
         LOCK(cs);
         fMasternodesAddedLocal = fMasternodesAdded;
         fMasternodesRemovedLocal = fMasternodesRemoved;
-    }
-
-    if(fMasternodesAddedLocal) {
-        governance.CheckMasternodeOrphanObjects(connman);
-        governance.CheckMasternodeOrphanVotes(connman);
-    }
-    if(fMasternodesRemovedLocal) {
-        governance.UpdateCachesAndClean();
     }
 
     LOCK(cs);

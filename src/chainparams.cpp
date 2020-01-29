@@ -82,22 +82,26 @@ public:
         strNetworkID = "main";
         consensus.nSubsidyHalvingInterval = 210000;
         consensus.nMasternodeMinimumConfirmations = 15;
-	    consensus.nMasternodePaymentsStartBlock = 50;
-        consensus.nMasternodePaymentsIncreaseBlock = 50;
-        consensus.nMasternodePaymentsIncreasePeriod = 365 * 1440; // 1 common year
+        consensus.nMasternodePaymentsStartBlock = 50;
         consensus.nMasternodeCollateralMinimum = 10000;
-		consensus.nMasternodeBurnSINNODE_1 = 100000;
-		consensus.nMasternodeBurnSINNODE_5 = 500000;
-		consensus.nMasternodeBurnSINNODE_10 = 1000000;
-		
+        consensus.nMasternodeBurnSINNODE_1 = 100000;
+        consensus.nMasternodeBurnSINNODE_5 = 500000;
+        consensus.nMasternodeBurnSINNODE_10 = 1000000;
+        consensus.nLimitSINNODE_1=375;
+        consensus.nLimitSINNODE_5=375;
+        consensus.nLimitSINNODE_10=375;
         consensus.nInstantSendKeepLock = 24;
+        consensus.nInfinityNodeBeginHeight=160000;
+        consensus.nInfinityNodeGenesisStatement=250000;
+        consensus.nInfinityNodeUpdateMeta=25;
+        consensus.nInfinityNodeVoteValue=100;
 
-        consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
+        consensus.nBudgetPaymentsStartBlock = 365 * 1440 * 5; // 1 common year
         consensus.nBudgetPaymentsCycleBlocks = 10958; // weekly
         consensus.nBudgetPaymentsWindowBlocks = 100;
         consensus.nBudgetProposalEstablishingTime = 86400; // 1 day
 
-        consensus.nSuperblockStartBlock = 365 * 1440; // 1 common year
+        consensus.nSuperblockStartBlock = 365 * 1440 * 5; // 1 common year
         consensus.nSuperblockCycle = 10958; // weekly
 
         consensus.nGovernanceMinQuorum = 10;
@@ -116,9 +120,12 @@ public:
         consensus.nMinerConfirmationWindow = 2016;
         consensus.devAddressPubKey = "841e6bf56b99a59545da932de2efb23ab93b4f44";
         consensus.devAddress = "SZLafuDjnjqh2tAfTrG9ZAGzbP8HkzNXvB";
-        consensus.cBurnAddress = "SinBurnAddress123456789SuqaXbx3AMC";
         consensus.cBurnAddressPubKey = "ebaf5ec74cb2e2342dfda0229111738ff4dc742d";
-		strSporkPubKey = "0449434681D96595AC04470E5613475D259489CAA79C260814D22D4F29F7361D84A85F1F535F7B11F51B87F4E7B8E168AA68747A6E7465DCF34ABDD25570430573";
+        consensus.cBurnAddress = "SinBurnAddress123456789SuqaXbx3AMC";
+        consensus.cMetadataAddress = "SinBurnAddressForMetadataXXXXEU2mj";
+        consensus.cNotifyAddress = "SinBurnAddressForNotifyXXXXXc42TcT";
+        consensus.cGovernanceAddress = "SinBurnAddressGovernanceVoteba5vkQ";
+        strSporkPubKey = "0449434681D96595AC04470E5613475D259489CAA79C260814D22D4F29F7361D84A85F1F535F7B11F51B87F4E7B8E168AA68747A6E7465DCF34ABDD25570430573";
 
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = NEVER;
@@ -157,14 +164,15 @@ public:
         assert(consensus.hashGenesisBlock == uint256S("000032bd27c65ec42967b7854a49df222abdfae8d9350a61083af8eab2a25e03"));
         assert(genesis.hashMerkleRoot == uint256S("c3555790e3804130514a674f3374b451dce058407dad6b9e82e191e198012680"));
 
-        vSeeds.push_back("sinexplorer.com");
-        vSeeds.push_back("139.59.139.105");
-        vSeeds.push_back("104.248.133.94");
-        vSeeds.push_back("104.248.17.3");
-        vSeeds.push_back("46.101.152.7");
-        vSeeds.push_back("46.101.227.238");
-        vSeeds.push_back("209.97.153.68");
-        vSeeds.push_back("159.89.194.138");
+        vSeeds.push_back("88.198.108.224");
+        vSeeds.push_back("95.216.140.124");
+        vSeeds.push_back("149.28.109.29");
+        vSeeds.push_back("104.248.4.79");
+        vSeeds.push_back("157.245.166.223");
+        vSeeds.push_back("206.189.147.193");
+        vSeeds.push_back("167.172.42.45");
+        vSeeds.push_back("138.197.135.125");
+
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,63);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
@@ -194,7 +202,12 @@ public:
 
         /* disable fallback fee on mainnet */
         m_fallback_fee_enabled = true;
-    }
+        nMaxReorganizationDepth = 55; // 55 at 2 minute block timespan is +/- 120 minutes/2h.
+        nMinReorganizationPeers = 3;
+
+
+        consensus.lwmaStartHeight = 262000;
+        consensus.lwmaAveragingWindow = 96;    }
 };
 
 /**
@@ -206,14 +219,19 @@ public:
         strNetworkID = "test";
         consensus.nSubsidyHalvingInterval = 210000;
         consensus.nMasternodeMinimumConfirmations = 15;
-	    consensus.nMasternodePaymentsStartBlock = 50;
-        consensus.nMasternodePaymentsIncreaseBlock = 50;
-        consensus.nMasternodePaymentsIncreasePeriod = 365 * 1440; // 1 common year
+        consensus.nMasternodePaymentsStartBlock = 50;
         consensus.nMasternodeCollateralMinimum = 10;
-		consensus.nMasternodeBurnSINNODE_1 = 100;
-		consensus.nMasternodeBurnSINNODE_5 = 500;
-		consensus.nMasternodeBurnSINNODE_10 = 1000;
+        consensus.nMasternodeBurnSINNODE_1 = 100000;
+        consensus.nMasternodeBurnSINNODE_5 = 500000;
+        consensus.nMasternodeBurnSINNODE_10 = 1000000;
+        consensus.nLimitSINNODE_1=6;
+        consensus.nLimitSINNODE_5=6;
+        consensus.nLimitSINNODE_10=6;
         consensus.nInstantSendKeepLock = 24;
+        consensus.nInfinityNodeBeginHeight=100;
+        consensus.nInfinityNodeGenesisStatement=110;
+        consensus.nInfinityNodeUpdateMeta=5;
+
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
         consensus.nBudgetPaymentsCycleBlocks = 10958; // weekly
         consensus.nBudgetPaymentsWindowBlocks = 100;
@@ -238,6 +256,9 @@ public:
         consensus.devAddress = "SZLafuDjnjqh2tAfTrG9ZAGzbP8HkzNXvB";
         consensus.cBurnAddress = "SinBurnAddress123456789SuqaXbx3AMC";
         consensus.cBurnAddressPubKey = "ebaf5ec74cb2e2342dfda0229111738ff4dc742d";
+        consensus.cMetadataAddress = "SinBurnAddressForMetadataXXXXEU2mj";
+        consensus.cNotifyAddress = "SinBurnAddressForNotifyXXXXXc42TcT";
+        consensus.cGovernanceAddress = "SinBurnAddressGovernanceVoteba5vkQ";
         strSporkPubKey = "0454E1B43ECCAC17E50402370477455BE34593E272CA9AE0DF04F6F3D423D1366D017822C77990A3D8DD980C60D3692C9B6D7DFD75F683F7056C1E97E82BD94DBE";
 
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -275,8 +296,8 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
 
-        vSeeds.emplace_back("178.128.230.114");
-        vSeeds.emplace_back("178.62.226.114");
+        //vSeeds.emplace_back("206.189.57.75");
+        //vSeeds.emplace_back("165.22.81.15");
 		nDefaultPort = 20980;
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,63);
@@ -303,6 +324,11 @@ public:
 
         /* enable fallback fee on testnet */
         m_fallback_fee_enabled = true;
+        nMaxReorganizationDepth = 5; // 5 at 2 minute block timespan is +/- 10 minutes.
+        nMinReorganizationPeers = 3;
+
+        consensus.lwmaStartHeight = 150;
+        consensus.lwmaAveragingWindow = 96;
     }
 };
 
@@ -316,13 +342,18 @@ public:
         consensus.nSubsidyHalvingInterval = 210000;
         consensus.nMasternodeMinimumConfirmations = 15;
         consensus.nMasternodePaymentsStartBlock = 50;
-        consensus.nMasternodePaymentsIncreaseBlock = 50;
-        consensus.nMasternodePaymentsIncreasePeriod = 365 * 1440; // 1 common year
         consensus.nMasternodeCollateralMinimum = 10;
-        consensus.nMasternodeBurnSINNODE_1 = 100;
-        consensus.nMasternodeBurnSINNODE_5 = 500;
-        consensus.nMasternodeBurnSINNODE_10 = 1000;
+        consensus.nMasternodeBurnSINNODE_1 = 100000;
+        consensus.nMasternodeBurnSINNODE_5 = 500000;
+        consensus.nMasternodeBurnSINNODE_10 = 1000000;
+        consensus.nLimitSINNODE_1=6;
+        consensus.nLimitSINNODE_5=6;
+        consensus.nLimitSINNODE_10=6;
         consensus.nInstantSendKeepLock = 24;
+        consensus.nInfinityNodeBeginHeight=100;
+        consensus.nInfinityNodeGenesisStatement=110;
+        consensus.nInfinityNodeUpdateMeta=5;
+
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
         consensus.nBudgetPaymentsCycleBlocks = 10958; // weekly
         consensus.nBudgetPaymentsWindowBlocks = 100;
@@ -347,6 +378,9 @@ public:
         consensus.devAddress = "SZLafuDjnjqh2tAfTrG9ZAGzbP8HkzNXvB";
         consensus.cBurnAddress = "SinBurnAddress123456789SuqaXbx3AMC";
         consensus.cBurnAddressPubKey = "ebaf5ec74cb2e2342dfda0229111738ff4dc742d";
+        consensus.cMetadataAddress = "SinBurnAddressForMetadataXXXXEU2mj";
+        consensus.cNotifyAddress = "SinBurnAddressForNotifyXXXXXc42TcT";
+        consensus.cGovernanceAddress = "SinBurnAddressGovernanceVoteba5vkQ";
         strSporkPubKey = "0454E1B43ECCAC17E50402370477455BE34593E272CA9AE0DF04F6F3D423D1366D017822C77990A3D8DD980C60D3692C9B6D7DFD75F683F7056C1E97E82BD94DBE";
 
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -412,6 +446,11 @@ public:
 
         /* enable fallback fee on FinalNet */
         m_fallback_fee_enabled = true;
+        nMaxReorganizationDepth = 5; // 5 at 2 minute block timespan is +/- 10 minutes.
+        nMinReorganizationPeers = 3;
+
+        consensus.lwmaStartHeight = 260000;
+        consensus.lwmaAveragingWindow = 96;
     }
 };
 
@@ -423,6 +462,10 @@ public:
     CRegTestParams() {
         strNetworkID = "regtest";
         consensus.nSubsidyHalvingInterval = 150;
+        consensus.nInfinityNodeBeginHeight=100;
+        consensus.nInfinityNodeGenesisStatement=110;
+        consensus.nInfinityNodeUpdateMeta=5;
+
         consensus.BIP16Exception = uint256();
         consensus.BIP34Height = 100000000;
         consensus.BIP34Hash = uint256();
@@ -435,7 +478,7 @@ public:
         consensus.fPowNoRetargeting = true;
         consensus.nRuleChangeActivationThreshold = 108;
         consensus.nMinerConfirmationWindow = 144;
-	consensus.devAddressPubKey = "841e6bf56b99a59545da932de2efb23ab93b4f44";
+        consensus.devAddressPubKey = "841e6bf56b99a59545da932de2efb23ab93b4f44";
 
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 0;
@@ -489,6 +532,11 @@ public:
 
         /* enable fallback fee on regtest */
         m_fallback_fee_enabled = true;
+        nMaxReorganizationDepth = 5; // 5 at 2 minute block timespan is +/- 10 minutes.
+        nMinReorganizationPeers = 3;
+
+        consensus.lwmaStartHeight = 260000;
+        consensus.lwmaAveragingWindow = 96;
     }
 };
 

@@ -11,8 +11,8 @@
 #include <utilstrencodings.h>
 #include <crypto/common.h>
 
-const int nSinHeightFinalnet = 50;
-const int nSinHeightTestnet  = 50;
+const int nSinHeightFinalnet = 5;
+const int nSinHeightTestnet  = 5;
 const int nSinHeightMainnet  = 170000;
 
 uint256 CBlockHeader::GetHash() const

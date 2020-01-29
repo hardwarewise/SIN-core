@@ -22,6 +22,7 @@ class CConnman;
 class CReserveScript;
 class CValidationInterface;
 class CValidationState;
+//Dash
 class uint256;
 class CScheduler;
 class CTxMemPool;
@@ -167,6 +168,8 @@ protected:
     friend void ::RegisterValidationInterface(CValidationInterface*);
     friend void ::UnregisterValidationInterface(CValidationInterface*);
     friend void ::UnregisterAllValidationInterfaces();
+    //Dash misc
+    virtual void NotifyInstantSendDoubleSpendAttempt(const CTransaction &currentTx, const CTransaction &previousTx) {}
 };
 
 struct MainSignalsInstance;
@@ -223,6 +226,8 @@ public:
     void Broadcast(int64_t nBestBlockTime, CConnman* connman);
     void BlockChecked(const CBlock&, const CValidationState&);
     void NewPoWValidBlock(const CBlockIndex *, const std::shared_ptr<const CBlock>&);
+    //Dash misc
+    void NotifyInstantSendDoubleSpendAttempt(const CTransaction &, const CTransaction &);
 };
 
 CMainSignals& GetMainSignals();

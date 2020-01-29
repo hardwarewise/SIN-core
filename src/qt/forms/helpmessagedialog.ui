@@ -16,6 +16,9 @@
     <height>500</height>
    </size>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <property name="spacing">
     <number>0</number>
@@ -73,7 +76,7 @@
         <bool>false</bool>
        </property>
        <property name="pixmap">
-        <pixmap resource="../sin.qrc">:/images/about</pixmap>
+        <pixmap>:/images/about</pixmap>
        </property>
        <property name="scaledContents">
         <bool>false</bool>
@@ -89,6 +92,9 @@
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QTextEdit" name="helpMessage">
+       <property name="styleSheet">
+        <string notr="true">color:#333333;</string>
+       </property>
        <property name="readOnly">
         <bool>true</bool>
        </property>
@@ -110,8 +116,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>630</width>
-          <height>201</height>
+          <width>642</width>
+          <height>215</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -119,6 +125,9 @@
           <widget class="QLabel" name="aboutMessage">
            <property name="cursor">
             <cursorShape>IBeamCursor</cursorShape>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color:#333333;</string>
            </property>
            <property name="textFormat">
             <enum>Qt::PlainText</enum>

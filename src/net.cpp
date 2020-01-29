@@ -5,6 +5,7 @@
 // Copyright (c) 2018-2019 SIN developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
 #include <config/sin-config.h>
@@ -27,7 +28,6 @@
 #include <netmessagemaker.h>
 #include <masternode-sync.h>
 #include <masternodeman.h>
-#include <privatesend.h>
 
 #ifdef WIN32
 #include <string.h>
@@ -2703,17 +2703,6 @@ bool CConnman::RemoveAddedNode(const std::string& strNode)
     return false;
 }
 
-bool CConnman::AddPendingMasternode(const CService& service)
-{
-    LOCK(cs_vPendingMasternodes);
-    for(std::vector<CService>::const_iterator it = vPendingMasternodes.begin(); it != vPendingMasternodes.end(); ++it) {
-        if (service == *it)
-            return false;
-    }
-
-    vPendingMasternodes.push_back(service);
-    return true;
-}
 
 size_t CConnman::GetNodeCount(NumConnections flags)
 {
@@ -2772,16 +2761,12 @@ void CConnman::RelayTransaction(const CTransaction& tx)
     
     LogPrintf("Net::RelayTransaction -- tx %s\n", hash.ToString());
     CTxLockRequest txLockRequestRet;
-    CDarksendBroadcastTx dstx = CPrivateSend::GetDSTX(hash);
-    if(dstx) { // MSG_DSTX
-        ss << dstx;
-        LogPrintf("Net::RelayTransaction -- MSG_DSTX %s\n", hash.ToString());
-    } else if(instantsend.GetTxLockRequest(hash, txLockRequestRet)) { // MSG_TXLOCK_REQUEST
+    if(instantsend.GetTxLockRequest(hash, txLockRequestRet)) { // MSG_TXLOCK_REQUEST
         ss << txLockRequestRet;
-        LogPrintf("Net::RelayTransaction -- MSG_TXLOCK_REQUEST %s\n", hash.ToString());
+        LogPrintf("Net::RelayTransaction -- InstantSend MSG_TXLOCK_REQUEST %s\n", hash.ToString());
     } else { // MSG_TX
         ss << tx;
-        LogPrintf("Net::RelayTransaction -- MSG_TX %s\n", hash.ToString());
+        LogPrintf("Net::RelayTransaction -- Transaction MSG_TX %s\n", hash.ToString());
     }
     RelayTransaction(tx, ss);
 }
@@ -2790,24 +2775,35 @@ void CConnman::RelayTransaction(const CTransaction& tx)
 void CConnman::RelayTransaction(const CTransaction& tx, const CDataStream& ss)
 {
     uint256 hash = tx.GetHash();
-    LogPrintf("Net::RelayTransaction -- tx hash %s\n", hash.ToString());
-    int nInv = static_cast<bool>(CPrivateSend::GetDSTX(hash)) ? MSG_DSTX :
-                (instantsend.HasTxLockRequest(hash) ? MSG_TXLOCK_REQUEST : MSG_TX);
+    int nInv = static_cast<bool>(instantsend.HasTxLockRequest(hash) ? MSG_TXLOCK_REQUEST : MSG_TX);
     LogPrintf("Net::RelayTransaction -- Type in protocol CInv(%d-%s)\n", nInv, hash.ToString());
     CInv inv(nInv, hash);
+    {
+        LOCK(cs_mapRelayDash);
+        // Expire old relay messages
+        while (!vRelayExpirationDash.empty() && vRelayExpirationDash.front().first < GetTime())
+        {
+            mapRelayDash.erase(vRelayExpirationDash.front().second);
+            vRelayExpirationDash.pop_front();
+        }
+        LogPrint(BCLog::NET, "Add relay invenroty for infinity node like InstantSend...\n");
+        // Save original serialized message so newer versions are preserved
+        mapRelayDash.insert(std::make_pair(inv, ss));
+        vRelayExpirationDash.push_back(std::make_pair(GetTime() + 15 * 60, inv));
+    }
     LOCK(cs_vNodes);
+    LogPrint(BCLog::NET, "CConnman::InstantSend -- RelayTransaction to %d nodes\n", vNodes.size());
     for (auto* pnode : vNodes)
     {
-        if(!pnode->fRelayTxes)
-            continue;
-        LOCK(pnode->cs_filter);
-        if (pnode->pfilter)
-        {
-            if (pnode->pfilter->IsRelevantAndUpdate(tx))
-                pnode->PushInventory(inv);
-        } else {
-            pnode->PushInventory(inv);
+        if (nInv == MSG_TXLOCK_REQUEST) {
+            LOCK(pnode->cs_filter);
+            /*if(!pnode->fRelayTxes)
+                continue;
+            LogPrint(BCLog::NET, "CConnman::InstantSend -- PushInventory node: peer=%d addr=%s nRefCount=%d fNetworkNode=%d fInbound=%d fMasternode=%d\n",                                                                                    
+                    pnode->id, pnode->addr.ToString(), pnode->GetRefCount(), pnode->fNetworkNode, pnode->fInbound, pnode->fMasternode);*/
+            if(pnode->pfilter && !pnode->pfilter->IsRelevantAndUpdate(tx)) continue;
         }
+        pnode->PushInventory(inv);
     }
 }
 

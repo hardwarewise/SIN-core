@@ -139,6 +139,7 @@ public:
     /// Check all Masternodes
     void Check();
     void CheckAndRemoveBurnFundNotUniqueNode(CConnman& connman);
+    void CheckAndRemoveLimitNumberNode(CConnman& connman, int nSinType, int nLimit);
     /// Check all Masternodes and remove inactive
     void CheckAndRemove(CConnman& connman);
     /// This is dummy overload to be used for dumping/loading mncache.dat
@@ -147,17 +148,19 @@ public:
     /// Quick check if masternode is legit
     int IsPayeeAValidMasternode(CScript payee);
 
-    /// Clear Masternode vector
+    /// Clear InfinityNode vector
     void Clear();
 
-    /// Count Masternodes filtered by nProtocolVersion.
-    /// Masternode nProtocolVersion should match or be above the one specified in param here.
+    /// Count InfinityNode filtered by nProtocolVersion.
+    /// InfinityNode nProtocolVersion should match or be above the one specified in param here.
     int CountMasternodes(int nProtocolVersion = -1);
-    /// Count enabled Masternodes filtered by nProtocolVersion.
-    /// Masternode nProtocolVersion should match or be above the one specified in param here.
+    /// Count ENABLED InfinityNode filtered by nProtocolVersion.
+    /// InfinityNode nProtocolVersion should match or be above the one specified in param here.
     int CountEnabled(int nProtocolVersion = -1);
+    /// Count InfinityNode by nSinType
+    int CountSinType(int nSinType);
 
-    /// Count Masternodes by network type - NET_IPV4, NET_IPV6, NET_TOR
+    /// Count InfinityNode by network type - NET_IPV4, NET_IPV6, NET_TOR
     // int CountByIP(int nNetworkType);
 
     void DsegUpdate(CNode* pnode, CConnman& connman);
@@ -209,24 +212,8 @@ public:
 
     void UpdateLastPaid(const CBlockIndex* pindex);
 
-    void AddDirtyGovernanceObjectHash(const uint256& nHash)
-    {
-        LOCK(cs);
-        vecDirtyGovernanceObjectHashes.push_back(nHash);
-    }
-
-    std::vector<uint256> GetAndClearDirtyGovernanceObjectHashes()
-    {
-        LOCK(cs);
-        std::vector<uint256> vecTmp = vecDirtyGovernanceObjectHashes;
-        vecDirtyGovernanceObjectHashes.clear();
-        return vecTmp;;
-    }
-
     bool IsWatchdogActive();
     void UpdateWatchdogVoteTime(const COutPoint& outpoint, uint64_t nVoteTime = 0);
-    bool AddGovernanceVote(const COutPoint& outpoint, uint256 nGovernanceObjectHash);
-    void RemoveGovernanceObject(uint256 nGovernanceObjectHash);
 
     void CheckMasternode(const CPubKey& pubKeyMasternode, bool fForce);
 

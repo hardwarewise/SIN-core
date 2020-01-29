@@ -9,6 +9,7 @@
 
 #include <chain.h>
 #include <net.h>
+#include <wallet/wallet.h>
 #include <primitives/transaction.h>
 
 class CTxLockVote;
@@ -70,7 +71,7 @@ private:
     void Vote(CTxLockCandidate& txLockCandidate, CConnman& connman);
 
     //process consensus vote message
-    bool ProcessTxLockVote(CNode* pfrom, CTxLockVote& vote, CConnman& connman);
+    bool ProcessTxLockVote(CNode* pfrom, CTxLockVote& vote, CConnman& connman, CWallet* pwallet);
     void ProcessOrphanTxLockVotes(CConnman& connman);
     bool IsEnoughOrphanVotesForTx(const CTxLockRequest& txLockRequest);
     bool IsEnoughOrphanVotesForTxAndOutPoint(const uint256& txHash, const COutPoint& outpoint);
@@ -129,12 +130,12 @@ public:
 class CTxLockRequest
 {
 private:
-    static const CAmount MIN_FEE            = 0.001 * COIN;
+    static const CAmount MIN_FEE            = 0.1 * COIN;
 
 public:
     /// Warn for a large number of inputs to an IS tx - fees could be substantial
     /// and the number txlvote responses requested large (10 * # of inputs)
-    static const int WARN_MANY_INPUTS       = 100;
+    static const int WARN_MANY_INPUTS       = 6;
 
     CTransactionRef tx;
 

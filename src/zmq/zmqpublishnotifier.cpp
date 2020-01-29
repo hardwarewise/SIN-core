@@ -12,10 +12,14 @@
 
 static std::multimap<std::string, CZMQAbstractPublishNotifier*> mapPublishNotifiers;
 
-static const char *MSG_HASHBLOCK = "hashblock";
-static const char *MSG_HASHTX    = "hashtx";
-static const char *MSG_RAWBLOCK  = "rawblock";
-static const char *MSG_RAWTX     = "rawtx";
+static const char *MSG_HASHBLOCK     = "hashblock";
+static const char *MSG_HASHTX        = "hashtx";
+static const char *MSG_HASHTXLOCK    = "hashtxlock";
+static const char *MSG_HASHISCON     = "hashinstantsenddoublespend";
+static const char *MSG_RAWBLOCK      = "rawblock";
+static const char *MSG_RAWTX         = "rawtx";
+static const char *MSG_RAWTXLOCK     = "rawtxlock";
+static const char *MSG_RAWISCON      = "rawinstantsenddoublespend";
 
 // Internal function to send multipart message
 static int zmq_send_multipart(void *sock, const void* data, size_t size, ...)
@@ -166,6 +170,31 @@ bool CZMQPublishHashTransactionNotifier::NotifyTransaction(const CTransaction &t
     return SendMessage(MSG_HASHTX, data, 32);
 }
 
+bool CZMQPublishHashTransactionLockNotifier::NotifyTransactionLock(const CTransaction &transaction)
+{
+    uint256 hash = transaction.GetHash();
+    LogPrint(BCLog::ZMQ, "zmq: Publish hashtxlock %s\n", hash.GetHex());
+    char data[32];
+    for (unsigned int i = 0; i < 32; i++)
+        data[31 - i] = hash.begin()[i];
+    return SendMessage(MSG_HASHTXLOCK, data, 32);
+}
+
+
+bool CZMQPublishHashInstantSendDoubleSpendNotifier::NotifyInstantSendDoubleSpendAttempt(const CTransaction &currentTx, const CTransaction &previousTx)
+{
+    uint256 currentHash = currentTx.GetHash(), previousHash = previousTx.GetHash();
+    LogPrint(BCLog::ZMQ, "zmq: Publish hashinstantsenddoublespend %s conflicts against %s\n", currentHash.ToString(), previousHash.ToString());
+    char dataCurrentHash[32], dataPreviousHash[32];
+    for (unsigned int i = 0; i < 32; i++) {
+        dataCurrentHash[31 - i] = currentHash.begin()[i];
+        dataPreviousHash[31 - i] = previousHash.begin()[i];
+    }
+    return SendMessage(MSG_HASHISCON, dataCurrentHash, 32)
+        && SendMessage(MSG_HASHISCON, dataPreviousHash, 32);
+}
+
+
 bool CZMQPublishRawBlockNotifier::NotifyBlock(const CBlockIndex *pindex)
 {
     LogPrint(BCLog::ZMQ, "zmq: Publish rawblock %s\n", pindex->GetBlockHash().GetHex());
@@ -194,4 +223,23 @@ bool CZMQPublishRawTransactionNotifier::NotifyTransaction(const CTransaction &tr
     CDataStream ss(SER_NETWORK, PROTOCOL_VERSION | RPCSerializationFlags());
     ss << transaction;
     return SendMessage(MSG_RAWTX, &(*ss.begin()), ss.size());
+}
+
+bool CZMQPublishRawTransactionLockNotifier::NotifyTransactionLock(const CTransaction &transaction)
+{
+    uint256 hash = transaction.GetHash();
+    LogPrint(BCLog::ZMQ, "zmq: Publish rawtxlock %s\n", hash.GetHex());
+    CDataStream ss(SER_NETWORK, PROTOCOL_VERSION  | RPCSerializationFlags());
+    ss << transaction;
+    return SendMessage(MSG_RAWTXLOCK, &(*ss.begin()), ss.size());
+}
+
+bool CZMQPublishRawInstantSendDoubleSpendNotifier::NotifyInstantSendDoubleSpendAttempt(const CTransaction &currentTx, const CTransaction &previousTx)
+{
+    LogPrint(BCLog::ZMQ, "zmq: Publish rawinstantsenddoublespend %s conflicts with %s\n", currentTx.GetHash().ToString(), previousTx.GetHash().ToString());
+    CDataStream ssCurrent(SER_NETWORK, PROTOCOL_VERSION), ssPrevious(SER_NETWORK, PROTOCOL_VERSION | RPCSerializationFlags());
+    ssCurrent << currentTx;
+    ssPrevious << previousTx;
+    return SendMessage(MSG_RAWISCON, &(*ssCurrent.begin()), ssCurrent.size())
+        && SendMessage(MSG_RAWISCON, &(*ssPrevious.begin()), ssPrevious.size());
 }

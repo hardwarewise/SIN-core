@@ -67,22 +67,13 @@ public:
     virtual bool isCrypted() = 0;
 
     //! Lock wallet.
-    // Dash
-    //virtual bool lock() = 0;
-    virtual bool lock(bool fAllowMixing = false) = 0;
-    //
+    virtual bool lock() = 0;
 
     //! Unlock wallet.
-    // Dash
-    //virtual bool unlock(const SecureString& wallet_passphrase) = 0;
-    virtual bool unlock(const SecureString& wallet_passphrase, bool fForMixingOnly = false) = 0;
-    //
+    virtual bool unlock(const SecureString& wallet_passphrase) = 0;
 
     //! Return whether wallet is locked.
-    // Dash
-    //virtual bool isLocked() = 0;
-    virtual bool isLocked(bool fForMixing = false) = 0;
-    //
+    virtual bool isLocked() = 0;
 
     //! Change wallet passphrase.
     virtual bool changeWalletPassphrase(const SecureString& old_wallet_passphrase,
@@ -161,15 +152,6 @@ public:
         std::string& fail_reason,
         AvailableCoinsType nCoinType = ALL_COINS,
         bool fUseInstantSend = false) = 0;
-
-    //! GetOutpointPrivateSendRounds
-    virtual int GetOutpointPrivateSendRounds (const COutPoint& outpoint) = 0;
-    virtual CAmount GetAnonymizableBalance(bool fSkipDenominated = false, bool fSkipUnconfirmed = true) = 0;
-    virtual CAmount GetAnonymizedBalance() = 0;
-    virtual CAmount GetDenominatedBalance(bool unconfirmed=false) = 0;
-    virtual CAmount GetNormalizedAnonymizedBalance() = 0;
-    virtual float GetAverageAnonymizedRounds() = 0;
-    virtual int64_t getKeysLeftSinceAutoBackup() = 0;
 
     //! Return whether transaction can be abandoned.
     virtual bool transactionCanBeAbandoned(const uint256& txid) = 0;

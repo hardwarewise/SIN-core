@@ -55,19 +55,8 @@ const char *MASTERNODEPAYMENTSYNC="mnget";
 const char *MNQUORUM="mn quorum"; // not implemented
 const char *MNANNOUNCE="mnb";
 const char *MNPING="mnp";
-const char *DSACCEPT="dsa";
-const char *DSVIN="dsi";
-const char *DSFINALTX="dsf";
-const char *DSSIGNFINALTX="dss";
-const char *DSCOMPLETE="dsc";
-const char *DSSTATUSUPDATE="dssu";
-const char *DSTX="dstx";
-const char *DSQUEUE="dsq";
 const char *DSEG="dseg";
 const char *SYNCSTATUSCOUNT="ssc";
-const char *MNGOVERNANCESYNC="govsync";
-const char *MNGOVERNANCEOBJECT="govobj";
-const char *MNGOVERNANCEOBJECTVOTE="govobjvote";
 const char *MNVERIFY="mnv";
 } // namespace NetMsgType
 
@@ -112,19 +101,8 @@ const static std::string allNetMessageTypes[] = {
     NetMsgType::MASTERNODEPAYMENTSYNC,
     NetMsgType::MNANNOUNCE,
     NetMsgType::MNPING,
-    NetMsgType::DSACCEPT,
-    NetMsgType::DSVIN,
-    NetMsgType::DSFINALTX,
-    NetMsgType::DSSIGNFINALTX,
-    NetMsgType::DSCOMPLETE,
-    NetMsgType::DSSTATUSUPDATE,
-    NetMsgType::DSTX,
-    NetMsgType::DSQUEUE,
     NetMsgType::DSEG,
     NetMsgType::SYNCSTATUSCOUNT,
-    NetMsgType::MNGOVERNANCESYNC,
-    NetMsgType::MNGOVERNANCEOBJECT,
-    NetMsgType::MNGOVERNANCEOBJECTVOTE,
     NetMsgType::MNVERIFY,
 };
 const static std::vector<std::string> allNetMessageTypesVec(allNetMessageTypes, allNetMessageTypes+ARRAYLEN(allNetMessageTypes));
@@ -247,9 +225,6 @@ std::string CInv::GetCommand() const
     case MSG_MASTERNODE_QUORUM:        return cmd.append(NetMsgType::MNQUORUM);
     case MSG_MASTERNODE_ANNOUNCE:      return cmd.append(NetMsgType::MNANNOUNCE);
     case MSG_MASTERNODE_PING:          return cmd.append(NetMsgType::MNPING);
-    case MSG_DSTX:                     return cmd.append(NetMsgType::DSTX);
-    case MSG_GOVERNANCE_OBJECT:        return cmd.append(NetMsgType::MNGOVERNANCEOBJECT);
-    case MSG_GOVERNANCE_OBJECT_VOTE:   return cmd.append(NetMsgType::MNGOVERNANCEOBJECTVOTE);
     case MSG_MASTERNODE_VERIFY:        return cmd.append(NetMsgType::MNVERIFY);
     //
     default:

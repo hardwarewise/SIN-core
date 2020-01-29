@@ -232,71 +232,37 @@ bool CCryptoKeyStore::SetCrypted()
     return true;
 }
 
-// Dash
-// This function should be used in a different combinations to determine
-// if CCryptoKeyStore is fully locked so that no operations requiring access
-// to private keys are possible:
-//      IsLocked(true)
-// or if CCryptoKeyStore's private keys are available for mixing only:
-//      !IsLocked(true) && IsLocked()
-// or if they are available for everything:
-//      !IsLocked()
-//bool CCryptoKeyStore::IsLocked() const
-bool CCryptoKeyStore::IsLocked(bool fForMixing) const
-//
+bool CCryptoKeyStore::IsLocked() const
+
 {
     if (!IsCrypted()) {
         return false;
     }
-    // Dash
-    //LOCK(cs_KeyStore);
-    //return vMasterKey.empty();
+
     bool result;
     {
         LOCK(cs_KeyStore);
         result = vMasterKey.empty();
     }
 
-    // fForMixing   fOnlyMixingAllowed  return
-    // ---------------------------------------
-    // true         true                result
-    // true         false               result
-    // false        true                true
-    // false        false               result
-
-    if(!fForMixing && fOnlyMixingAllowed) return true;
-
     return result;
-    //
 }
 
-// Dash
-//bool CCryptoKeyStore::Lock()
-bool CCryptoKeyStore::Lock(bool fAllowMixing)
-//
+bool CCryptoKeyStore::Lock()
 {
     if (!SetCrypted())
         return false;
 
-    // Dash
-    //{
-    if (!fAllowMixing) {
-    //
+    {
         LOCK(cs_KeyStore);
         vMasterKey.clear();
     }
 
-    // Dash
-    fOnlyMixingAllowed = fAllowMixing;
-    //
     NotifyStatusChanged(this);
     return true;
 }
 
-// Dash
-//bool CCryptoKeyStore::Unlock(const CKeyingMaterial& vMasterKeyIn)
-bool CCryptoKeyStore::Unlock(const CKeyingMaterial& vMasterKeyIn, bool fForMixingOnly)
-//
+bool CCryptoKeyStore::Unlock(const CKeyingMaterial& vMasterKeyIn)
 {
     {
         LOCK(cs_KeyStore);
@@ -330,9 +296,6 @@ bool CCryptoKeyStore::Unlock(const CKeyingMaterial& vMasterKeyIn, bool fForMixin
         vMasterKey = vMasterKeyIn;
         fDecryptionThoroughlyChecked = true;
     }
-    // Dash
-    fOnlyMixingAllowed = fForMixingOnly;
-    //
     NotifyStatusChanged(this);
     return true;
 }

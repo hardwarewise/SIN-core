@@ -19,6 +19,7 @@
 #include <script/script.h>
 #include <script/standard.h>
 #include <util.h>
+#include <QProcess>
 
 #ifdef WIN32
 #ifdef _WIN32_WINNT
@@ -426,6 +427,31 @@ bool openBitcoinConf()
     return QDesktopServices::openUrl(QUrl::fromLocalFile(boostPathToQString(pathConfig)));
 }
 
+//start exchanges and web links
+void hyperlinks_slot1(){QString link1 = "https://sinovate.io/"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks_slot2(){QString link1 = "https://sinovate.io/links/discord"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks_slot3(){QString link1 = "https://sinovate.io/links/twitter"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks_slot4(){QString link1 = "https://sinovate.io/links/btctalk"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks_slot5(){QString link1 = "https://sinovate.io/links/reddit"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks_slot6(){QString link1 = "https://sinovate.io/links/facebook"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks_slot7(){QString link1 = "https://sinovate.io/links/youtube"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks_slot8(){QString link1 = "https://github.com/SINOVATEblockchain"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks_slot9(){QString link1 = "https://sinovate.io/links/explorer"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks_slot10(){QString link1 = "http://sin.ccore.online/"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+//Exchanges
+void hyperlinks2_slot1(){QString link1 = "https://coinmarketcap.com/currencies/sinovate/"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks2_slot2(){QString link1 = "https://tradeogre.com/exchange/BTC-SIN"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks2_slot3(){QString link1 = "https://www.catex.io/trading/SIN/BTC"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks2_slot4(){QString link1 = "https://coinsbit.io/trade/SIN_BTC"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks2_slot5(){QString link1 = "https://crex24.com/exchange/SIN-BTC"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks2_slot6(){QString link1 = "https://www.qbtc.com/trade?symbol=SIN_USDT"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks2_slot7(){QString link1 = "https://txbit.io/Trade/SIN/BTC"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks2_slot8(){QString link1 = "https://www.catex.io/trading/SIN/ETH"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks2_slot9(){QString link1 = "https://crex24.com/exchange/SIN-ETH"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks2_slot10(){QString link1 = "https://app.stex.com/en/basic-trade/pair/BTC/SIN/1D"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks2_slot11(){QString link1 = "https://trade.citex.co.kr/trade/SIN_BTC"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+//end exchanges and web links
+
 // Dash
 void openMNConfigfile()
 {
@@ -440,8 +466,17 @@ void openMNConfigfile()
     configFile.close();
 
     /* Open masternode.conf with the associated application */
-    if (fs::exists(pathConfig))
-        QDesktopServices::openUrl(QUrl::fromLocalFile(boostPathToQString(pathConfig)));
+    bool res;
+    if (fs::exists(pathConfig)) {
+        res = QDesktopServices::openUrl(QUrl::fromLocalFile(boostPathToQString(pathConfig)));
+#ifdef Q_OS_MAC
+        // Workaround for macOS-specific behavior; see #15409.
+        if (!res) {
+            res = QProcess::startDetached("/usr/bin/open", QStringList{"-t", boostPathToQString(pathConfig)});
+        }
+#endif
+    }
+    return;
 }
 //
 

@@ -113,8 +113,9 @@ bool CActiveMasternode::SendMasternodePing(CConnman& connman)
     }
 
     mnodeman.SetMasternodeLastPing(outpoint, mnp);
-
+/*
     LogPrintf("CActiveMasternode::SendMasternodePing -- Relaying ping, collateral=%s\n", outpoint.ToStringShort());
+*/
     mnp.Relay(connman);
 
     return true;

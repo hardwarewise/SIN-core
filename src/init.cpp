@@ -57,7 +57,6 @@
 #include <activemasternode.h>
 #include <dsnotificationinterface.h>
 #include <flat-database.h>
-#include <governance.h>
 #include <instantx.h>
 #ifdef ENABLE_WALLET
 #include <keepass.h>
@@ -68,13 +67,13 @@
 #include <masternodeconfig.h>
 #include <messagesigner.h>
 #include <netfulfilledman.h>
-#ifdef ENABLE_WALLET
-#include <privatesend-client.h>
-#endif // ENABLE_WALLET
-#include <privatesend-server.h>
+
 #include <spork.h>
 #include <sporkdb.h>
-
+//sinovate
+#include <infinitynodeman.h>
+#include <infinitynodersv.h>
+//
 
 #ifndef WIN32
 #include <signal.h>
@@ -263,10 +262,14 @@ void Shutdown()
     flatdb1.Dump(mnodeman);
     CFlatDB<CMasternodePayments> flatdb2("mnpayments.dat", "magicMasternodePaymentsCache");
     flatdb2.Dump(mnpayments);
-    CFlatDB<CGovernanceManager> flatdb3("governance.dat", "magicGovernanceCache");
-    flatdb3.Dump(governance);
     CFlatDB<CNetFulfilledRequestManager> flatdb4("netfulfilled.dat", "magicFulfilledCache");
     flatdb4.Dump(netfulfilledman);
+    //
+    // Sinovate
+    CFlatDB<CInfinitynodeMan> flatdb5("infinitynode.dat", "magicInfinityNodeCache");
+    flatdb5.Dump(infnodeman);
+    CFlatDB<CInfinitynodersv> flatdb6("infinitynodersv.dat", "magicInfinityRSV");
+    flatdb6.Dump(infnodersv);
     //
 
     if (fFeeEstimatesInitialized)
@@ -407,7 +410,6 @@ void SetupServerArgs()
     // When adding new options to the categories, please keep and ensure alphabetical ordering.
     gArgs.AddArg("-?", "Print this help message and exit", false, OptionsCategory::OPTIONS);
     gArgs.AddArg("-version", "Print version and exit", false, OptionsCategory::OPTIONS);
-    gArgs.AddArg("-pubkey", "pubkey for notary nodes.", false, OptionsCategory::OPTIONS);
     gArgs.AddArg("-alertnotify=<cmd>", "Execute command when a relevant alert is received or we see a really long fork (%s in cmd is replaced by message)", false, OptionsCategory::OPTIONS);
     gArgs.AddArg("-assumevalid=<hex>", strprintf("If this block is in the chain assume that it and its ancestors are valid and potentially skip their script verification (0 to verify all, default: %s, testnet: %s)", defaultChainParams->GetConsensus().defaultAssumeValid.GetHex(), testnetChainParams->GetConsensus().defaultAssumeValid.GetHex()), false, OptionsCategory::OPTIONS);
     gArgs.AddArg("-blocksdir=<dir>", "Specify blocks directory (default: <datadir>/blocks)", false, OptionsCategory::OPTIONS);
@@ -422,6 +424,9 @@ void SetupServerArgs()
     gArgs.AddArg("-feefilter", strprintf("Tell other nodes to filter invs to us by our mempool min fee (default: %u)", DEFAULT_FEEFILTER), true, OptionsCategory::OPTIONS);
     gArgs.AddArg("-includeconf=<file>", "Specify additional configuration file, relative to the -datadir path (only useable from configuration file, not command line)", false, OptionsCategory::OPTIONS);
     gArgs.AddArg("-loadblock=<file>", "Imports blocks from external blk000??.dat file on startup", false, OptionsCategory::OPTIONS);
+	gArgs.AddArg("-maxreorg=<n>", strprintf(_("Set the Maximum reorg depth (default: %u)"), defaultChainParams->MaxReorganizationDepth()), false, OptionsCategory::BLOCK_CREATION);
+    gArgs.AddArg("-minreorgpeers=<n>", strprintf(_("Set the Minimum amount of peers required to not allow reorgs. Peers must be greater than. (default: %u)"), defaultChainParams->MinReorganizationPeers()), false, OptionsCategory::BLOCK_CREATION);
+
     gArgs.AddArg("-maxmempool=<n>", strprintf("Keep the transaction memory pool below <n> megabytes (default: %u)", DEFAULT_MAX_MEMPOOL_SIZE), false, OptionsCategory::OPTIONS);
     gArgs.AddArg("-maxorphantx=<n>", strprintf("Keep at most <n> unconnectable transactions in memory (default: %u)", DEFAULT_MAX_ORPHAN_TRANSACTIONS), false, OptionsCategory::OPTIONS);
     gArgs.AddArg("-mempoolexpiry=<n>", strprintf("Do not keep transactions in the mempool longer than <n> hours (default: %u)", DEFAULT_MEMPOOL_EXPIRY), false, OptionsCategory::OPTIONS);
@@ -579,7 +584,7 @@ void SetupServerArgs()
 
 std::string LicenseInfo()
 {
-    const std::string URL_SOURCE_CODE = "<https://github.com/SINORG/>";
+    const std::string URL_SOURCE_CODE = "<https://github.com/SINOVATEblockchain/>";
     const std::string URL_WEBSITE = "<https://sinovate.io>";
 
     return CopyrightHolders(strprintf(_("Copyright (C) %i-%i"), 2009, COPYRIGHT_YEAR) + " ") + "\n" +
@@ -794,8 +799,6 @@ static bool AppInitServers()
     return true;
 }
 
-int32_t komodo_init();
-
 // Parameter interaction based on rules
 void InitParameterInteraction()
 {
@@ -863,8 +866,6 @@ void InitParameterInteraction()
     // specified in default section of config file, but not overridden
     // on the command line or in this network's section of the config file.
     gArgs.WarnForSectionOnlyArgs();
-
-    komodo_init();
 }
 
 static std::string ResolveErrMsg(const char * const optname, const std::string& strBind)
@@ -1277,6 +1278,59 @@ bool AppInitLockDataDirectory()
     }
     return true;
 }
+
+//TODO: Rename/move to core
+void ThreadCheckInfinityNode(CConnman& connman)
+{
+    if(fLiteMode) return; // disable all Dash specific functionality
+
+    static bool fOneThread;
+    if(fOneThread) return;
+    fOneThread = true;
+
+    RenameThread("sinovate-ps");
+
+    unsigned int nTick = 0;
+
+    while (true)
+    {
+        MilliSleep(1000);
+
+        // try to sync from all available nodes, one step at a time
+        masternodeSync.ProcessTick(connman);
+        if(masternodeSync.IsBlockchainSynced() && !ShutdownRequested() && masternodeSync.IsSynced()) {
+
+            nTick++;
+            LogPrintf("nTick: %d\n",nTick);
+
+            // make sure to check all masternodes first
+            mnodeman.Check();
+
+            // check if we should activate or ping every few minutes,
+            // slightly postpone first run to give net thread a chance to connect to some peers
+            if(nTick % MASTERNODE_MIN_MNP_SECONDS == 15)
+                activeMasternode.ManageState(connman);
+            if(nTick % 60 == 0) {
+                netfulfilledman.CheckAndRemove();
+                mnodeman.ProcessMasternodeConnections(connman);
+                mnodeman.CheckAndRemove(connman);
+                mnpayments.CheckAndRemove();
+                instantsend.CheckAndRemove();
+            }
+            if(fMasterNode && (nTick % (60 * 5) == 0)) {
+                mnodeman.DoFullVerificationStep(connman);
+            }
+            if(nTick % (60 * 5) == 0) {
+                infnodeman.CheckAndRemove(connman);
+                mnodeman.CheckAndRemoveBurnFundNotUniqueNode(connman);
+                mnodeman.CheckAndRemoveLimitNumberNode(connman, 1, Params().GetConsensus().nLimitSINNODE_1);
+                mnodeman.CheckAndRemoveLimitNumberNode(connman, 5, Params().GetConsensus().nLimitSINNODE_5);
+                mnodeman.CheckAndRemoveLimitNumberNode(connman, 10, Params().GetConsensus().nLimitSINNODE_10);
+            }
+        }
+    }
+}
+
 
 bool AppInitMain()
 {
@@ -1785,7 +1839,7 @@ bool AppInitMain()
     }
 
     // Dash
-    // ********************************************************* Step 11a: setup PrivateSend
+    // ********************************************************* Step 11a: setup InfinityNode
     fMasterNode = gArgs.GetBoolArg("-masternode", false);
     // TODO: masternode should have no wallet
 
@@ -1804,7 +1858,7 @@ bool AppInitMain()
         std::string strMasterNodePrivKey = gArgs.GetArg("-masternodeprivkey", "");
         if(!strMasterNodePrivKey.empty()) {
             if(!CMessageSigner::GetKeysFromSecret(strMasterNodePrivKey, activeMasternode.keyMasternode, activeMasternode.pubKeyMasternode))
-                return InitError(_("Invalid masternodeprivkey. Please see documenation."));
+                return InitError(_("Invalid masternodeprivkey. Please see documentation."));
 
             LogPrintf("  pubKeyMasternode: %s\n", EncodeDestination(activeMasternode.pubKeyMasternode.GetID()));
         } else {
@@ -1824,7 +1878,7 @@ bool AppInitMain()
             int outputIndex;
             for (CMasternodeConfig::CMasternodeEntry mne : masternodeConfig.getEntries()) {
                 mnTxHash.SetHex(mne.getTxHash());
-                outputIndex = boost::lexical_cast<unsigned int>(mne.getOutputIndex());
+                outputIndex = atoi(mne.getOutputIndex());
                 COutPoint outpoint = COutPoint(mnTxHash, outputIndex);
                 // don't lock non-spendable outpoint (i.e. it's already spent or it's not from this wallet at all)
                 if(pwallet->IsMine(CTxIn(outpoint)) != ISMINE_SPENDABLE) {
@@ -1836,17 +1890,6 @@ bool AppInitMain()
             }
         }
     }
-
-    privateSendClient.nLiquidityProvider = std::min(std::max((int)gArgs.GetArg("-liquidityprovider", DEFAULT_PRIVATESEND_LIQUIDITY), 0), 100);
-    if(privateSendClient.nLiquidityProvider) {
-        // special case for liquidity providers only, normal clients should use default value
-        privateSendClient.SetMinBlocksToWait(privateSendClient.nLiquidityProvider * 15);
-    }
-
-    privateSendClient.fEnablePrivateSend = gArgs.GetBoolArg("-enableprivatesend", false);
-    privateSendClient.fPrivateSendMultiSession = gArgs.GetBoolArg("-privatesendmultisession", DEFAULT_PRIVATESEND_MULTISESSION);
-    privateSendClient.nPrivateSendRounds = std::min(std::max((int)gArgs.GetArg("-privatesendrounds", DEFAULT_PRIVATESEND_ROUNDS), 2), privateSendClient.nLiquidityProvider ? 99999 : 16);
-    privateSendClient.nPrivateSendAmount = std::min(std::max((int)gArgs.GetArg("-privatesendamount", DEFAULT_PRIVATESEND_AMOUNT), 2), 999999);
 #endif // ENABLE_WALLET
 
     fEnableInstantSend = gArgs.GetBoolArg("-enableinstantsend", 1);
@@ -1861,12 +1904,6 @@ bool AppInitMain()
 
     LogPrintf("fLiteMode %d\n", fLiteMode);
     LogPrintf("nInstantSendDepth %d\n", nInstantSendDepth);
-#ifdef ENABLE_WALLET
-    LogPrintf("PrivateSend rounds %d\n", privateSendClient.nPrivateSendRounds);
-    LogPrintf("PrivateSend amount %d\n", privateSendClient.nPrivateSendAmount);
-#endif // ENABLE_WALLET
-
-    CPrivateSend::InitStandardDenominations();
 
     // ********************************************************* Step 11b: Load cache data
 
@@ -1889,16 +1926,8 @@ bool AppInitMain()
         if(!flatdb2.Load(mnpayments)) {
             return InitError(_("Failed to load masternode payments cache from") + "\n" + (pathDB / strDBName).string());
         }
-
-        strDBName = "governance.dat";
-        uiInterface.InitMessage(_("Loading governance cache..."));
-        CFlatDB<CGovernanceManager> flatdb3(strDBName, "magicGovernanceCache");
-        if(!flatdb3.Load(governance)) {
-            return InitError(_("Failed to load governance cache from") + "\n" + (pathDB / strDBName).string());
-        }
-        governance.InitOnLoad();
     } else {
-        uiInterface.InitMessage(_("Masternode cache is empty, skipping payments and governance cache..."));
+        uiInterface.InitMessage(_("Masternode cache is empty, skipping payments cache..."));
     }
 
     strDBName = "netfulfilled.dat";
@@ -1907,6 +1936,36 @@ bool AppInitMain()
     if(!flatdb4.Load(netfulfilledman)) {
         return InitError(_("Failed to load fulfilled requests cache from") + "\n" + (pathDB / strDBName).string());
     }
+
+    strDBName = "infinitynode.dat";
+    uiInterface.InitMessage(_("Loading on-chain infinitynode list..."));
+    CFlatDB<CInfinitynodeMan> flatdb5(strDBName, "magicInfinityNodeCache");
+    if(!flatdb5.Load(infnodeman)) {
+        return InitError(_("Failed to load infinitynode cache from") + "\n" + (pathDB / strDBName).string());
+    }
+
+    strDBName = "infinitynodersv.dat";
+    uiInterface.InitMessage(_("Loading infinitynode RSV..."));
+    CFlatDB<CInfinitynodersv> flatdb6(strDBName, "magicInfinityRSV");
+    if(!flatdb6.Load(infnodersv)) {
+        return InitError(_("Failed to load RSV vote cache from") + "\n" + (pathDB / strDBName).string());
+    }
+
+    LogPrintf("InfinityNode last scan height: %d and active Height: %d\n", infnodeman.getLastScan(), chainActive.Height());
+    if (infnodeman.getLastScan() == 0){
+        uiInterface.InitMessage(_("Initial on-chain infinitynode list..."));
+        if ( chainActive.Height() < Params().GetConsensus().nInfinityNodeBeginHeight || infnodeman.initialInfinitynodeList(chainActive.Height()) == false){
+            LogPrintf("InfinityNode does not begin or error in initial list of node:\n");
+        }
+    } else {
+        uiInterface.InitMessage(_("Update on-chain infinitynode list..."));
+        if ( chainActive.Height() < infnodeman.getLastScan() || infnodeman.updateInfinitynodeList(chainActive.Height()) == false){
+            LogPrintf("Lastscan is higher than chainActive or error in update list of node:\n");
+        }
+    }
+
+    // ********************************************************* Step 11b1: init and load data
+
 
     // ********************************************************* Step 11c: update block tip in Dash modules
 
@@ -1917,16 +1976,9 @@ bool AppInitMain()
 
     // ********************************************************* Step 11d: start dash-ps-<smth> threads
 
-    threadGroup.create_thread(boost::bind(&ThreadCheckPrivateSend, boost::ref(*g_connman)));
-    if (fMasterNode)
-        threadGroup.create_thread(boost::bind(&ThreadCheckPrivateSendServer, boost::ref(*g_connman)));
-#ifdef ENABLE_WALLET
-    else
-        threadGroup.create_thread(boost::bind(&ThreadCheckPrivateSendClient, boost::ref(*g_connman)));
-#endif // ENABLE_WALLET
-    //
+    threadGroup.create_thread(boost::bind(&ThreadCheckInfinityNode, boost::ref(*g_connman)));
 
-    // ********************************************************* Step 12: start node
+	// ********************************************************* Step 12: start node
 
     int chain_active_height;
 

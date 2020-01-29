@@ -27,7 +27,6 @@
 /*SIN*/
 #include <instantx.h>
 #include <spork.h>
-#include <privatesend-client.h>
 
 #include <QDebug>
 #include <QMessageBox>
@@ -381,13 +380,9 @@ WalletModel::EncryptionStatus WalletModel::getEncryptionStatus() const
     {
         return Unencrypted;
     }
-    else if(m_wallet->isLocked(true))
-    {
-        return Locked;
-    }
     else if(m_wallet->isLocked())
     {
-        return UnlockedForMixingOnly;
+        return Locked;
     }
     else
     {
@@ -409,17 +404,17 @@ bool WalletModel::setWalletEncrypted(bool encrypted, const SecureString &passphr
     }
 }
 
-bool WalletModel::setWalletLocked(bool locked, const SecureString &passPhrase, bool fMixing)
+bool WalletModel::setWalletLocked(bool locked, const SecureString &passPhrase)
 {
     if(locked)
     {
         // Lock
-        return m_wallet->lock(fMixing);
+        return m_wallet->lock();
     }
     else
     {
         // Unlock
-        return m_wallet->unlock(passPhrase, fMixing);
+        return m_wallet->unlock(passPhrase);
     }
 }
 
@@ -503,7 +498,7 @@ void WalletModel::unsubscribeFromCoreSignals()
 }
 
 // WalletModel::UnlockContext implementation
-WalletModel::UnlockContext WalletModel::requestUnlock(bool fForMixingOnly)
+WalletModel::UnlockContext WalletModel::requestUnlock()
 {
     // Dash
     //bool was_locked = getEncryptionStatus() == Locked;
@@ -511,53 +506,41 @@ WalletModel::UnlockContext WalletModel::requestUnlock(bool fForMixingOnly)
 
     // Wallet was completely locked
     bool was_locked = (encStatusOld == Locked);
-    // Wallet was unlocked for mixing
-    bool was_mixing = (encStatusOld == UnlockedForMixingOnly);
-    // Wallet was unlocked for mixing and now user requested to fully unlock it
-    bool fMixingToFullRequested = !fForMixingOnly && was_mixing;
 
     //if(was_locked)
-    if(was_locked || fMixingToFullRequested)
+    if(was_locked)
     //
     {
         // Request UI to unlock wallet
         //Q_EMIT requireUnlock();
-        Q_EMIT requireUnlock(fForMixingOnly);
+        Q_EMIT requireUnlock();
     }
 
     // If wallet is still locked, unlock was failed or cancelled, mark context as invalid
     //bool valid = getEncryptionStatus() != Locked;
     EncryptionStatus encStatusNew = getEncryptionStatus();
-
-    // Wallet was locked, user requested to unlock it for mixing and failed to do so
-    bool fMixingUnlockFailed = fForMixingOnly && !(encStatusNew == UnlockedForMixingOnly);
-    // Wallet was unlocked for mixing, user requested to fully unlock it and failed
-    bool fMixingToFullFailed = fMixingToFullRequested && !(encStatusNew == Unlocked);
     // If wallet is still locked, unlock failed or was cancelled, mark context as invalid
-    bool fInvalid = (encStatusNew == Locked) || fMixingUnlockFailed || fMixingToFullFailed;
-    // Wallet was not locked in any way or user tried to unlock it for mixing only and succeeded, keep it unlocked
-    bool fKeepUnlocked = !was_locked || (fForMixingOnly && !fMixingUnlockFailed);
+    bool fInvalid = (encStatusNew == Locked);
+    // Wallet was not locked in any way or user tried to unlock it , keep it unlocked
+    bool fKeepUnlocked = !was_locked;
 
     //return UnlockContext(this, valid, was_locked);
-    return UnlockContext(this, !fInvalid, !fKeepUnlocked, was_mixing);
+    return UnlockContext(this, !fInvalid, !fKeepUnlocked);
     //
 }
 
-WalletModel::UnlockContext::UnlockContext(WalletModel *_wallet, bool _valid, bool _relock, bool was_mixing):
+WalletModel::UnlockContext::UnlockContext(WalletModel *_wallet, bool _valid, bool _relock):
         wallet(_wallet),
         valid(_valid),
-        relock(_relock),
-        // Dash
-        was_mixing(was_mixing)
-        //
+        relock(_relock)
 {
 }
 
 WalletModel::UnlockContext::~UnlockContext()
 {
-    if(valid && (relock || was_mixing))
+    if(valid && (relock))
     {
-        wallet->setWalletLocked(true, "", was_mixing);
+        wallet->setWalletLocked(true, "");
     }
 }
 
@@ -566,9 +549,6 @@ void WalletModel::UnlockContext::CopyFrom(const UnlockContext& rhs)
     // Transfer context; old object no longer relocks wallet
     *this = rhs;
     rhs.relock = false;
-    // Dash
-    rhs.was_mixing = false;
-    //
 }
 
 void WalletModel::loadReceiveRequests(std::vector<std::string>& vReceiveRequests)

@@ -1261,14 +1261,11 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 	if (50000   <= nHeight && nHeight < 100000)  reward = 2500 * COIN;
 	if (100000  <= nHeight && nHeight < 170000)  reward = 1250 * COIN; //hard fork
 	if (170000  <= nHeight && nHeight < 245000)  reward = 500 * COIN;
-	if (245000  <= nHeight && nHeight < 375000)  reward = 250 * COIN;
-	if (375000  <= nHeight && nHeight < 505000)  reward = 125 * COIN;
-	if (505000  <= nHeight && nHeight < 635000)  reward = 62.5 * COIN;
-	if (635000  <= nHeight && nHeight < 765000)  reward = 31.25 * COIN;
-	if (765000  <= nHeight && nHeight < 895000)  reward = 15.625 * COIN;
-	if (895000  <= nHeight && nHeight < 1025000) reward = 7.8125 * COIN;
-	if (1025000 <= nHeight && nHeight < 1500000) reward = 3.90625 * COIN;
-	if (1500000 <= nHeight && nHeight < 5000000) reward = 1.953125 * COIN;
+	if (245000  <= nHeight && nHeight < 262000)  reward = 250 * COIN;
+	if (262000  <= nHeight && nHeight < 500000)  reward = 25 * COIN;
+	if (500000  <= nHeight && nHeight < 1000000)  reward = 12.5 * COIN;
+	if (1000000  <= nHeight && nHeight < 1500000)  reward = 6.25 * COIN;
+	if (1500000 <= nHeight && nHeight < 5000000) reward = 3 * COIN;
 
 	reward += GetMasternodePayment(nHeight, 1) + GetMasternodePayment(nHeight, 5) + GetMasternodePayment(nHeight, 10);
 
@@ -1956,9 +1953,14 @@ static int64_t nTimeTotal = 0;
 static int64_t nBlocksTotal = 0;
 
 CAmount GetDevCoin(int nHeight, CAmount reward) {
-  if (Params().NetworkIDString() == CBaseChainParams::FINALNET && nHeight >=100) return 0.01 * reward;
+  if (Params().NetworkIDString() == CBaseChainParams::TESTNET && nHeight < 100) return 0.1 * reward;
+  if (Params().NetworkIDString() == CBaseChainParams::TESTNET && 100 <= nHeight && nHeight < 150) return 0.01 * reward;
+  if (Params().NetworkIDString() == CBaseChainParams::TESTNET && 150 <= nHeight && nHeight < 200) return 0.1 * reward;
+
   if (nHeight < 170050) return 0.1 * reward;
-  return 0.01 * reward;
+  if (170050 <= nHeight && nHeight < 262000) return 0.01 * reward;
+  if (262000 <= nHeight && nHeight < 1500000) return 0.1 * reward;
+  return 0.1 * reward;
 }
 
 /** Apply the effects of this block (with given index) on the UTXO set represented by coins.
@@ -3506,14 +3508,21 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationSta
     assert(pindexPrev != nullptr);
     const int nHeight = pindexPrev->nHeight + 1;
 
+    int nMaxReorgDepth = gArgs.GetArg("-maxreorg", Params().MaxReorganizationDepth());
+    int nMinReorgPeers = gArgs.GetArg("-minreorgpeers", Params().MinReorganizationPeers());
+    bool fGreaterThanMaxReorg = chainActive.Height() - (nHeight-1) >= nMaxReorgDepth;
+    if (fGreaterThanMaxReorg && g_connman && (int)g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > nMinReorgPeers && !IsInitialBlockDownload())
+        return state.DoS(1, error("%s: forked chain older than max reorganization depth (height %d), with connections (count %d), and (initial download %s)", __func__, nHeight, g_connman ? g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) : -1, IsInitialBlockDownload() ? "true" : "false"), REJECT_MAXREORGDEPTH, "bad-fork-prior-to-maxreorgdepth");
+
     // Check proof of work
     const Consensus::Params& consensusParams = params.GetConsensus();
     uint32_t nBitsExpected = GetNextWorkRequired(pindexPrev, &block, consensusParams);
 
-    // LogPrintf("nHeight %d nBitsConsensus %08x nBitsActual %08x nBitsPass %s\n", nHeight, nBitsExpected, block.nBits, (nBitsExpected == block.nBits) ? "Y" : "N");
+    LogPrintf("nHeight %d nBitsConsensus %08x nBitsActual %08x nBitsPass %s\n", nHeight, nBitsExpected, block.nBits, (nBitsExpected == block.nBits) ? "Y" : "N");
 
     if (block.nBits != nBitsExpected)
-        return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
+        //return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
+        return state.DoS(100, error("incorrect proof of work; received: %u, expected: %u", block.nBits, nBitsExpected), REJECT_INVALID, "bad-diffbits");
 
     // Check against checkpoints
     if (fCheckpointsEnabled) {

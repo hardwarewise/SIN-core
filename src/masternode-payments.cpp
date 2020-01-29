@@ -5,7 +5,6 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <activemasternode.h>
-#include <governance-classes.h>
 #include <masternode-payments.h>
 #include <masternode-sync.h>
 #include <masternodeman.h>
@@ -14,6 +13,8 @@
 #include <netmessagemaker.h>
 #include <spork.h>
 #include <util.h>
+#include <script/standard.h>
+#include <key_io.h>
 
 #include <boost/lexical_cast.hpp>
 
@@ -74,59 +75,7 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
     }
 
     // superblocks started
-
-    CAmount nSuperblockMaxValue =  blockReward + CSuperblock::GetPaymentsLimit(nBlockHeight, block.GetBlockHeader());
-    bool isSuperblockMaxValueMet = (block.vtx[0]->GetValueOut() <= nSuperblockMaxValue);
-
-    LogPrint(BCLog::GOBJECT, "block.vtx[0]->GetValueOut() %lld <= nSuperblockMaxValue %lld\n", block.vtx[0]->GetValueOut(), nSuperblockMaxValue);
-
-    if(!masternodeSync.IsSynced()) {
-        // not enough data but at least it must NOT exceed superblock max value
-        if(CSuperblock::IsValidBlockHeight(nBlockHeight)) {
-            if(fDebug) LogPrintf("IsBlockPayeeValid -- WARNING: Client not synced, checking superblock max bounds only\n");
-            if(!isSuperblockMaxValueMet) {
-                strErrorRet = strprintf("coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded superblock max value",
-                                        nBlockHeight, block.vtx[0]->GetValueOut(), nSuperblockMaxValue);
-            }
-            return isSuperblockMaxValueMet;
-        }
-        if(!isBlockRewardValueMet) {
-            strErrorRet = strprintf("coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded block reward, only regular blocks are allowed at this height",
-                                    nBlockHeight, block.vtx[0]->GetValueOut(), blockReward);
-        }
-        // it MUST be a regular block otherwise
-        return isBlockRewardValueMet;
-    }
-
-    // we are synced, let's try to check as much data as we can
-
-    if(sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED)) {
-        if(CSuperblockManager::IsSuperblockTriggered(nBlockHeight)) {
-            if(CSuperblockManager::IsValid(block.vtx[0], nBlockHeight, blockReward, block.GetBlockHeader())) {
-                LogPrint(BCLog::GOBJECT, "IsBlockValueValid -- Valid superblock at height %d: %s\n", nBlockHeight, block.vtx[0]->ToString());
-                // all checks are done in CSuperblock::IsValid, nothing to do here
-                return true;
-            }
-
-            // triggered but invalid? that's weird
-            LogPrintf("IsBlockValueValid -- ERROR: Invalid superblock detected at height %d: %s\n", nBlockHeight, block.vtx[0]->ToString());
-            // should NOT allow invalid superblocks, when superblocks are enabled
-            strErrorRet = strprintf("invalid superblock detected at height %d", nBlockHeight);
-            return false;
-        }
-        LogPrint(BCLog::GOBJECT, "IsBlockValueValid -- No triggered superblock detected at height %d\n", nBlockHeight);
-        if(!isBlockRewardValueMet) {
-            strErrorRet = strprintf("coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded block reward, no triggered superblock detected",
-                                    nBlockHeight, block.vtx[0]->GetValueOut(), blockReward);
-        }
-    } else {
-        // should NOT allow superblocks at all, when superblocks are disabled
-        LogPrint(BCLog::GOBJECT, "IsBlockValueValid -- Superblocks are disabled, no superblocks allowed\n");
-        if(!isBlockRewardValueMet) {
-            strErrorRet = strprintf("coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded block reward, superblocks are disabled",
-                                    nBlockHeight, block.vtx[0]->GetValueOut(), blockReward);
-        }
-    }
+    // removed
 
     // it MUST be a regular block
     return isBlockRewardValueMet;
@@ -175,27 +124,6 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
         return true;
     }
 
-    // superblocks started
-    // SEE IF THIS IS A VALID SUPERBLOCK
-
-    if(sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED)) {
-        if(CSuperblockManager::IsSuperblockTriggered(nBlockHeight)) {
-            if(CSuperblockManager::IsValid(txNew, nBlockHeight, blockReward, pblock)) {
-                LogPrint(BCLog::GOBJECT, "IsBlockPayeeValid -- Valid superblock at height %d: %s\n", nBlockHeight, txNew->ToString());
-                return true;
-            }
-
-            LogPrintf("IsBlockPayeeValid -- ERROR: Invalid superblock detected at height %d: %s\n", nBlockHeight, txNew->ToString());
-            // should NOT allow such superblocks, when superblocks are enabled
-            return false;
-        }
-        // continue validation, should pay MN
-        LogPrint(BCLog::GOBJECT, "IsBlockPayeeValid -- No triggered superblock detected at height %d\n", nBlockHeight);
-    } else {
-        // should NOT allow superblocks at all, when superblocks are disabled
-        LogPrint(BCLog::GOBJECT, "IsBlockPayeeValid -- Superblocks are disabled, no superblocks allowed\n");
-    }
-
     // IF THIS ISN'T A SUPERBLOCK OR SUPERBLOCK IS INVALID, IT SHOULD PAY A MASTERNODE DIRECTLY
     if(mnpayments.IsTransactionValid(txNew, nBlockHeight)) {
         LogPrint(BCLog::MNPAYMENTS, "IsBlockPayeeValid -- Valid masternode payment at height %d: %s\n", nBlockHeight, txNew->ToString());
@@ -213,15 +141,6 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
 
 void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blockReward, std::vector<CTxOut>& txoutMasternodeRet, std::vector<CTxOut>& voutSuperblockRet)
 {
-    // only create superblocks if spork is enabled AND if superblock is actually triggered
-    // (height should be validated inside)
-    if(sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED) &&
-        CSuperblockManager::IsSuperblockTriggered(nBlockHeight)) {
-            LogPrint(BCLog::GOBJECT, "FillBlockPayments -- triggered superblock creation at height %d\n", nBlockHeight);
-            CSuperblockManager::CreateSuperblock(txNew, nBlockHeight, voutSuperblockRet);
-            return;
-    }
-
 	int fSINNODE_1 = 0; int fSINNODE_5 = 0; int fSINNODE_10 = 0;
     sintype_pair_vec_t vSinType;
 
@@ -253,11 +172,6 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
 
 std::string GetRequiredPaymentsString(int nBlockHeight)
 {
-    // IF WE HAVE A ACTIVATED TRIGGER FOR THIS HEIGHT - IT IS A SUPERBLOCK, GET THE REQUIRED PAYEES
-    if(CSuperblockManager::IsSuperblockTriggered(nBlockHeight)) {
-        return CSuperblockManager::GetRequiredPaymentsString(nBlockHeight);
-    }
-
     // OTHERWISE, PAY MASTERNODE
     return mnpayments.GetRequiredPaymentsString(nBlockHeight);
 }
@@ -574,6 +488,8 @@ bool CMasternodePayments::IsScheduled(CMasternode& mn, int nNotBlockHeight)
 
 bool CMasternodePayments::AddPaymentVote(const CMasternodePaymentVote& vote)
 {
+    LOCK(cs_main);
+
     uint256 blockHash = uint256();
     if(!GetBlockHash(blockHash, vote.nBlockHeight - 101)) return false;
 
@@ -617,6 +533,11 @@ void CMasternodeBlockPayees::AddPayee(const CMasternodePaymentVote& vote)
         return;
     }
 
+    if (pmn->GetSinTypeInt() == -1){
+        LOCK(cs_main);
+        pmn->Check();
+    }
+
     CMasternodePayee payeeNew(vote.payee, pmn->GetSinTypeInt(), vote.GetHash());
     vecPayees.push_back(payeeNew);
 }
@@ -631,10 +552,21 @@ bool CMasternodeBlockPayees::GetBestPayee(int sintype, CScript& payeeRet)
     }
 
     int nVotes = -1;
+    CMasternodePayee payeetmp;
     for (auto& payee : vecPayees) {
+        //first candidate OR not the same vote
         if (payee.GetVoteCount() > nVotes && payee.GetSinType() == sintype) {
-            payeeRet = payee.GetPayee();
             nVotes = payee.GetVoteCount();
+
+            payeeRet = payee.GetPayee();
+            payeetmp = payee;
+        }
+        //found someone with the same vote
+        if (payee.GetVoteCount() == nVotes && payee.GetSinType() == sintype) {
+            if (UintToArith256(payee.GetHash()) > UintToArith256(payeetmp.GetHash())){
+                 payeeRet = payee.GetPayee();
+                 payeetmp = payee;
+            }
         }
     }
 
@@ -685,7 +617,7 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransactionRef txNew)
 			} else {
 				for (auto& payee : vecPayees) {
 					CAmount nMasternodePayment = GetMasternodePayment(nBlockHeight, payee.GetSinType());
-					if (payee.GetPayee() == txout.scriptPubKey && nMasternodePayment == txout.nValue){
+					if (payee.GetPayee() == txout.scriptPubKey && (nMasternodePayment == txout.nValue || payee.GetVoteCount() >= (MNPAYMENTS_SIGNATURES_REQUIRED - 1))){
 						LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- Found required payment\n");
 						counterNodePayment ++;
 					}
@@ -695,9 +627,9 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransactionRef txNew)
 					std::string address2 = EncodeDestination(address1);
 
 					if(strPayeesPossible == "") {
-						strPayeesPossible = address2;
+						strPayeesPossible = strprintf("%s(%d)",address2, payee.GetSinType());
 					} else {
-						strPayeesPossible += "," + address2;
+						strPayeesPossible = strprintf("%s,%s(%d)",strPayeesPossible, address2, payee.GetSinType());
 					}
 				}
 			}
@@ -909,18 +841,6 @@ bool CMasternodePayments::ProcessBlock(int nBlockHeight, CConnman& connman)
     CScript payee = GetScriptForDestination(mnInfo.pubKeyCollateralAddress.GetID());
     CMasternodePaymentVote voteNew(activeMasternode.outpoint, nBlockHeight, payee);
 
-    if(!GetUTXOCoin(mnInfo.vinBurnFund.prevout, coin)) {
-        nBurnFundValue = 0;
-    } else {
-        nBurnFundValue = coin.out.nValue;
-    }
-
-    CTxDestination address1;
-    ExtractDestination(payee, address1);
-    std::string address2 = EncodeDestination(address1);
-
-    LogPrintf("CMasternodePayments::ProcessBlock -- Masternode found by GetNextMasternodeInQueueForPayment(): vote for %s, payee=%s, burnfund %llf, nBlockHeight=%d \n", mnInfo.vin.prevout.ToStringShort(), address2, nBurnFundValue, nBlockHeight);
-
     // SIGN MESSAGE TO NETWORK WITH OUR MASTERNODE KEYS
     if (voteNew.Sign()) {
         if (AddPaymentVote(voteNew)) {
@@ -949,10 +869,15 @@ void CMasternodePayments::CheckPreviousBlockVotes(int nPrevBlockHeight)
 
     LOCK2(cs_mapMasternodeBlocks, cs_mapMasternodePaymentVotes);
 
+    bool voteForSinType1 = false;
+    bool voteForSinType5 = false;
+    bool voteForSinType10 = false;
+
     for (int i = 0; i < MNPAYMENTS_SIGNATURES_TOTAL && i < (int)mns.size(); i++) {
         auto mn = mns[i];
         CScript payee;
         bool found = false;
+        int voteSinType = -1;
 
         if (mapMasternodeBlocks.count(nPrevBlockHeight)) {
             for (auto &p : mapMasternodeBlocks[nPrevBlockHeight].vecPayees) {
@@ -965,7 +890,11 @@ void CMasternodePayments::CheckPreviousBlockVotes(int nPrevBlockHeight)
                     auto vote = mapMasternodePaymentVotes[voteHash];
                     if (vote.vinMasternode.prevout == mn.second.vin.prevout) {
                         payee = vote.payee;
+                        voteSinType = p.GetSinType();
                         found = true;
+                        if ( voteSinType == 1 ) voteForSinType1 = true;
+                        if ( voteSinType == 5 ) voteForSinType5 = true;
+                        if ( voteSinType == 10 ) voteForSinType10 = true;
                         break;
                     }
                 }
@@ -983,15 +912,23 @@ void CMasternodePayments::CheckPreviousBlockVotes(int nPrevBlockHeight)
         ExtractDestination(payee, address1);
         std::string address2 = EncodeDestination(address1);
 
-        debugStr += strprintf("CMasternodePayments::CheckPreviousBlockVotes --   %s - voted for %s\n",
-                              mn.second.vin.prevout.ToStringShort(), address2);
+        debugStr += strprintf("CMasternodePayments::CheckPreviousBlockVotes --   %s - voted for %s type %d\n",
+                              mn.second.vin.prevout.ToStringShort(), address2, voteSinType);
     }
+
+    if ( !voteForSinType1 || !voteForSinType5 || !voteForSinType10 )
+    {
+        debugStr += strprintf("CMasternodePayments::CheckPreviousBlockVotes --   +++++++++++ TRY TO GET NEW VOTE ++++++++\n");
+    } else {
+        debugStr += strprintf("CMasternodePayments::CheckPreviousBlockVotes --   +++++++++++ VOTE OK ++++++++\n");
+    }
+
     debugStr += "CMasternodePayments::CheckPreviousBlockVotes -- Masternodes which missed a vote in the past:\n";
     for (auto it : mapMasternodesDidNotVote) {
         debugStr += strprintf("CMasternodePayments::CheckPreviousBlockVotes --   %s: %d\n", it.first.ToStringShort(), it.second);
     }
 
-    LogPrint(BCLog::MNPAYMENTS, "%s\n", debugStr);
+    LogPrint(BCLog::MNPAYMENTS, "Height: %d \n%s\n", nPrevBlockHeight, debugStr);
 }
 
 void CMasternodePaymentVote::Relay(CConnman& connman)
@@ -1022,8 +959,8 @@ bool CMasternodePaymentVote::CheckSignature(const CPubKey& pubKeyMasternode, int
         // and we have no idea about the old one.
         if(masternodeSync.IsMasternodeListSynced() && nBlockHeight > nValidationHeight) {
             nDos = 20;
+            return error("CMasternodePaymentVote::CheckSignature -- Got bad Masternode payment signature, masternode=%s, error: %s", vinMasternode.prevout.ToStringShort().c_str(), strError);
         }
-        return error("CMasternodePaymentVote::CheckSignature -- Got bad Masternode payment signature, masternode=%s, error: %s", vinMasternode.prevout.ToStringShort().c_str(), strError);
     }
 
     return true;

@@ -121,6 +121,9 @@ BITCOIN_CORE_H = \
   index/txindex.h \
   indirectmap.h \
   init.h \
+  infinitynode.h \
+  infinitynodeman.h \
+  infinitynodesrv.h \
   interfaces/handler.h \
   interfaces/node.h \
   interfaces/wallet.h \
@@ -211,14 +214,6 @@ BITCOIN_CORE_H += \
   cachemultimap.h \
   dsnotificationinterface.h \
   flat-database.h \
-  governance.h \
-  governance-classes.h \
-  governance-exceptions.h \
-  governance-misc.h \
-  governance-object.h \
-  governance-validators.h \
-  governance-vote.h \
-  governance-votedb.h \
   instantx.h \
   keepass.h \
   leveldbwrapper.h \
@@ -229,10 +224,6 @@ BITCOIN_CORE_H += \
   masternodeconfig.h \
   messagesigner.h \
   netfulfilledman.h \
-  privatesend.h \
-  privatesend-client.h \
-  privatesend-server.h \
-  privatesend-util.h \
   spork.h \
   sporkdb.h
 
@@ -290,17 +281,14 @@ libsin_server_a_SOURCES = \
   versionbits.cpp \
   $(BITCOIN_CORE_H)
 
-# dash server
+# dash-SIN server
 libsin_server_a_SOURCES += \
   activemasternode.cpp \
   dsnotificationinterface.cpp \
-  governance.cpp \
-  governance-classes.cpp \
-  governance-object.cpp \
-  governance-validators.cpp \
-  governance-vote.cpp \
-  governance-votedb.cpp \
   instantx.cpp \
+  infinitynode.cpp \
+  infinitynodeman.cpp \
+  infinitynodersv.cpp \
   leveldbwrapper.cpp \
   masternode.cpp \
   masternodeman.cpp \
@@ -309,9 +297,6 @@ libsin_server_a_SOURCES += \
   masternodeconfig.cpp \
   messagesigner.cpp \
   netfulfilledman.cpp \
-  privatesend.cpp \
-  privatesend-server.cpp \
-  rpc/governance.cpp \
   rpc/masternode.cpp \
   spork.cpp \
   sporkdb.cpp
@@ -350,9 +335,7 @@ libsin_wallet_a_SOURCES = \
 
 # dash wallet
 libsin_wallet_a_SOURCES += \
-  keepass.cpp \
-  privatesend-client.cpp \
-  privatesend-util.cpp
+  keepass.cpp
 
 # crypto primitives library
 crypto_libsin_crypto_base_a_CPPFLAGS = $(AM_CPPFLAGS)

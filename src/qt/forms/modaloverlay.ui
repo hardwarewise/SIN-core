@@ -33,8 +33,8 @@
     <widget class="QWidget" name="bgWidget" native="true">
      <property name="styleSheet">
       <string notr="true">QWidget#bgWidget {
-background-color: #0d1827 ;
-color: #ffffff;
+background-color:#E3E3FF;
+color: #fff;
 } 
 </string>
      </property>
@@ -54,12 +54,12 @@ color: #ffffff;
       <item>
        <widget class="QWidget" name="contentWidget" native="true">
         <property name="styleSheet">
-         <string notr="true">QLabel { color: rgb(255,255,255);  }
+         <string notr="true">QLabel { color: #333;  }
 
 #contentWidget {
-background-color: #0d1827 ; 
+background-color: #E3E3FF;
  border-radius: 6px;
-color: #ffffff;
+color: #333;
 } </string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayoutSub" stretch="1,0,0,0">

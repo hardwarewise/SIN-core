@@ -125,18 +125,13 @@ public:
         return m_wallet.EncryptWallet(wallet_passphrase);
     }
     bool isCrypted() override { return m_wallet.IsCrypted(); }
-    // Dash
-    //bool lock() override { return m_wallet.Lock(); }
-    bool lock(bool fAllowMixing = false) override { return m_wallet.Lock(fAllowMixing); }
-    //
-    // Dash
-    //bool unlock(const SecureString& wallet_passphrase) override { return m_wallet.Unlock(wallet_passphrase); }
-    bool unlock(const SecureString& wallet_passphrase, bool fForMixingOnly = false) override { return m_wallet.Unlock(wallet_passphrase,fForMixingOnly); }
-    //
-    // Dash
-    //bool isLocked() override { return m_wallet.IsLocked(); }
-    bool isLocked(bool fForMixing = false) override { return m_wallet.IsLocked(fForMixing); }
-    //
+
+    bool lock() override { return m_wallet.Lock(); }
+
+    bool unlock(const SecureString& wallet_passphrase) override { return m_wallet.Unlock(wallet_passphrase); }
+
+    bool isLocked() override { return m_wallet.IsLocked(); }
+
     bool changeWalletPassphrase(const SecureString& old_wallet_passphrase,
         const SecureString& new_wallet_passphrase) override
     {
@@ -243,13 +238,6 @@ public:
         }
         return std::move(pending);
     }
-    int GetOutpointPrivateSendRounds (const COutPoint& outpoint) override { return m_wallet.GetOutpointPrivateSendRounds(outpoint); }
-    CAmount GetAnonymizableBalance(bool fSkipDenominated, bool fSkipUnconfirmed ) override { return m_wallet.GetAnonymizableBalance(fSkipDenominated, fSkipUnconfirmed); }
-    CAmount GetAnonymizedBalance() override { return m_wallet.GetAnonymizedBalance(); }
-    CAmount GetDenominatedBalance(bool unconfirmed ) override { return m_wallet.GetDenominatedBalance(unconfirmed); }
-    CAmount GetNormalizedAnonymizedBalance() override { return m_wallet.GetNormalizedAnonymizedBalance(); }
-    float GetAverageAnonymizedRounds() override { return m_wallet.GetAverageAnonymizedRounds(); }
-    int64_t getKeysLeftSinceAutoBackup() override { return m_wallet.getKeysLeftSinceAutoBackup(); }
 
     bool transactionCanBeAbandoned(const uint256& txid) override { return m_wallet.TransactionCanBeAbandoned(txid); }
     bool abandonTransaction(const uint256& txid) override
@@ -362,7 +350,6 @@ public:
         result.balance = m_wallet.GetBalance();
         result.unconfirmed_balance = m_wallet.GetUnconfirmedBalance();
         result.immature_balance = m_wallet.GetImmatureBalance();
-        result.anonymized_balance = m_wallet.GetAnonymizedBalance();
         result.have_watch_only = m_wallet.HaveWatchOnly();
         result.term_deposit_info = m_wallet.GetTermDepositInfo();
         if (result.have_watch_only) {

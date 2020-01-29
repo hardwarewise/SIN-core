@@ -88,6 +88,8 @@ public:
     const ChainTxData& TxData() const { return chainTxData; }
     void UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout);
     std::string SporkPubKey() const { return strSporkPubKey; }
+    int MaxReorganizationDepth() const { return nMaxReorganizationDepth; }
+    int MinReorganizationPeers() const { return nMinReorganizationPeers; }
 protected:
     CChainParams() {}
 
@@ -112,7 +114,8 @@ protected:
     // Dash
     std::string strSporkPubKey;
     //-//std::string strMasternodePaymentsPubKey;
-    //
+    int nMaxReorganizationDepth;
+    int nMinReorganizationPeers;
 };
 
 /**

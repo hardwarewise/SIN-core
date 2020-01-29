@@ -36,15 +36,10 @@
 
 // Dash
 #include <spork.h>
-#include <governance.h>
 #include <instantx.h>
 #include <masternode-payments.h>
 #include <masternode-sync.h>
 #include <masternodeman.h>
-#ifdef ENABLE_WALLET
-#include <privatesend-client.h>
-#endif // ENABLE_WALLET
-#include <privatesend-server.h>
 //
 
 #if defined(NDEBUG)
@@ -87,6 +82,7 @@ struct COrphanTx {
     int64_t nTimeExpire;
 };
 static CCriticalSection g_cs_orphans;
+CCriticalSection cs_mapMasternodePaymentVotesNet;
 std::map<uint256, COrphanTx> mapOrphanTransactions GUARDED_BY(g_cs_orphans);
 
 void EraseOrphansFor(NodeId peer);
@@ -1094,7 +1090,10 @@ bool static AlreadyHave(const CInv& inv) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
         return mapSporks.count(inv.hash);
 
     case MSG_MASTERNODE_PAYMENT_VOTE:
+        {
+        LOCK(cs_mapMasternodePaymentVotesNet);
         return mnpayments.mapMasternodePaymentVotes.count(inv.hash);
+        }
 
     case MSG_MASTERNODE_PAYMENT_BLOCK:
         {
@@ -1107,14 +1106,6 @@ bool static AlreadyHave(const CInv& inv) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
 
     case MSG_MASTERNODE_PING:
         return mnodeman.mapSeenMasternodePing.count(inv.hash);
-
-    case MSG_DSTX: {
-        return static_cast<bool>(CPrivateSend::GetDSTX(inv.hash));
-    }
-
-    case MSG_GOVERNANCE_OBJECT:
-    case MSG_GOVERNANCE_OBJECT_VOTE:
-        return ! governance.ConfirmInventoryRequest(inv);
 
     case MSG_MASTERNODE_VERIFY:
         return mnodeman.mapSeenMasternodeVerification.count(inv.hash);
@@ -1335,9 +1326,9 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& chainparams, CConnm
     {
         LOCK(cs_main);
 
-		while (it != pfrom->vRecvGetData.end() && !(it->type == MSG_BLOCK || 
-													it->type == MSG_FILTERED_BLOCK || 
-													it->type == MSG_CMPCT_BLOCK || it->type == MSG_WITNESS_BLOCK))			
+        while (it != pfrom->vRecvGetData.end() && !(it->type == MSG_BLOCK || 
+                                                    it->type == MSG_FILTERED_BLOCK || 
+                                                    it->type == MSG_CMPCT_BLOCK || it->type == MSG_WITNESS_BLOCK))
         {
             if (interruptMsgProc)
                 return;
@@ -1374,36 +1365,27 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& chainparams, CConnm
 				}
           } else {
           // Dash
-            	{
-				LogPrint(BCLog::NET, "ProcessGetData -- Node message type in protocol: %d\n", inv.type);
-                // Send stream from relay memory
+             {
+                LogPrint(BCLog::NET, "ProcessGetData -- message from infinity node protocol: %d like InstantSend\n", inv.type);
                 bool pushed = false;
                 {
                     CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
                     {
                         LOCK(cs_mapRelayDash);
+                        LogPrint(BCLog::NET, "ProcessGetData --InstantSend mapRelayDash: %s \n", mapRelayDash.size());
                         map<CInv, CDataStream>::iterator mi = mapRelayDash.find(inv);
                         if (mi != mapRelayDash.end()) {
                             ss += (*mi).second;
                             pushed = true;
+                            if ((*mi).first.type == MSG_TXLOCK_REQUEST){
+                                LogPrint(BCLog::NET, "CConnman::InstantSend -- PushInventory node: peer=%d addr=%s nRefCount=%d fNetworkNode=%d fInbound=%d fMasternode=%d\n",                                                                                    
+                    pfrom->GetId(), pfrom->addr.ToString(), pfrom->GetRefCount(), pfrom->fNetworkNode, pfrom->fInbound, pfrom->fMasternode);
+                            }
                         }
                     }
                     if(pushed)
                         connman->PushMessage(pfrom, msgMaker.Make(inv.GetCommand(), ss));
                 }
-                // SIN TODO: check if there are MSG_TX messages in Dash processing before removing this code
-                /*
-                if (!pushed && inv.type == MSG_TX) {
-                    CTransaction tx;
-                    if (mempool.lookup(inv.hash, tx)) {
-                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-                        ss.reserve(1000);
-                        ss << tx;
-                        connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::TX, ss));
-                        pushed = true;
-                    }
-                }
-                */
                 if (!pushed && inv.type == MSG_TXLOCK_REQUEST) {
                     CTxLockRequest txLockRequest;
                     if(instantsend.GetTxLockRequest(inv.hash, txLockRequest)) {
@@ -1481,54 +1463,6 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& chainparams, CConnm
                         ss.reserve(1000);
                         ss << mnodeman.mapSeenMasternodePing[inv.hash];
                         connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::MNPING, ss));
-                        pushed = true;
-                    }
-                }
-
-                if (!pushed && inv.type == MSG_DSTX) {
-                    CDarksendBroadcastTx dstx = CPrivateSend::GetDSTX(inv.hash);
-                    if(dstx) {
-                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-                        ss.reserve(1000);
-                        ss << dstx;
-                        connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::DSTX, ss));
-                        pushed = true;
-                    }
-                }
-
-                if (!pushed && inv.type == MSG_GOVERNANCE_OBJECT) {
-                    LogPrint(BCLog::NET, "ProcessGetData -- MSG_GOVERNANCE_OBJECT: inv = %s\n", inv.ToString());
-                    CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-                    bool topush = false;
-                    {
-                        if(governance.HaveObjectForHash(inv.hash)) {
-                            ss.reserve(1000);
-                            if(governance.SerializeObjectForHash(inv.hash, ss)) {
-                                topush = true;
-                            }
-                        }
-                    }
-                    LogPrint(BCLog::NET, "ProcessGetData -- MSG_GOVERNANCE_OBJECT: topush = %d, inv = %s\n", topush, inv.ToString());
-                    if(topush) {
-                        connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::MNGOVERNANCEOBJECT, ss));
-                        pushed = true;
-                    }
-                }
-
-                if (!pushed && inv.type == MSG_GOVERNANCE_OBJECT_VOTE) {
-                    CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-                    bool topush = false;
-                    {
-                        if(governance.HaveVoteForHash(inv.hash)) {
-                            ss.reserve(1000);
-                            if(governance.SerializeVoteForHash(inv.hash, ss)) {
-                                topush = true;
-                            }
-                        }
-                    }
-                    if(topush) {
-                        LogPrint(BCLog::NET, "ProcessGetData -- pushing: inv = %s\n", inv.ToString());
-                        connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::MNGOVERNANCEOBJECTVOTE, ss));
                         pushed = true;
                     }
                 }
@@ -2397,7 +2331,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             return true;
         }
 
-//        LOCK(cs_main);
+        LOCK(cs_main);
 //        if (IsInitialBlockDownload() && !pfrom->fWhitelisted) {
 //            LogPrint(BCLog::NET, "Ignoring getheaders from peer=%d because node is in initial block download\n", pfrom->GetId());
 //            return true;
@@ -2453,7 +2387,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
     }
 
 
-    else if (strCommand == NetMsgType::TX || strCommand == NetMsgType::DSTX || strCommand == NetMsgType::TXLOCKREQUEST)
+    else if (strCommand == NetMsgType::TX || strCommand == NetMsgType::TXLOCKREQUEST)
     {
         // Stop processing the transaction early if
         // We are in blocks only mode and peer is either not whitelisted or whitelistrelay is off
@@ -2467,21 +2401,22 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         std::vector<uint256> vEraseQueue;
         CTransactionRef ptx;
         CTxLockRequest txLockRequest;
-        CDarksendBroadcastTx dstx;
         int nInvType = MSG_TX;
+        bool fTryAutoLock = false;
 
         // Read data and assign inv type
         if(strCommand == NetMsgType::TX) {
             vRecv >> ptx;
+            if(fMasterNode) {
+                txLockRequest = CTxLockRequest(ptx);
+                fTryAutoLock = true;
+            }
         } else if(strCommand == NetMsgType::TXLOCKREQUEST) {
             vRecv >> txLockRequest;
             ptx = txLockRequest.tx;
             nInvType = MSG_TXLOCK_REQUEST;
-        } else if (strCommand == NetMsgType::DSTX) {
-            vRecv >> dstx;
-            ptx = dstx.tx;
-            nInvType = MSG_DSTX;
         }
+
         const CTransaction& tx = *ptx;
         CInv inv(nInvType, tx.GetHash());
         pfrom->AddInventoryKnown(inv);
@@ -2496,40 +2431,14 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
         // Dash
         // Process custom logic, no matter if tx will be accepted to mempool later or not
-        if (strCommand == NetMsgType::TXLOCKREQUEST) {
+        if (strCommand == NetMsgType::TXLOCKREQUEST || (fTryAutoLock)) {
             if(!instantsend.ProcessTxLockRequest(txLockRequest, *connman)) {
                 LogPrint(BCLog::INSTANTSEND, "TXLOCKREQUEST -- failed %s\n", txLockRequest.GetHash().ToString());
-                return false;
+                if (!fTryAutoLock) {
+                    return false;
+                }
+                fTryAutoLock = false;
             }
-        } else if (strCommand == NetMsgType::DSTX) {
-            uint256 hashTx = tx.GetHash();
-            if(CPrivateSend::GetDSTX(hashTx)) {
-                LogPrint(BCLog::PRIVATESEND, "DSTX -- Already have %s, skipping...\n", hashTx.ToString());
-                return true; // not an error
-            }
-
-            CMasternode mn;
-
-            if(!mnodeman.Get(dstx.masternodeOutpoint, mn)) {
-                LogPrint(BCLog::PRIVATESEND, "DSTX -- Can't find masternode %s to verify %s\n", dstx.masternodeOutpoint.ToStringShort(), hashTx.ToString());
-                return false;
-            }
-
-            if(!mn.fAllowMixingTx) {
-                LogPrint(BCLog::PRIVATESEND, "DSTX -- Masternode %s is sending too many transactions %s\n", dstx.masternodeOutpoint.ToStringShort(), hashTx.ToString());
-                return true;
-                // TODO: Not an error? Could it be that someone is relaying old DSTXes
-                // we have no idea about (e.g we were offline)? How to handle them?
-            }
-
-            if(!dstx.CheckSignature(mn.pubKeyMasternode)) {
-                LogPrint(BCLog::PRIVATESEND, "DSTX -- CheckSignature() failed for %s\n", hashTx.ToString());
-                return false;
-            }
-
-            LogPrintf("DSTX -- Got Masternode transaction %s\n", hashTx.ToString());
-            mempool.PrioritiseTransaction(hashTx, 0.1*COIN);
-            mnodeman.DisallowMixing(dstx.masternodeOutpoint);
         }
         //
 
@@ -2539,11 +2448,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             AcceptToMemoryPool(mempool, state, ptx, &fMissingInputs, &lRemovedTxn, false /* bypass_limits */, 0 /* nAbsurdFee */)) {
             // Dash
             // Process custom txes, this changes AlreadyHave to "true"
-            if (strCommand == NetMsgType::DSTX) {
-                LogPrintf("DSTX -- Masternode transaction accepted, txid=%s, peer=%d\n",
-                        tx.GetHash().ToString(), pfrom->GetId());
-                CPrivateSend::AddDSTX(dstx);
-            } else if (strCommand == NetMsgType::TXLOCKREQUEST) {
+            if (strCommand == NetMsgType::TXLOCKREQUEST || (fTryAutoLock && fMasterNode)) {
                 LogPrintf("TXLOCKREQUEST -- Transaction Lock Request accepted, txid=%s, peer=%d\n",
                         tx.GetHash().ToString(), pfrom->GetId());
                 instantsend.AcceptLockRequest(txLockRequest);
@@ -3286,16 +3191,11 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         if (found)
         {
             //probably one the extensions
-#ifdef ENABLE_WALLET
-            privateSendClient.ProcessMessage(pfrom, strCommand, vRecv, *connman);
-#endif // ENABLE_WALLET
-            privateSendServer.ProcessMessage(pfrom, strCommand, vRecv, *connman);
             mnodeman.ProcessMessage(pfrom, strCommand, vRecv, *connman);
             mnpayments.ProcessMessage(pfrom, strCommand, vRecv, *connman);
             instantsend.ProcessMessage(pfrom, strCommand, vRecv, *connman);
             sporkManager.ProcessSpork(pfrom, strCommand, vRecv, *connman);
             masternodeSync.ProcessMessage(pfrom, strCommand, vRecv);
-            governance.ProcessMessage(pfrom, strCommand, vRecv, *connman);
         }
         //
         else

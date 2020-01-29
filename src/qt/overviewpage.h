@@ -41,7 +41,7 @@ public:
     std::vector<COutput> termDepositInfo;
 
 public Q_SLOTS:
-    void privateSendStatus();
+    void infinityNodeStat();
     void setBalance(const interfaces::WalletBalances& balances);
 
 Q_SIGNALS:
@@ -55,32 +55,20 @@ private:
     WalletModel *walletModel;
     interfaces::WalletBalances m_balances;
     int nDisplayUnit;
-    bool fShowAdvancedPSUI;
 
     TxViewDelegate *txdelegate;
     std::unique_ptr<TransactionFilterProxy> filter;
 
     void SetupTransactionList(int nNumItems);
-    void DisablePrivateSendCompletely();
 
 private Q_SLOTS:
-    void togglePrivateSend();
-    void privateSendAuto();
-    void privateSendReset();
-    void privateSendInfo();
     void updateDisplayUnit();
-    void updatePrivateSendProgress();
-    void updateAdvancedPSUI(bool fShowAdvancedPSUI);
     void handleTransactionClicked(const QModelIndex &index);
     void updateAlerts(const QString &warnings);
     void updateWatchOnlyLabels(bool showWatchOnly);
     void handleOutOfSyncWarningClicks();
-    void on_pushButton_Website_clicked();
-	  void on_pushButton_Discord_clicked();
-    void on_pushButton_Telegram_clicked();
-    void on_pushButton_Twitter_clicked();
-    void on_pushButton_Explorer_clicked();
-	  void on_pushButton_Btctalk_clicked();
+    
+
 };
 
 #endif // BITCOIN_QT_OVERVIEWPAGE_H

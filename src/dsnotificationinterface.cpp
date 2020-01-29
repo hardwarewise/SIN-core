@@ -7,14 +7,10 @@
 #include <chainparams.h>
 #include <dsnotificationinterface.h>
 #include <instantx.h>
-#include <governance.h>
 #include <masternodeman.h>
+#include <infinitynodeman.h>
 #include <masternode-payments.h>
 #include <masternode-sync.h>
-#include <privatesend.h>
-#ifdef ENABLE_WALLET
-#include <privatesend-client.h>
-#endif // ENABLE_WALLET
 
 void CDSNotificationInterface::InitializeCurrentBlockTip()
 {
@@ -39,25 +35,16 @@ void CDSNotificationInterface::UpdatedBlockTip(const CBlockIndex *pindexNew, con
 
     masternodeSync.UpdatedBlockTip(pindexNew, fInitialDownload, connman);
 
-    // FXTC TODO:
-    // Update global DIP0001 activation status
-    //fDIP0001ActiveAtTip = (VersionBitsState(pindexNew, Params().GetConsensus(), Consensus::DEPLOYMENT_DIP0001, versionbitscache) == ThresholdState::ACTIVE);
-
     if (fInitialDownload)
         return;
 
     mnodeman.UpdatedBlockTip(pindexNew);
-    CPrivateSend::UpdatedBlockTip(pindexNew);
-#ifdef ENABLE_WALLET
-    privateSendClient.UpdatedBlockTip(pindexNew);
-#endif // ENABLE_WALLET
+    infnodeman.UpdatedBlockTip(pindexNew);
     instantsend.UpdatedBlockTip(pindexNew);
     mnpayments.UpdatedBlockTip(pindexNew, connman);
-    governance.UpdatedBlockTip(pindexNew, connman);
 }
 
 void CDSNotificationInterface::SyncTransaction(const CTransaction &tx, const CBlockIndex *pindex, int posInBlock)
 {
     instantsend.SyncTransaction(tx, pindex, posInBlock);
-    CPrivateSend::SyncTransaction(tx, pindex, posInBlock);
 }

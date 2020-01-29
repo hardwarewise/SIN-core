@@ -71,6 +71,14 @@ public:
         READWRITE(vecVoteHashes);
     }
 
+    uint256 GetHash() const
+    {
+        CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
+        ss << scriptPubKey;
+        ss << sintype;
+        return ss.GetHash();
+    }
+
     CScript GetPayee() { return scriptPubKey; }
     int GetSinType() { return sintype; }
 

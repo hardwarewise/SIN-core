@@ -60,7 +60,6 @@ namespace BCLog {
 
         // Dash
         // dash log flags //
-        PRIVATESEND = (1 << 23),
         INSTANTSEND = (1 << 24),
         MASTERNODE  = (1 << 25),
         MNPAYMENTS  = (1 << 26),
@@ -68,6 +67,10 @@ namespace BCLog {
         SPORK       = (1 << 28),
         KEEPASS     = (1 << 29),
         GOBJECT     = (1 << 30),
+        //
+        //SIN
+        INFINITYNODE    = (1 << 21),
+        INFINITYMAN     = (1 << 22),
         //
     };
 

@@ -8,6 +8,8 @@
 #include <amount.h>
 #include <primitives/transaction.h>
 #include <random.h>
+#include <validation.h>
+#include <chainparams.h>
 
 //! target minimum change amount
 static const CAmount MIN_CHANGE = CENT;
