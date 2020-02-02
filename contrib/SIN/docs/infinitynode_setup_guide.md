@@ -96,7 +96,9 @@ Open your Sinovate local wallet and create a new receiving address:
 
 * From the wallet top menu, click on `Help` then on `Debug Window` and `Console`.
   * Before you enter the burn command, make sure you unlock the wallet if your wallet have been encrypted. Open the debug console/window and enter this command: `walletpassphrase password 999` (replace password with your wallet password). The 999 is the number of seconds your wallet will remain unlocked, so any number will do.
-* As shown in the screenshot below, enter the burning command in the debug window's bottom field. The command will be `infinitynodeburnfund`, followed by the **BURN amount (100000 / 500000 / 1000000) and followed by the backup address. The backup address must be from another wallet to receive the funds to that wallet in case of a hack of your local wallet.**
+* As shown in the screenshot below, enter the burning command in the debug window's bottom field. The command will be `infinitynodeburnfund`, followed by the **BURN amount (100000 / 500000 / 1000000) and followed by the backup address.**
+* Please use the backup address previously generated. (Section 1. SIN Backup Address creation)
+  * *The backup address must be from another wallet to receive the funds to that wallet in case of a hack of your local wallet.*
 * **Make sure the command is entered properly, because you will no longer be able to recover these coins.**
 * In the screenshot below we have an example for the SIN-BIG Infinity Node, so the command in that case is
 ```bash
