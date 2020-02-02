@@ -62,7 +62,7 @@ unloadwallet
 * Close your local SIN wallet.
 * Locate the previously created temporary wallet folder on your hard drive:
   * Linux: `~/.sin/wallets/`
-  * MAC: `~/Library/Application Support/SIN/wallets/
+  * MAC: `~/Library/Application Support/SIN/wallets/`
   * Windows: `%appdata%\SIN\wallets`
    * (This defaults to `C:\Documents and Settings\YourUserName\Application data\SIN\wallets` on Windows XP and to `C:\Users\YourUserName\Appdata\Roaming\SIN\wallets` on Windows Vista, 7, 8, and 10.)
 * Delete the **SIN_Backup** folder.
@@ -71,7 +71,7 @@ unloadwallet
 
 * Empty your bin.
 
-Please use the new generated BackUp SIN address above during the Infinity Node setup.
+Please use the new generated backup SIN address during the next secion (The Burn transaction).
 
 ### 2. The Burn transaction
 Open your Sinovate local wallet and create a new receiving address:
