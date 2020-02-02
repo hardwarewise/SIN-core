@@ -38,7 +38,7 @@ Open your Sinovate local wallet and create a new receiving address:
 * In the `Amount` field, enter the **Burn** amount you wish to build your Infinity Node with (100,000 / 500,000 / 1,000,000) – see photo below.
 * the amount has to be exact, no more, no less.
 
-![Image 02](assets/img_02.jpg)
+![Image 02](assets/infinitynode_setup_guide/img_02.jpg)
 
 :warning:**IMPORTANT:** DO NOT check the little checkbox that says `Subtract fee from amount`. Leave it as it is.
 
@@ -46,7 +46,7 @@ Open your Sinovate local wallet and create a new receiving address:
 * After the confirmations are there, return to the **Send** tab, and click on the `OPEN COIN CONTROL` button.
 * A list with balances should open. Select the amount with the BURN amount (in our example it would be the 1,000,000 coins). You select it by checking the little checkbox on its left and click the Ok button to confirm. This will ensure that the next process, the burn transaction, will be done only from that source.
 
-![Image 03](assets/img_03.jpg)
+![Image 03](assets/infinitynode_setup_guide/img_03.jpg)
 
 * From the wallet top menu, click on `Help` then on `Debug Window` and `Console`.
   * Before you enter the burn command, make sure you unlock the wallet if your wallet have been encrypted. Open the debug console/window and enter this command: `walletpassphrase password 999` (replace password with your wallet password). The 999 is the number of seconds your wallet will remain unlocked, so any number will do.
@@ -57,17 +57,17 @@ Open your Sinovate local wallet and create a new receiving address:
 infinitynodeburnfund 1000000 yourSINbackupaddress
 ```
 
-![Image 04](assets/img_04.jpg)
+![Image 04](assets/infinitynode_setup_guide/img_04.jpg)
 
 :warning: **REMEMBER: THE SCREENSHOT SERVES ONLY AS AN EXAMPLE! If you have any doubts at this point, it’s best to contact the Sinovate Support before entering the command without fully understanding the consequences of a mistake.**
 
 * After you entered the BURN command, you will receive an output similar to the one from the screenshot below. 
 
-![Image 05](assets/img_05.jpg)
+![Image 05](assets/infinitynode_setup_guide/img_05.jpg)
 
 * From Transaction tab, get the **Burn** transaction information double clicking the transaction. **Copy the Transaction ID and Output Index in Notepad, you will need this info later.**
 
-![Image 06](assets/img_06.jpg)
+![Image 06](assets/infinitynode_setup_guide/img_06.jpg)
 
 ### 2. The Collateral transaction
 
@@ -76,13 +76,13 @@ Unlike the Burn transaction, which takes the coins out of reach, making them uns
 * Go to the Send tab, in your Sinovate wallet, and send exactly 10,000 SIN to the SAME ADDRESS you used for the BURN transaction.
 * From Transaction tab, get the **Collateral** transaction information double clicking the transaction. **Copy the Transaction ID and Output Index in Notepad, you will need this info later.**
 
-![Image 07](assets/img_07.jpg)
+![Image 07](assets/infinitynode_setup_guide/img_07.jpg)
 
 ### 3. The Infinity Node PRIVKEY
 
 * From the wallet top menu, click on `Help` then on `Debug Window` and `Console`. Type the following command to generate a new masternode privkey: `masternode genkey`. **Copy the privkey in Notepad, you will need this info later.**
 
-![Image 08](assets/img_08.jpg)
+![Image 08](assets/infinitynode_setup_guide/img_08.jpg)
 
 ### 4. Editing the infinitynode.conf file
 
@@ -101,7 +101,7 @@ Alias | VPS IP:PORT | privkey | Collateral tx ID | Collateral Output index | Bur
 01-BIG | 78.47.162.140:20970 | 7RRfQkxYPUKkKFAQBpoMde1qaB56EvPU5X8LYWq16e2YtTycvVi | 7f48e48e51b487f0a962d492b03debdd89835bc619242be29e720080fc4b2e09 | 0 | 764fe088b95d287b56f85ee0da11bb08195a862ded8b7ded08a3783135418e3c | 0
 
 **Screenshot of the infinitynode.conf file:**
-![Image 09](assets/img_09.jpg)
+![Image 09](assets/infinitynode_setup_guide/img_09.jpg)
 
 * Save the file, then **Restart the wallet**.
 
@@ -124,16 +124,16 @@ chmod +x sin_install_vps_noroot.sh
 * After the new username, it will ask for a **new password** (choose a strong password that you won’t forget).
 * The installation will take few minutes, please be patient!
 
-![Image 10](assets/img_10.jpg)
+![Image 10](assets/infinitynode_setup_guide/img_10.jpg)
 
 * You will be asked for the **Sinovate Infinitynode Private Key**.
   * You can find it in your `infinitynode.conf` file as indicated in previous step "4. Editing the infinitynode.conf file".
  
-![Image 11](assets/img_11.jpg)
+![Image 11](assets/infinitynode_setup_guide/img_11.jpg)
  
 * First phase of installation is done.
 
-![Image 12](assets/img_12.jpg)
+![Image 12](assets/infinitynode_setup_guide/img_12.jpg)
 
 * Logout from your VPS.
 
@@ -141,11 +141,11 @@ chmod +x sin_install_vps_noroot.sh
 
 * Create a connection profile in your SSH client
 
-![Image 13_1](assets/img_13_1.jpg)
+![Image 13_1](assets/infinitynode_setup_guide/img_13_1.jpg)
 
 > your choosen username during infinity node installation or default sinovate username
 
-![Image 13_2](assets/img_13_2.jpg)
+![Image 13_2](assets/infinitynode_setup_guide/img_13_2.jpg)
 
 * Once connected, type the following commands:
 
@@ -155,7 +155,7 @@ su sinovate
 bash
 ```
 
-![Image 14](assets/img_14.jpg)
+![Image 14](assets/infinitynode_setup_guide/img_14.jpg)
 
 * Enter the following commands to see the synchronization process in real time and wait until you see the **MASTERNODE_SYNC_FINISHED** status. This process can take up to 30 miunutes, please be patient!
 
@@ -165,14 +165,14 @@ bash
 watch -n 5 '~/sin-cli getblockcount && ~/sin-cli masternode status && ~/sin-cli mnsync status'
 ```
 
-![Image 15](assets/img_15.jpg)
+![Image 15](assets/infinitynode_setup_guide/img_15.jpg)
 
 * When your Infinity Node sync status is **MASTERNODE_SYNC_FINISHED**, open your local wallet.
 * Make sure the Infinity Node tab is enabled in `Settings, Options, Wallet` and flag `Show InfinityNodes Tab`.
 * Go to the Infinity Nodes tab, select your node, then click the **START ALIAS** button.
 * The Infinity Node should change its status to **PRE_ENABLED**, then **ENABLED** after few minutes.
 
-![Image 16](assets/img_16.jpg)
+![Image 16](assets/infinitynode_setup_guide/img_16.jpg)
 
 * However, all masternode cold wallets can sometimes show inaccurate statuses that might trick you into restarting, as mentioned in the small **Note**, above your node(s).
 * That's why, you can check the infinitynode’s status from the VPS as well.
@@ -181,6 +181,6 @@ watch -n 5 '~/sin-cli getblockcount && ~/sin-cli masternode status && ~/sin-cli 
 ~/sin-cli masternode status
 ```
 
-![Image 17](assets/img_17.jpg)
+![Image 17](assets/infinitynode_setup_guide/img_17.jpg)
 
 **CONGRATULATIONS! YOUR INFINITY NODE IS UP AND RUNNING!**
