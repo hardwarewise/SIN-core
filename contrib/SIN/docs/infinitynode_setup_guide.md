@@ -71,7 +71,7 @@ unloadwallet
 
 * Empty your bin.
 * Please **use the new generated backup SIN address during the next section** (The Burn transaction).
-  * You can use the same backup address when creating multiple Infinity Nodes.
+  * *You can use the same backup address when creating multiple Infinity Nodes.*
 
 ### 2. The Burn transaction
 Open your Sinovate local wallet and create a new receiving address:
