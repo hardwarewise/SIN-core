@@ -70,8 +70,7 @@ unloadwallet
 ![Image-bkup-03](assets/infinitynode_setup_guide/img_bkup_addr_03.jpg)
 
 * Empty your bin.
-
-Please use the new generated backup SIN address during the next secion (The Burn transaction).
+* Please **use the new generated backup SIN address during the next section** (The Burn transaction).
 
 ### 2. The Burn transaction
 Open your Sinovate local wallet and create a new receiving address:
