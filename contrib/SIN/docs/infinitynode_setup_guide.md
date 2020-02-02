@@ -58,7 +58,7 @@ unloadwallet
 
 ![Image-bkup-02](assets/infinitynode_setup_guide/img_bkup_addr_02.jpg)
 
-* **Now it is extremely important** that you physically delete the wallet file from your computer. Also make sure to empty the bin.
+* **NOW IT IS EXTREMELY IMPORTANT** that you physically delete the created wallet folder `SIN_Backup` from your computer. Also make sure to empty the bin.
 * Close your local SIN wallet.
 * Locate the previously created temporary wallet folder on your hard drive:
   * Linux: `~/.sin/wallets/`
