@@ -64,7 +64,7 @@ unloadwallet
   * Linux: `~/.sin/wallets/`
   * MAC: `~/Library/Application Support/SIN/wallets/`
   * Windows: `%appdata%\SIN\wallets`
-   * (This defaults to `C:\Documents and Settings\YourUserName\Application data\SIN\wallets` on Windows XP and to `C:\Users\YourUserName\Appdata\Roaming\SIN\wallets` on Windows Vista, 7, 8, and 10.)
+     * (This defaults to `C:\Documents and Settings\YourUserName\Application data\SIN\wallets` on Windows XP and to `C:\Users\YourUserName\Appdata\Roaming\SIN\wallets` on Windows Vista, 7, 8, and 10.)
 * Delete the **SIN_Backup** folder.
 
 ![Image-bkup-03](assets/infinitynode_setup_guide/img_bkup_addr_03.jpg)
