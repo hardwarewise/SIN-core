@@ -50,7 +50,7 @@ getnewaddress
 ```bash
 dumpprivkey YOUR_ADDRESS
 ```
-* :warning: :key: **_SAVE AND SAFELY STORE THE NEW SIN ADDRESS AND THE PRIVATE KEY. YOU WILL BE ABLE TO GET FULL CONTROL OF THE ADDRESS ONLY WITH THE PRIVATE KEY._** :warning: :key:
+* :warning: :key: **_SAVE AND SAFELY STORE THE NEW SIN ADDRESS AND THE PRIVATE KEY. YOU WILL BE ABLE TO GET FULL CONTROL OF THE ADDRESS ONLY WITH THE PRIVATE KEY. NEVER, UNDER ANY CIRCUMSTANCES, SHARE YOUR PRIVATE KEY WITH ANY OTHER PERSON._** :warning: :key:
 * Once you have stored your new SIN address and the private key in a safely place, you can now unload the second wallet. Enter the following command:
 ```bash
 unloadwallet
@@ -71,6 +71,7 @@ unloadwallet
 
 * Empty your bin.
 * Please **use the new generated backup SIN address during the next section** (The Burn transaction).
+  * You can use the same backup address when creating multiple Infinity Nodes.
 
 ### 2. The Burn transaction
 Open your Sinovate local wallet and create a new receiving address:
