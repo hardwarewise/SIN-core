@@ -4,7 +4,7 @@
 
 ## I. PRE-SETUP PREPARATION
 - [x] Download and install the Sinovate local wallet from our [Official Github channel](https://github.com/SINOVATEblockchain/SIN-core/releases)
-- [x] Purchase the needed Burn and/or Collateral amount from one of the exchanges we’re listed on: [TradeOgre](https://tradeogre.com/exchange/BTC-SIN), [Stex.com](https://app.stex.com/en/basic-trade/pair/BTC/SIN/1D), [Crex24](https://crex24.com/exchange/SIN-BTC), [txbit.io](https://txbit.io/Trade/SIN/BTC/?r=c73), [Coinsbit](https://coinsbit.io/trade/SIN_BTC), [Catex](https://www.catex.io/trading/SIN/ETH).
+- [x] Purchase the needed Burn and/or Collateral amount from one of the exchanges we're listed on: [TradeOgre](https://tradeogre.com/exchange/BTC-SIN), [Stex.com](https://app.stex.com/en/basic-trade/pair/BTC/SIN/1D), [Crex24](https://crex24.com/exchange/SIN-BTC), [txbit.io](https://txbit.io/Trade/SIN/BTC/?r=c73), [Coinsbit](https://coinsbit.io/trade/SIN_BTC), [Catex](https://www.catex.io/trading/SIN/ETH).
 - [x] Send the needed amount to the newly installed local wallet.
 - [x] In order to build an Infinity Node, you will require two transactions: the **“BURN”** and the **“Collateral“**.
 - [x] Enable coin control on local wallet in `Settings, Options, Wallet` and flag `Enable coin control feature`.
@@ -29,13 +29,13 @@ When you open the wallet, **ALWAYS** let it fully sync. It will take a long time
 ### 1. The Burn transaction
 Open your Sinovate local wallet and create a new receiving address:
 * Top menu, click on `File`, then on `Receiving address`
-* Label the address (for example: 01-BIG – see photo).
+* Label the address (for example: 01-BIG – see screenshot).
 
 ![Image 01](assets/infinitynode_setup_guide/img_01.jpg)
 
 * Copy that newly generated address.
 * Go to the `Send` tab of the wallet and paste the address in the `Pay To` field.
-* In the `Amount` field, enter the **Burn** amount you wish to build your Infinity Node with (100,000 / 500,000 / 1,000,000) – see photo below.
+* In the `Amount` field, enter the **Burn** amount you wish to build your Infinity Node with (100,000 / 500,000 / 1,000,000) – see screenshot below.
 * the amount has to be exact, no more, no less.
 
 ![Image 02](assets/infinitynode_setup_guide/img_02.jpg)
@@ -59,7 +59,7 @@ infinitynodeburnfund 1000000 yourSINbackupaddress
 
 ![Image 04](assets/infinitynode_setup_guide/img_04.jpg)
 
-:warning: **REMEMBER: THE SCREENSHOT SERVES ONLY AS AN EXAMPLE! If you have any doubts at this point, it’s best to contact the Sinovate Support before entering the command without fully understanding the consequences of a mistake.**
+:warning: **REMEMBER: THE SCREENSHOT SERVES ONLY AS AN EXAMPLE! If you have any doubts at this point, it's best to contact the Sinovate Support before entering the command without fully understanding the consequences of a mistake.**
 
 * After you entered the BURN command, you will receive an output similar to the one from the screenshot below. 
 
@@ -120,8 +120,8 @@ chmod +x sin_install_vps_noroot.sh
 ./sin_install_vps_noroot.sh
 ```
 * Scrypt will ask you to enter a **new username** for security reasons.
-* If you don’t enter a new username, the default username will be **sinovate**!
-* After the new username, it will ask for a **new password** (choose a strong password that you won’t forget).
+* If you don't enter a new username, the default username will be **sinovate**!
+* After the new username, it will ask for a **new password** (choose a strong password that you won't forget).
 * The installation will take few minutes, please be patient!
 
 ![Image 10](assets/infinitynode_setup_guide/img_10.jpg)
@@ -175,7 +175,7 @@ watch -n 5 '~/sin-cli getblockcount && ~/sin-cli masternode status && ~/sin-cli 
 ![Image 16](assets/infinitynode_setup_guide/img_16.jpg)
 
 * However, all masternode cold wallets can sometimes show inaccurate statuses that might trick you into restarting, as mentioned in the small **Note**, above your node(s).
-* That's why, you can check the infinitynode’s status from the VPS as well.
+* That's why, you can check the infinitynode's status from the VPS as well.
 * On your VPS screen enter the following command, you should see the status: **Masternode successfully started**
 ```bash
 ~/sin-cli masternode status
