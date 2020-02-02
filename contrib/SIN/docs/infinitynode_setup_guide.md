@@ -31,7 +31,7 @@ Open your Sinovate local wallet and create a new receiving address:
 * Top menu, click on `File`, then on `Receiving address`
 * Label the address (for example: 01-BIG – see photo).
 
-![Image 01](assets/img_01.jpg)
+![Image 01](assets/infinitynode_setup_guide/img_01.jpg)
 
 * Copy that newly generated address.
 * Go to the `Send` tab of the wallet and paste the address in the `Pay To` field.
