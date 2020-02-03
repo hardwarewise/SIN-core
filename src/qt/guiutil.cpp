@@ -436,8 +436,7 @@ void hyperlinks_slot5(){QString link1 = "https://sinovate.io/links/reddit"; QDes
 void hyperlinks_slot6(){QString link1 = "https://sinovate.io/links/facebook"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
 void hyperlinks_slot7(){QString link1 = "https://sinovate.io/links/youtube"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
 void hyperlinks_slot8(){QString link1 = "https://github.com/SINOVATEblockchain"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
-void hyperlinks_slot9(){QString link1 = "https://sinovate.io/links/explorer"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
-void hyperlinks_slot10(){QString link1 = "http://sin.ccore.online/"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks_slot9(){QString link1 = "https://sinovate.io/links/telegram"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
 //Exchanges
 void hyperlinks2_slot1(){QString link1 = "https://coinmarketcap.com/currencies/sinovate/"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
 void hyperlinks2_slot2(){QString link1 = "https://tradeogre.com/exchange/BTC-SIN"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
@@ -450,6 +449,15 @@ void hyperlinks2_slot8(){QString link1 = "https://www.catex.io/trading/SIN/ETH";
 void hyperlinks2_slot9(){QString link1 = "https://crex24.com/exchange/SIN-ETH"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
 void hyperlinks2_slot10(){QString link1 = "https://app.stex.com/en/basic-trade/pair/BTC/SIN/1D"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
 void hyperlinks2_slot11(){QString link1 = "https://trade.citex.co.kr/trade/SIN_BTC"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks2_slot12(){QString link1 = "https://instaswap.io"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+
+void hyperlinks3_slot1(){QString link1 = "https://sinovate.io/whitepaper/"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks3_slot2(){QString link1 = "https://sinovate.io/roadmap/"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks3_slot3(){QString link1 = "https://sinovate.gitbook.io/docs/"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks3_slot4(){QString link1 = "https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/sin.conf"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks3_slot5(){QString link1 = "https://github.com/SINOVATEblockchain/SIN-core/releases"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks3_slot6(){QString link1 = "https://sinovate.io/links/explorer"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks3_slot7(){QString link1 = "https://sinovate.io/webtool"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
 //end exchanges and web links
 
 // Dash
