@@ -1958,13 +1958,14 @@ QGroupBox {
 QProgressBar {
      border: none;
      border-radius: 10px;
-     background-color: #333;
+     background-color: #2392CB;
      color: #ffffff;
 
  }
 
  QProgressBar::chunk {
-  background-color: #222B38;
+  background-color: #EF3C23;
                 }
-
- 
+QToolTip { 
+	color: #000000; background-color: #ffffff; border: 1px solid white; 
+}
