@@ -266,7 +266,7 @@ LogPrintf("CInfinitynodeMan::updateInfinityNodeInfo -- read block number: %d, en
                                 CInfinitynode inf(PROTOCOL_VERSION, outpoint);
                                 inf.setHeight(prevBlockIndex->nHeight);
                                 inf.setBurnValue(out.nValue);
-                                inf.setScriptPublicKey(prevScript);
+
                                 if (vSolutions.size() == 2){
                                     std::string backupAddress(vSolutions[1].begin(), vSolutions[1].end());
                                     CTxDestination NodeAddress = DecodeDestination(backupAddress);
@@ -293,7 +293,10 @@ LogPrintf("CInfinitynodeMan::updateInfinityNodeInfo -- read block number: %d, en
                                     LogPrintf("CInfinitynodeMan::updateInfinityNodeInfo -- False when extract payee from BurnFund tx.\n");
                                     return false;
                                 }
+
                                 inf.setCollateralAddress(EncodeDestination(addressBurnFund));
+                                inf.setScriptPublicKey(prevtx->vout[index].scriptPubKey);
+
                                 //we have all infos. Then add in map
                                 if(prevBlockIndex->nHeight < pindex->nHeight - INF_MATURED_LIMIT) {
                                     //matured
