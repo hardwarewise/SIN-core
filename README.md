@@ -1,44 +1,42 @@
 # ![SINOVATE Logo](https://sinovate.io/wp-content/uploads/2019/07/logo.png)
 
-**SINOVATE (SIN)** is a new Peer-to-Peer (P2P) digital currency and  ecosystem which creates unique and modern Blockchain products, services and solutions.
+**SINOVATE (SIN)** is an open-source state of the art digital cryptocurrency. We create and build
+innovative blockchain services for individuals, developers, and enterprises. Big Data, decentralized cloud,
+proof-of-integrity, proof-of-inheritance, and inflation are some of the resolutions presented to the crypto space.
 
 
-# Features
 
- - **x25X** New Algorithm
- - **Infinity Nodes**
- - **Shadow**Send
- - **Flash**Send
- - **Incorruptible Data Storage**
 
-**SINOVATE (SIN)** is a new Peer-to-Peer (P2P) digital currency and  ecosystem which creates unique and modern Blockchain products, services and solutions.
+# Features and Innovations
 
-**SIN** embraces this new technology and has executed extensive research,  on various ways to educate others and help them implement innovation into their daily lives and businesses.
+ - **x25X** GPU Algorithm. Leading-edge, in-house built,custom GPU mining algorithm. More complex,less power-hungry.
+ - **Infinity Nodes** Explicitly designed to overcome the hyperinflation all cryptocurrency projects face. Infinity nodes burn the collateral with unprecedented network security and stability.
+ - **Incorruptible Data Storage** Incorruptible Data Storage. DataSend, DataStore and Blockchain-mail. Proof-of-Integrity. Unlimited private networking of big data storage.
+ - **FlashSend** Instanteneous trasnactions in less than 2 seconds.
+SINOVATE (SIN) combines its brand new **X25X Proof of Work (PoW)** algorithm with LWMA difficulty retargeting algorithm, Reorg fork reject solution merged with P.O.B., establishes a 51% attack protection.
 
-**SINOVATE** believes in transparency and are open about the current challenges the crypto community faces. To overcome these, an experienced and talented team which works alongside the community has been assembled, paving the way towards mass adoption of cryptocurrency.
+X25X is  GPU mineable and ensures **ASIC, FPGA and QUANTUM resistance**,  solidifying the decentralised consensus mechanism in the process. 
 
-SINOVATE (SIN) combines its brand new **X25X Proof of Work (PoW)** algorithm with Komodo’s unique security mechanism, known as Delayed Proof of Work (dPoW).
 
-X25X is CPU as well as GPU mineable and ensures **ASIC, FPGA and QUANTUM resistance**,  solidifying the decentralised consensus mechanism in the process. 
 
 ## Coin Specifications
 
 
 |Specification| Value |
 |--|--|
-|Block Reward  | **3282 SIN** |
-|Block Size  | **16 MB** |
+|Block Reward  | **3052.5 SIN** |
 |Block Time  | **2 Minutes** |
-|Block Fee  | **1.1%** |
+|Block Fee  | **10%** |
+|Difficulty Retargeting Algo | LWMA | 
 |Max Transactions Per Second  | **533 tx/s** |
-|Total Supply  | **Around 2.5 billion SIN after 20 years** |
-|Max Block Size  | **4 MB** |
+|Total Supply  | **Always Less than 700 million SIN infinitely** |
+|Max Block Size  | **16 MB** |
 |SINOVATE legacy address start with  | **S** |
 |Infinity Node Port  | **20970** |
 |<small>BIG</small> Infinity Node Requirement  | **1.000.000 SIN** |
 |<small>MID</small> Infinity Node Requirement  | **500.000 SIN** |
-|<small>LIL</small> Infinity Node Requirement  | **100.000 SIN** |
-|Infinity Node ROI  |<b>Minimum 22*%</b> |
+|<small>MINI</small> Infinity Node Requirement  | **100.000 SIN** |
+
 
 # Installation
 

@@ -23,10 +23,12 @@
 #include <QDesktopWidget>
 #include <QPainter>
 #include <QRadialGradient>
+#include <QPainter>
 
 SplashScreen::SplashScreen(interfaces::Node& node, Qt::WindowFlags f, const NetworkStyle *networkStyle) :
     QWidget(0, f), curAlignment(0), m_node(node)
 {
+    
     setWindowFlags(Qt::FramelessWindowHint);
 
     // set sizes
@@ -57,12 +59,13 @@ SplashScreen::SplashScreen(interfaces::Node& node, Qt::WindowFlags f, const Netw
     pixPaint.setPen(QColor("#ffffff"));
 
     QRect mainRect(QPoint(0,0), splashSize);
-    pixPaint.fillRect(mainRect, QColor("#030509"));
+    pixPaint.fillRect(mainRect, QColor("#f0f0f0"));
 
     // draw background
     QRect rectBg(QPoint(0, 0), QSize(splashSize.width(), splashSize.height()));
     QPixmap bg(":/images/splash");
     pixPaint.drawPixmap(rectBg, bg);
+
 
     pixPaint.setFont(QFont(font, 28*fontFactor, QFont::Bold));
     QRect rectTitle(QPoint(0,0), QSize(splashSize.width(), (splashSize.height() / 2)));
@@ -140,7 +143,7 @@ static void InitMessage(SplashScreen *splash, const std::string &message)
         Qt::QueuedConnection,
         Q_ARG(QString, QString::fromStdString(message)),
         Q_ARG(int, Qt::AlignBottom|Qt::AlignHCenter),
-        Q_ARG(QColor, QColor(55,55,55)));
+        Q_ARG(QColor, QColor("#ffffff")));
 }
 
 static void ShowProgress(SplashScreen *splash, const std::string &title, int nProgress, bool resume_possible)

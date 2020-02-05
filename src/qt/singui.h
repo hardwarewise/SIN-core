@@ -138,6 +138,40 @@ private:
     QAction* m_wallet_selector_label_action = nullptr;
     QAction* m_wallet_selector_action = nullptr;
 
+    /// start Exhange and Web Links
+    QAction* openWebsite1;
+    QAction* openWebsite2;
+    QAction* openWebsite3;
+    QAction* openWebsite4;
+    QAction* openWebsite5;
+    QAction* openWebsite6;
+    QAction* openWebsite7;
+    QAction* openWebsite8;
+    QAction* openWebsite9;
+    
+    QAction* Exchangesite1;
+    QAction* Exchangesite2;
+    QAction* Exchangesite3;
+    QAction* Exchangesite4;
+    QAction* Exchangesite5;
+    QAction* Exchangesite6;
+    QAction* Exchangesite7;
+    QAction* Exchangesite8;
+    QAction* Exchangesite9;
+    QAction* Exchangesite10;
+    QAction* Exchangesite11;
+    QAction* Exchangesite12;
+
+    QAction* ResourcesWebsite1;
+    QAction* ResourcesWebsite2;
+    QAction* ResourcesWebsite3;
+    QAction* ResourcesWebsite4;
+    QAction* ResourcesWebsite5;
+    QAction* ResourcesWebsite6;
+    QAction* ResourcesWebsite7;
+/// end Exhange and Web Links
+    QAction *showSpecsHelpAction;
+    
     QLabel *m_wallet_selector_label = nullptr;
     QComboBox* m_wallet_selector = nullptr;
 
@@ -145,7 +179,9 @@ private:
     QMenu* trayIconMenu = nullptr;
     Notificator* notificator = nullptr;
     RPCConsole* rpcConsole = nullptr;
-    HelpMessageDialog* helpMessageDialog = nullptr;
+    //HelpMessageDialog* helpMessageDialog = nullptr;
+    HelpMessageDialog *helpMessageDialog;
+
     ModalOverlay* modalOverlay = nullptr;
 
     /** Keep track of previous number of blocks, to detect progress */
@@ -290,6 +326,7 @@ private Q_SLOTS:
 
     /** Show help message dialog */
     void showHelpMessageClicked();
+    void showSpecsHelpClicked();
 #ifndef Q_OS_MAC
     /** Handle tray icon clicked */
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
