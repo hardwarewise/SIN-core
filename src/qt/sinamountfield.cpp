@@ -195,7 +195,7 @@ SINAmountField::SINAmountField(QWidget *parent) :
     amount(0)
 {
     amount = new AmountSpinBox(this);
-	amount->setStyleSheet("background-color:transparent; border-color:#FF8204;	border-radius:10px;	font-size:12px;	font-weight:bold;	color:#ffffff;");
+	amount->setStyleSheet("background-color:transparent; border-color:#45515D;	border-radius:10px;	font-size:12px;	font-weight:bold;	color:#000000;");
     amount->setLocale(QLocale::c());
     amount->installEventFilter(this);
     amount->setMaximumWidth(240);
@@ -245,7 +245,7 @@ bool SINAmountField::validate()
 void SINAmountField::setValid(bool valid)
 {
     if (valid)
-        amount->setStyleSheet("background-color:transparent; border-color:#FF8204;	border-radius:10px;	font-size:12px;	font-weight:bold;	color:#ffffff;");
+        amount->setStyleSheet("background-color:transparent; border-color:#45515D;	border-radius:10px;	font-size:12px;	font-weight:bold;	color:#000000;");
     else
         amount->setStyleSheet(STYLE_INVALID);
 }

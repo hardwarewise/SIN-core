@@ -52,6 +52,7 @@
 #include <QMessageBox>
 #include <QMimeData>
 #include <QProgressDialog>
+#include <QProgressBar>
 #include <QSettings>
 #include <QShortcut>
 #include <QStackedWidget>
@@ -59,9 +60,15 @@
 #include <QStyle>
 #include <QTimer>
 #include <QToolBar>
-#include <QUrlQuery>
 #include <QVBoxLayout>
 #include <QFontDatabase>
+
+#if QT_VERSION < 0x050000
+#include <QTextDocument>
+#include <QUrl>
+#else
+#include <QUrlQuery>
+#endif
 
 const std::string BitcoinGUI::DEFAULT_UIPLATFORM =
 #if defined(Q_OS_MAC)
@@ -147,7 +154,103 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
     // Create status bar
     statusBar();
 
-    // Disable size grip because it looks ugly and nobody needs it
+ // Social Media icons
+    QFrame* frameSocial = new QFrame();
+    frameSocial->setContentsMargins(0, 0, 0, 0);
+    frameSocial->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+    QHBoxLayout* frameSocialLayout = new QHBoxLayout(frameSocial);
+    frameSocialLayout->setContentsMargins(16, 0, 16, 0);
+    frameSocialLayout->setSpacing(16);
+    
+    QLabel* explorer = new QLabel();
+    explorer->setObjectName(QStringLiteral("explorer"));
+    explorer->setMinimumSize(QSize(32, 32));
+    explorer->setMaximumSize(QSize(32, 32));
+    explorer->setBaseSize(QSize(0, 0));
+    explorer->setCursor(QCursor(Qt::PointingHandCursor));
+    explorer->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+    explorer->setOpenExternalLinks(true);
+#ifndef QT_NO_TOOLTIP
+    explorer->setToolTip(QApplication::translate("OverviewPage", "Visit SINOVATE Block Explorer.", nullptr));
+#endif // QT_NO_TOOLTIP
+    explorer->setText(QApplication::translate("OverviewPage", "<a href=\"https://sinovate.io/links/explorer\"><img src=\":/icons/explorer\" width=\"32\" height=\"32\"></a>", nullptr));
+            
+            QLabel* website = new QLabel();
+    website->setObjectName(QStringLiteral("website"));
+    website->setMinimumSize(QSize(19, 19));
+    website->setMaximumSize(QSize(19, 19));
+    website->setBaseSize(QSize(0, 0));
+    website->setCursor(QCursor(Qt::PointingHandCursor));
+    website->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+    website->setOpenExternalLinks(true);
+#ifndef QT_NO_TOOLTIP
+    website->setToolTip(QApplication::translate("OverviewPage", "Visit SINOVATE Website", nullptr));
+#endif // QT_NO_TOOLTIP
+    website->setText(QApplication::translate("OverviewPage", "<a href=\"https://sinovate.io\"><img src=\":/icons/website\" width=\"19\" height=\"19\"></a>", nullptr));
+                        
+            QLabel* youtube = new QLabel();
+    youtube->setObjectName(QStringLiteral("youtube"));
+    youtube->setMinimumSize(QSize(32, 32));
+    youtube->setMaximumSize(QSize(32, 32));
+    youtube->setBaseSize(QSize(0, 0));
+    youtube->setCursor(QCursor(Qt::PointingHandCursor));
+    youtube->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+    youtube->setOpenExternalLinks(true);
+#ifndef QT_NO_TOOLTIP
+    youtube->setToolTip(QApplication::translate("OverviewPage", "Visit SINOVATE Youtube Channel", nullptr));
+#endif // QT_NO_TOOLTIP
+    youtube->setText(QApplication::translate("OverviewPage", "<a href=\"https://sinovate.io/links/youtube\"><img src=\":/icons/youtube\" width=\"32\" height=\"32\"></a>", nullptr));
+
+            QLabel* twitter = new QLabel();
+    twitter->setObjectName(QStringLiteral("twitter"));
+    twitter->setMinimumSize(QSize(32, 32));
+    twitter->setMaximumSize(QSize(32, 32));
+    twitter->setBaseSize(QSize(0, 0));
+    twitter->setCursor(QCursor(Qt::PointingHandCursor));
+    twitter->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+    twitter->setOpenExternalLinks(true);
+#ifndef QT_NO_TOOLTIP
+    twitter->setToolTip(QApplication::translate("OverviewPage", "Visit SINOVATE Twitter Channel", nullptr));
+#endif // QT_NO_TOOLTIP
+    twitter->setText(QApplication::translate("OverviewPage", "<a href=\"https://sinovate.io/links/twitter\"><img src=\":/icons/twitter\" width=\"32\" height=\"32\"></a>", nullptr));
+
+            QLabel* discord = new QLabel();
+    discord->setObjectName(QStringLiteral("discord"));
+    discord->setMinimumSize(QSize(32, 32));
+    discord->setMaximumSize(QSize(32, 32));
+    discord->setBaseSize(QSize(0, 0));
+    discord->setCursor(QCursor(Qt::PointingHandCursor));
+    discord->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+    discord->setOpenExternalLinks(true);
+#ifndef QT_NO_TOOLTIP
+    discord->setToolTip(QApplication::translate("OverviewPage", "Join the official SINOVATE Discord community.", nullptr));
+#endif // QT_NO_TOOLTIP
+    discord->setText(QApplication::translate("OverviewPage", "<a href=\"https://sinovate.io/links/discord\"><img src=\":/icons/discord\" width=\"32\" height=\"32\"></a>", nullptr));
+            
+            QLabel* github = new QLabel();
+    github->setObjectName(QStringLiteral("github"));
+    github->setMinimumSize(QSize(32, 32));
+    github->setMaximumSize(QSize(32, 32));
+    github->setBaseSize(QSize(0, 0));
+    github->setCursor(QCursor(Qt::PointingHandCursor));
+    github->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+    github->setOpenExternalLinks(true);
+#ifndef QT_NO_TOOLTIP
+    github->setToolTip(QApplication::translate("OverviewPage", "Visit SINOVATE Github", nullptr));
+#endif // QT_NO_TOOLTIP
+    github->setText(QApplication::translate("OverviewPage", "<a href=\"https://github.com/SINOVATEblockchain\"><img src=\":/icons/github\" width=\"32\" height=\"32\"></a>", nullptr));
+     
+    frameSocialLayout->addWidget(website); 
+    frameSocialLayout->addWidget(discord);
+    frameSocialLayout->addWidget(twitter);
+    frameSocialLayout->addWidget(github);     
+    frameSocialLayout->addWidget(youtube);
+    frameSocialLayout->addWidget(explorer);
+    
+    
+    
+            
+        // Disable size grip because it looks ugly and nobody needs it
     statusBar()->setSizeGripEnabled(false);
 
     // Status bar notification icons
@@ -197,7 +300,9 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
         progressBar->setStyleSheet("QProgressBar { background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
     }
 
+    statusBar()->addWidget(frameSocial);
     statusBar()->addWidget(progressBarLabel);
+    progressBarLabel->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 1px solid white; } QLabel {color: #fff; }");
     statusBar()->addWidget(progressBar);
     statusBar()->addPermanentWidget(frameBlocks);
 
@@ -211,6 +316,44 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
     subscribeToCoreSignals();
 
     connect(connectionsControl, SIGNAL(clicked(QPoint)), this, SLOT(toggleNetworkActive()));
+
+    ///start Exhange and Web Links
+    connect(openWebsite1, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks_slot1()));
+    connect(openWebsite2, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks_slot2()));
+    connect(openWebsite3, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks_slot3()));
+    connect(openWebsite4, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks_slot4()));
+    connect(openWebsite5, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks_slot5()));
+    connect(openWebsite6, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks_slot6()));
+    connect(openWebsite7, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks_slot7()));
+    connect(openWebsite8, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks_slot8()));
+    connect(openWebsite9, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks_slot9()));
+    
+    
+    connect(Exchangesite1, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks2_slot1()));
+    connect(Exchangesite2, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks2_slot2()));
+    connect(Exchangesite3, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks2_slot3()));
+    connect(Exchangesite4, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks2_slot4()));
+    connect(Exchangesite5, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks2_slot5()));
+    connect(Exchangesite6, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks2_slot6()));
+    connect(Exchangesite7, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks2_slot7()));
+    connect(Exchangesite8, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks2_slot8()));
+    connect(Exchangesite9, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks2_slot9()));
+    connect(Exchangesite10, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks2_slot10()));
+    connect(Exchangesite11, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks2_slot11()));
+    connect(Exchangesite12, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks2_slot12()));
+
+    connect(ResourcesWebsite1, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot1()));
+    connect(ResourcesWebsite2, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot2()));
+    connect(ResourcesWebsite3, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot3()));
+    connect(ResourcesWebsite4, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot4()));
+    connect(ResourcesWebsite5, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot5()));
+    connect(ResourcesWebsite6, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot6()));
+    connect(ResourcesWebsite7, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot7()));
+
+
+    ///end Exhange, Resources and Web Links
+
+
 
     modalOverlay = new ModalOverlay(this->centralWidget());
 #ifdef ENABLE_WALLET
@@ -294,7 +437,7 @@ void BitcoinGUI::createActions()
     QSettings settings;
     if (settings.value("fShowMasternodesTab").toBool()) {
         masternodeAction = new QAction(platformStyle->SingleColorIcon(":/icons/masternodes"), tr("&Infinity Nodes"), this);
-        masternodeAction->setStatusTip(tr("Browse masternodes"));
+        masternodeAction->setStatusTip(tr("Browse Infinitynodes"));
         masternodeAction->setToolTip(masternodeAction->statusTip());
         masternodeAction->setCheckable(true);
 #ifdef Q_OS_MAC
@@ -409,6 +552,12 @@ void BitcoinGUI::createActions()
     showHelpMessageAction->setMenuRole(QAction::NoRole);
     showHelpMessageAction->setStatusTip(tr("Show the %1 help message to get a list with possible SIN command-line options").arg(tr("SINOVATE")));
 
+    showSpecsHelpAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation), tr("&Specifications"), this);
+    showSpecsHelpAction->setMenuRole(QAction::NoRole);
+    showSpecsHelpAction->setStatusTip(tr("Show the Specifications"));
+
+
+
     // Dash
 
     //-//connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -441,9 +590,48 @@ void BitcoinGUI::createActions()
     connect(toggleHideAction, SIGNAL(triggered()), this, SLOT(toggleHidden()));
     connect(showHelpMessageAction, SIGNAL(triggered()), this, SLOT(showHelpMessageClicked()));
     connect(openRPCConsoleAction, SIGNAL(triggered()), this, SLOT(showDebugWindow()));
+    connect(showSpecsHelpAction, SIGNAL(triggered()), this, SLOT(showSpecsHelpClicked()));
 
     // prevents an open debug window from becoming stuck/unusable on client shutdown
     connect(quitAction, SIGNAL(triggered()), rpcConsole, SLOT(hide()));
+
+//start Exchange and Web Links
+    openWebsite1 = new QAction(QIcon(":/icons/website1"), tr("&Sinovate.io"), this);
+    openWebsite2 = new QAction(QIcon(":/icons/discord1"), tr("&Discord"), this);
+    openWebsite3 = new QAction(QIcon(":/icons/twitter1"), tr("&Twitter"), this);
+    openWebsite4 = new QAction(QIcon(":/icons/btctalk1"), tr("&Bitcointalk"), this);
+    openWebsite5 = new QAction(QIcon(":/icons/reddit1"), tr("&Reddit"), this);
+    openWebsite6 = new QAction(QIcon(":/icons/github1"), tr("&github"), this);
+    openWebsite7 = new QAction(QIcon(":/icons/youtube1"), tr("&Youtube"), this);
+    openWebsite8 = new QAction(QIcon(":/icons/github1"), tr("&Github"), this);
+    openWebsite9 = new QAction(QIcon(":/icons/telegram1"), tr("&Telegram"), this);
+    
+
+    Exchangesite1 = new QAction(QIcon(":/icons/cmc"), tr("&Coinmarketcap"), this);
+    Exchangesite2 = new QAction(QIcon(":/icons/tradeogre"), tr("&TradeOgre"), this);
+    Exchangesite3 = new QAction(QIcon(":/icons/catex"), tr("&Cat.Ex"), this);
+    Exchangesite4 = new QAction(QIcon(":/icons/coinsbit"), tr("&Coinsbit"), this);
+    Exchangesite5 = new QAction(QIcon(":/icons/crex24"), tr("&Crex24"), this);
+    Exchangesite6 = new QAction(QIcon(":/icons/qbtc"), tr("&QBTC"), this);
+    Exchangesite7 = new QAction(QIcon(":/icons/txbit"), tr("&Txbit"), this);
+    Exchangesite8 = new QAction(QIcon(":/icons/catex"), tr("&Cat.Ex ETH"), this);
+    Exchangesite9 = new QAction(QIcon(":/icons/crex24"), tr("&Crex24 ETH"), this);
+    Exchangesite10 = new QAction(QIcon(":/icons/stex"), tr("&Stex"), this);
+    Exchangesite11 = new QAction(QIcon(":/icons/citex"), tr("&Citex"), this);
+    Exchangesite12 = new QAction(QIcon(":/icons/instaswap"), tr("&InstaSwap"), this);
+
+    ResourcesWebsite1 = new QAction(QIcon(":/icons/info"), tr("&Whitepaper"), this);
+    ResourcesWebsite2 = new QAction(QIcon(":/icons/info"), tr("&Roadmap"), this);
+    ResourcesWebsite3 = new QAction(QIcon(":/icons/info"), tr("&GitBook"), this);
+    ResourcesWebsite4 = new QAction(QIcon(":/icons/info"), tr("&sin.conf "), this);
+    ResourcesWebsite5 = new QAction(QIcon(":/icons/info"), tr("&Releases"), this);
+    ResourcesWebsite6 = new QAction(QIcon(":/icons/explorer1"), tr("&Explorer"), this);
+    ResourcesWebsite7 = new QAction(QIcon(":/icons/info"), tr("&Web Tool"), this);
+
+
+
+
+//end Exchange and Web Links
 
 #ifdef ENABLE_WALLET
     if(walletFrame)
@@ -496,6 +684,47 @@ void BitcoinGUI::createMenuBar()
     }
     file->addAction(quitAction);
 
+   
+
+    //start exchange Links
+    
+         if (walletFrame) {
+        QMenu* hyperlinks2 = appMenuBar->addMenu(tr("&Exchanges"));
+        hyperlinks2->addAction(Exchangesite1);
+        hyperlinks2->addSeparator();
+        hyperlinks2->addAction(Exchangesite2);
+        hyperlinks2->addAction(Exchangesite3);
+        hyperlinks2->addAction(Exchangesite4);
+        hyperlinks2->addAction(Exchangesite5);
+        hyperlinks2->addAction(Exchangesite6);
+        hyperlinks2->addAction(Exchangesite7);
+        hyperlinks2->addAction(Exchangesite8);
+        hyperlinks2->addAction(Exchangesite9);
+        hyperlinks2->addAction(Exchangesite10);
+        hyperlinks2->addAction(Exchangesite11);
+        hyperlinks2->addAction(Exchangesite12);
+    }
+
+    //end Exchange Links
+
+    //start Resources Links
+
+    if (walletFrame) {
+        QMenu* hyperlinks3 = appMenuBar->addMenu(tr("&Resources"));
+        hyperlinks3->addAction(ResourcesWebsite1);
+        hyperlinks3->addAction(ResourcesWebsite2);
+        hyperlinks3->addAction(ResourcesWebsite3);
+        hyperlinks3->addAction(ResourcesWebsite4);
+        hyperlinks3->addAction(ResourcesWebsite5);
+        hyperlinks3->addAction(ResourcesWebsite6);
+        hyperlinks3->addAction(ResourcesWebsite7);
+        
+    }
+    //end Resources Links
+
+    //
+
+
     // Dash
     if(walletFrame)
     {
@@ -510,6 +739,24 @@ void BitcoinGUI::createMenuBar()
         tools->addAction(openMNConfEditorAction);
         //-//tools->addAction(showBackupsAction);
     }
+
+     //start Web Links
+
+    if (walletFrame) {
+        QMenu* hyperlinks = appMenuBar->addMenu(tr("&Social"));
+        hyperlinks->addAction(openWebsite1);
+        hyperlinks->addSeparator();
+        hyperlinks->addAction(openWebsite2);
+        hyperlinks->addAction(openWebsite3);
+        hyperlinks->addAction(openWebsite4);
+        hyperlinks->addAction(openWebsite5);
+        hyperlinks->addAction(openWebsite6);
+        hyperlinks->addAction(openWebsite7);
+        hyperlinks->addAction(openWebsite8);
+        hyperlinks->addAction(openWebsite9);
+        
+    }
+    //end Web Links
     //
 
     QMenu *settings = appMenuBar->addMenu(tr("&Settings"));
@@ -533,6 +780,7 @@ void BitcoinGUI::createMenuBar()
         help->addAction(openRPCConsoleAction);
     }
     help->addAction(showHelpMessageAction);
+    help->addAction(showSpecsHelpAction);
     help->addSeparator();
     help->addAction(aboutAction);
     help->addAction(aboutQtAction);
@@ -558,6 +806,18 @@ void BitcoinGUI::createToolBars()
         {
             toolbar->addAction(masternodeAction);
         }
+        
+        //add LOGO
+
+        QLabel* label = new QLabel();
+        label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        toolbar->addWidget(label);
+
+        QLabel* labelLogo = new QLabel();
+        labelLogo->setPixmap(QPixmap(":/images/sinovate_logo_horizontal"));
+        labelLogo->setStyleSheet("margin-left: 20px");
+        toolbar->addWidget(labelLogo);
+
         //
         overviewAction->setChecked(true);
 
@@ -757,6 +1017,43 @@ void BitcoinGUI::createTrayIconMenu()
     trayIconMenu = new QMenu(this);
     trayIcon->setContextMenu(trayIconMenu);
 
+
+//start Exchange and Web Links
+    trayIconMenu->addAction(openWebsite1);
+    trayIconMenu->addAction(openWebsite2);
+    trayIconMenu->addAction(openWebsite3);
+    trayIconMenu->addAction(openWebsite4);
+    trayIconMenu->addAction(openWebsite5);
+    trayIconMenu->addAction(openWebsite6);
+    trayIconMenu->addAction(openWebsite7);
+    trayIconMenu->addAction(openWebsite8);
+    trayIconMenu->addAction(openWebsite9);
+       
+    trayIconMenu->addAction(Exchangesite1);
+    trayIconMenu->addAction(Exchangesite2);
+    trayIconMenu->addAction(Exchangesite3);
+    trayIconMenu->addAction(Exchangesite4);
+    trayIconMenu->addAction(Exchangesite5);
+    trayIconMenu->addAction(Exchangesite6);
+    trayIconMenu->addAction(Exchangesite7);
+    trayIconMenu->addAction(Exchangesite8);
+    trayIconMenu->addAction(Exchangesite9);
+    trayIconMenu->addAction(Exchangesite10);
+    trayIconMenu->addAction(Exchangesite11);
+    trayIconMenu->addAction(Exchangesite12);
+
+    trayIconMenu->addAction(ResourcesWebsite1);
+    trayIconMenu->addAction(ResourcesWebsite2);
+    trayIconMenu->addAction(ResourcesWebsite3);
+    trayIconMenu->addAction(ResourcesWebsite4);
+    trayIconMenu->addAction(ResourcesWebsite5);
+    trayIconMenu->addAction(ResourcesWebsite6);
+    trayIconMenu->addAction(ResourcesWebsite7);
+
+
+//end Exchange and Web Links
+
+
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
 #else
@@ -860,6 +1157,16 @@ void BitcoinGUI::showMNConfEditor()
 void BitcoinGUI::showHelpMessageClicked()
 {
     helpMessageDialog->show();
+}
+
+void BitcoinGUI::showSpecsHelpClicked()
+{
+    if(!clientModel)
+        return;
+
+    HelpMessageDialog dlg(m_node, this, HelpMessageDialog::pshelp);
+    dlg.exec();
+
 }
 
 #ifdef ENABLE_WALLET
@@ -1349,7 +1656,7 @@ void BitcoinGUI::setEncryptionStatus(int status)
         break;
     case WalletModel::Unlocked:
         labelWalletEncryptionIcon->show();
-        labelWalletEncryptionIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/lock_open").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        labelWalletEncryptionIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/lock_open1").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
         labelWalletEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>unlocked</b>"));
         encryptWalletAction->setChecked(true);
         changePassphraseAction->setEnabled(true);
@@ -1361,7 +1668,7 @@ void BitcoinGUI::setEncryptionStatus(int status)
         break;
     case WalletModel::Locked:
         labelWalletEncryptionIcon->show();
-        labelWalletEncryptionIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/lock_closed").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        labelWalletEncryptionIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/lock_closed1").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
         labelWalletEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>locked</b>"));
         encryptWalletAction->setChecked(true);
         changePassphraseAction->setEnabled(true);
@@ -1518,7 +1825,7 @@ UnitDisplayStatusBarControl::UnitDisplayStatusBarControl(const PlatformStyle *pl
     }
     setMinimumSize(max_width, 0);
     setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    setStyleSheet(QString("QLabel { color : #FF8204; }").arg(platformStyle->SingleColor().name()));
+    setStyleSheet(QString("QLabel { color : #EF3C23; font-weight: bold; }").arg(platformStyle->SingleColor().name()));
 }
 
 /** So that it responds to button clicks */

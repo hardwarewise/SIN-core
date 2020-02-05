@@ -17,93 +17,93 @@
    <string notr="true"> /*******   BGcolor #0d1827  Orange #FF8204 */
 
 QDialog#CoinControlDialog { /* Coin Control Dialog Window */
- background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop:0 #0d0d1a, stop:1 #191b41); color:#020024;
-  color:#ffffff;
+ background-color: #E3E3FF;
+  color:#000000;
   }
   
   QDialog#CoinControlDialog .QLabel#labelCoinControlQuantityText { /* Coin Control Quantity Label */
   min-height:30px;
   padding-left:15px;
-  color:#ffffff;
+  color:#000000;
   }
   
   QDialog#CoinControlDialog .QLabel#labelCoinControlQuantity { /* Coin Control Quantity */
-    color:#ffffff;
+    color:#000000;
   min-height:30px;
   }
   
   QDialog#CoinControlDialog .QLabel#labelCoinControlBytesText { /* Coin Control Bytes Label */
   padding-left:15px;
-  color:#ffffff;
+  color:#000000;
   }
   
   QDialog#CoinControlDialog .QLabel#labelCoinControlBytes { /* Coin Control Bytes */
-    color:#ffffff;
+    color:#000000;
   }
   
   QDialog#CoinControlDialog .QLabel#labelCoinControlAmountText { /* Coin Control Amount Label */
   min-height:30px;
   padding-left:15px;
-  color:#ffffff;
+  color:#000000;
   }
   
   QDialog#CoinControlDialog .QLabel#labelCoinControlAmount { /* Coin Control Amount */
   min-height:30px;
-  color:#ffffff;
+  color:#000000;
   }
   
   QDialog#CoinControlDialog .QLabel#labelCoinControlPriorityText { /* Coin Control Priority Label */
   padding-left:15px;
-  color:#ffffff;
+  color:#000000;
   }
   
   QDialog#CoinControlDialog .QLabel#labelCoinControlPriority { /* Coin Control Priority */
-    color:#ffffff;
+    color:#000000;
   }
   
   QDialog#CoinControlDialog .QLabel#labelCoinControlFeeText { /* Coin Control Fee Label */
   min-height:30px;
   padding-left:15px;
-  color:#ffffff;
+  color:#000000;
   }
   
   QDialog#CoinControlDialog .QLabel#labelCoinControlFee { /* Coin Control Fee */
   min-height:30px;
-  color:#ffffff;
+  color:#000000;
   }
   
   QDialog#CoinControlDialog .QLabel#labelCoinControlLowOutputText { /* Coin Control Low Output Label */
   padding-left:15px;
-  color:#ffffff;
+  color:#000000;
   }
   
   QDialog#CoinControlDialog .QLabel#labelCoinControlLowOutput { /* Coin Control Low Output */
-    color:#ffffff;
+    color:#000000;
   }
   
   QDialog#CoinControlDialog .QLabel#labelCoinControlAfterFeeText { /* Coin Control After Fee Label */
   min-height:30px;
   padding-left:15px;
-  color:#ffffff;
+  color:#000000;
   }
   
   QDialog#CoinControlDialog .QLabel#labelCoinControlAfterFee { /* Coin Control After Fee */
   min-height:30px;
-  color:#ffffff;
+  color:#000000;
   }
   
   QDialog#CoinControlDialog .QLabel#labelCoinControlChangeText { /* Coin Control Change Label */
   padding-left:15px;
-  color:#ffffff;
+  color:#000000;
   }
   
   QDialog#CoinControlDialog .QLabel#labelCoinControlChange { /* Coin Control Change */
-    color:#ffffff;
+    color:#000000;
   }
  
 
 QDialog#CoinControlDialog .QLabel#labelLocked { /* Coin Control Change */
-    color:#ffffff;
+    color:#000000;
   }
 
 
@@ -123,12 +123,12 @@ QDialog#CoinControlDialog .QLabel#labelLocked { /* Coin Control Change */
   }
   
   QDialog#CoinControlDialog .QFrame#frame .QRadioButton#radioTreeMode { /* Coin Control Tree Mode Selector */
-  color:#ffffff;
+  color:#000000;
   background-color:transparent;
   }
   
   QDialog#CoinControlDialog .QFrame#frame .QRadioButton#radioListMode { /* Coin Control List Mode Selector */
-  color:#ffffff;
+  color:#000000;
   background-color:transparent;
   }
  QDialog#CoinControlDialog .QFrame#frame .QRadioButton::indicator{
@@ -156,26 +156,29 @@ QDialog#CoinControlDialog .QLabel#labelLocked { /* Coin Control Change */
 
 QDialog#CoinControlDialog .CoinControlTreeWidget#treeWidget::item {
 	background-color:transparent;
-	color:white;
+	color:#000000;
 	padding-left:0;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 } 
 
 QDialog#CoinControlDialog .CoinControlTreeWidget#treeWidget::item:selected {
 	/* Coin Control Item (selected) */
-	background-color: #313d4b;
-	color: #fff;
+	background-color: #D6D7D8;
+	color: #000000;
 }
 QDialog#CoinControlDialog .CoinControlTreeWidget#treeWidget::item:checked {
 	/* Coin Control Item (checked) */
 	background-color: transparent;
-	color: #fff;
+	color: #000000;
 }
 
 QPushButton {
 	/* Global Button Style */
-	background-color: #FF8204;
-	padding: 0.85em 2em;
+	background-color: #00419A;
+	background: url(':/images/button-bg');
+	background-repeat: no-repeat;
+    background-size: 1000% 1000%;
+ 	padding: 0.85em 2em;
 	font-family: &quot;Montserrat&quot;;
 	letter-spacing: 1px;
 	border: 0;
@@ -186,7 +189,9 @@ QPushButton {
 	text-transform: uppercase;
 }
 QPushButton:hover {
-	background-color: #db7e20;
+	/*background-color: #202677;*/
+	color : #EF3C23;
+	
 }
 QPushButton:focus {
 	border: none;
@@ -194,6 +199,10 @@ QPushButton:focus {
 }
 QPushButton:pressed {
 	border: 1px solid #333;
+}
+
+QMessageBox {
+background-color: #E3E3FF;
 }
 
 
@@ -227,7 +236,7 @@ background-color:transparent;
 
 QHeaderView::section { /* Table Header Sections */
 background-color: transparent;
-color: #fff;
+color: #000000;
 min-height:30px;
 font-weight: bold;
 font-size: 14px;
@@ -258,7 +267,7 @@ QScrollBar:horizontal {
 }
 QScrollBar::handle:vertical {
 	/* Scroll Bar Slider - vertical */
-	background: #333b46;
+	background: #D6D7D8;
     border-radius: 6px;
     min-height:50px;
     width:3px;
@@ -269,7 +278,7 @@ QScrollBar::handle:vertical {
 
 QScrollBar::handle:horizontal {
 	/* Scroll Bar Slider - horizontal */
-	background: #333b46;
+	background: #D6D7D8;
     min-width: 50px;
     border-radius: 6px;
 }

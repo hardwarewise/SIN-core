@@ -138,15 +138,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     txdelegate(new TxViewDelegate(platformStyle, this))
 {
     ui->setupUi(this);
-    //ui->pushButton_Website->setIcon(QIcon(GUIUtil::getThemeImage(":/icons/website")));
-    ui->pushButton_Website->setStatusTip(tr("SINOVATE Website"));
-    ui->pushButton_Discord->setStatusTip(tr("SINOVATE Discord Channel"));
-    ui->pushButton_Telegram->setStatusTip(tr("SINOVATE Telegram Channel"));
-    ui->pushButton_Twitter->setStatusTip(tr("SINOVATE Twitter Channel"));
-    ui->pushButton_Explorer->setStatusTip(tr("SINOVATE Block Explorer"));
-    ui->pushButton_Reddit->setStatusTip(tr("SINOVATE Reddit"));
-    ui->pushButton_Facebook->setStatusTip(tr("SINOVATE Facebook"));
-    ui->pushButton_Youtube->setStatusTip(tr("SINOVATE Youtube Channel"));
+    
 
 
     m_balances.balance = -1;
@@ -225,9 +217,9 @@ void OverviewPage::infinityNodeStat()
     QString strMIDNodeText(tr("%1").arg(totalMID));
     QString strLILNodeText(tr("%1").arg(totalLIL));
 
-    QString strBIGNodeQueuedText(tr("Queued %1").arg(totalBIGNonMatured));
-    QString strMIDNodeQueuedText(tr("Queued %1").arg(totalMIDNonMatured));
-    QString strLILNodeQueuedText(tr("Queued %1").arg(totalLILNonMatured));
+    QString strBIGNodeQueuedText(tr("Starting %1").arg(totalBIGNonMatured));
+    QString strMIDNodeQueuedText(tr("Starting %1").arg(totalMIDNonMatured));
+    QString strLILNodeQueuedText(tr("Starting %1").arg(totalLILNonMatured));
 
     ui->labelStatisticTotalNode->setText(strTotalNodeText);
     ui->labelBIGNode->setText(strBIGNodeText);
@@ -246,13 +238,14 @@ void OverviewPage::infinityNodeStat()
     ui->labelMIDNodeRoi->setText(strMIDNodeROIText);
     ui->labelLILNodeRoi->setText(strLILNodeROIText);
 
-    QString strBIGNodeSTMText(tr("Statement %1").arg(infnodeman.getLastStatement(10)));
-    QString strMIDNodeSTMText(tr("Statement %1").arg(infnodeman.getLastStatement(5)));
-    QString strLILNodeSTMText(tr("Statement %1").arg(infnodeman.getLastStatement(1)));
+    QString strBIGNodeSTMText(tr("Payment Round\n%1").arg(infnodeman.getLastStatement(10)));
+    QString strMIDNodeSTMText(tr("Payment Round\n%1").arg(infnodeman.getLastStatement(5)));
+    QString strLILNodeSTMText(tr("Payment Round\n%1").arg(infnodeman.getLastStatement(1)));
 
     ui->labelBIGNodeSTM->setText(strBIGNodeSTMText);
     ui->labelMIDNodeSTM->setText(strMIDNodeSTMText);
     ui->labelLILNodeSTM->setText(strLILNodeSTMText);
+
 
 }
 
@@ -398,30 +391,3 @@ void OverviewPage::SetupTransactionList(int nNumItems) {
     }
 }
 
-void OverviewPage::on_pushButton_Website_clicked() {
-    QDesktopServices::openUrl(QUrl("https://sinovate.io/", QUrl::TolerantMode));
-}
-void OverviewPage::on_pushButton_Discord_clicked() {
-    QDesktopServices::openUrl(QUrl("https://sinovate.io/links/discord", QUrl::TolerantMode));
-}
-void OverviewPage::on_pushButton_Telegram_clicked() {
-    QDesktopServices::openUrl(QUrl("https://sinovate.io/links/telegram", QUrl::TolerantMode));
-}
-void OverviewPage::on_pushButton_Twitter_clicked() {
-    QDesktopServices::openUrl(QUrl("https://sinovate.io/links/twitter", QUrl::TolerantMode));
-}
-void OverviewPage::on_pushButton_Explorer_clicked() {
-    QDesktopServices::openUrl(QUrl("http://sinovate.io/links/explorer", QUrl::TolerantMode));
-}
-void OverviewPage::on_pushButton_Btctalk_clicked() {
-    QDesktopServices::openUrl(QUrl("https://sinovate.io/links/btctalk", QUrl::TolerantMode));
-}
-void OverviewPage::on_pushButton_Reddit_clicked() {
-    QDesktopServices::openUrl(QUrl("https://sinovate.io/links/reddit", QUrl::TolerantMode));
-}
-void OverviewPage::on_pushButton_Youtube_clicked() {
-    QDesktopServices::openUrl(QUrl("https://sinovate.io/links/youtube", QUrl::TolerantMode));
-}
-void OverviewPage::on_pushButton_Facebook_clicked() {
-    QDesktopServices::openUrl(QUrl("https://sinovate.io/links/facebook", QUrl::TolerantMode));
-}
