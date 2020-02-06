@@ -1136,6 +1136,7 @@ static UniValue infinitynodeburnfund(const JSONRPCRequest& request)
             bool fUseInstantSend=false;
             CCoinControl coin_control;
             coin_control.Select(COutPoint(out.tx->GetHash(), out.i));
+            coin_control.destChange = NodeOwnerAddress;//fund go back to NodeOwnerAddress
 
             CScript script;
             script = GetScriptForBurn(keyid, request.params[1].get_str());
