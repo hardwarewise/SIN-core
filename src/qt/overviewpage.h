@@ -18,12 +18,16 @@ class TxViewDelegate;
 class PlatformStyle;
 class WalletModel;
 
+
+
 namespace Ui {
     class OverviewPage;
 }
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
+class QNetworkAccessManager;
+class QNetworkRequest;
 QT_END_NAMESPACE
 
 /** Overview ("home") page widget */
@@ -43,6 +47,7 @@ public:
 public Q_SLOTS:
     void infinityNodeStat();
     void setBalance(const interfaces::WalletBalances& balances);
+    void getPriceInfo();
 
 Q_SIGNALS:
     void transactionClicked(const QModelIndex &index);
@@ -54,6 +59,10 @@ private:
     ClientModel *clientModel;
     WalletModel *walletModel;
     interfaces::WalletBalances m_balances;
+    QTimer *pricingTimer;
+    QNetworkAccessManager* networkManager;
+    QNetworkRequest* request;
+    qint64 totalBalance;
     int nDisplayUnit;
 
     TxViewDelegate *txdelegate;
