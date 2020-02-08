@@ -896,6 +896,8 @@ padding-right:5px;
 
 /* OVERVIEW SCREEN */
 
+
+
 QWidget .QFrame#frame { /* Wallet Balance */
 min-width:800px;
 }
@@ -982,6 +984,7 @@ font-size:12px;
 margin-left:16px;
 }
 
+
 QWidget .QFrame#frame .QLabel#labelPendingText { /* Pending Balance Label */
 qproperty-alignment: 'AlignVCenter | AlignCenter';
 min-width:160px;
@@ -1038,6 +1041,7 @@ font-size:12px;
 margin-left:16px;
 }
 
+
 QWidget .QFrame#frame .QLabel#labelTotalText { /* Total Balance Label */
 /*qproperty-alignment: 'AlignVCenter | AlignHCenter';*/
 min-width:160px;
@@ -1051,8 +1055,26 @@ background-image: url(':/images/button-bg');
 margin-right:5px;
 padding-right:5px;
 min-height:35px;
-
 }
+
+
+QWidget .QFrame#frame .QLabel#labelTotalUSDText { /* Total Balance Label */
+/*qproperty-alignment: 'AlignVCenter | AlignHCenter';*/
+min-width:160px;
+font-size:24px;
+font-weight:bold;
+color:#ffffff;
+border-radius: 10px;
+/*background-color:#00C0F7;*/
+background-color:#00419A;
+background-image: url(':/images/button-bg');
+margin-right:5px;
+padding-right:5px;
+min-height:35px;
+}
+
+
+
 
 QWidget .QFrame#frame .QLabel#labelTotal { /* Total Balance */
 qproperty-alignment: 'AlignVCenter | AlignRight';
@@ -1061,6 +1083,19 @@ font-weight:bold;
 color:#EF3C23;
 margin-left:0px;
 }
+
+
+QWidget .QFrame#frame .QLabel#labelUSDTotal { /* Total Balance */
+qproperty-alignment: 'AlignVCenter | AlignRight';
+font-size:24px;
+font-weight:bold;
+color:#EF3C23;
+margin-left:0px;
+}
+
+
+
+
 
 QWidget .QFrame#frame .QLabel#labelWatchTotal { /* Watch-only Total Balance */
 qproperty-alignment: 'AlignVCenter | AlignLeft';
