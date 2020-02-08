@@ -95,7 +95,7 @@ public:
         consensus.nInfinityNodeGenesisStatement=250000;
         consensus.nInfinityNodeUpdateMeta=25;
         consensus.nInfinityNodeVoteValue=100;
-        consensus.nSchnorrActivationHeight = 350000; // Dummy, TBA
+        consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440 * 5; // 1 common year
         consensus.nBudgetPaymentsCycleBlocks = 10958; // weekly

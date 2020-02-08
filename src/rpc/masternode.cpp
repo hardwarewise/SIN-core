@@ -818,7 +818,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
         (strCommand != "build-list" && strCommand != "show-lastscan" && strCommand != "show-infos" && strCommand != "stats"
                                     && strCommand != "show-lastpaid" && strCommand != "build-stm" && strCommand != "show-stm"
                                     && strCommand != "show-candidate" && strCommand != "show-script" && strCommand != "show-proposal"
-                                    && strCommand != "scan-vote" && strCommand != "show-proposals"
+                                    && strCommand != "scan-vote" && strCommand != "show-proposals" && strCommand != "keypair"
         ))
             throw std::runtime_error(
                 "infinitynode \"command\"...\n"
@@ -836,6 +836,23 @@ UniValue infinitynode(const JSONRPCRequest& request)
                 );
 
     UniValue obj(UniValue::VOBJ);
+
+    if (strCommand == "keypair")
+    {
+        CKey secret;
+        secret.MakeNewKey(true);
+        CPubKey pubkey = secret.GetPubKey();
+        assert(secret.VerifyPubKey(pubkey));
+
+        std::string s(pubkey.begin(), pubkey.end());
+
+        obj.push_back(Pair("PrivateKey", EncodeSecret(secret)));
+        obj.push_back(Pair("PublicKey", EncodeBase64(pubkey.begin(), pubkey.size())));
+        obj.push_back(Pair("PublicKeyHex", HexStr(pubkey)));
+        obj.push_back(Pair("isComppressed", pubkey.IsCompressed()));
+
+        return obj;
+    }
 
     if (strCommand == "build-list")
     {
@@ -918,7 +935,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
                                inf.getSINType() << " " <<
                                inf.getBackupAddress() << " " <<
                                inf.getLastRewardHeight() << " " <<
-                               inf.getRank()
+                               inf.getRank() << " " << infnodeman.getLastStatementSize(inf.getSINType())
                                ;
                 std::string strInfo = streamInfo.str();
                 obj.push_back(Pair(strOutpoint, strInfo));
@@ -1202,12 +1219,13 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid SIN address: OwnerAddress");
     }
 
-    std::string strNodeAddress = request.params[1].get_str();
-    CTxDestination NodeAddress = DecodeDestination(strNodeAddress);
-    if (!IsValidDestination(NodeAddress)) {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid SIN address: NodeAddress");
+    //limit data carrier, so we accept only 66 char
+    std::string nodePublickeyHexStr = "";
+    if(IsHex(request.params[1].get_str()) && (request.params[1].get_str().length() == 66)){
+        nodePublickeyHexStr = request.params[1].get_str();
+    } else {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid node publickey");
     }
-
     std::string strService = request.params[2].get_str();
     CService service;
     if (!Lookup(strService.c_str(), service, 0, false)){
@@ -1252,8 +1270,9 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
             bool fUseInstantSend=false;
             CCoinControl coin_control;
             coin_control.Select(COutPoint(out.tx->GetHash(), out.i));
+            coin_control.destChange = INFAddress;
 
-            streamInfo << strNodeAddress << ";" << strService;
+            streamInfo << nodePublickeyHexStr << ";" << strService;
             std::string strInfo = streamInfo.str();
             CScript script;
             script = GetScriptForBurn(keyid, streamInfo.str());
