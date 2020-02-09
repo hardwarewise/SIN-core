@@ -42,7 +42,7 @@ struct infinitynode_info_t
     std::string backupAddress = "BackupAddress";
     int nRank=0;
     int nMetadataHeight=0;
-    std::string metadataNodeAddress = "NodeAddress";
+    std::string metadataPublicKey = "PublicKey";
     CService metadataService{};
 };
 
@@ -78,7 +78,7 @@ public:
         READWRITE(scriptPubKey);
         READWRITE(backupAddress);
         READWRITE(nMetadataHeight);
-        READWRITE(metadataNodeAddress);
+        READWRITE(metadataPublicKey);
         READWRITE(metadataService);
     }
 
@@ -90,7 +90,7 @@ public:
     void setLastRewardHeight(int nReward){nLastRewardHeight = nReward;}
     void setRank(int nRankIn){nRank=nRankIn;}
     void setBackupAddress(std::string address) { backupAddress = address;}
-    void setNodeAddress(std::string address) { metadataNodeAddress = address;}
+    void setNodePublicKey(std::string publicKey) { metadataPublicKey = publicKey;}
     void setService(CService addrNew) { metadataService = addrNew;}
     void setMetadataHeight(int nHeight) { nMetadataHeight = nHeight;}
 
@@ -105,6 +105,8 @@ public:
     int getLastRewardHeight(){return nLastRewardHeight;}
     int getRank(){return nRank;}
     int getMetadataHeight(){return nMetadataHeight;}
+    std::string getMetaPublicKey(){return metadataPublicKey;}
+    CService getMetaService(){return metadataService;}
 
     CInfinitynode& operator=(CInfinitynode const& from)
     {

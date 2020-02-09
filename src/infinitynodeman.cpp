@@ -243,7 +243,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
         CBlock blockReadFromDisk;
         if (ReadBlockFromDisk(blockReadFromDisk, prevBlockIndex, Params().GetConsensus()))
         {
-LogPrintf("CInfinitynodeMan::updateInfinityNodeInfo -- read block number: %d, end at: %d.\n", prevBlockIndex->nHeight, nLowHeight);
+            LogPrintf("CInfinitynodeMan::updateInfinityNodeInfo -- read block number: %d, end at: %d.\n", prevBlockIndex->nHeight, nLowHeight);
             for (const CTransactionRef& tx : blockReadFromDisk.vtx) {
                 //Not coinbase
                 if (!tx->IsCoinBase()) {
@@ -382,21 +382,22 @@ LogPrintf("CInfinitynodeMan::updateInfinityNodeInfo -- read block number: %d, en
                         if (whichType == TX_BURN_DATA && Params().GetConsensus().cMetadataAddress == EncodeDestination(CKeyID(uint160(vSolutions[0]))))
                         {
                             //Amount for UpdateMeta
-                            if (( Params().GetConsensus().nMasternodeBurnSINNODE_1 - 1) * COIN < out.nValue 
-                                && out.nValue <= Params().GetConsensus().nMasternodeBurnSINNODE_1 * COIN){
+                            if ( (Params().GetConsensus().nInfinityNodeUpdateMeta - 1) * COIN <= out.nValue
+                                 && out.nValue <= (Params().GetConsensus().nInfinityNodeUpdateMeta) * COIN){
                                 if (vSolutions.size() == 2){
                                     std::string metadata(vSolutions[1].begin(), vSolutions[1].end());
                                     string s;
                                     stringstream ss(metadata);
                                     int i=0;
                                     int check=0;
-                                    while (getline(ss, s,' ')) {
+                                    std::string publicKeyString;
+                                    CService service;
+                                    while (getline(ss, s,';')) {
                                         CTxDestination NodeAddress;
-                                        CService service;
                                         //1st position: Node Address
                                         if (i==0) {
-                                            NodeAddress = DecodeDestination(s);
-                                            if (IsValidDestination(NodeAddress)) {check++;}
+                                            publicKeyString = s;
+                                            if (publicKeyString.length() == 66) {check++;}
                                         }
                                         //2nd position: Node IP
                                         if (i==1 && Lookup(s.c_str(), service, 0, false)) {check++;}
@@ -419,7 +420,8 @@ LogPrintf("CInfinitynodeMan::updateInfinityNodeInfo -- read block number: %d, en
                                                 LogPrintf("CInfinitynodeMan::updateInfinityNodeInfo -- False when extract payee from BurnFund tx.\n");
                                                 return false;
                                             }
-                                            updateMetadata(EncodeDestination(addressBurnFund), EncodeDestination(NodeAddress), service, prevBlockIndex->nHeight);
+                                            LogPrintf("CInfinitynodeMan:: meta update: %s, %s, %s\n", EncodeDestination(addressBurnFund), publicKeyString, service.ToString());
+                                            updateMetadata(EncodeDestination(addressBurnFund), publicKeyString, service, prevBlockIndex->nHeight);
                                         }
                                         i++;
                                     }
@@ -489,14 +491,14 @@ bool CInfinitynodeMan::GetInfinitynodeInfo(const COutPoint& outpoint, infinityno
     return true;
 }
 
-void CInfinitynodeMan::updateMetadata(std::string nodeowner, std::string nodeAddress, CService nodeService, int nHeightUpdate)
+void CInfinitynodeMan::updateMetadata(std::string nodeowner, std::string nodePublicKey, CService nodeService, int nHeightUpdate)
 {
     AssertLockHeld(cs);
 
     for (auto& infpair : mapInfinitynodes) {
         if (infpair.second.collateralAddress == nodeowner) {
             if (infpair.second.getMetadataHeight() < nHeightUpdate){
-                infpair.second.setNodeAddress(nodeAddress);
+                infpair.second.setNodePublicKey(nodePublicKey);
                 infpair.second.setService(nodeService);
             }
         }

@@ -935,7 +935,11 @@ UniValue infinitynode(const JSONRPCRequest& request)
                                inf.getSINType() << " " <<
                                inf.getBackupAddress() << " " <<
                                inf.getLastRewardHeight() << " " <<
-                               inf.getRank() << " " << infnodeman.getLastStatementSize(inf.getSINType())
+                               inf.getRank() << " " << 
+                               infnodeman.getLastStatementSize(inf.getSINType()) << " " <<
+                               inf.getMetadataHeight() << " " <<
+                               inf.getMetaPublicKey() << " " <<
+                               inf.getMetaService().ToString()
                                ;
                 std::string strInfo = streamInfo.str();
                 obj.push_back(Pair(strOutpoint, strInfo));
