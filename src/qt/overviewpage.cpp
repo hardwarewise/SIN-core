@@ -143,11 +143,14 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     pricingTimer = new QTimer();
     networkManager = new QNetworkAccessManager();
     request = new QNetworkRequest();
+    pricingTimerBTC = new QTimer();
+    networkManagerBTC = new QNetworkAccessManager();
+    requestBTC = new QNetworkRequest();
     ui->setupUi(this);
            
    
 
-    // Set the pricing information
+    // Set the USD pricing information
        
 
         // Network request code for the header widget
@@ -191,15 +194,14 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                                     
                             }
                             ui->labelCurrentPrice->setText(QString("%1").arg(QString().setNum(next, 'f', 8)));
-                            ui->labelCurrentPrice->setToolTip(tr("Brought to you by coinmarketcap.com"));
+                            //ui->labelCurrentPrice->setToolTip(tr("Brought to you by coinmarketcap.com"));
 
                             QString total;
     						double current2 = (current * totalBalance / 100000000);
   							total = QString::number(current2, 'f', 2);
-  							//ui->labelUSDTotal->setText("$ " + total + " USD");
   							ui->labelUSDTotal->setText("$" + total + " USD");
 
-                            //balances.balance + balances.unconfirmed_balance + balances.immature_balance
+                            
                         }
                     }
                 }
@@ -209,10 +211,74 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     
         // Create the timer
         connect(pricingTimer, SIGNAL(timeout()), this, SLOT(getPriceInfo()));
-        pricingTimer->start(10000);
+        pricingTimer->start(300000);
         getPriceInfo();
-        /** pricing END */
+        /** pricing USD END */
 
+// Set the BTC pricing information
+       
+
+        // Network request code for the header widget
+        QObject::connect(networkManagerBTC, &QNetworkAccessManager::finished,
+                         this, [=](QNetworkReply *replyBTC) {  
+                         
+                    if (replyBTC->error()) {
+                        ui->labelCurrentPriceBTC->setText("");
+                        qDebug() << replyBTC->errorString();
+                        return;
+                    }
+                    // Get the data from the network request
+                    QString answerBTC = replyBTC->readAll();
+
+                    // Create regex expression to find the value with 8 decimals
+                    QRegExp rx("\\d*.\\d\\d\\d\\d\\d\\d\\d\\d");
+                    rx.indexIn(answerBTC);
+
+                    // List the found values
+                    QStringList listBTC = rx.capturedTexts();
+
+                    QString currentPriceStyleSheet = ".QLabel{color: %1;}";
+                    // Evaluate the current and next numbers and assign a color (green for positive, red for negative)
+                    bool ok;
+                    if (!listBTC.isEmpty()) {
+                        double next = listBTC.first().toDouble(&ok);
+                        if (!ok) {
+                            ui->labelCurrentPriceBTC->setStyleSheet(currentPriceStyleSheet.arg("#4960ad"));
+                            ui->labelCurrentPriceBTC->setText("");
+                        } else {
+                            double currentBTC = ui->labelCurrentPriceBTC->text().toDouble(&ok);
+                            if (!ok) {
+                                currentBTC = 0.00000000;
+                            } else {
+                                if (next < currentBTC)
+                                    ui->labelCurrentPriceBTC->setStyleSheet(currentPriceStyleSheet.arg("red"));
+                                else if (next > currentBTC)
+                                    ui->labelCurrentPriceBTC->setStyleSheet(currentPriceStyleSheet.arg("green"));
+                                else
+                                    ui->labelCurrentPriceBTC->setStyleSheet(currentPriceStyleSheet.arg("black"));
+                                    
+                            }
+                            ui->labelCurrentPriceBTC->setText(QString("%1").arg(QString().setNum(next, 'f', 8)));
+                            //ui->labelCurrentPriceBTC->setToolTip(tr("Brought to you by coinmarketcap.com"));
+
+                            //QString total;
+    						//double current2 = (current * totalBalance / 100000000);
+  							//total = QString::number(current2, 'f', 2);
+  							//ui->labelUSDTotal->setText("$" + total + " USD");
+
+                            
+                        }
+                    }
+                }
+        );
+
+        
+    
+        // Create the timer
+        connect(pricingTimerBTC, SIGNAL(timeout()), this, SLOT(getPriceInfo()));
+        pricingTimerBTC->start(300000);
+        getPriceInfoBTC();
+        /** pricing BTC END */
 
 
 
@@ -475,8 +541,14 @@ void OverviewPage::SetupTransactionList(int nNumItems) {
 
 void OverviewPage::getPriceInfo()
 {
-    //request->setUrl(QUrl("https://api.binance.com/api/v1/ticker/price?symbol=RVNBTC"));
-    request->setUrl(QUrl("https://api.coinmarketcap.com/v1/ticker/sinovate/"));
+        request->setUrl(QUrl("https://sinovate.io/priceUSD.php"));
     
     networkManager->get(*request);
+}
+
+void OverviewPage::getPriceInfoBTC()
+{
+        requestBTC->setUrl(QUrl("https://sinovate.io/priceBTC.php"));
+    
+    networkManagerBTC->get(*requestBTC);
 }

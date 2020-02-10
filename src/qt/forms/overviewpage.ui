@@ -996,7 +996,7 @@ background-color: transparent;</string>
          <property name="minimumSize">
           <size>
            <width>100</width>
-           <height>70</height>
+           <height>100</height>
           </size>
          </property>
          <property name="frameShape">
@@ -1011,10 +1011,24 @@ background-color: transparent;</string>
             <x>10</x>
             <y>0</y>
             <width>391</width>
-            <height>71</height>
+            <height>96</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="statisticGridLayout">
+           <item row="2" column="1">
+            <widget class="QLabel" name="labelStatisticLastScan">
+             <property name="font">
+              <font>
+               <pointsize>11</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>0</string>
+             </property>
+            </widget>
+           </item>
            <item row="3" column="0">
             <widget class="QLabel" name="labelCurrentPriceText">
              <property name="sizePolicy">
@@ -1041,8 +1055,8 @@ background-color: transparent;</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="1">
-            <widget class="QLabel" name="labelCurrentPrice">
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelStatisticLastScanText">
              <property name="font">
               <font>
                <pointsize>11</pointsize>
@@ -1050,23 +1064,11 @@ background-color: transparent;</string>
                <bold>true</bold>
               </font>
              </property>
-             <property name="cursor">
-              <cursorShape>IBeamCursor</cursorShape>
-             </property>
-             <property name="toolTip">
-              <string>Your current total balance</string>
-             </property>
              <property name="styleSheet">
               <string notr="true"/>
              </property>
              <property name="text">
-              <string notr="true">0 USD</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-             </property>
-             <property name="textInteractionFlags">
-              <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+              <string>Last Scan :</string>
              </property>
             </widget>
            </item>
@@ -1109,8 +1111,8 @@ background-color: transparent;</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="labelStatisticLastScan">
+           <item row="4" column="0">
+            <widget class="QLabel" name="labelCurrentPriceBTCText">
              <property name="font">
               <font>
                <pointsize>11</pointsize>
@@ -1119,12 +1121,12 @@ background-color: transparent;</string>
               </font>
              </property>
              <property name="text">
-              <string>0</string>
+              <string>SIN Market Value Btc :</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="labelStatisticLastScanText">
+           <item row="4" column="1">
+            <widget class="QLabel" name="labelCurrentPriceBTC">
              <property name="font">
               <font>
                <pointsize>11</pointsize>
@@ -1132,11 +1134,22 @@ background-color: transparent;</string>
                <bold>true</bold>
               </font>
              </property>
-             <property name="styleSheet">
-              <string notr="true"/>
+             <property name="text">
+              <string>0 BTC</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLabel" name="labelCurrentPrice">
+             <property name="font">
+              <font>
+               <pointsize>11</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
              </property>
              <property name="text">
-              <string>Last Scan :</string>
+              <string>0 USD</string>
              </property>
             </widget>
            </item>

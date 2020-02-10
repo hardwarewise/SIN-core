@@ -48,6 +48,7 @@ public Q_SLOTS:
     void infinityNodeStat();
     void setBalance(const interfaces::WalletBalances& balances);
     void getPriceInfo();
+    void getPriceInfoBTC();
 
 Q_SIGNALS:
     void transactionClicked(const QModelIndex &index);
@@ -60,8 +61,11 @@ private:
     WalletModel *walletModel;
     interfaces::WalletBalances m_balances;
     QTimer *pricingTimer;
+    QTimer *pricingTimerBTC;
     QNetworkAccessManager* networkManager;
+    QNetworkAccessManager* networkManagerBTC;
     QNetworkRequest* request;
+    QNetworkRequest* requestBTC;
     qint64 totalBalance;
     int nDisplayUnit;
 
