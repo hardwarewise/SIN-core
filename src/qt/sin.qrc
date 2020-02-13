@@ -82,6 +82,7 @@
         <file alias="discord1">res/icons/discord1.png</file>
         <file alias="facebook1">res/icons/facebook1.png</file>
         <file alias="github1">res/icons/github1.png</file>
+        <file alias="github">res/icons/github.png</file>
         <file alias="twitter1">res/icons/twitter1.png</file>
         <file alias="telegram1">res/icons/telegram1.png</file>
         <file alias="youtube1">res/icons/youtube1.png</file>
@@ -96,6 +97,7 @@
         <file alias="tradeogre">res/icons/tradeogre.png</file>
         <file alias="txbit">res/icons/txbit.png</file>
         <file alias="qbtc">res/icons/qbtc.png</file>
+        <file alias="instaswap">res/icons/instaswap.png</file>
 
     </qresource>
     <qresource prefix="/movies">

@@ -148,8 +148,7 @@ private:
     QAction* openWebsite7;
     QAction* openWebsite8;
     QAction* openWebsite9;
-    QAction* openWebsite10;
-
+    
     QAction* Exchangesite1;
     QAction* Exchangesite2;
     QAction* Exchangesite3;
@@ -161,7 +160,17 @@ private:
     QAction* Exchangesite9;
     QAction* Exchangesite10;
     QAction* Exchangesite11;
+    QAction* Exchangesite12;
+
+    QAction* ResourcesWebsite1;
+    QAction* ResourcesWebsite2;
+    QAction* ResourcesWebsite3;
+    QAction* ResourcesWebsite4;
+    QAction* ResourcesWebsite5;
+    QAction* ResourcesWebsite6;
+    QAction* ResourcesWebsite7;
 /// end Exhange and Web Links
+    QAction *showSpecsHelpAction;
     
     QLabel *m_wallet_selector_label = nullptr;
     QComboBox* m_wallet_selector = nullptr;
@@ -170,7 +179,9 @@ private:
     QMenu* trayIconMenu = nullptr;
     Notificator* notificator = nullptr;
     RPCConsole* rpcConsole = nullptr;
-    HelpMessageDialog* helpMessageDialog = nullptr;
+    //HelpMessageDialog* helpMessageDialog = nullptr;
+    HelpMessageDialog *helpMessageDialog;
+
     ModalOverlay* modalOverlay = nullptr;
 
     /** Keep track of previous number of blocks, to detect progress */
@@ -315,6 +326,7 @@ private Q_SLOTS:
 
     /** Show help message dialog */
     void showHelpMessageClicked();
+    void showSpecsHelpClicked();
 #ifndef Q_OS_MAC
     /** Handle tray icon clicked */
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
