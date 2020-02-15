@@ -11,10 +11,8 @@ sudo apt update && sudo apt install unzip
 # remove old files and folders
 rm -rf ~/.sin/{blocks,chainstate,debug.log,mnpayments.dat,mncache.dat,banlist.dat,peers.dat,netfulfilled.dat,governance.dat,fee_estimates.dat}
 
-# download bootstrap archive
-# please check the latest version available at github replacing the bootstrap URL from the command below:
-# https://github.com/SINOVATEblockchain/SIN-core/releases/latest
-wget -O ~/bootstrap.zip https://github.com/SINOVATEblockchain/SIN-core/releases/download/ec78b3b/bootstrap.02.01.2020.zip
+# download latest bootstrap archive
+wget -O ~/bootstrap.zip https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstrap.zip
 
 # unzip the bootstrap archive
 unzip ~/bootstrap.zip
