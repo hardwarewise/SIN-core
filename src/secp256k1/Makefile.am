@@ -179,3 +179,7 @@ endif
 if ENABLE_MODULE_SCHNORR
 include src/modules/schnorr/Makefile.am.include
 endif
+
+if ENABLE_MODULE_MUSIG
+include src/modules/musig/Makefile.am.include
+endif
