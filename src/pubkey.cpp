@@ -184,7 +184,7 @@ bool CPubKey::VerifyECDSA(const uint256 &hash, const std::vector<unsigned char>&
     return secp256k1_ecdsa_verify(secp256k1_context_verify, &sig, hash.begin(), &pubkey);
 }
 
-bool CPubKey::VerifySchnorr(const uint256 &hash, const std::vector<uint8_t> &vchSig) const {
+bool CPubKey::VerifySchnorr(const uint256 &hash, const std::vector<unsigned char> &vchSig) const {
     if (!IsValid()) {
         return false;
     }
@@ -193,12 +193,18 @@ bool CPubKey::VerifySchnorr(const uint256 &hash, const std::vector<uint8_t> &vch
         return false;
     }
 
+    //secp256k1_pubkey pubkey;
+    secp256k1_schnorr sig;
     secp256k1_pubkey pubkey;
-    if (!secp256k1_ec_pubkey_parse(secp256k1_context_verify, &pubkey, &(*this)[0], size())) {
+
+    if (!secp256k1_ec_pubkey_parse(secp256k1_context_verify, &pubkey, vch, size())) {
+        return false;
+    }
+    if (!secp256k1_schnorr_parse(secp256k1_context_verify, &sig, &vchSig[0])) {
         return false;
     }
 
-    return secp256k1_schnorr_verify(secp256k1_context_verify, &vchSig[0], hash.begin(), &pubkey);
+    return secp256k1_schnorr_verify(secp256k1_context_verify, &sig, hash.begin(), &pubkey);
 }
 
 bool CPubKey::RecoverCompact(const uint256 &hash, const std::vector<unsigned char>& vchSig) {
