@@ -428,6 +428,31 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
                                 }
                             }
                         }
+                        //Amount to Notification
+                        if (whichType == TX_BURN_DATA && Params().GetConsensus().cNotifyAddress == EncodeDestination(CKeyID(uint160(vSolutions[0]))))
+                        {
+                            //Amount for UpdateMeta
+                            if ( (Params().GetConsensus().nInfinityNodeNotificationValue - 1) * COIN <= out.nValue
+                                 && out.nValue <= (Params().GetConsensus().nInfinityNodeNotificationValue) * COIN){
+                                //Address payee: we known that there is only 1 input
+                                const CTxIn& txin = tx->vin[0];
+                                int index = txin.prevout.n;
+
+                                CTransactionRef prevtx;
+                                uint256 hashblock;
+                                if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false)) {
+                                    LogPrintf("CInfinitynodeMan::updateInfinityNodeInfo -- PrevBurnFund tx is not in block.\n");
+                                    return false;
+                                }
+
+                                CTxDestination addressBurnFund;
+                                if(!ExtractDestination(prevtx->vout[index].scriptPubKey, addressBurnFund)){
+                                    LogPrintf("CInfinitynodeMan::updateInfinityNodeInfo -- False when extract payee from BurnFund tx.\n");
+                                    return false;
+                                }
+                                updateNotification(EncodeDestination(addressBurnFund),"BackupAddress");
+                            }
+                        }
                     } //end loop for all output
                 } else { //Coinbase tx => update mapLastPaid
                     if (prevBlockIndex->nHeight >= pindex->nHeight - nLastPaidScanDeepth){
@@ -500,6 +525,19 @@ void CInfinitynodeMan::updateMetadata(std::string nodeowner, std::string nodePub
             if (infpair.second.getMetadataHeight() < nHeightUpdate){
                 infpair.second.setNodePublicKey(nodePublicKey);
                 infpair.second.setService(nodeService);
+            }
+        }
+    }
+}
+
+void CInfinitynodeMan::updateNotification(std::string nodeowner, std::string code)
+{
+    AssertLockHeld(cs);
+
+    for (auto& infpair : mapInfinitynodes) {
+        if (infpair.second.collateralAddress == nodeowner) {
+            if (code == "BackupAddress") {
+                infpair.second.setActiveBackupAddress(1);
             }
         }
     }

@@ -9,6 +9,8 @@
 #include <validation.h>
 #include <script/standard.h>
 #include <key_io.h>
+#include <net.h>
+#include <netbase.h>
 
 using namespace std;
 
@@ -44,6 +46,7 @@ struct infinitynode_info_t
     int nMetadataHeight=0;
     std::string metadataPublicKey = "PublicKey";
     CService metadataService{};
+    int activeBackupAddress = 0;
 };
 
 class CInfinitynode : public infinitynode_info_t
@@ -80,6 +83,7 @@ public:
         READWRITE(nMetadataHeight);
         READWRITE(metadataPublicKey);
         READWRITE(metadataService);
+        READWRITE(activeBackupAddress);
     }
 
     void setHeight(int nInHeight){nHeight = nInHeight; nExpireHeight=nInHeight + 720*365;}
@@ -93,6 +97,7 @@ public:
     void setNodePublicKey(std::string publicKey) { metadataPublicKey = publicKey;}
     void setService(CService addrNew) { metadataService = addrNew;}
     void setMetadataHeight(int nHeight) { nMetadataHeight = nHeight;}
+    void setActiveBackupAddress(int active) { activeBackupAddress = active;}
 
     infinitynode_info_t GetInfo();
     std::string getCollateralAddress(){return collateralAddress;}
@@ -107,6 +112,11 @@ public:
     int getMetadataHeight(){return nMetadataHeight;}
     std::string getMetaPublicKey(){return metadataPublicKey;}
     CService getMetaService(){return metadataService;}
+    int getActiveBackupAddress(){return activeBackupAddress;}
+
+    bool IsValidNetAddr();
+    static bool IsValidNetAddr(CService addrIn);
+    static bool IsValidStateForAutoStart(int nMetadataHeight);
 
     CInfinitynode& operator=(CInfinitynode const& from)
     {

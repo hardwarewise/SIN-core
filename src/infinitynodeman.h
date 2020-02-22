@@ -134,6 +134,7 @@ public:
     bool buildInfinitynodeList(int nBlockHeight, int nLowHeight = 165000);
     bool buildListForBlock(int nBlockHeight);
     void updateLastPaid();
+    void updateNotification(std::string nodeowner, std::string code);
     void updateMetadata(std::string nodeowner, std::string nodeAddress, CService nodeService, int nHeightUpdate);
     bool updateInfinitynodeList(int fromHeight);//call in init.cppp
     bool initialInfinitynodeList(int fromHeight);//call in init.cpp
