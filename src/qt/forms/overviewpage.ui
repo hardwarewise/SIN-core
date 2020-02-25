@@ -524,8 +524,7 @@ background-position:bottom right;
           </property>
           <property name="styleSheet">
            <string notr="true">QFrame#frame_7 {
-background-color: #000;
-background-image: url(':/images/button-bg');
+background-color: #00023B;
 border-radius:10px;
 padding-right: 10px;
 
@@ -556,7 +555,7 @@ padding-right: 10px;
             <string notr="true">background-color: transparent;
 font: 75 14px &quot;MS Shell Dlg 2&quot;;
 font-weight: bold;
-color: #EF3C23;</string>
+color: #BC8F3A;</string>
            </property>
            <property name="text">
             <string>BIG</string>
@@ -684,8 +683,7 @@ background-color: transparent;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">QFrame#frame_8 {
-background-color: #000;
-background-image: url(':/images/button-bg');
+background-color: #00023B;
 border-radius:10px;
 padding-right: 10px;
 }</string>
@@ -709,7 +707,7 @@ padding-right: 10px;
             <string notr="true">background-color: transparent;
 font: 75 14px &quot;MS Shell Dlg 2&quot;;
 font-weight: bold;
-color: #EF3C23;</string>
+color: #BC8F3A;</string>
            </property>
            <property name="text">
             <string>MID</string>
@@ -834,8 +832,7 @@ background-color: transparent;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">QFrame#frame_9 {
-background-color: #000;
-background-image: url(':/images/button-bg');
+background-color: #00023B;
 border-radius:10px;
 padding-right: 10px;
 }</string>
@@ -859,7 +856,7 @@ padding-right: 10px;
             <string notr="true">background-color: transparent;
 font: 75 14px &quot;MS Shell Dlg 2&quot;;
 font-weight: bold;
-color: #EF3C23;</string>
+color: #BC8F3A;</string>
            </property>
            <property name="text">
             <string>MINI</string>

@@ -15,7 +15,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true"> QWidget#RPCConsole {
-background-color: #E3E3FF;
+background-color: #D6DCE5;
 
 }
 QTabWidget {
@@ -109,24 +109,26 @@ QTableView::item:selected { /* Table Item Selected */
 }
 
 QWidget#RPCConsole QPushButton#openDebugLogfileButton { /* Open Debug File Button */
-  background-color: #EF3C23;
-  border: 2px solid #EF3C23;
-  color: #ffffff;
-  padding-left: 20px;
-  padding-right: 20px;
-font-size: 12px;
+  background-color: #00023B;
+	background-repeat: no-repeat;
+    background-size: 1000% 1000%;
+ 	padding: 0.85em 2em;
+	font-family: &quot;Montserrat&quot;;
+	letter-spacing: 1px;
+	border: 0;
+	color: #ffffff;
+	font-size: 12px;
 	font-weight: bold;
 	border-radius: 19px;
 	text-transform: uppercase;
 }
 
 QWidget#RPCConsole QPushButton#openDebugLogfileButton:hover {
-  background-color: #E03821;
-  color: #fffff;
+  color : #BC8F3A;
 }
 
 QWidget#RPCConsole QPushButton#openDebugLogfileButton:pressed {
-	border: 1px solid #9e9e9e;
+	border: 1px solid #333;
 }
 
 QScrollBar {
