@@ -160,7 +160,7 @@ Alias | VPS IP:PORT | privkey | Collateral tx ID | Collateral Output index | Bur
 
 ### A. First Phase
 
-* If you are a Windows user, download and install a SSH client (ie. [Bitvise](https://www.bitvise.com), [Putty](https://www.putty.org/), [Xshell](https://www.netsarang.com/en/xshell/), ecc...)
+* If you are a Windows user, download and install a SSH client (ie. [Bitvise](https://www.bitvise.com), [Putty](https://www.putty.org/), [Xshell](https://www.netsarang.com/en/free-for-home-school/), ecc...)
 * Connect to your VPS and enter your new password for first time installation. 
 * Then enter the following commands:
 ```bash
