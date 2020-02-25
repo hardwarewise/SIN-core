@@ -1,4 +1,4 @@
-# Infinity Node Bootstrap
+# Linux Bootstrap
 In case you need to quickly sync the blockchain of your Infinity Node or linux wallet, follow the steps below:
 
 ```bash
