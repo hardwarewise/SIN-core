@@ -43,7 +43,7 @@ Follow the steps below to create a new SIN address **to be used only for this pu
 
 * :warning: **Make sure to select the new wallet before proceeding.** See screenshot below:
 
-![Image-bkup-01](../.gitbook/assets/img_bkup_addr_01.jpg)
+![Image-bkup-01](/docs/assets/masternode_setup_guide/img_bkup_addr_01.jpg)
 
 * Now generate the new SIN address in the new wallet:
 
