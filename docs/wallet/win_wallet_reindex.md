@@ -7,4 +7,4 @@ In case you need to resync your local wallet in Windows:<br>
 * add in target, at the end of the path ` -reindex` (space -reindex, see screenshot below)
 * wait full resync
 
-![](./docs/assets/misc/win_wallet_reindex.png)
+![](/docs/assets/misc/win_wallet_reindex.png)
