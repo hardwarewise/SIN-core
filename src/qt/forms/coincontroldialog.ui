@@ -17,7 +17,7 @@
    <string notr="true"> /*******   BGcolor #0d1827  Orange #FF8204 */
 
 QDialog#CoinControlDialog { /* Coin Control Dialog Window */
- background-color: #E3E3FF;
+ background-color: #D6DCE5;
   color:#000000;
   }
   
@@ -172,10 +172,11 @@ QDialog#CoinControlDialog .CoinControlTreeWidget#treeWidget::item:checked {
 	color: #000000;
 }
 
+/*******************************************************/
+
 QPushButton {
 	/* Global Button Style */
-	background-color: #00419A;
-	background: url(':/images/button-bg');
+	background-color: #00023B;
 	background-repeat: no-repeat;
     background-size: 1000% 1000%;
  	padding: 0.85em 2em;
@@ -190,7 +191,7 @@ QPushButton {
 }
 QPushButton:hover {
 	/*background-color: #202677;*/
-	color : #EF3C23;
+	color : #BC8F3A;
 	
 }
 QPushButton:focus {

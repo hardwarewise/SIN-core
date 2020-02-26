@@ -1825,7 +1825,7 @@ UnitDisplayStatusBarControl::UnitDisplayStatusBarControl(const PlatformStyle *pl
     }
     setMinimumSize(max_width, 0);
     setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    setStyleSheet(QString("QLabel { color : #EF3C23; font-weight: bold; }").arg(platformStyle->SingleColor().name()));
+    setStyleSheet(QString("QLabel { color : #BC8F3A; font-weight: bold; }").arg(platformStyle->SingleColor().name()));
 }
 
 /** So that it responds to button clicks */
