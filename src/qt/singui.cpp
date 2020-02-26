@@ -188,18 +188,18 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
 #endif // QT_NO_TOOLTIP
     website->setText(QApplication::translate("OverviewPage", "<a href=\"https://sinovate.io\"><img src=\":/icons/website\" width=\"19\" height=\"19\"></a>", nullptr));
                         
-            QLabel* youtube = new QLabel();
-    youtube->setObjectName(QStringLiteral("youtube"));
-    youtube->setMinimumSize(QSize(32, 32));
-    youtube->setMaximumSize(QSize(32, 32));
-    youtube->setBaseSize(QSize(0, 0));
-    youtube->setCursor(QCursor(Qt::PointingHandCursor));
-    youtube->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-    youtube->setOpenExternalLinks(true);
+            QLabel* instaswap = new QLabel();
+    instaswap->setObjectName(QStringLiteral("instaswap"));
+    instaswap->setMinimumSize(QSize(32, 32));
+    instaswap->setMaximumSize(QSize(32, 32));
+    instaswap->setBaseSize(QSize(0, 0));
+    instaswap->setCursor(QCursor(Qt::PointingHandCursor));
+    instaswap->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+    instaswap->setOpenExternalLinks(true);
 #ifndef QT_NO_TOOLTIP
-    youtube->setToolTip(QApplication::translate("OverviewPage", "Visit SINOVATE Youtube Channel", nullptr));
+    instaswap->setToolTip(QApplication::translate("OverviewPage", "Exchange your SIN rapidly", nullptr));
 #endif // QT_NO_TOOLTIP
-    youtube->setText(QApplication::translate("OverviewPage", "<a href=\"https://sinovate.io/links/youtube\"><img src=\":/icons/youtube\" width=\"32\" height=\"32\"></a>", nullptr));
+    instaswap->setText(QApplication::translate("OverviewPage", "<a href=\"https://instaswap.io/\"><img src=\":/icons/instaswap\" width=\"32\" height=\"32\"></a>", nullptr));
 
             QLabel* twitter = new QLabel();
     twitter->setObjectName(QStringLiteral("twitter"));
@@ -244,7 +244,7 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
     frameSocialLayout->addWidget(discord);
     frameSocialLayout->addWidget(twitter);
     frameSocialLayout->addWidget(github);     
-    frameSocialLayout->addWidget(youtube);
+    frameSocialLayout->addWidget(instaswap);
     frameSocialLayout->addWidget(explorer);
     
     
@@ -327,6 +327,9 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
     connect(openWebsite7, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks_slot7()));
     connect(openWebsite8, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks_slot8()));
     connect(openWebsite9, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks_slot9()));
+    connect(openWebsite10, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks_slot10()));
+    connect(openWebsite11, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks_slot11()));
+    connect(openWebsite12, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks_slot12()));
     
     
     connect(Exchangesite1, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks2_slot1()));
@@ -605,6 +608,10 @@ void BitcoinGUI::createActions()
     openWebsite7 = new QAction(QIcon(":/icons/youtube1"), tr("&Youtube"), this);
     openWebsite8 = new QAction(QIcon(":/icons/github1"), tr("&Github"), this);
     openWebsite9 = new QAction(QIcon(":/icons/telegram1"), tr("&Telegram"), this);
+    openWebsite10 = new QAction(QIcon(":/icons/info"), tr("&Internationals"), this);
+    openWebsite11 = new QAction(QIcon(":/icons/facebook1"), tr("&Facebook"), this);
+    openWebsite12 = new QAction(QIcon(":/icons/info"), tr("&Minds"), this);
+
     
 
     Exchangesite1 = new QAction(QIcon(":/icons/cmc"), tr("&Coinmarketcap"), this);
@@ -622,11 +629,11 @@ void BitcoinGUI::createActions()
 
     ResourcesWebsite1 = new QAction(QIcon(":/icons/info"), tr("&Whitepaper"), this);
     ResourcesWebsite2 = new QAction(QIcon(":/icons/info"), tr("&Roadmap"), this);
-    ResourcesWebsite3 = new QAction(QIcon(":/icons/info"), tr("&GitBook"), this);
+    ResourcesWebsite3 = new QAction(QIcon(":/icons/info"), tr("&Documents"), this);
     ResourcesWebsite4 = new QAction(QIcon(":/icons/info"), tr("&sin.conf "), this);
-    ResourcesWebsite5 = new QAction(QIcon(":/icons/info"), tr("&Releases"), this);
+    ResourcesWebsite5 = new QAction(QIcon(":/icons/info"), tr("&Wallets"), this);
     ResourcesWebsite6 = new QAction(QIcon(":/icons/explorer1"), tr("&Explorer"), this);
-    ResourcesWebsite7 = new QAction(QIcon(":/icons/info"), tr("&Web Tool"), this);
+    ResourcesWebsite7 = new QAction(QIcon(":/icons/info"), tr("&SIN WebTool"), this);
 
 
 
@@ -718,6 +725,7 @@ void BitcoinGUI::createMenuBar()
         hyperlinks3->addAction(ResourcesWebsite5);
         hyperlinks3->addAction(ResourcesWebsite6);
         hyperlinks3->addAction(ResourcesWebsite7);
+        hyperlinks3->addAction(showSpecsHelpAction);
         
     }
     //end Resources Links
@@ -754,6 +762,9 @@ void BitcoinGUI::createMenuBar()
         hyperlinks->addAction(openWebsite7);
         hyperlinks->addAction(openWebsite8);
         hyperlinks->addAction(openWebsite9);
+        hyperlinks->addAction(openWebsite10);
+        hyperlinks->addAction(openWebsite11);
+        hyperlinks->addAction(openWebsite12);
         
     }
     //end Web Links
@@ -780,7 +791,7 @@ void BitcoinGUI::createMenuBar()
         help->addAction(openRPCConsoleAction);
     }
     help->addAction(showHelpMessageAction);
-    help->addAction(showSpecsHelpAction);
+    //help->addAction(showSpecsHelpAction);
     help->addSeparator();
     help->addAction(aboutAction);
     help->addAction(aboutQtAction);
@@ -1028,6 +1039,9 @@ void BitcoinGUI::createTrayIconMenu()
     trayIconMenu->addAction(openWebsite7);
     trayIconMenu->addAction(openWebsite8);
     trayIconMenu->addAction(openWebsite9);
+    trayIconMenu->addAction(openWebsite10);
+    trayIconMenu->addAction(openWebsite11);
+    trayIconMenu->addAction(openWebsite12);
        
     trayIconMenu->addAction(Exchangesite1);
     trayIconMenu->addAction(Exchangesite2);
