@@ -377,13 +377,13 @@ void OverviewPage::infinityNodeStat()
     ui->labelMIDNodeQueued->setText(strMIDNodeQueuedText);
     ui->labelLILNodeQueued->setText(strLILNodeQueuedText);
 
-    QString strBIGNodeROIText(tr("ROI %1 days").arg(infnodeman.getRoi(10, totalBIG)));
-    QString strMIDNodeROIText(tr("ROI %1 days").arg(infnodeman.getRoi(5, totalMID)));
-    QString strLILNodeROIText(tr("ROI %1 days").arg(infnodeman.getRoi(1, totalLIL)));
+    //QString strBIGNodeROIText(tr("ROI %1 days").arg(infnodeman.getRoi(10, totalBIG)));
+    //QString strMIDNodeROIText(tr("ROI %1 days").arg(infnodeman.getRoi(5, totalMID)));
+    //QString strLILNodeROIText(tr("ROI %1 days").arg(infnodeman.getRoi(1, totalLIL)));
 
-    ui->labelBIGNodeRoi->setText(strBIGNodeROIText);
-    ui->labelMIDNodeRoi->setText(strMIDNodeROIText);
-    ui->labelLILNodeRoi->setText(strLILNodeROIText);
+    //ui->labelBIGNodeRoi->setText(strBIGNodeROIText);
+    //ui->labelMIDNodeRoi->setText(strMIDNodeROIText);
+    //ui->labelLILNodeRoi->setText(strLILNodeROIText);
 
     QString strBIGNodeSTMText(tr("Payment Round\n%1").arg(infnodeman.getLastStatement(10)));
     QString strMIDNodeSTMText(tr("Payment Round\n%1").arg(infnodeman.getLastStatement(5)));

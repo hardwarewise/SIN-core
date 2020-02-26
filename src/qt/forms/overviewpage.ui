@@ -628,28 +628,6 @@ background-color: transparent;</string>
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
-          <widget class="QLabel" name="labelBIGNodeRoi">
-           <property name="geometry">
-            <rect>
-             <x>42</x>
-             <y>12</y>
-             <width>80</width>
-             <height>20</height>
-            </rect>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">font: 75 8px &quot;MS Shell Dlg 2&quot;;
-background-color: transparent;
-color: #ffffff;
-margin-right: 5px;</string>
-           </property>
-           <property name="text">
-            <string notr="true">0</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
           <widget class="QLabel" name="labelBIGNodeSTM">
            <property name="geometry">
             <rect>
@@ -777,28 +755,6 @@ background-color: transparent;</string>
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
-          <widget class="QLabel" name="labelMIDNodeRoi">
-           <property name="geometry">
-            <rect>
-             <x>42</x>
-             <y>12</y>
-             <width>80</width>
-             <height>20</height>
-            </rect>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">font: 75 8px &quot;MS Shell Dlg 2&quot;;
-background-color: transparent;
-color: #ffffff;
-margin-right: 5px;</string>
-           </property>
-           <property name="text">
-            <string notr="true">0</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
           <widget class="QLabel" name="labelMIDNodeSTM">
            <property name="geometry">
             <rect>
@@ -924,28 +880,6 @@ background-color: transparent;</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-          <widget class="QLabel" name="labelLILNodeRoi">
-           <property name="geometry">
-            <rect>
-             <x>42</x>
-             <y>12</y>
-             <width>80</width>
-             <height>20</height>
-            </rect>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">font: 75 8px &quot;MS Shell Dlg 2&quot;;
-background-color: transparent;
-color: #ffffff;
-margin-right: 5px;</string>
-           </property>
-           <property name="text">
-            <string notr="true">0</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
           <widget class="QLabel" name="labelLILNodeSTM">
