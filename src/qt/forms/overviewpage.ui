@@ -545,9 +545,9 @@ padding-right: 10px;
           <widget class="QLabel" name="labelBIGNodeText">
            <property name="geometry">
             <rect>
-             <x>0</x>
+             <x>10</x>
              <y>10</y>
-             <width>125</width>
+             <width>100</width>
              <height>25</height>
             </rect>
            </property>
@@ -560,16 +560,13 @@ color: #BC8F3A;</string>
            <property name="text">
             <string>BIG</string>
            </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
           </widget>
           <widget class="QLabel" name="labelBIGNode">
            <property name="geometry">
             <rect>
-             <x>0</x>
+             <x>18</x>
              <y>46</y>
-             <width>125</width>
+             <width>91</width>
              <height>36</height>
             </rect>
            </property>
@@ -592,9 +589,9 @@ color: #ffffff;
           <widget class="QLabel" name="labelBIGNodeQueued">
            <property name="geometry">
             <rect>
-             <x>0</x>
-             <y>81</y>
-             <width>125</width>
+             <x>13</x>
+             <y>85</y>
+             <width>98</width>
              <height>15</height>
             </rect>
            </property>
@@ -613,9 +610,9 @@ background-color: transparent;</string>
           <widget class="QLabel" name="label_7">
            <property name="geometry">
             <rect>
-             <x>0</x>
-             <y>32</y>
-             <width>125</width>
+             <x>10</x>
+             <y>28</y>
+             <width>100</width>
              <height>15</height>
             </rect>
            </property>
@@ -634,10 +631,10 @@ background-color: transparent;</string>
           <widget class="QLabel" name="labelBIGNodeSTM">
            <property name="geometry">
             <rect>
-             <x>0</x>
-             <y>98</y>
-             <width>125</width>
-             <height>22</height>
+             <x>13</x>
+             <y>100</y>
+             <width>98</width>
+             <height>20</height>
             </rect>
            </property>
            <property name="styleSheet">
@@ -678,9 +675,9 @@ padding-right: 10px;
           <widget class="QLabel" name="labelMIDNodeText">
            <property name="geometry">
             <rect>
-             <x>0</x>
+             <x>10</x>
              <y>10</y>
-             <width>125</width>
+             <width>100</width>
              <height>25</height>
             </rect>
            </property>
@@ -693,16 +690,13 @@ color: #BC8F3A;</string>
            <property name="text">
             <string>MID</string>
            </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
           </widget>
           <widget class="QLabel" name="labelMIDNode">
            <property name="geometry">
             <rect>
-             <x>0</x>
+             <x>18</x>
              <y>46</y>
-             <width>125</width>
+             <width>91</width>
              <height>36</height>
             </rect>
            </property>
@@ -722,9 +716,9 @@ color: #ffffff;
           <widget class="QLabel" name="labelMIDNodeQueued">
            <property name="geometry">
             <rect>
-             <x>0</x>
-             <y>81</y>
-             <width>125</width>
+             <x>13</x>
+             <y>85</y>
+             <width>98</width>
              <height>15</height>
             </rect>
            </property>
@@ -743,9 +737,9 @@ background-color: transparent;</string>
           <widget class="QLabel" name="label_8">
            <property name="geometry">
             <rect>
-             <x>0</x>
-             <y>32</y>
-             <width>125</width>
+             <x>10</x>
+             <y>28</y>
+             <width>100</width>
              <height>15</height>
             </rect>
            </property>
@@ -764,10 +758,10 @@ background-color: transparent;</string>
           <widget class="QLabel" name="labelMIDNodeSTM">
            <property name="geometry">
             <rect>
-             <x>0</x>
-             <y>98</y>
-             <width>125</width>
-             <height>22</height>
+             <x>13</x>
+             <y>100</y>
+             <width>98</width>
+             <height>20</height>
             </rect>
            </property>
            <property name="styleSheet">
@@ -808,9 +802,9 @@ padding-right: 10px;
           <widget class="QLabel" name="labelLILNodeText">
            <property name="geometry">
             <rect>
-             <x>0</x>
+             <x>10</x>
              <y>10</y>
-             <width>125</width>
+             <width>100</width>
              <height>25</height>
             </rect>
            </property>
@@ -823,16 +817,13 @@ color: #BC8F3A;</string>
            <property name="text">
             <string>MINI</string>
            </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
           </widget>
           <widget class="QLabel" name="labelLILNode">
            <property name="geometry">
             <rect>
-             <x>0</x>
+             <x>18</x>
              <y>46</y>
-             <width>125</width>
+             <width>91</width>
              <height>36</height>
             </rect>
            </property>
@@ -852,9 +843,9 @@ color: #ffffff;
           <widget class="QLabel" name="labelLILNodeQueued">
            <property name="geometry">
             <rect>
-             <x>0</x>
-             <y>81</y>
-             <width>125</width>
+             <x>13</x>
+             <y>85</y>
+             <width>98</width>
              <height>15</height>
             </rect>
            </property>
@@ -873,9 +864,9 @@ background-color: transparent;</string>
           <widget class="QLabel" name="label_9">
            <property name="geometry">
             <rect>
-             <x>0</x>
-             <y>32</y>
-             <width>125</width>
+             <x>10</x>
+             <y>28</y>
+             <width>100</width>
              <height>15</height>
             </rect>
            </property>
@@ -894,10 +885,10 @@ background-color: transparent;</string>
           <widget class="QLabel" name="labelLILNodeSTM">
            <property name="geometry">
             <rect>
-             <x>0</x>
-             <y>98</y>
-             <width>125</width>
-             <height>22</height>
+             <x>13</x>
+             <y>100</y>
+             <width>98</width>
+             <height>20</height>
             </rect>
            </property>
            <property name="styleSheet">
