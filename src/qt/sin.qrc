@@ -98,6 +98,7 @@
         <file alias="txbit">res/icons/txbit.png</file>
         <file alias="qbtc">res/icons/qbtc.png</file>
         <file alias="instaswap">res/icons/instaswap.png</file>
+        <file alias="instaswap1">res/icons/instaswap1.png</file>
 
     </qresource>
     <qresource prefix="/movies">

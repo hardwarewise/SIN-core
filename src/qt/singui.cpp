@@ -4,6 +4,7 @@
 
 #include <qt/singui.h>
 
+#include <clientversion.h>
 #include <qt/sinunits.h>
 #include <qt/clientmodel.h>
 #include <qt/guiconstants.h>
@@ -85,19 +86,19 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
     m_node(node),
     platformStyle(_platformStyle)
 {
-    QSettings settings;
+	QSettings settings;
     if (!restoreGeometry(settings.value("MainWindowGeometry").toByteArray())) {
         // Restore failed (perhaps missing setting), center the window
         move(QApplication::desktop()->availableGeometry().center() - frameGeometry().center());
     }
 
-    QString windowTitle = tr("SIN-CORE") + " - ";
+       QString windowTitle = tr("SIN-CORE") + " - ";
 #ifdef ENABLE_WALLET
     enableWallet = WalletModel::isWalletEnabled();
 #endif // ENABLE_WALLET
     if(enableWallet)
     {
-        windowTitle += tr("Wallet");
+        windowTitle += tr("Wallet") + QString(" %1").arg(QString::fromStdString(FormatFullVersion()));
     } else {
         windowTitle += tr("Node");
     }
@@ -199,7 +200,7 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
 #ifndef QT_NO_TOOLTIP
     instaswap->setToolTip(QApplication::translate("OverviewPage", "Exchange your SIN rapidly", nullptr));
 #endif // QT_NO_TOOLTIP
-    instaswap->setText(QApplication::translate("OverviewPage", "<a href=\"https://instaswap.io/\"><img src=\":/icons/instaswap\" width=\"32\" height=\"32\"></a>", nullptr));
+    instaswap->setText(QApplication::translate("OverviewPage", "<a href=\"https://instaswap.io/\"><img src=\":/icons/instaswap1\" width=\"32\" height=\"32\"></a>", nullptr));
 
             QLabel* twitter = new QLabel();
     twitter->setObjectName(QStringLiteral("twitter"));
@@ -824,8 +825,10 @@ void BitcoinGUI::createToolBars()
         label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         toolbar->addWidget(label);
 
+        
         QLabel* labelLogo = new QLabel();
         labelLogo->setPixmap(QPixmap(":/images/sinovate_logo_horizontal"));
+        //labelLogo->setText(versionText);
         labelLogo->setStyleSheet("margin-left: 20px");
         toolbar->addWidget(labelLogo);
 
