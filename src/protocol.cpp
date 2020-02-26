@@ -58,6 +58,7 @@ const char *MNPING="mnp";
 const char *DSEG="dseg";
 const char *SYNCSTATUSCOUNT="ssc";
 const char *MNVERIFY="mnv";
+const char *INFLOCKREWARD="inflrwd";
 } // namespace NetMsgType
 
 /** All known message types. Keep this in the same order as the list of
@@ -104,6 +105,7 @@ const static std::string allNetMessageTypes[] = {
     NetMsgType::DSEG,
     NetMsgType::SYNCSTATUSCOUNT,
     NetMsgType::MNVERIFY,
+    NetMsgType::INFLOCKREWARD,
 };
 const static std::vector<std::string> allNetMessageTypesVec(allNetMessageTypes, allNetMessageTypes+ARRAYLEN(allNetMessageTypes));
 
@@ -227,6 +229,7 @@ std::string CInv::GetCommand() const
     case MSG_MASTERNODE_PING:          return cmd.append(NetMsgType::MNPING);
     case MSG_MASTERNODE_VERIFY:        return cmd.append(NetMsgType::MNVERIFY);
     //
+    case MSG_LOCKREWARD_INIT:          return cmd.append(NetMsgType::INFLOCKREWARD);
     default:
         throw std::out_of_range(strprintf("CInv::GetCommand(): type=%d unknown type", type));
     }

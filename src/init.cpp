@@ -1838,6 +1838,9 @@ bool AppInitMain()
         return false;
     }
 
+    // SIN
+    fInfinityNode = gArgs.GetBoolArg("-infinitynode", false);
+    //
     // Dash
     // ********************************************************* Step 11a: setup InfinityNode
     fMasterNode = gArgs.GetBoolArg("-masternode", false);

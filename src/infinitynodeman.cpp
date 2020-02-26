@@ -677,7 +677,7 @@ void CInfinitynodeMan::calculAllInfinityNodesRankAtLastStm()
 
 bool CInfinitynodeMan::deterministicRewardAtHeight(int nBlockHeight, int nSinType, CInfinitynode& infinitynodeRet)
 {
-    assert(nBlockHeight >= Params().GetConsensus().nInfinityNodeGenesisStatement);
+    if(nBlockHeight < Params().GetConsensus().nInfinityNodeGenesisStatement) return false;
     //step1: copy mapStatement for nSinType
     std::map<int, int> mapStatementSinType = getStatementMap(nSinType);
 

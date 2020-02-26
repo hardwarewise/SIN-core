@@ -100,6 +100,7 @@ public:
     void setActiveBackupAddress(int active) { activeBackupAddress = active;}
 
     infinitynode_info_t GetInfo();
+    COutPoint getBurntxOutPoint(){return vinBurnFund.prevout;}
     std::string getCollateralAddress(){return collateralAddress;}
     std::string getBackupAddress(){return backupAddress;}
     CScript getScriptPublicKey(){return scriptPubKey;}
