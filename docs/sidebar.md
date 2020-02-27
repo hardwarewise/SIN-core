@@ -4,6 +4,8 @@
 - [Infinity Node setup](infinity_node_setup_guide)
 - [Bootstrap](bootstrap)
 - [Wallet](wallet)
+- **Tutorials**
+- [Infinity Node tips](infinity_node_tips)
 - **Archived**
 - [Stuck block 350094](archive/20200214_stuck_block_350094)
 - **Links**
