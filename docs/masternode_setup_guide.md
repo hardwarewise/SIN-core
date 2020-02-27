@@ -43,7 +43,7 @@ Follow the steps below to create a new SIN address **to be used only for this pu
 
 * :warning: **Make sure to select the new wallet before proceeding.** See screenshot below:
 
-![Image-bkup-01](/docs/assets/masternode_setup_guide/img_bkup_addr_01.jpg)
+![Image-bkup-01](assets/img/masternode_setup_guide/img_bkup_addr_01.jpg)
 
 * Now generate the new SIN address in the new wallet:
 
@@ -65,7 +65,7 @@ Follow the steps below to create a new SIN address **to be used only for this pu
   unloadwallet
   ```
 
-![Image-bkup-02](/docs/assets/masternode_setup_guide/img_bkup_addr_02.jpg)
+![Image-bkup-02](assets/img/masternode_setup_guide/img_bkup_addr_02.jpg)
 
 * **NOW IT IS EXTREMELY IMPORTANT** that you physically delete the temporary wallet folder `SIN_Backup` from your computer. Also make sure to empty the bin.
 * Close your local SIN wallet.
@@ -76,7 +76,7 @@ Follow the steps below to create a new SIN address **to be used only for this pu
     * \(This defaults to `C:\Documents and Settings\YourUserName\Application data\SIN\wallets` on Windows XP and to `C:\Users\YourUserName\Appdata\Roaming\SIN\wallets` on Windows Vista, 7, 8, and 10.\)
 * **Delete** the **SIN\_Backup** folder.
 
-![Image-bkup-03](/docs/assets/masternode_setup_guide/img_bkup_addr_03.jpg)
+![Image-bkup-03](assets/img/masternode_setup_guide/img_bkup_addr_03.jpg)
 
 * Empty your bin.
 * Please **use the new generated backup SIN address during the next section** \(The Burn transaction\).
@@ -89,14 +89,14 @@ Open your Sinovate local wallet and create a new receiving address:
 * Top menu, click on `File`, then on `Receiving address`
 * Label the address \(for example: 01-BIG – see screenshot\).
 
-![Image 01](/docs/assets/masternode_setup_guide/img_01.jpg)
+![Image 01](assets/img/masternode_setup_guide/img_01.jpg)
 
 * Copy that newly generated address.
 * Go to the `Send` tab of the wallet and paste the address in the `Pay To` field.
 * In the `Amount` field, enter the **Burn** amount you wish to build your Infinity Node with \(100,000 / 500,000 / 1,000,000\) – see screenshot below.
 * the amount has to be exact, no more, no less.
 
-![Image 02](/docs/assets/masternode_setup_guide/img_02.jpg)
+![Image 02](assets/img/masternode_setup_guide/img_02.jpg)
 
 :warning:**IMPORTANT:** DO NOT check the little checkbox that says `Subtract fee from amount`. Leave it as it is.
 
@@ -104,7 +104,7 @@ Open your Sinovate local wallet and create a new receiving address:
 * After the confirmations are there, return to the **Send** tab, and click on the `OPEN COIN CONTROL` button.
 * A list with balances should open. Select the amount with the BURN amount \(in our example it would be the 1,000,000 coins\). You select it by checking the little checkbox on its left and click the Ok button to confirm. This will ensure that the next process, the burn transaction, will be done only from that source.
 
-![Image 03](/docs/assets/masternode_setup_guide/img_03.jpg)
+![Image 03](assets/img/masternode_setup_guide/img_03.jpg)
 
 * From the wallet top menu, click on `Help` then on `Debug Window` and `Console`.
   * Before you enter the burn command, make sure you unlock the wallet if your wallet have been encrypted. Open the debug console/window and enter this command: `walletpassphrase password 999` \(replace password with your wallet password\). The 999 is the number of seconds your wallet will remain unlocked, so any number will do.
@@ -118,17 +118,17 @@ Open your Sinovate local wallet and create a new receiving address:
   infinitynodeburnfund 1000000 yourSINbackupaddress
   ```
 
-![Image 04](/docs/assets/masternode_setup_guide/img_04.jpg)
+![Image 04](assets/img/masternode_setup_guide/img_04.jpg)
 
 :warning: **REMEMBER: THE SCREENSHOT SERVES ONLY AS AN EXAMPLE! If you have any doubts at this point, it's best to contact the Sinovate Support before entering the command without fully understanding the consequences of a mistake.**
 
 * After you entered the BURN command, you will receive an output similar to the one from the screenshot below. 
 
-![Image 05](/docs/assets/masternode_setup_guide/img_05.jpg)
+![Image 05](assets/img/masternode_setup_guide/img_05.jpg)
 
 * From Transaction tab, get the **Burn** transaction information double clicking the transaction. **Copy the Transaction ID and Output Index in Notepad, you will need this info later.**
 
-![Image 06](/docs/assets/masternode_setup_guide/img_06.jpg)
+![Image 06](assets/img/masternode_setup_guide/img_06.jpg)
 
 ### 3. The Collateral transaction
 
@@ -137,13 +137,13 @@ Unlike the Burn transaction, which takes the coins out of reach, making them uns
 * Go to the Send tab, in your Sinovate wallet, and send exactly 10,000 SIN to the SAME ADDRESS you used for the BURN transaction.
 * From Transaction tab, get the **Collateral** transaction information double clicking the transaction. **Copy the Transaction ID and Output Index in Notepad, you will need this info later.**
 
-![Image 07](/docs/assets/masternode_setup_guide/img_07.jpg)
+![Image 07](assets/img/masternode_setup_guide/img_07.jpg)
 
 ### 4. The Infinity Node PRIVKEY
 
 * From the wallet top menu, click on `Help` then on `Debug Window` and `Console`. Type the following command to generate a new masternode privkey: `masternode genkey`. **Copy the privkey in Notepad, you will need this info later.**
 
-![Image 08](/docs/assets/masternode_setup_guide/img_08.jpg)
+![Image 08](assets/img/masternode_setup_guide/img_08.jpg)
 
 ### 5. Editing the infinitynode.conf file
 
@@ -164,7 +164,7 @@ Unlike the Burn transaction, which takes the coins out of reach, making them uns
 
 **Screenshot of the infinitynode.conf file:**
 
-![Image 09](/docs/assets/masternode_setup_guide/img_09.jpg)
+![Image 09](assets/img/masternode_setup_guide/img_09.jpg)
 
 * Save the file, then **Restart the wallet**.
 
@@ -189,16 +189,16 @@ Unlike the Burn transaction, which takes the coins out of reach, making them uns
 * After the new username, it will ask for a **new password** \(choose a strong password that you won't forget\).
 * The installation will take few minutes, please be patient!
 
-![Image 10](/docs/assets/masternode_setup_guide/img_10.jpg)
+![Image 10](assets/img/masternode_setup_guide/img_10.jpg)
 
 * You will be asked for the **Sinovate Infinitynode Private Key**.
   * You can find it in your `infinitynode.conf` file as indicated in previous step "4. Editing the infinitynode.conf file".
 
-![Image 11](/docs/assets/masternode_setup_guide/img_11.jpg)
+![Image 11](assets/img/masternode_setup_guide/img_11.jpg)
 
 * First phase of installation is done.
 
-![Image 12](/docs/assets/masternode_setup_guide/img_12.jpg)
+![Image 12](assets/img/masternode_setup_guide/img_12.jpg)
 
 * Logout from your VPS.
 
@@ -206,11 +206,11 @@ Unlike the Burn transaction, which takes the coins out of reach, making them uns
 
 * Create a connection profile in your SSH client
 
-![Image 13\_1](/docs/assets/masternode_setup_guide/img_13_1.jpg)
+![Image 13\_1](assets/img/masternode_setup_guide/img_13_1.jpg)
 
 > your choosen username during infinity node installation or default sinovate username
 
-![Image 13\_2](/docs/assets/masternode_setup_guide/img_13_2.jpg)
+![Image 13\_2](assets/img/masternode_setup_guide/img_13_2.jpg)
 
 * Once connected, type the following commands:
 
@@ -220,7 +220,7 @@ su sinovate
 bash
 ```
 
-![Image 14](/docs/assets/masternode_setup_guide/img_14.jpg)
+![Image 14](assets/img/masternode_setup_guide/img_14.jpg)
 
 * Enter the following commands to see the synchronization process in real time and wait until you see the **MASTERNODE\_SYNC\_FINISHED** status. This process can take up to 30 miunutes, please be patient!
 
@@ -230,14 +230,14 @@ bash
 watch -n 5 '~/sin-cli getblockcount && ~/sin-cli masternode status && ~/sin-cli mnsync status'
 ```
 
-![Image 15](/docs/assets/masternode_setup_guide/img_15.jpg)
+![Image 15](assets/img/masternode_setup_guide/img_15.jpg)
 
 * When your Infinity Node sync status is **MASTERNODE\_SYNC\_FINISHED**, open your local wallet.
 * Make sure the Infinity Node tab is enabled in `Settings, Options, Wallet` and flag `Show InfinityNodes Tab`.
 * Go to the Infinity Nodes tab, select your node, then click the **START ALIAS** button.
 * The Infinity Node should change its status to **PRE\_ENABLED**, then **ENABLED** after few minutes \(usually 10-30 minutes\).
 
-![Image 16](/docs/assets/masternode_setup_guide/img_16.jpg)
+![Image 16](assets/img/masternode_setup_guide/img_16.jpg)
 
 * However, all masternode cold wallets can sometimes show inaccurate statuses that might trick you into restarting, as mentioned in the small **Note**, above your node\(s\).
 * That's why, you can check the infinitynode's status from the VPS as well.
@@ -247,7 +247,7 @@ watch -n 5 '~/sin-cli getblockcount && ~/sin-cli masternode status && ~/sin-cli 
   ~/sin-cli masternode status
   ```
 
-![Image 17](/docs/assets/masternode_setup_guide/img_17.jpg)
+![Image 17](assets/img/masternode_setup_guide/img_17.jpg)
 
 **CONGRATULATIONS! YOUR INFINITY NODE IS UP AND RUNNING!**
 

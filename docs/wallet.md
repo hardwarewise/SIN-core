@@ -1,5 +1,6 @@
-### Resync SIN windows wallet
+# Wallet reindex
 
+## Windows
 In case you need to resync your local wallet in Windows:<br>
 * Close wallet;
 * Create a shortcut;
@@ -8,3 +9,6 @@ In case you need to resync your local wallet in Windows:<br>
 * wait full resync
 
 ![](/docs/assets/misc/win_wallet_reindex.png)
+
+# Deleting masternodes cache
+*Documentation soon available*

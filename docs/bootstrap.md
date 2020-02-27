@@ -1,4 +1,4 @@
-# Linux Bootstrap
+## Linux Bootstrap
 
 In case you need to quickly sync the blockchain of your Infinity Node or linux wallet, follow the steps below:
 
@@ -28,3 +28,6 @@ rm -rf ~/{bootstrap,bootstrap.zip}
 sudo reboot
 ```
 
+## Windows Bootstrap
+
+*Documentation soon available*
