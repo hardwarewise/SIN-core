@@ -8,7 +8,7 @@ In case you need to resync your local wallet in Windows:<br>
 * add in target, at the end of the path ` -reindex` (space -reindex, see screenshot below)
 * wait full resync
 
-![](assets/misc/win_wallet_reindex.png)
+![](assets/img/misc/win_wallet_reindex.png)
 
 # Deleting masternodes cache
 *Documentation soon available*
