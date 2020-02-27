@@ -456,7 +456,7 @@ void hyperlinks2_slot12(){QString link1 = "https://instaswap.io"; QDesktopServic
 
 void hyperlinks3_slot1(){QString link1 = "https://sinovate.io/whitepaper/"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
 void hyperlinks3_slot2(){QString link1 = "https://sinovate.io/roadmap/"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
-void hyperlinks3_slot3(){QString link1 = "https://documnets.sinovate.io/"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks3_slot3(){QString link1 = "https://docs.sinovate.io/"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
 void hyperlinks3_slot4(){QString link1 = "https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/sin.conf"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
 void hyperlinks3_slot5(){QString link1 = "https://github.com/SINOVATEblockchain/SIN-core/releases"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
 void hyperlinks3_slot6(){QString link1 = "https://sinovate.io/links/explorer"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
