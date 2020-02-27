@@ -1,6 +1,6 @@
 # Infinity Node Setup Guide
 
-:warning: Please, setup only with **Ubuntu 18.04**
+!> Please, setup only with **Ubuntu 18.04**
 
 ## I. PRE-SETUP PREPARATION
 
@@ -25,7 +25,7 @@ The **Collateral** \(10,000 SIN\) will remain locked inside your wallet. Unlocki
 
 ## II. STARTING THE SETUP
 
-When you open the wallet, **ALWAYS** let it fully sync. It will take a long time the first time you open it, so, please, be patient.
+?> When you open the wallet, **ALWAYS** let it fully sync. It will take a long time the first time you open it, so, please, be patient.
 
 ### 1. SIN Backup Address creation
 
@@ -37,7 +37,7 @@ Follow the steps below to create a new SIN address **to be used only for this pu
 * From the wallet top menu, click on `Help` then on `Debug Window` and `Console`.
 * Enter the following command:
 
-  ```bash
+  ```
   createwallet "SIN_Backup"
   ```
 
@@ -47,21 +47,21 @@ Follow the steps below to create a new SIN address **to be used only for this pu
 
 * Now generate the new SIN address in the new wallet:
 
-  ```bash
+  ```
   getnewaddress
   ```
 
 * Select and copy the generated SIN address.
 * Now get the private key for your new SIN address:
 
-  ```bash
+  ```
   dumpprivkey YOUR_ADDRESS
   ```
 
 * :warning: :key: _**SAVE AND SAFELY STORE THE NEW SIN ADDRESS AND THE PRIVATE KEY. YOU WILL BE ABLE TO GET FULL CONTROL OF THE ADDRESS ONLY WITH THE PRIVATE KEY. NEVER, UNDER ANY CIRCUMSTANCES, SHARE YOUR PRIVATE KEY WITH ANY OTHER PERSON.**_ :warning: :key:
 * Once you have stored your new SIN address and the private key in a safely place, you can now unload the second wallet. Enter the following command:
 
-  ```bash
+  ```
   unloadwallet
   ```
 
@@ -114,13 +114,13 @@ Open your Sinovate local wallet and create a new receiving address:
 * **Make sure the command is entered properly, because you will no longer be able to recover these coins.**
 * In the screenshot below we have an example for the SIN-BIG Infinity Node, so the command in that case is
 
-  ```bash
+  ```
   infinitynodeburnfund 1000000 yourSINbackupaddress
   ```
 
 ![Image 04](assets/img/infinity_node_setup_guide/img_04.jpg)
 
-:warning: **REMEMBER: THE SCREENSHOT SERVES ONLY AS AN EXAMPLE! If you have any doubts at this point, it's best to contact the Sinovate Support before entering the command without fully understanding the consequences of a mistake.**
+!> **REMEMBER: THE SCREENSHOT SERVES ONLY AS AN EXAMPLE! If you have any doubts at this point, it's best to contact the Sinovate Support before entering the command without fully understanding the consequences of a mistake.**
 
 * After you entered the BURN command, you will receive an output similar to the one from the screenshot below. 
 
@@ -170,7 +170,7 @@ Unlike the Burn transaction, which takes the coins out of reach, making them uns
 
 ## III. Setting up the VPS
 
-> :warning: Please wait **Collateral** and **Burn** transactions have **15 confirmations** before setting up the VPS.
+!> :warning: Please wait **Collateral** and **Burn** transactions have **15 confirmations** before setting up the VPS.
 
 ### A. First Phase
 

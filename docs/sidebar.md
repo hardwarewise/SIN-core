@@ -11,3 +11,5 @@
 - [![Explorer](https://icongr.am/feather/link.svg?size=16&color=808080)Blocks Explorer](https://explorer.sinovate.io)
 - [![Github](https://icongram.jgog.in/simple/github.svg?color=808080&size=16)Github](https://github.com/SINOVATEblockchain/SIN-core)
 - [![Discord](https://icongram.jgog.in/simple/discord.svg?color=808080&size=16)Discord](https://discord.gg/8rxutDv)
+- [![Twitter](https://icongram.jgog.in/simple/twitter.svg?color=808080&size=16)@SinovateChain](https://twitter.com/SinovateChain)
+
