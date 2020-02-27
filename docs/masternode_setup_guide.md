@@ -4,7 +4,7 @@
 
 ## I. PRE-SETUP PREPARATION
 
-* [x] Download and install the Sinovate local wallet from our [Official Github channel](https://github.com/SINOVATEblockchain/SIN-core/releases)
+* [x] Download and install the Sinovate local wallet from our [Official Github channel](https://github.com/SINOVATEblockchain/SIN-core/releases/latest)
 * [x] If you do not own any SIN yet, purchase the needed Burn and/or Collateral amount from one of the exchanges we're listed on: [TradeOgre](https://tradeogre.com/exchange/BTC-SIN), [Stex.com](https://app.stex.com/en/basic-trade/pair/BTC/SIN/1D), [Crex24](https://crex24.com/exchange/SIN-BTC), [txbit.io](https://txbit.io/Trade/SIN/BTC/?r=c73), [Coinsbit](https://coinsbit.io/trade/SIN_BTC), [Catex](https://www.catex.io/trading/SIN/ETH).
 * [x] Send the needed amount to the newly installed local wallet.
 * [x] In order to build an Infinity Node, you will require two transactions: the **“BURN”** and the **“Collateral“**.
