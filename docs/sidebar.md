@@ -1,7 +1,7 @@
 - **Introduction**
 - [Community contributions](/)
 - **Documentation**
-- [Maternode setup guide](masternode_setup_guide)
+- [Infinity Node setup](infinity_node_setup_guide)
 - [Bootstrap](bootstrap)
 - [Wallet](wallet)
 - **Archived**
