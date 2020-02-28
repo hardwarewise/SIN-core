@@ -33,6 +33,7 @@ class WalletModel;
 class HelpMessageDialog;
 class ModalOverlay;
 class MasternodeList;
+class Instaswap;
 
 namespace interfaces {
 class Handler;
@@ -107,6 +108,9 @@ private:
     QAction* historyAction = nullptr;
     // Dash
     QAction *masternodeAction = nullptr;
+    //
+    // Instaswap
+    QAction *instaswapAction = nullptr;
     //
     QAction* quitAction = nullptr;
     QAction* sendCoinsAction = nullptr;
@@ -281,6 +285,11 @@ private Q_SLOTS:
     // Dash
     /** Switch to masternode page */
     void gotoMasternodePage();
+    //
+
+    // Instaswap
+    /** Switch to instaswap page */
+    void gotoInstaswapPage();
     //
 
     /** Switch to receive coins page */

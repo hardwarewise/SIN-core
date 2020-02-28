@@ -349,7 +349,7 @@ void InstaSwap::on_addressBookButton_clicked()
 void InstaSwap::on_depositAmountEdit_textChanged(const QString &arg1)
 {
     bool isNumeric = false;
-    double value = QString::toDouble( &isNumeric );
+    double value = arg11->toDouble( &isNumeric );
     if ( isNumeric && value>0 ) {
         QJsonDocument json = callTicker();
 
@@ -359,5 +359,14 @@ void InstaSwap::on_depositAmountEdit_textChanged(const QString &arg1)
             QString value = obj["getAmount"].toString();
             ui->receivingAmountLabel->setText( value + " " + PURCHASECOIN );
         }
+    }
+}
+
+void InstaSwap::on_receivingAddressEdit_textChanged(const QString &arg1)
+{
+    CBitcoinAddress address( arg1.toUtf8().constData() );
+    bool isValid = address.IsValid();
+    if (isValid)    {
+        updateSwapList();
     }
 }

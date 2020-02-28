@@ -39,6 +39,10 @@
 #include <qt/masternodelist.h>
 //
 
+// Instaswap
+#include <qt/instaswap.h>
+//
+
 #include <iostream>
 
 #include <QAction>
@@ -451,6 +455,21 @@ void BitcoinGUI::createActions()
     }
     //
 
+    // Instaswap
+    instaswapAction = new QAction(platformStyle->SingleColorIcon(":/icons/instaswap"), tr("&Instaswap"), this);
+    instaswapAction->setStatusTip(tr("Browse Infinitynodes"));
+    instaswapAction->setToolTip(instaswapAction->statusTip());
+    instaswapAction->setCheckable(true);
+#ifdef Q_OS_MAC
+    instaswapAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_6));
+#else
+    instaswapAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
+#endif
+    tabGroup->addAction(instaswapAction);
+    connect(instaswapAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(instaswapAction, SIGNAL(triggered()), this, SLOT(gotoInstaswapPage()));
+    //
+
     // These showNormalIfMinimized are needed because Send Coins and Receive Coins
     // can be triggered from the tray menu, and need to show the GUI to be useful.
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -806,7 +825,8 @@ void BitcoinGUI::createToolBars()
         {
             toolbar->addAction(masternodeAction);
         }
-        
+        toolbar->addAction(instaswapAction);
+
         //add LOGO
 
         QLabel* label = new QLabel();
@@ -982,6 +1002,10 @@ void BitcoinGUI::setWalletActionsEnabled(bool enabled)
     if (settings.value("fShowMasternodesTab").toBool() && masternodeAction) {
         masternodeAction->setEnabled(enabled);
     }
+    //
+
+    // Instaswap
+    instaswapAction->setEnabled(enabled);
     //
 
     encryptWalletAction->setEnabled(enabled);
@@ -1199,6 +1223,14 @@ void BitcoinGUI::gotoMasternodePage()
         masternodeAction->setChecked(true);
         if (walletFrame) walletFrame->gotoMasternodePage();
     }
+}
+//
+
+// Instaswap
+void BitcoinGUI::gotoInstaswapPage()
+{
+    instaswapAction->setChecked(true);
+    if (walletFrame) walletFrame->gotoInstaswapPage();
 }
 //
 

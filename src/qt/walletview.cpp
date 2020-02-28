@@ -80,6 +80,11 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     }
     //
 
+    // Instaswap
+    instaswapListPage = new Instaswap(platformStyle);
+    addWidget(instaswapListPage);
+    //
+
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
     connect(overviewPage, SIGNAL(outOfSyncWarningClicked()), this, SLOT(requestedSyncWarningInfo()));

@@ -49,6 +49,8 @@ private slots:
 
     void on_depositAmountEdit_textChanged(const QString &arg1);
 
+    void on_receivingAddressEdit_textChanged(const QString &arg1);
+
 private:
     QMenu* swapListContextMenu;
     Ui::InstaSwap *ui;

@@ -73,6 +73,11 @@ public Q_SLOTS:
     void gotoMasternodePage();
     //
 
+    // Instaswap
+    /** Switch to instaswap page */
+    void gotoInstaswapPage();
+    //
+
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
