@@ -33,7 +33,7 @@
     <widget class="QWidget" name="bgWidget" native="true">
      <property name="styleSheet">
       <string notr="true">QWidget#bgWidget {
-background-color:#E3E3FF;
+background-color:#D6DCE5;
 color: #fff;
 } 
 </string>
@@ -57,7 +57,7 @@ color: #fff;
          <string notr="true">QLabel { color: #333;  }
 
 #contentWidget {
-background-color: #E3E3FF;
+background-color: #D6DCE5;
  border-radius: 6px;
 color: #333;
 } </string>

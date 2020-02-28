@@ -15,12 +15,11 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QDialog#TransactionDescDialog {
-background-color: #E3E3FF;
+background-color: #D6DCE5;
 }
 QPushButton {
 	/* Global Button Style */
-	background-color: #00419A;
-	background: url(':/images/button-bg');
+	background-color: #00023B;
 	background-repeat: no-repeat;
     background-size: 1000% 1000%;
  	padding: 0.85em 2em;
@@ -35,7 +34,7 @@ QPushButton {
 }
 QPushButton:hover {
 	/*background-color: #202677;*/
-	color : #EF3C23;
+	color : #BC8F3A;
 	
 }
 QPushButton:focus {
@@ -45,7 +44,6 @@ QPushButton:focus {
 QPushButton:pressed {
 	border: 1px solid #333;
 }
-
 QTextEdit#detailText {
 background-color: transparent;
 color: #000;

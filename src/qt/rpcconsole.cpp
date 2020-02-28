@@ -1047,6 +1047,9 @@ void RPCConsole::hyperlinks_slot6(){ GUIUtil::hyperlinks_slot6();}
 void RPCConsole::hyperlinks_slot7(){ GUIUtil::hyperlinks_slot7();}
 void RPCConsole::hyperlinks_slot8(){ GUIUtil::hyperlinks_slot8();}
 void RPCConsole::hyperlinks_slot9(){ GUIUtil::hyperlinks_slot9();}
+void RPCConsole::hyperlinks_slot10(){ GUIUtil::hyperlinks_slot10();}
+void RPCConsole::hyperlinks_slot11(){ GUIUtil::hyperlinks_slot11();}
+void RPCConsole::hyperlinks_slot12(){ GUIUtil::hyperlinks_slot12();}
 
 void RPCConsole::hyperlinks2_slot1(){ GUIUtil::hyperlinks2_slot1();}
 void RPCConsole::hyperlinks2_slot2(){ GUIUtil::hyperlinks2_slot2();}
