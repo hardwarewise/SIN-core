@@ -3206,7 +3206,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         // Dash
     }
     //
-
     return true;
 }
 

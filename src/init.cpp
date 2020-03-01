@@ -73,6 +73,7 @@
 //sinovate
 #include <infinitynodeman.h>
 #include <infinitynodersv.h>
+#include <infinitynodepeer.h>
 //
 
 #ifndef WIN32
@@ -1840,6 +1841,17 @@ bool AppInitMain()
 
     // SIN
     fInfinityNode = gArgs.GetBoolArg("-infinitynode", false);
+    if(fMasterNode) {
+        std::string strInfinityNodePrivKey = gArgs.GetArg("-infinitynodeprivkey", "");
+        if(!strInfinityNodePrivKey.empty()) {
+            if(!CMessageSigner::GetKeysFromSecret(strInfinityNodePrivKey, infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode))
+                return InitError(_("Invalid masternodeprivkey. Please see documentation."));
+            LogPrintf("  pubKeyInfinitynode: %s\n", EncodeDestination(infinitynodePeer.pubKeyInfinitynode.GetID()));
+            infinitynodePeer.ManageState(connman);
+        } else {
+            return InitError(_("You must specify a infinitynodeprivkey in the configuration. Please see documentation for help."));
+        }
+    }
     //
     // Dash
     // ********************************************************* Step 11a: setup InfinityNode
