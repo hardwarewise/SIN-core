@@ -33,7 +33,7 @@ class WalletModel;
 class HelpMessageDialog;
 class ModalOverlay;
 class MasternodeList;
-class Instaswap;
+class InstaSwap;
 
 namespace interfaces {
 class Handler;

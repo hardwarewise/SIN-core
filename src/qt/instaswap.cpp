@@ -1,12 +1,11 @@
 #include "instaswap.h"
-#include "ui_instaswap.h"
+#include "forms/ui_instaswap.h"
 
 #include "init.h"
-#include "wallet_ismine.h"
 #include "addressbookpage.h"
-#include "bitcoinunits.h"
 #include "optionsmodel.h"
 #include "guiutil.h"
+#include <qt/platformstyle.h>
 
 #include <QLineEdit>
 #include <QMessageBox>
@@ -23,18 +22,22 @@
 
 #include <boost/algorithm/string.hpp>
 using namespace std;
-using namespace json_spirit;
 
-InstaSwap::InstaSwap(QWidget *parent) :
+const char* InstaSwap::TransactionStateString[] = {
+    "Awaiting Deposit", "Swaping", "Withdraw", "Completed", "Deposit Not Completed"
+};
+
+InstaSwap::InstaSwap(const PlatformStyle *_platformStyle, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::InstaSwap),
     clientModel(0),
-    walletModel(0)
+    walletModel(0),
+    platformStyle(_platformStyle)
 {
     ui->setupUi(this);
 
     PURCHASECOIN = "SIN";
-    ENDPOINT = QString::fromStdString(GetArg("-instaswapurl", "https://instaswap.sinovate.io/instaswap_service.php"));
+    ENDPOINT = QString::fromStdString(gArgs.GetArg("-instaswapurl", "https://instaswap.sinovate.io/instaswap_service.php"));
 
     setupSwapList();
     populatePairsCombo();
@@ -85,7 +88,7 @@ void InstaSwap::setWalletModel(WalletModel* model)
 
 void InstaSwap::setAddress(const QString& address)
 {
-    setAddress(address, ui->addressEdit);
+    setAddress(address, ui->receivingAddressEdit);
 }
 
 void InstaSwap::setAddress(const QString& address, QLineEdit* addrEdit)
@@ -133,14 +136,15 @@ void InstaSwap::populatePairsCombo()
 {
     QJsonDocument json = callAllowedPairs();
 
-    if ( json.object()["apiInfo"]=="OK" && json.object().contains("response") && json.object().contains("response").isArray() )
+    if ( json.object()["apiInfo"]=="OK" && json.object().contains("response") && json.object()["response"].isArray() )
     {
         QJsonArray jArr = json.object()["response"].toArray();
-        foreach (const QJsonValue & value, jArr) {
+
+        for(const QJsonValue & value : jArr) {
             QJsonObject obj = value.toObject();
             QString receiveCoin = obj["receiveCoin"].toString();
             if (receiveCoin==PURCHASECOIN) {       // only SIN purchases
-                ui->allowedPairsCombo->addItem( obj["depositCoin"].toString() )
+                ui->allowedPairsCombo->addItem( obj["depositCoin"].toString() );
             }
         }
     }
@@ -259,11 +263,11 @@ void InstaSwap::updateSwapList()
 
     QJsonDocument json = callListHistory();
 
-    if ( json.object()["apiInfo"]=="OK" && json.object().contains("response") && json.object().contains("response").isArray() )
+    if ( json.object()["apiInfo"]=="OK" && json.object().contains("response") && json.object()["response"].isArray() )
     {
         QJsonArray jArr = json.object()["response"].toArray();
 
-        foreach (const QJsonValue & value, jArr) {
+        for(const QJsonValue & value : jArr) {
             QJsonObject obj = value.toObject();
             QString strTransactionId = obj["transactionId"].toString();
             QString strDepositCoin = obj["depositCoin"].toString();
@@ -339,24 +343,24 @@ void InstaSwap::CopyListColumn( QTableWidget *QTW, int nColumn )
 void InstaSwap::on_addressBookButton_clicked()
 {
     if (walletModel && walletModel->getAddressTableModel()) {
-        AddressBookPage dlg(AddressBookPage::ForSelection, AddressBookPage::ReceivingTab, this);
+        AddressBookPage dlg(platformStyle, AddressBookPage::ForSelection, AddressBookPage::ReceivingTab, this);
         dlg.setModel(walletModel->getAddressTableModel());
         if (dlg.exec())
-            setAddress(dlg.getReturnValue(), ui->addressEdit);
+            setAddress(dlg.getReturnValue(), ui->receivingAddressEdit);
     }
 }
 
 void InstaSwap::on_depositAmountEdit_textChanged(const QString &arg1)
 {
     bool isNumeric = false;
-    double value = arg11->toDouble( &isNumeric );
+    double value = arg1.toDouble( &isNumeric );
     if ( isNumeric && value>0 ) {
         QJsonDocument json = callTicker();
 
-        if ( json.object()["apiInfo"]=="OK" && json.object().contains("response") && json.object().contains("response").isObject() )
+        if ( json.object()["apiInfo"]=="OK" && json.object().contains("response") && json.object()["response"].isObject() )
         {
             QJsonObject response = json.object()["response"].toObject();
-            QString value = obj["getAmount"].toString();
+            QString value = response["getAmount"].toString();
             ui->receivingAmountLabel->setText( value + " " + PURCHASECOIN );
         }
     }
@@ -364,9 +368,7 @@ void InstaSwap::on_depositAmountEdit_textChanged(const QString &arg1)
 
 void InstaSwap::on_receivingAddressEdit_textChanged(const QString &arg1)
 {
-    CBitcoinAddress address( arg1.toUtf8().constData() );
-    bool isValid = address.IsValid();
-    if (isValid)    {
+    if ( walletModel->validateAddress(arg1) )    {
         updateSwapList();
     }
 }

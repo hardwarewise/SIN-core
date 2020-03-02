@@ -81,7 +81,7 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     //
 
     // Instaswap
-    instaswapListPage = new Instaswap(platformStyle);
+    instaswapListPage = new InstaSwap(platformStyle);
     addWidget(instaswapListPage);
     //
 
@@ -230,6 +230,13 @@ void WalletView::gotoMasternodePage()
     if (settings.value("fShowMasternodesTab").toBool()) {
         setCurrentWidget(masternodeListPage);
     }
+}
+//
+
+// Dash
+void WalletView::gotoInstaswapPage()
+{
+    setCurrentWidget(instaswapListPage);
 }
 //
 

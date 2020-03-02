@@ -81,7 +81,7 @@ private:
     //
 
     // Instaswap
-    Instaswap *instaswapListPage;
+    InstaSwap *instaswapListPage;
     //
 
     TransactionView *transactionView;

@@ -188,7 +188,7 @@
       </widget>
      </item>
      <item row="5" column="0">
-      <widget class="SINAmountField" name="depositAmountEdit">
+      <widget class="QLineEdit" name="depositAmountEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -324,14 +324,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>SINAmountField</class>
-   <extends>QLineEdit</extends>
-   <header>qt/sinamountfield.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="../sin.qrc"/>
  </resources>

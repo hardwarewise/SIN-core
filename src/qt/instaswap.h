@@ -25,12 +25,8 @@ class InstaSwap : public QWidget
         awaiting, swaping, withdraw, completed, notcompleted
     };
 
-    static const char *TransactionStateString[] = {
-        "Awaiting Deposit", "Swaping", "Withdraw", "Completed", "Deposit Not Completed"
-    };
-
 public:
-    explicit InstaSwap(QWidget *parent = 0);
+    explicit InstaSwap(const PlatformStyle *platformStyle, QWidget *parent = 0);
     ~InstaSwap();
     void setClientModel(ClientModel* clientModel);
     void setWalletModel(WalletModel* walletModel);
@@ -41,21 +37,21 @@ public Q_SLOTS:
     void updateSwapList();
     void showContextMenu(const QModelIndex&);
 
-private slots:
+private Q_SLOTS:
     void on_addressBookButton_clicked();
     //void on_userButton_clicked();
     void on_copyTransactionIdAction_clicked();
     void on_copyDepositAddressAction_clicked();
-
     void on_depositAmountEdit_textChanged(const QString &arg1);
-
     void on_receivingAddressEdit_textChanged(const QString &arg1);
 
 private:
+    static const char* TransactionStateString[];
     QMenu* swapListContextMenu;
     Ui::InstaSwap *ui;
     ClientModel* clientModel;
     WalletModel* walletModel;
+    const PlatformStyle *platformStyle;
 
     QNetworkAccessManager *ConnectionManager;
 
