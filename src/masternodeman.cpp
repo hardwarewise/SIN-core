@@ -255,60 +255,6 @@ void CMasternodeMan::CheckAndRemoveBurnFundNotUniqueNode(CConnman& connman)
     }
 }
 
-void CMasternodeMan::CheckAndRemoveLimitNumberNode(CConnman& connman, int nSinType, int nLimit)
-{
-    if(!masternodeSync.IsMasternodeListSynced()) return;
-
-    std::vector<std::pair<int64_t, CMasternode*> > vecSigTimeType;
-    std::vector<CMasternode> vpMasternodesToBan; //list node will be banned
-
-    for (auto& mnpair : mapMasternodes) {
-        if (mnpair.second.GetSinTypeInt() == nSinType) {
-            vecSigTimeType.push_back(std::make_pair(mnpair.second.sigTime, &mnpair.second));
-        }
-    }
-
-    // Sort them low to high
-    sort(vecSigTimeType.begin(), vecSigTimeType.end(), CompareSigTime());
-
-    //at fork heigh, limit will very high, node will not removed
-    if (nCachedBlockHeight >= 330000){nLimit=5000;}
-    //in testnet, limit is removed from block 500
-    if (Params().NetworkIDString() == CBaseChainParams::TESTNET && nCachedBlockHeight >= 1000) {
-        nLimit=5000;
-    }
-
-    if ((int)vecSigTimeType.size() <= nLimit) return;
-
-	int count=0;
-    for (std::pair<int64_t, CMasternode*>& p : vecSigTimeType){
-        count++;
-        if (count >= nLimit) {
-            CMasternode mn = *p.second;
-            vpMasternodesToBan.push_back(mn);
-        }
-    }
-
-    if ((int)vpMasternodesToBan.size() > 0) {
-        LogPrint(BCLog::MASTERNODE, "CMasternodeMan::CheckAndRemoveBurnFundNotUniqueNode -- removing...\n");
-        std::vector<CNode*> vNodesCopy = connman.CopyNodeVector();
-        for (auto pmn : vpMasternodesToBan) {
-            std::map<COutPoint, CMasternode>::iterator it;
-            it = mapMasternodes.find(pmn.vin.prevout);
-
-            CMasternodeBroadcast mnb = CMasternodeBroadcast(it->second);
-            uint256 hash = mnb.GetHash();
-            // erase all of the broadcasts we've seen from this txin, ...
-            mapSeenMasternodeBroadcast.erase(hash);
-            mWeAskedForMasternodeListEntry.erase(pmn.vin.prevout);
-            mapMasternodes.erase(it);
-        }
-
-        NotifyMasternodeUpdates(connman);
-    }
-}
-
-
 void CMasternodeMan::CheckAndRemove(CConnman& connman)
 {
     if(!masternodeSync.IsMasternodeListSynced()) return;

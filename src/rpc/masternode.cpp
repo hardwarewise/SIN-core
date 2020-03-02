@@ -1231,10 +1231,10 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
             "\nSend update info.\n"
             "\nArguments:\n"
             "1. \"OwnerAddress\"  (string, required) Address of node OWNER which funds are burnt.\n"
-            "2. \"NodeAddress\"   (string, required) Address of node which will be used for valide Reward, FlashSend...\n"
+            "2. \"PublicKey\"     (string, required) PublicKey of node which will be used for LockReward, FlashSend...\n"
             "3. \"IP\"            (string, required) IP of node.\n"
             "\nResult:\n"
-            "\"UpdateInfo upadted message\"   (string) The Burn transaction id. Need to run infinity node\n"
+            "\"UpdateInfo upadted message\"   (string) Metadata information\n"
             "\nExamples:\n"
             + HelpExampleCli("infinitynodeupdatemeta", "OwnerAddress NodeAddress IP")
         );

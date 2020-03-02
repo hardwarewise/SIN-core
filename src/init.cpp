@@ -1293,6 +1293,11 @@ void ThreadCheckInfinityNode(CConnman& connman)
 
     unsigned int nTick = 0;
 
+    //if this node is an Infinitynode peer, so verify the state
+    if(fInfinityNode) {
+        infinitynodePeer.ManageState(connman);
+    }
+
     while (true)
     {
         MilliSleep(1000);
@@ -1841,7 +1846,7 @@ bool AppInitMain()
 
     // SIN
     fInfinityNode = gArgs.GetBoolArg("-infinitynode", false);
-    if(fMasterNode) {
+    if(fInfinityNode) {
         std::string strInfinityNodePrivKey = gArgs.GetArg("-infinitynodeprivkey", "");
         if(!strInfinityNodePrivKey.empty()) {
             if(!CMessageSigner::GetKeysFromSecret(strInfinityNodePrivKey, infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode))
