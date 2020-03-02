@@ -1329,9 +1329,6 @@ void ThreadCheckInfinityNode(CConnman& connman)
             if(nTick % (60 * 5) == 0) {
                 infnodeman.CheckAndRemove(connman);
                 mnodeman.CheckAndRemoveBurnFundNotUniqueNode(connman);
-                mnodeman.CheckAndRemoveLimitNumberNode(connman, 1, Params().GetConsensus().nLimitSINNODE_1);
-                mnodeman.CheckAndRemoveLimitNumberNode(connman, 5, Params().GetConsensus().nLimitSINNODE_5);
-                mnodeman.CheckAndRemoveLimitNumberNode(connman, 10, Params().GetConsensus().nLimitSINNODE_10);
             }
         }
     }
