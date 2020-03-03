@@ -94,7 +94,7 @@ public:
     /// Find an entry
     CInfinitynode* Find(const COutPoint& outpoint);
 
-    bool GetInfinitynodeInfo(std::string nodeowner, infinitynode_info_t& infInfoRet);
+    bool GetInfinitynodeInfo(std::string nodePublicKey, infinitynode_info_t& infInfoRet);
     bool GetInfinitynodeInfo(const COutPoint& outpoint, infinitynode_info_t& infInfoRet);
 
     /// Clear InfinityNode vector

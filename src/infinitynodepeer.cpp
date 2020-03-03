@@ -81,9 +81,9 @@ std::string CInfinitynodePeer::GetMyPeerInfo() const
         return GetStatus();
     }
     if(infnodeman.GetInfinitynodeInfo(HexStr(pubKeyInfinitynode), infoInf) && eType == INFINITYNODE_REMOTE && nState == INFINITYNODE_PEER_STARTED) {
-        myPeerInfo = strprintf("Peer is not ready. Please update the metadata of Infinitynode.");
+        myPeerInfo = strprintf("My Peer is running at %s\n", infoInf.metadataService.ToString());
     } else {
-        myPeerInfo = "My Peer is not in Deterministic Infinitynode list";
+        myPeerInfo = strprintf("Peer is not ready. Please update the metadata of Infinitynode.");
     }
     return myPeerInfo;
 }
@@ -96,7 +96,7 @@ bool CInfinitynodePeer::AutoCheck(CConnman& connman)
     }
 
     infinitynode_info_t infoInf;
-    if(infnodeman.GetInfinitynodeInfo(HexStr(pubKeyInfinitynode), infoInf))
+    if(!infnodeman.GetInfinitynodeInfo(HexStr(pubKeyInfinitynode), infoInf))
     {
         strNotCapableReason = "Cannot find the Peer's Key in Deterministic node list";
         nState = INFINITYNODE_PEER_NOT_CAPABLE;

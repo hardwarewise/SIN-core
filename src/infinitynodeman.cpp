@@ -493,11 +493,11 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
     return true;
 }
 
-bool CInfinitynodeMan::GetInfinitynodeInfo(std::string nodeowner, infinitynode_info_t& infInfoRet)
+bool CInfinitynodeMan::GetInfinitynodeInfo(std::string nodePublicKey, infinitynode_info_t& infInfoRet)
 {
     LOCK(cs);
     for (auto& infpair : mapInfinitynodes) {
-        if (infpair.second.collateralAddress == nodeowner) {
+        if (infpair.second.getMetaPublicKey() == nodePublicKey) {
             infInfoRet = infpair.second.GetInfo();
             return true;
         }
