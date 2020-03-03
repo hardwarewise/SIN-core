@@ -525,6 +525,7 @@ void CInfinitynodeMan::updateMetadata(std::string nodeowner, std::string nodePub
             if (infpair.second.getMetadataHeight() < nHeightUpdate){
                 infpair.second.setNodePublicKey(nodePublicKey);
                 infpair.second.setService(nodeService);
+                infpair.second.setMetadataHeight(nHeightUpdate);
             }
         }
     }

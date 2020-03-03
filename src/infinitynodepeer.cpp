@@ -196,12 +196,6 @@ void CInfinitynodePeer::ManageStateRemote()
             LogPrintf("CInfinitynodePeer::ManageStateRemote -- %s: %s\n", GetStateString(), strNotCapableReason);
             return;
         }
-        if(service != infoInf.metadataService) {
-            nState = INFINITYNODE_PEER_NOT_CAPABLE;
-            strNotCapableReason = "Broadcasted IP doesn't match our external address. Make sure you issued a new broadcast if IP of this Infinitynode changed recently.";
-            LogPrintf("CInfinitynodePeer::ManageStateRemote -- %s: %s\n", GetStateString(), strNotCapableReason);
-            return;
-        }
         if(!CInfinitynode::IsValidStateForAutoStart(infoInf.nMetadataHeight)) {
             nState = INFINITYNODE_PEER_NOT_CAPABLE;
             strNotCapableReason = strprintf("Infinitynode metadata height is %d", infoInf.nMetadataHeight);
