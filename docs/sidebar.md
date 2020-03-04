@@ -4,8 +4,9 @@
 - [Infinity Node setup](infinity_node_setup_guide)
 - [Bootstrap](bootstrap)
 - [Wallet](wallet)
-- **Tutorials**
+- **Tutorials & Guides**
 - [Infinity Node tips](infinity_node_tips)
+- [SUQA Coins Conflict](suqa_conflict)
 - **Archived**
 - [Stuck block 350094](archive/20200214_stuck_block_350094)
 - **Links**
