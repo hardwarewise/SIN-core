@@ -936,7 +936,7 @@ background-color: transparent;</string>
          <property name="minimumSize">
           <size>
            <width>100</width>
-           <height>100</height>
+           <height>130</height>
           </size>
          </property>
          <property name="frameShape">
@@ -951,10 +951,27 @@ background-color: transparent;</string>
             <x>10</x>
             <y>0</y>
             <width>391</width>
-            <height>96</height>
+            <height>130</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="statisticGridLayout">
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelStatisticLastScanText">
+             <property name="font">
+              <font>
+               <pointsize>11</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>Last Scan :</string>
+             </property>
+            </widget>
+           </item>
            <item row="2" column="1">
             <widget class="QLabel" name="labelStatisticLastScan">
              <property name="font">
@@ -966,6 +983,20 @@ background-color: transparent;</string>
              </property>
              <property name="text">
               <string>0</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLabel" name="labelCurrentPrice">
+             <property name="font">
+              <font>
+               <pointsize>11</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>0 USD</string>
              </property>
             </widget>
            </item>
@@ -995,8 +1026,8 @@ background-color: transparent;</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="labelStatisticLastScanText">
+           <item row="4" column="1">
+            <widget class="QLabel" name="labelCurrentPriceBTC">
              <property name="font">
               <font>
                <pointsize>11</pointsize>
@@ -1004,16 +1035,13 @@ background-color: transparent;</string>
                <bold>true</bold>
               </font>
              </property>
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
              <property name="text">
-              <string>Last Scan :</string>
+              <string>0 BTC</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="labelStatisticTotalNodeText">
+           <item row="6" column="0">
+            <widget class="QLabel" name="labelLatestVersionText">
              <property name="font">
               <font>
                <pointsize>11</pointsize>
@@ -1021,11 +1049,8 @@ background-color: transparent;</string>
                <bold>true</bold>
               </font>
              </property>
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
              <property name="text">
-              <string>Total Infinitynodes :</string>
+              <string>Latest Version :</string>
              </property>
             </widget>
            </item>
@@ -1051,6 +1076,43 @@ background-color: transparent;</string>
              </property>
             </widget>
            </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelStatisticTotalNodeText">
+             <property name="font">
+              <font>
+               <pointsize>11</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>Total Burnt Infinitynodes :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLabel" name="labelLatestVersion">
+             <property name="font">
+              <font>
+               <pointsize>11</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Version</string>
+             </property>
+             <property name="openExternalLinks">
+              <bool>true</bool>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::TextBrowserInteraction</set>
+             </property>
+            </widget>
+           </item>
            <item row="4" column="0">
             <widget class="QLabel" name="labelCurrentPriceBTCText">
              <property name="font">
@@ -1065,31 +1127,19 @@ background-color: transparent;</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="1">
-            <widget class="QLabel" name="labelCurrentPriceBTC">
-             <property name="font">
-              <font>
-               <pointsize>11</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
+           <item row="5" column="1">
+            <widget class="Line" name="line_2">
+             <property name="autoFillBackground">
+              <bool>true</bool>
              </property>
-             <property name="text">
-              <string>0 BTC</string>
+             <property name="styleSheet">
+              <string notr="true"/>
              </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLabel" name="labelCurrentPrice">
-             <property name="font">
-              <font>
-               <pointsize>11</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
+             <property name="lineWidth">
+              <number>2</number>
              </property>
-             <property name="text">
-              <string>0 USD</string>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
              </property>
             </widget>
            </item>
