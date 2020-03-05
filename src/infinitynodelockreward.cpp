@@ -147,21 +147,15 @@ bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
 
     //step 1: Check if this InfinitynodePeer is a candidate at nBlockHeight
     CInfinitynode infRet;
-    if(!infnodeman.deterministicRewardAtHeight(nBlockHeight, infinitynodePeer.nSINType, infRet)){
-        LogPrintf("CInfinityNodeLockReward::ProcessBlock -- Can not identify the candidate at height %d\n", nBlockHeight);
+    if(!infnodeman.Get(infinitynodePeer.burntx, infRet)){
+        LogPrintf("CInfinityNodeLockReward::ProcessBlock -- Can not identify mypeer in list, height: %d\n", nBlockHeight);
         return false;
     }
 
-    if(infinitynodePeer.burntx != infRet.getBurntxOutPoint()){
-        LogPrintf("CInfinityNodeLockReward::ProcessBlock -- This peer is not candidate at height %d\n", nBlockHeight);
+    if(!infnodeman.isPossibleForLockReward(infRet.getCollateralAddress())){
+        LogPrintf("CInfinityNodeLockReward::ProcessBlock -- Try to LockReward false at height %d\n", nBlockHeight);
         return false;
     }
-
-    //step 2: send INV to lock the reward for this InfinityNode
-    CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
-    ss << infinitynodePeer.burntx;
-    CInv inv(MSG_LOCKREWARD_INIT, ss.GetHash());
-    connman.RelayInv(inv);
 
     return true;
 }
@@ -173,7 +167,7 @@ void CInfinityNodeLockReward::UpdatedBlockTip(const CBlockIndex *pindex, CConnma
     nCachedBlockHeight = pindex->nHeight;
     LogPrintf("CInfinityNodeLockReward::UpdatedBlockTip -- nCachedBlockHeight=%d\n", nCachedBlockHeight);
 
-    int nFutureBlock = nCachedBlockHeight + LOCKREWARD_AT_FUTURE;
+    int nFutureBlock = nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardDeepth;
 
     //CheckPreviousBlockVotes(nFutureBlock);
     ProcessBlock(nFutureBlock, connman);

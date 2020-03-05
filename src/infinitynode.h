@@ -114,6 +114,7 @@ public:
     std::string getMetaPublicKey(){return metadataPublicKey;}
     CService getMetaService(){return metadataService;}
     int getActiveBackupAddress(){return activeBackupAddress;}
+    bool isRewardInNextStm(int nEndCurrentStmHeight){return nExpireHeight > nEndCurrentStmHeight;}
 
     bool IsValidNetAddr();
     static bool IsValidNetAddr(CService addrIn);

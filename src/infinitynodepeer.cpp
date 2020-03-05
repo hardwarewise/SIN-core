@@ -81,7 +81,7 @@ std::string CInfinitynodePeer::GetMyPeerInfo() const
         return GetStatus();
     }
     if(infnodeman.GetInfinitynodeInfo(HexStr(pubKeyInfinitynode), infoInf) && eType == INFINITYNODE_REMOTE && nState == INFINITYNODE_PEER_STARTED) {
-        myPeerInfo = strprintf("My Peer is running at %s\n", infoInf.metadataService.ToString());
+        myPeerInfo = strprintf("My Peer is running at %s", infoInf.metadataService.ToString());
     } else {
         myPeerInfo = strprintf("Peer is not ready. Please update the metadata of Infinitynode.");
     }

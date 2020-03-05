@@ -146,6 +146,7 @@ public:
     std::pair<int, int> getLastStatementBySinType(int nSinType);
     std::string getLastStatementString() const;
     int getRoi(int nSinType, int totalNode);
+    bool isPossibleForLockReward(std::string nodeOwner);
 
     void CheckAndRemove(CConnman& connman);
     /// This is dummy overload to be used for dumping/loading mncache.dat
