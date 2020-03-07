@@ -144,15 +144,15 @@ void CInfinitynodeMan::CheckAndRemove(CConnman& connman)
         //calcul new Statement
         deterministicRewardStatement(10);
         //update rank for new Statement
-        calculInfinityNodeRank(nBIGLastStmHeight, 10, true);
+        //calculInfinityNodeRank(nBIGLastStmHeight, 10, true);
     }
     if (nMIDLastStmHeight + nMIDLastStmSize - nCachedBlockHeight < INF_MATURED_LIMIT){
         deterministicRewardStatement(5);
-        calculInfinityNodeRank(nMIDLastStmHeight, 5, true);
+        //calculInfinityNodeRank(nMIDLastStmHeight, 5, true);
     }
     if (nLILLastStmHeight + nLILLastStmSize - nCachedBlockHeight < INF_MATURED_LIMIT){
         deterministicRewardStatement(1);
-        calculInfinityNodeRank(nLILLastStmHeight, 1, true);
+        //calculInfinityNodeRank(nLILLastStmHeight, 1, true);
     }
 
     return;
@@ -778,6 +778,9 @@ LogPrintf("CInfinitynodeMan::isPossibleForLockReward -- info, SIN type: %d, Stm 
     }
 }
 
+/*
+ * update LastStm, Size and Rank of node if we are at switch Height
+ */
 void CInfinitynodeMan::updateLastStmHeightAndSize(int nBlockHeight, int nSinType)
 {
     if(nBlockHeight < Params().GetConsensus().nInfinityNodeGenesisStatement) return;
@@ -797,6 +800,10 @@ void CInfinitynodeMan::updateLastStmHeightAndSize(int nBlockHeight, int nSinType
             if(nDelta <= stm.second){
                 lastStatement = stm.first;
                 lastStatementSize = stm.second;
+                //we switch to new Stm ==> update rank
+                if((lastStatement + lastStatementSize) == nBlockHeight){
+                    calculInfinityNodeRank(lastStatement, nSinType, true);
+                }
             }
         }
     }
