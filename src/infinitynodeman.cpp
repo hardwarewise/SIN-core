@@ -120,16 +120,6 @@ std::string CInfinitynodeMan::ToString() const
     return info.str();
 }
 
-void CInfinitynodeMan::UpdatedBlockTip(const CBlockIndex *pindex)
-{
-    nCachedBlockHeight = pindex->nHeight;
-    if(fMasterNode) {
-        // normal wallet does not need to update this every block, doing update on rpc call should be enough
-        /* SIN::TODO - update last paid for all infinitynode */
-        //UpdateLastPaid(pindex);
-    }
-}
-
 void CInfinitynodeMan::CheckAndRemove(CConnman& connman)
 {
     /*this function is called in InfinityNode thread and after sync of node*/
@@ -558,7 +548,7 @@ void CInfinitynodeMan::updateLastPaid()
         }
     }
 }
-
+/*TODO: optimisation this programme*/
 bool CInfinitynodeMan::deterministicRewardStatement(int nSinType)
 {
     int stm_height_temp = Params().GetConsensus().nInfinityNodeGenesisStatement;
@@ -569,12 +559,9 @@ bool CInfinitynodeMan::deterministicRewardStatement(int nSinType)
     LOCK(cs);
     while (stm_height_temp < nCachedBlockHeight)
     {
-        std::map<COutPoint, CInfinitynode> mapInfinitynodesCopy;
         int totalSinType = 0;
         for (auto& infpair : mapInfinitynodes) {
-            CInfinitynode inf = infpair.second;
-            if (inf.getSINType() == nSinType && inf.getHeight() < stm_height_temp && stm_height_temp <= inf.getExpireHeight()){
-                mapInfinitynodesCopy[inf.vinBurnFund.prevout] = inf;
+            if (infpair.second.getSINType() == nSinType && infpair.second.getHeight() < stm_height_temp && stm_height_temp <= infpair.second.getExpireHeight()){
                 totalSinType = totalSinType + 1;
             }
         }
@@ -604,6 +591,18 @@ bool CInfinitynodeMan::deterministicRewardStatement(int nSinType)
         }
         //loop
         stm_height_temp = stm_height_temp + totalSinType;
+        //we will out of loop this next step, but we can calculate the next STM now
+        if(nCachedBlockHeight <  stm_height_temp && stm_height_temp < nCachedBlockHeight + INF_MATURED_LIMIT){
+            int totalSinTypeNextStm = 0;
+            for (auto& infpair : mapInfinitynodes) {
+                if (infpair.second.getSINType() == nSinType && infpair.second.getHeight() < stm_height_temp && stm_height_temp <= infpair.second.getExpireHeight()){
+                    totalSinTypeNextStm = totalSinTypeNextStm + 1;
+                }
+            }
+            if (nSinType == 10){mapStatementBIG[stm_height_temp] = totalSinTypeNextStm;}
+            if (nSinType == 5){mapStatementMID[stm_height_temp] = totalSinTypeNextStm;}
+            if (nSinType == 1){mapStatementLIL[stm_height_temp] = totalSinTypeNextStm;}
+        }
     }
     return true;
 }
@@ -619,10 +618,10 @@ std::pair<int, int> CInfinitynodeMan::getLastStatementBySinType(int nSinType)
 std::string CInfinitynodeMan::getLastStatementString() const
 {
     std::ostringstream info;
-
-    info << "BIG: [" << mapStatementBIG.size() << " / " << nBIGLastStmHeight << ":" << nBIGLastStmSize << "] - "
-            "MID: [" << mapStatementMID.size() << " / " << nMIDLastStmHeight << ":" << nMIDLastStmSize << "] - "
-            "LIL: [" << mapStatementLIL.size() << " / " << nLILLastStmHeight << ":" << nLILLastStmSize << "]";
+    info << nCachedBlockHeight << " "
+            << "BIG: [" << mapStatementBIG.size() << " / " << nBIGLastStmHeight << ":" << nBIGLastStmSize << "] - "
+            << "MID: [" << mapStatementMID.size() << " / " << nMIDLastStmHeight << ":" << nMIDLastStmSize << "] - "
+            << "LIL: [" << mapStatementLIL.size() << " / " << nLILLastStmHeight << ":" << nLILLastStmSize << "]";
 
     return info.str();
 }
@@ -697,7 +696,7 @@ bool CInfinitynodeMan::deterministicRewardAtHeight(int nBlockHeight, int nSinTyp
     if (lastStatement == 0) return false;
 
     std::map<int, CInfinitynode> rankOfStatement = calculInfinityNodeRank(lastStatement, nSinType, false);
-    infinitynodeRet = rankOfStatement[nBlockHeight - lastStatement];
+    infinitynodeRet = rankOfStatement[nBlockHeight - lastStatement + 1];
     return true;
 }
 
@@ -727,15 +726,17 @@ bool CInfinitynodeMan::isPossibleForLockReward(std::string nodeOwner)
         if (nNodeSINtype == 10) {nLastStmBySINtype = nBIGLastStmHeight; nLastStmSizeBySINtype = nBIGLastStmSize;}
         if (nNodeSINtype == 5) {nLastStmBySINtype = nMIDLastStmHeight; nLastStmSizeBySINtype = nMIDLastStmSize;}
         if (nNodeSINtype == 1) {nLastStmBySINtype = nLILLastStmHeight; nLastStmSizeBySINtype = nLILLastStmSize;}
+LogPrintf("CInfinitynodeMan::isPossibleForLockReward -- info, SIN type: %d, Stm Height: %d, Stm size: %d, current Height: %d, node rank: %d\n",
+             nNodeSINtype, nBIGLastStmHeight, nLastStmSizeBySINtype, nCachedBlockHeight, inf.getRank());
         //size of statement is not enough for call LockReward => false
-        if(getLastStatementSize(inf.getSINType()) <= Params().GetConsensus().nInfinityNodeCallLockRewardDeepth){
+        if(nLastStmSizeBySINtype <= Params().GetConsensus().nInfinityNodeCallLockRewardDeepth){
             LogPrintf("CInfinitynodeMan::isPossibleForLockReward -- No, number node is not enough: %d, for SIN type: %d\n", nLastStmSizeBySINtype, nNodeSINtype);
             return false;
         }
         else
         {
             //Case1: not receive reward in this Stm
-            int nHeightReward = nLastStmBySINtype + inf.getRank();
+            int nHeightReward = nLastStmBySINtype + inf.getRank() - 1;
             if(nCachedBlockHeight <= nHeightReward)
             {
                 if( nHeightReward - nCachedBlockHeight <= Params().GetConsensus().nInfinityNodeCallLockRewardDeepth){
@@ -766,11 +767,66 @@ bool CInfinitynodeMan::isPossibleForLockReward(std::string nodeOwner)
                             nextStmRank = s.first;
                         }
                     }
-                    int nHeightRewardNextStm = nLastStmBySINtype + nLastStmSizeBySINtype + nextStmRank;
-                    LogPrintf("CInfinitynodeMan::isPossibleForLockReward -- NA, next STM reward height: %d, current height: %d\n", nHeightRewardNextStm, nCachedBlockHeight);
-                    return nHeightRewardNextStm - nCachedBlockHeight < Params().GetConsensus().nInfinityNodeCallLockRewardDeepth;
+                    int nHeightRewardNextStm = nLastStmBySINtype + nLastStmSizeBySINtype + nextStmRank - 1;
+                    int call_temp = nHeightRewardNextStm - nCachedBlockHeight - Params().GetConsensus().nInfinityNodeCallLockRewardDeepth;
+                    LogPrintf("CInfinitynodeMan::isPossibleForLockReward -- %d, next STM reward height: %d, current height: %d, next rank: %d\n",
+                                 call_temp, nHeightRewardNextStm, nCachedBlockHeight, nextStmRank);
+                    return nHeightRewardNextStm - nCachedBlockHeight <= Params().GetConsensus().nInfinityNodeCallLockRewardDeepth;
                 }
             }
         }
     }
+}
+
+void CInfinitynodeMan::updateLastStmHeightAndSize(int nBlockHeight, int nSinType)
+{
+    if(nBlockHeight < Params().GetConsensus().nInfinityNodeGenesisStatement) return;
+    //step1: copy mapStatement for nSinType
+    std::map<int, int> mapStatementSinType = getStatementMap(nSinType);
+
+    LOCK(cs);
+    //step2: find last Statement for nBlockHeight;
+    int nDelta = 100000; //big enough > number of node by SIN type (Stm size). Delta is distant from Stm begin to last block
+    int lastStatement = 0;
+    int lastStatementSize = 0;
+    for(auto& stm : mapStatementSinType)
+    {
+        if (nBlockHeight > stm.first && nDelta > (nBlockHeight -stm.first))
+        {
+            nDelta = nBlockHeight -stm.first;
+            if(nDelta <= stm.second){
+                lastStatement = stm.first;
+                lastStatementSize = stm.second;
+            }
+        }
+    }
+    //return false if not found statement
+    if (lastStatement == 0) return;
+
+    if (nSinType == 10)
+    {
+        nBIGLastStmHeight = lastStatement;
+        nBIGLastStmSize = lastStatementSize;
+    }
+
+    if (nSinType == 5)
+    {
+        nMIDLastStmHeight = lastStatement;
+        nMIDLastStmSize = lastStatementSize;
+    }
+
+    if (nSinType == 1)
+    {
+        nLILLastStmHeight = lastStatement;
+        nLILLastStmSize = lastStatementSize;
+    }
+
+}
+
+void CInfinitynodeMan::UpdatedBlockTip(const CBlockIndex *pindex)
+{
+    nCachedBlockHeight = pindex->nHeight;
+    updateLastStmHeightAndSize(nCachedBlockHeight, 10);
+    updateLastStmHeightAndSize(nCachedBlockHeight, 5);
+    updateLastStmHeightAndSize(nCachedBlockHeight, 1);
 }

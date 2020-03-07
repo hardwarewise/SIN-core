@@ -864,15 +864,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
             throw JSONRPCError(RPC_INTERNAL_ERROR, "This is not a Infinitynode");
 
         UniValue infObj(UniValue::VOBJ);
-/*
-        mnObj.push_back(Pair("outpoint", infinitynodePeer.outpoint.ToStringShort()));
-        mnObj.push_back(Pair("service", infinitynodePeer.service.ToString()));
-
-        CMasternode mn;
-        if(mnodeman.Get(activeMasternode.outpoint, mn)) {
-            mnObj.push_back(Pair("payee", EncodeDestination(mn.pubKeyCollateralAddress.GetID())));
-        }
-*/
+        infinitynodePeer.ManageState(*g_connman);
         infObj.push_back(Pair("MyPeerInfo", infinitynodePeer.GetMyPeerInfo()));
         return infObj;
     }

@@ -139,6 +139,7 @@ public:
     bool updateInfinitynodeList(int fromHeight);//call in init.cppp
     bool initialInfinitynodeList(int fromHeight);//call in init.cpp
 
+    //this function build the map of STM from genesis
     bool deterministicRewardStatement(int nSinType);
     bool deterministicRewardAtHeight(int nBlockHeight, int nSinType, CInfinitynode& infinitynodeRet);
     std::map<int, CInfinitynode> calculInfinityNodeRank(int nBlockHeight, int nSinType, bool updateList=false);
@@ -148,6 +149,8 @@ public:
     int getRoi(int nSinType, int totalNode);
     bool isPossibleForLockReward(std::string nodeOwner);
 
+    //this function update lastStm and size from UpdatedBlockTip and map
+    void updateLastStmHeightAndSize(int nBlockHeight, int nSinType);
     void CheckAndRemove(CConnman& connman);
     /// This is dummy overload to be used for dumping/loading mncache.dat
     void CheckAndRemove() {}

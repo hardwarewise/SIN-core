@@ -42,8 +42,9 @@ void CDSNotificationInterface::UpdatedBlockTip(const CBlockIndex *pindexNew, con
     mnodeman.UpdatedBlockTip(pindexNew);
     instantsend.UpdatedBlockTip(pindexNew);
     mnpayments.UpdatedBlockTip(pindexNew, connman);
+
     infnodeman.UpdatedBlockTip(pindexNew);
-	inflockreward.UpdatedBlockTip(pindexNew, connman);
+    inflockreward.UpdatedBlockTip(pindexNew, connman);
 }
 
 void CDSNotificationInterface::SyncTransaction(const CTransaction &tx, const CBlockIndex *pindex, int posInBlock)
