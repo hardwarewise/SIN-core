@@ -641,7 +641,7 @@ std::map<int, CInfinitynode> CInfinitynodeMan::calculInfinityNodeRank(int nBlock
     for (auto& infpair : mapInfinitynodes) {
         CInfinitynode inf = infpair.second;
         //reinitial Rank to 0 all nodes of nSinType
-        if (inf.getSINType() == nSinType) infpair.second.setRank(0);
+        if (inf.getSINType() == nSinType && updateList == true) infpair.second.setRank(0);
         //put valid node in vector
         if (inf.getSINType() == nSinType && inf.getExpireHeight() >= nBlockHeight && inf.getHeight() < nBlockHeight)
         {
@@ -655,9 +655,9 @@ std::map<int, CInfinitynode> CInfinitynodeMan::calculInfinityNodeRank(int nBlock
     int rank=1;
     for (std::pair<int, CInfinitynode*>& s : vecCInfinitynodeHeight){
         auto it = mapInfinitynodes.find(s.second->vinBurnFund.prevout);
-        if(updateList) it->second.setRank(rank);
+        if(updateList == true) it->second.setRank(rank);
         retMapInfinityNodeRank[rank] = *s.second;
-        ++rank;
+        rank = rank + 1;
     }
 
     return retMapInfinityNodeRank;
@@ -794,16 +794,19 @@ void CInfinitynodeMan::updateLastStmHeightAndSize(int nBlockHeight, int nSinType
     int lastStatementSize = 0;
     for(auto& stm : mapStatementSinType)
     {
+        if (nBlockHeight == stm.first)
+        {
+                //we switch to new Stm ==> update rank
+                lastStatement = stm.first;
+                lastStatementSize = stm.second;
+                calculInfinityNodeRank(nBlockHeight, nSinType, true);
+        }
         if (nBlockHeight > stm.first && nDelta > (nBlockHeight -stm.first))
         {
             nDelta = nBlockHeight -stm.first;
             if(nDelta <= stm.second){
                 lastStatement = stm.first;
                 lastStatementSize = stm.second;
-                //we switch to new Stm ==> update rank
-                if((lastStatement + lastStatementSize) == nBlockHeight){
-                    calculInfinityNodeRank(lastStatement, nSinType, true);
-                }
             }
         }
     }
