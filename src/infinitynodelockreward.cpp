@@ -119,7 +119,8 @@ bool CInfinityNodeLockReward::AlreadyHave(const uint256& hash)
 
 bool CInfinityNodeLockReward::AddLockRewardRequest(const CLockRewardRequest& lockRewardRequest)
 {
-    LogPrintf("CInfinityNodeLockReward::AddLockRewardRequest -- lockRewardRequest hash %s\n", lockRewardRequest.GetHash().ToString());
+    LogPrintf("CInfinityNodeLockReward::AddLockRewardRequest -- lockRewardRequest from %s, SIN type: %d, loop: %d\n",
+               lockRewardRequest.burnTxIn.prevout.ToStringShort(), lockRewardRequest.nSINtype, lockRewardRequest.nLoop);
 
     //if we hash this request => don't add it
     if(mapLockRewardRequest.count(lockRewardRequest.GetHash())) return false;
@@ -199,8 +200,8 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
             LOCK(cs);
             if(mapLockRewardRequest.count(nHash)) return;
             if(!ProcessRewardLockRequest(pfrom, lockReq, connman, nCachedBlockHeight)) return;
-            mapLockRewardRequest.insert(std::make_pair(nHash, lockReq));
-
+            LogPrintf("CInfinityNodeLockReward::ProcessMessage -- add new LockRewadRequest from %d\n",pfrom->GetId());
+            AddLockRewardRequest(lockReq);
             return;
         }
     }

@@ -157,8 +157,6 @@ void CMasternodeMan::Check()
 {
     LOCK2(cs_main, cs);
 
-    LogPrint(BCLog::MASTERNODE, "CMasternodeMan::Check -- nLastWatchdogVoteTime=%d, IsWatchdogActive()=%d\n", nLastWatchdogVoteTime, IsWatchdogActive());
-
     std::map<COutPoint, CMasternode>::iterator it = mapMasternodes.begin();
     while (it != mapMasternodes.end()) {
         it->second.updateInfinityNodeInfo(true);
@@ -195,8 +193,6 @@ void CMasternodeMan::CheckAndRemoveBurnFundNotUniqueNode(CConnman& connman)
             std::vector<CMasternode> vpMasternodesToBan; //list node will be banned
             for (auto& mnpair : mapMasternodes) {
                     CMasternode mnb = mnpair.second;
-                    LogPrint(BCLog::MASTERNODE, "CMasternodeMan::CheckAndRemoveBurnFundNotUniqueNode -- burntx %s size %d find %d\n", 
-                                mnb.vinBurnFund.prevout.ToString(), nBurnFundMap.size(), nBurnFundMap.count(mnb.vinBurnFund.prevout));
                     if (nBurnFundMap.count(mnb.vinBurnFund.prevout) > 0) {
                         // conflict situation with someone else, choose older sigtime
                             LogPrint(BCLog::MASTERNODE, "CMasternodeMan::CheckAndRemoveBurnFundNotUniqueNode -- burntx detected %s\n", mnb.vinBurnFund.prevout.ToStringShort());

@@ -176,14 +176,12 @@ bool CInfinitynodeMan::initialInfinitynodeList(int nBlockHeight)
 
 bool CInfinitynodeMan::updateInfinitynodeList(int nBlockHeight)
 {
-    LogPrintf("CInfinitynodeMan::updateInfinitynodeList -- begin at %d...\n", nBlockHeight);
     LOCK(cs);
     if (nLastScanHeight == 0) {
         LogPrintf("CInfinitynodeMan::updateInfinitynodeList -- update list for 1st scan at Height %d\n",nBlockHeight); 
         return buildInfinitynodeList(nBlockHeight, Params().GetConsensus().nInfinityNodeBeginHeight);
     }
     if(nBlockHeight < nLastScanHeight) return false;
-    LogPrintf("CInfinitynodeMan::updateInfinitynodeList -- update at height: %d, last scan height: %d\n", nBlockHeight, nLastScanHeight);
     return buildInfinitynodeList(nBlockHeight, nLastScanHeight);
 }
 
@@ -228,7 +226,6 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
         CBlock blockReadFromDisk;
         if (ReadBlockFromDisk(blockReadFromDisk, prevBlockIndex, Params().GetConsensus()))
         {
-            LogPrintf("CInfinitynodeMan::updateInfinityNodeInfo -- read block number: %d, end at: %d.\n", prevBlockIndex->nHeight, nLowHeight);
             for (const CTransactionRef& tx : blockReadFromDisk.vtx) {
                 //Not coinbase
                 if (!tx->IsCoinBase()) {
