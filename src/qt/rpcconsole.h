@@ -164,6 +164,7 @@ public Q_SLOTS:
     void hyperlinks3_slot5();
     void hyperlinks3_slot6();
     void hyperlinks3_slot7();
+    void hyperlinks3_slot8();
     //end Exchanges and Web Links
 
 Q_SIGNALS:
