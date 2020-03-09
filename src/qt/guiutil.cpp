@@ -461,6 +461,7 @@ void hyperlinks3_slot4(){QString link1 = "https://github.com/SINOVATEblockchain/
 void hyperlinks3_slot5(){QString link1 = "https://github.com/SINOVATEblockchain/SIN-core/releases"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
 void hyperlinks3_slot6(){QString link1 = "https://sinovate.io/links/explorer"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
 void hyperlinks3_slot7(){QString link1 = "https://github.com/SINOVATEblockchain/SINWebTool/releases"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
+void hyperlinks3_slot8(){QString link1 = "https://docs.sinovate.io/#/infinity_node_setup_guide"; QDesktopServices::openUrl(QUrl(link1, QUrl::TolerantMode));}
 //end exchanges and web links
 
 // Dash

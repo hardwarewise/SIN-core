@@ -353,6 +353,7 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
     connect(ResourcesWebsite5, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot5()));
     connect(ResourcesWebsite6, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot6()));
     connect(ResourcesWebsite7, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot7()));
+    connect(ResourcesWebsite8, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot8()));
 
 
     ///end Exhange, Resources and Web Links
@@ -635,6 +636,7 @@ void BitcoinGUI::createActions()
     ResourcesWebsite5 = new QAction(QIcon(":/icons/info"), tr("&Wallets"), this);
     ResourcesWebsite6 = new QAction(QIcon(":/icons/explorer1"), tr("&Explorer"), this);
     ResourcesWebsite7 = new QAction(QIcon(":/icons/info"), tr("&SIN WebTool"), this);
+    ResourcesWebsite8 = new QAction(QIcon(":/icons/info"), tr("&Infinitynode Setup Guide"), this);
 
 
 
@@ -726,6 +728,7 @@ void BitcoinGUI::createMenuBar()
         hyperlinks3->addAction(ResourcesWebsite5);
         hyperlinks3->addAction(ResourcesWebsite6);
         hyperlinks3->addAction(ResourcesWebsite7);
+        hyperlinks3->addAction(ResourcesWebsite8);
         hyperlinks3->addAction(showSpecsHelpAction);
         
     }
@@ -1066,6 +1069,7 @@ void BitcoinGUI::createTrayIconMenu()
     trayIconMenu->addAction(ResourcesWebsite5);
     trayIconMenu->addAction(ResourcesWebsite6);
     trayIconMenu->addAction(ResourcesWebsite7);
+    trayIconMenu->addAction(ResourcesWebsite8);
 
 
 //end Exchange and Web Links
