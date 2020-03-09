@@ -256,7 +256,7 @@ extern const char *MNPING;
 extern const char *DSEG;
 extern const char *SYNCSTATUSCOUNT;
 extern const char *MNVERIFY;
-extern const char *INFLOCKREWARD;
+extern const char *INFLOCKREWARDINIT;
 };
 
 /* Get a vector of all valid message types (see above) */

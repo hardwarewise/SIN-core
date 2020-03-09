@@ -10,8 +10,6 @@
 class CInfinityNodeLockReward;
 class CLockRewardRequest;
 
-static const int LOCKREWARD_AT_FUTURE         = 50; // in blocks
-
 extern CInfinityNodeLockReward inflockreward;
 
 class CLockRewardRequest
@@ -22,9 +20,9 @@ public:
     int nSINtype{0};
     int nLoop{0};
     std::vector<unsigned char> vchSig{};
-    int64_t sigTime{};
     bool fFinal = false;
 
+    CLockRewardRequest();
     CLockRewardRequest(int Height, COutPoint burnTxIn, int nSINtype, int loop = 0);
 
     ADD_SERIALIZE_METHODS;
@@ -35,7 +33,6 @@ public:
         READWRITE(burnTxIn);
         READWRITE(nSINtype);
         READWRITE(nLoop);
-        READWRITE(sigTime);
         READWRITE(vchSig);
         READWRITE(fFinal);
     }
@@ -47,13 +44,12 @@ public:
         ss << burnTxIn;
         ss << nSINtype;
         ss << nLoop;
-        ss << sigTime;
         return ss.GetHash();
     }
 
     bool Sign(const CKey& keyInfinitynode, const CPubKey& pubKeyInfinitynode);
-    bool CheckSignature(CPubKey& pubKeyInfinitynode);
-    bool SimpleCheck();
+    bool CheckSignature(CPubKey& pubKeyInfinitynode, int &nDos);
+    bool IsValid(CNode* pnode, int nValidationHeight, std::string& strError, CConnman& connman);
     void Relay(CConnman& connman);
 };
 
@@ -62,7 +58,6 @@ class CInfinityNodeLockReward
 private:
 
     mutable CCriticalSection cs;
-
     std::map<uint256, CLockRewardRequest> mapLockRewardRequest;
     std::map<uint256, int> mapInfinityNodeCommitment;
     std::map<uint256, int> mapInfinityNodeRandom;
@@ -70,6 +65,7 @@ private:
     int nCachedBlockHeight;
 
 public:
+
     CInfinityNodeLockReward() : nCachedBlockHeight(0) {}
 
     ADD_SERIALIZE_METHODS;
@@ -84,7 +80,7 @@ public:
     bool AlreadyHave(const uint256& hash);
 
     /*TODO: LockRewardRequest*/
-    void AddLockRewardRequest(const CLockRewardRequest& lockRewardRequest);
+    bool AddLockRewardRequest(const CLockRewardRequest& lockRewardRequest);
     void RemoveLockRewardRequest(const CLockRewardRequest& lockRewardRequest);
     bool HasLockRewardRequest(const uint256& reqHash);
     bool GetLockRewardRequest(const uint256& reqHash, CLockRewardRequest& lockRewardRequestRet);
@@ -97,6 +93,8 @@ public:
     void ProcessVerifyBroadcast(CNode* pnode, const CMasternodeVerification& mnv);
     */
 
+    //process consensus request message
+    bool ProcessRewardLockRequest(CNode* pfrom, CLockRewardRequest& lockRewardRequestRet, CConnman& connman, int nBlockHeight);
     /*call in UpdatedBlockTip*/
     bool ProcessBlock(int nBlockHeight, CConnman& connman);
     /*call in processing.cpp when node receive INV*/

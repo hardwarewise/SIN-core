@@ -6,6 +6,7 @@
 #include <infinitynodeman.h>
 #include <infinitynodepeer.h>
 #include <messagesigner.h>
+#include <net_processing.h>
 
 #include <boost/lexical_cast.hpp>
 
@@ -15,12 +16,14 @@ CInfinityNodeLockReward inflockreward;
 /*************************************************************/
 /***** CLockRewardRequest ************************************/
 /*************************************************************/
+CLockRewardRequest::CLockRewardRequest()
+{}
+
 CLockRewardRequest::CLockRewardRequest(int Height, COutPoint outpoint, int sintype, int loop){
     nRewardHeight = Height;
     burnTxIn = CTxIn(outpoint);
     nSINtype = sintype;
     nLoop = loop;
-    sigTime = GetAdjustedTime();
 }
 
 bool CLockRewardRequest::Sign(const CKey& keyInfinitynode, const CPubKey& pubKeyInfinitynode)
@@ -30,8 +33,7 @@ bool CLockRewardRequest::Sign(const CKey& keyInfinitynode, const CPubKey& pubKey
 
     std::string strMessage = boost::lexical_cast<std::string>(nRewardHeight) + burnTxIn.ToString()
                              + boost::lexical_cast<std::string>(nSINtype)
-                             + boost::lexical_cast<std::string>(nLoop)
-                             + boost::lexical_cast<std::string>(sigTime);
+                             + boost::lexical_cast<std::string>(nLoop);
 
     if(!CMessageSigner::SignMessage(strMessage, vchSig, keyInfinitynode)) {
         LogPrintf("CLockRewardRequest::Sign -- SignMessage() failed\n");
@@ -46,33 +48,46 @@ bool CLockRewardRequest::Sign(const CKey& keyInfinitynode, const CPubKey& pubKey
     return true;
 }
 
-bool CLockRewardRequest::CheckSignature(CPubKey& pubKeyInfinitynode)
+bool CLockRewardRequest::CheckSignature(CPubKey& pubKeyInfinitynode, int &nDos)
 {
     std::string strMessage = boost::lexical_cast<std::string>(nRewardHeight) + burnTxIn.ToString()
                              + boost::lexical_cast<std::string>(nSINtype)
-                             + boost::lexical_cast<std::string>(nLoop)
-                             + boost::lexical_cast<std::string>(sigTime);
+                             + boost::lexical_cast<std::string>(nLoop);
     std::string strError = "";
 
     if(!CMessageSigner::VerifyMessage(pubKeyInfinitynode, vchSig, strMessage, strError)) {
-        LogPrintf("CMasternodePing::CheckSignature -- Got bad Infinitynode LockReward signature, ID=%s, error: %s\n", burnTxIn.prevout.ToStringShort(), strError);
+        LogPrintf("CMasternodePing::CheckSignature -- Got bad Infinitynode LockReward signature, ID=%s, error: %s\n", 
+                    burnTxIn.prevout.ToStringShort(), strError);
+        nDos = 20;
         return false;
     }
     return true;
 }
 
-bool CLockRewardRequest::SimpleCheck()
+bool CLockRewardRequest::IsValid(CNode* pnode, int nValidationHeight, std::string& strError, CConnman& connman)
 {
-    if (sigTime > GetAdjustedTime() + 60 * 60) {
-        LogPrintf("CLockRewardRequest::SimpleCheck -- Signature rejected, too far into the future, ID=%s\n", burnTxIn.prevout.ToStringShort());
+    CInfinitynode inf;
+    if(!infnodeman.deterministicRewardAtHeight(nRewardHeight, nSINtype, inf)){
+        strError = strprintf("Cannot find candidate for Height of LockRequest: %d\n", nRewardHeight);
         return false;
     }
 
-    {
-        CInfinitynode inf;
-        infnodeman.deterministicRewardAtHeight(nRewardHeight, nSINtype, inf);
-        if(inf.vinBurnFund != burnTxIn){return false;}
+    if(inf.vinBurnFund != burnTxIn){
+        strError = strprintf("Node %s is not a Candidate for height: %d, SIN type: %d\n", burnTxIn.prevout.ToStringShort(), nRewardHeight, nSINtype);
+        return false;
     }
+
+    int nDos = 0;
+    std::string metaPublicKey = inf.getMetaPublicKey();
+    std::vector<char> v(metaPublicKey.begin(), metaPublicKey.end());
+    CPubKey pubKey(v.begin(), v.end());
+    if(!CheckSignature(pubKey, nDos)){
+        LOCK(cs_main);
+        Misbehaving(pnode->GetId(), nDos);
+        strError = strprintf("ERROR: invalid signature\n");
+        return false;
+    }
+
     return true;
 }
 
@@ -102,10 +117,12 @@ bool CInfinityNodeLockReward::AlreadyHave(const uint256& hash)
             mapInfinityNodeCommitment.count(hash);
 }
 
-void CInfinityNodeLockReward::AddLockRewardRequest(const CLockRewardRequest& lockRewardRequest)
+bool CInfinityNodeLockReward::AddLockRewardRequest(const CLockRewardRequest& lockRewardRequest)
 {
     LogPrintf("CInfinityNodeLockReward::AddLockRewardRequest -- lockRewardRequest hash %s\n", lockRewardRequest.GetHash().ToString());
 
+    //if we hash this request => don't add it
+    if(mapLockRewardRequest.count(lockRewardRequest.GetHash())) return false;
     if(lockRewardRequest.nLoop == 0){
         {
             LOCK(cs);
@@ -119,6 +136,16 @@ void CInfinityNodeLockReward::AddLockRewardRequest(const CLockRewardRequest& loc
             mapLockRewardRequest.insert(make_pair(lockRewardRequest.GetHash(), lockRewardRequest));
         }
     }
+    return true;
+}
+
+bool CInfinityNodeLockReward::GetLockRewardRequest(const uint256& reqHash, CLockRewardRequest& lockRewardRequestRet)
+{
+    LOCK(cs);
+    std::map<uint256, CLockRewardRequest>::iterator it = mapLockRewardRequest.find(reqHash);
+    if(it == mapLockRewardRequest.end()) return false;
+    lockRewardRequestRet = it->second;
+    return true;
 }
 
 /*
@@ -141,6 +168,44 @@ void CInfinityNodeLockReward::RemoveLockRewardRequest(const CLockRewardRequest& 
     }
 }
 
+bool CInfinityNodeLockReward::ProcessRewardLockRequest(CNode* pfrom, CLockRewardRequest& lockRewardRequestRet, CConnman& connman, int nBlockHeight)
+{
+    AssertLockHeld(cs);
+    if(lockRewardRequestRet.nRewardHeight > nBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardDeepth + 2
+        || lockRewardRequestRet.nRewardHeight < nBlockHeight){
+        LogPrintf("CInfinityNodeLockReward::ProcessRewardLockRequest -- LockRewardRequest for invalid height: %d, current height: %d\n", lockRewardRequestRet.nRewardHeight, nBlockHeight);
+        return false;
+    }
+
+    std::string strError = "";
+    if(!lockRewardRequestRet.IsValid(pfrom, nBlockHeight, strError, connman)){
+        LogPrintf("CInfinityNodeLockReward::ProcessRewardLockRequest -- LockRewardRequest is invalid\n");
+        return false;
+    }
+
+    return true;
+}
+
+void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman)
+{
+    if(fLiteMode) return; // disable all SIN specific functionality
+    if (strCommand == NetMsgType::INFLOCKREWARDINIT) {
+        CLockRewardRequest lockReq;
+        vRecv >> lockReq;
+        //dont ask pfrom for this Request anymore
+        uint256 nHash = lockReq.GetHash();
+        pfrom->setAskFor.erase(nHash);
+        {
+            LOCK(cs);
+            if(mapLockRewardRequest.count(nHash)) return;
+            if(!ProcessRewardLockRequest(pfrom, lockReq, connman, nCachedBlockHeight)) return;
+            mapLockRewardRequest.insert(std::make_pair(nHash, lockReq));
+
+            return;
+        }
+    }
+}
+
 bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
 {
     if(fLiteMode || !fInfinityNode) return false;
@@ -157,6 +222,14 @@ bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
         return false;
     }
 
+    CLockRewardRequest newRequest(nBlockHeight, infRet.getBurntxOutPoint(), infRet.getSINType(), 0);
+    // SIGN MESSAGE TO NETWORK WITH OUR MASTERNODE KEYS
+    if (newRequest.Sign(infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode)) {
+        if (AddLockRewardRequest(newRequest)) {
+            newRequest.Relay(connman);
+            return true;
+        }
+    }
     return true;
 }
 

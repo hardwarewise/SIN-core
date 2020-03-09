@@ -674,6 +674,8 @@ bool CInfinitynodeMan::deterministicRewardAtHeight(int nBlockHeight, int nSinTyp
     if (lastStatement == 0) return false;
 
     std::map<int, CInfinitynode> rankOfStatement = calculInfinityNodeRank(lastStatement, nSinType, false);
+    if(rankOfStatement.empty()) return false;
+    if((nBlockHeight < lastStatement) || (rankOfStatement.size() < (nBlockHeight - lastStatement + 1))) return false;
     infinitynodeRet = rankOfStatement[nBlockHeight - lastStatement + 1];
     return true;
 }
@@ -717,12 +719,13 @@ bool CInfinitynodeMan::isPossibleForLockReward(std::string nodeOwner)
             int nHeightReward = nLastStmBySINtype + inf.getRank() - 1;
             if(nCachedBlockHeight <= nHeightReward)
             {
-                if( nHeightReward - nCachedBlockHeight <= Params().GetConsensus().nInfinityNodeCallLockRewardDeepth){
-                    LogPrintf("CInfinitynodeMan::isPossibleForLockReward -- Yes, reward height: %d, current height: %d\n", nHeightReward, nCachedBlockHeight);
+                /*SIN TODO: use <= in next version and loop until N+5*/
+                if((nHeightReward - nCachedBlockHeight) == Params().GetConsensus().nInfinityNodeCallLockRewardDeepth){
+                    LogPrintf("CInfinitynodeMan::isPossibleForLockReward -- Yes, Stm height: %d, reward height: %d, current height: %d\n", nLastStmBySINtype, nHeightReward, nCachedBlockHeight);
                     return true;
                 }
                 else{
-                    LogPrintf("CInfinitynodeMan::isPossibleForLockReward -- No, reward height: %d, current height: %d\n", nHeightReward, nCachedBlockHeight);
+                    LogPrintf("CInfinitynodeMan::isPossibleForLockReward -- No, Stm height: %d, reward height: %d, current height: %d\n", nLastStmBySINtype, nHeightReward, nCachedBlockHeight);
                     return false;
                 }
             }
@@ -749,7 +752,8 @@ bool CInfinitynodeMan::isPossibleForLockReward(std::string nodeOwner)
                     int call_temp = nHeightRewardNextStm - nCachedBlockHeight - Params().GetConsensus().nInfinityNodeCallLockRewardDeepth;
                     LogPrintf("CInfinitynodeMan::isPossibleForLockReward -- call for LockReward in %d block, next STM reward height: %d, current height: %d, next rank: %d\n",
                                  call_temp, nHeightRewardNextStm, nCachedBlockHeight, nextStmRank);
-                    return nHeightRewardNextStm - nCachedBlockHeight <= Params().GetConsensus().nInfinityNodeCallLockRewardDeepth;
+                    /*SIN TODO: use <= in next version and loop until N+5*/
+                    return (nHeightRewardNextStm - nCachedBlockHeight) == Params().GetConsensus().nInfinityNodeCallLockRewardDeepth;
                 }
             }
         }
@@ -767,13 +771,14 @@ void CInfinitynodeMan::updateLastStmHeightAndSize(int nBlockHeight, int nSinType
 
     LOCK(cs);
     //step2: find last Statement for nBlockHeight;
-    int nDelta = 100000; //big enough > number of node by SIN type (Stm size). Delta is distant from Stm begin to last block
+    int nDelta = 1000; //big enough > number of node by SIN type (Stm size). Delta is distant from Stm begin to last block
     int lastStatement = 0;
     int lastStatementSize = 0;
     for(auto& stm : mapStatementSinType)
     {
         if (nBlockHeight == stm.first)
         {
+                LogPrintf("CInfinitynodeMan::isPossibleForLockReward -- SIN type: %d, switch to new Stm :%d at size: %d\n", nSinType, stm.first, stm.second);
                 //we switch to new Stm ==> update rank
                 lastStatement = stm.first;
                 lastStatementSize = stm.second;

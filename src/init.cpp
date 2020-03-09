@@ -1284,34 +1284,24 @@ bool AppInitLockDataDirectory()
 void ThreadCheckInfinityNode(CConnman& connman)
 {
     if(fLiteMode) return; // disable all Dash specific functionality
-
     static bool fOneThread;
     if(fOneThread) return;
     fOneThread = true;
-
     RenameThread("sinovate-ps");
-
     unsigned int nTick = 0;
-
     //if this node is an Infinitynode peer, so verify the state
     if(fInfinityNode) {
         infinitynodePeer.ManageState(connman);
     }
-
     while (true)
     {
         MilliSleep(1000);
-
         // try to sync from all available nodes, one step at a time
         masternodeSync.ProcessTick(connman);
         if(masternodeSync.IsBlockchainSynced() && !ShutdownRequested() && masternodeSync.IsSynced()) {
-
             nTick++;
-            LogPrintf("nTick: %d\n",nTick);
-
             // make sure to check all masternodes first
             mnodeman.Check();
-
             // check if we should activate or ping every few minutes,
             // slightly postpone first run to give net thread a chance to connect to some peers
             if(nTick % MASTERNODE_MIN_MNP_SECONDS == 15)
