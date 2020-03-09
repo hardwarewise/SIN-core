@@ -172,6 +172,7 @@ private:
     QAction* ResourcesWebsite5;
     QAction* ResourcesWebsite6;
     QAction* ResourcesWebsite7;
+    QAction* ResourcesWebsite8;
 /// end Exhange and Web Links
     QAction *showSpecsHelpAction;
     
