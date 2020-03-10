@@ -1049,17 +1049,17 @@ static UniValue infinitynodeburnfund(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 3)
        throw std::runtime_error(
-            "infinitynodeburnfund amount SINBackupAddress"
+            "infinitynodeburnfund NodeOwnerAddress amount SINBackupAddress"
             "\nSend an amount to BurnAddress.\n"
             "\nArguments:\n"
-            "1. \"NodeOwnerAddress\" (string) Address of Collateral."
+            "1. \"NodeOwnerAddress\" (string, required) Address of Collateral.\n"
             "2. \"amount\"             (numeric or string, required) The amount in " + CURRENCY_UNIT + " to send. eg 0.1\n"
             "3. \"NodeOwnerBackupAddress\"  (string, required) The SIN address to send to when you make a notification(new feature soon).\n"
             "\nResult:\n"
             "\"BURNtxid\"                  (string) The Burn transaction id. Need to run infinity node\n"
             "\"CollateralAddress\"         (string) Address of Collateral. Please send 10000 to this address.\n"
             "\nExamples:\n"
-            + HelpExampleCli("infinitynodeburnfund", "1000000 SINBackupAddress")
+            + HelpExampleCli("infinitynodeburnfund", "NodeOwnerAddress 1000000 SINBackupAddress")
         );
 
     if(!masternodeSync.IsMasternodeListSynced())
