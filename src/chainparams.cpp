@@ -96,6 +96,7 @@ public:
         consensus.nInfinityNodeUpdateMeta=25;
         consensus.nInfinityNodeVoteValue=100;
         consensus.nInfinityNodeNotificationValue=1;
+        consensus.nInfinityNodeCallLockRewardDeepth=50;
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440 * 5; // 1 common year
@@ -234,6 +235,7 @@ public:
         consensus.nInfinityNodeGenesisStatement=110;
         consensus.nInfinityNodeUpdateMeta=5;
         consensus.nInfinityNodeNotificationValue=1;
+        consensus.nInfinityNodeCallLockRewardDeepth=5;
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
@@ -358,6 +360,7 @@ public:
         consensus.nInfinityNodeGenesisStatement=110;
         consensus.nInfinityNodeUpdateMeta=5;
         consensus.nInfinityNodeNotificationValue=1;
+        consensus.nInfinityNodeCallLockRewardDeepth=5;
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
@@ -472,6 +475,7 @@ public:
         consensus.nInfinityNodeGenesisStatement=110;
         consensus.nInfinityNodeUpdateMeta=5;
         consensus.nInfinityNodeNotificationValue=1;
+        consensus.nInfinityNodeCallLockRewardDeepth=5;
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         consensus.BIP16Exception = uint256();

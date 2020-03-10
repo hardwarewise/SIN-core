@@ -47,12 +47,15 @@ background-position:bottom right;
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1">
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">
      <property name="topMargin">
-      <number>15</number>
+      <number>5</number>
      </property>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="spacing">
+        <number>6</number>
+       </property>
        <property name="bottomMargin">
         <number>0</number>
        </property>
@@ -123,8 +126,11 @@ background-position:bottom right;
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout">
-            <property name="spacing">
+            <property name="horizontalSpacing">
              <number>13</number>
+            </property>
+            <property name="verticalSpacing">
+             <number>10</number>
             </property>
             <item row="2" column="2">
              <widget class="QLabel" name="labelWatchPending">
@@ -428,23 +434,61 @@ background-position:bottom right;
               </property>
              </widget>
             </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="labelTotalUSDText">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Total USD</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QLabel" name="labelUSDTotal">
+              <property name="font">
+               <font>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="cursor">
+               <cursorShape>IBeamCursor</cursorShape>
+              </property>
+              <property name="toolTip">
+               <string>Your current total balance</string>
+              </property>
+              <property name="text">
+               <string notr="true">0 USD</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+              <property name="textInteractionFlags">
+               <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
          </layout>
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer">
+        <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::MinimumExpanding</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>10</height>
+           <height>40</height>
           </size>
          </property>
         </spacer>
@@ -454,7 +498,7 @@ background-position:bottom right;
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>185</height>
+           <height>150</height>
           </size>
          </property>
          <property name="styleSheet">
@@ -480,8 +524,7 @@ background-position:bottom right;
           </property>
           <property name="styleSheet">
            <string notr="true">QFrame#frame_7 {
-background-color: #000;
-background-image: url(':/images/button-bg');
+background-color: #00023B;
 border-radius:10px;
 padding-right: 10px;
 
@@ -502,9 +545,9 @@ padding-right: 10px;
           <widget class="QLabel" name="labelBIGNodeText">
            <property name="geometry">
             <rect>
-             <x>10</x>
+             <x>0</x>
              <y>10</y>
-             <width>100</width>
+             <width>125</width>
              <height>25</height>
             </rect>
            </property>
@@ -512,18 +555,21 @@ padding-right: 10px;
             <string notr="true">background-color: transparent;
 font: 75 14px &quot;MS Shell Dlg 2&quot;;
 font-weight: bold;
-color: #EF3C23;</string>
+color: #BC8F3A;</string>
            </property>
            <property name="text">
             <string>BIG</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
           <widget class="QLabel" name="labelBIGNode">
            <property name="geometry">
             <rect>
-             <x>18</x>
+             <x>0</x>
              <y>46</y>
-             <width>91</width>
+             <width>125</width>
              <height>36</height>
             </rect>
            </property>
@@ -546,9 +592,9 @@ color: #ffffff;
           <widget class="QLabel" name="labelBIGNodeQueued">
            <property name="geometry">
             <rect>
-             <x>13</x>
-             <y>85</y>
-             <width>98</width>
+             <x>0</x>
+             <y>81</y>
+             <width>125</width>
              <height>15</height>
             </rect>
            </property>
@@ -567,9 +613,9 @@ background-color: transparent;</string>
           <widget class="QLabel" name="label_7">
            <property name="geometry">
             <rect>
-             <x>10</x>
-             <y>28</y>
-             <width>100</width>
+             <x>0</x>
+             <y>32</y>
+             <width>125</width>
              <height>15</height>
             </rect>
            </property>
@@ -585,35 +631,13 @@ background-color: transparent;</string>
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
-          <widget class="QLabel" name="labelBIGNodeRoi">
-           <property name="geometry">
-            <rect>
-             <x>42</x>
-             <y>12</y>
-             <width>80</width>
-             <height>20</height>
-            </rect>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">font: 75 8px &quot;MS Shell Dlg 2&quot;;
-background-color: transparent;
-color: #ffffff;
-margin-right: 5px;</string>
-           </property>
-           <property name="text">
-            <string notr="true">0</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
           <widget class="QLabel" name="labelBIGNodeSTM">
            <property name="geometry">
             <rect>
-             <x>13</x>
-             <y>100</y>
-             <width>98</width>
-             <height>20</height>
+             <x>0</x>
+             <y>98</y>
+             <width>125</width>
+             <height>22</height>
             </rect>
            </property>
            <property name="styleSheet">
@@ -640,8 +664,7 @@ background-color: transparent;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">QFrame#frame_8 {
-background-color: #000;
-background-image: url(':/images/button-bg');
+background-color: #00023B;
 border-radius:10px;
 padding-right: 10px;
 }</string>
@@ -655,9 +678,9 @@ padding-right: 10px;
           <widget class="QLabel" name="labelMIDNodeText">
            <property name="geometry">
             <rect>
-             <x>10</x>
+             <x>0</x>
              <y>10</y>
-             <width>100</width>
+             <width>125</width>
              <height>25</height>
             </rect>
            </property>
@@ -665,18 +688,21 @@ padding-right: 10px;
             <string notr="true">background-color: transparent;
 font: 75 14px &quot;MS Shell Dlg 2&quot;;
 font-weight: bold;
-color: #EF3C23;</string>
+color: #BC8F3A;</string>
            </property>
            <property name="text">
             <string>MID</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
           <widget class="QLabel" name="labelMIDNode">
            <property name="geometry">
             <rect>
-             <x>18</x>
+             <x>0</x>
              <y>46</y>
-             <width>91</width>
+             <width>125</width>
              <height>36</height>
             </rect>
            </property>
@@ -696,9 +722,9 @@ color: #ffffff;
           <widget class="QLabel" name="labelMIDNodeQueued">
            <property name="geometry">
             <rect>
-             <x>13</x>
-             <y>85</y>
-             <width>98</width>
+             <x>0</x>
+             <y>81</y>
+             <width>125</width>
              <height>15</height>
             </rect>
            </property>
@@ -717,9 +743,9 @@ background-color: transparent;</string>
           <widget class="QLabel" name="label_8">
            <property name="geometry">
             <rect>
-             <x>10</x>
-             <y>28</y>
-             <width>100</width>
+             <x>0</x>
+             <y>32</y>
+             <width>125</width>
              <height>15</height>
             </rect>
            </property>
@@ -735,35 +761,13 @@ background-color: transparent;</string>
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
-          <widget class="QLabel" name="labelMIDNodeRoi">
-           <property name="geometry">
-            <rect>
-             <x>42</x>
-             <y>12</y>
-             <width>80</width>
-             <height>20</height>
-            </rect>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">font: 75 8px &quot;MS Shell Dlg 2&quot;;
-background-color: transparent;
-color: #ffffff;
-margin-right: 5px;</string>
-           </property>
-           <property name="text">
-            <string notr="true">0</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
           <widget class="QLabel" name="labelMIDNodeSTM">
            <property name="geometry">
             <rect>
-             <x>13</x>
-             <y>100</y>
-             <width>98</width>
-             <height>20</height>
+             <x>0</x>
+             <y>98</y>
+             <width>125</width>
+             <height>22</height>
             </rect>
            </property>
            <property name="styleSheet">
@@ -790,8 +794,7 @@ background-color: transparent;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">QFrame#frame_9 {
-background-color: #000;
-background-image: url(':/images/button-bg');
+background-color: #00023B;
 border-radius:10px;
 padding-right: 10px;
 }</string>
@@ -805,9 +808,9 @@ padding-right: 10px;
           <widget class="QLabel" name="labelLILNodeText">
            <property name="geometry">
             <rect>
-             <x>10</x>
+             <x>0</x>
              <y>10</y>
-             <width>100</width>
+             <width>125</width>
              <height>25</height>
             </rect>
            </property>
@@ -815,18 +818,21 @@ padding-right: 10px;
             <string notr="true">background-color: transparent;
 font: 75 14px &quot;MS Shell Dlg 2&quot;;
 font-weight: bold;
-color: #EF3C23;</string>
+color: #BC8F3A;</string>
            </property>
            <property name="text">
             <string>MINI</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
           <widget class="QLabel" name="labelLILNode">
            <property name="geometry">
             <rect>
-             <x>18</x>
+             <x>0</x>
              <y>46</y>
-             <width>91</width>
+             <width>125</width>
              <height>36</height>
             </rect>
            </property>
@@ -846,9 +852,9 @@ color: #ffffff;
           <widget class="QLabel" name="labelLILNodeQueued">
            <property name="geometry">
             <rect>
-             <x>13</x>
-             <y>85</y>
-             <width>98</width>
+             <x>0</x>
+             <y>81</y>
+             <width>125</width>
              <height>15</height>
             </rect>
            </property>
@@ -867,9 +873,9 @@ background-color: transparent;</string>
           <widget class="QLabel" name="label_9">
            <property name="geometry">
             <rect>
-             <x>10</x>
-             <y>28</y>
-             <width>100</width>
+             <x>0</x>
+             <y>32</y>
+             <width>125</width>
              <height>15</height>
             </rect>
            </property>
@@ -885,35 +891,13 @@ background-color: transparent;</string>
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
-          <widget class="QLabel" name="labelLILNodeRoi">
-           <property name="geometry">
-            <rect>
-             <x>42</x>
-             <y>12</y>
-             <width>80</width>
-             <height>20</height>
-            </rect>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">font: 75 8px &quot;MS Shell Dlg 2&quot;;
-background-color: transparent;
-color: #ffffff;
-margin-right: 5px;</string>
-           </property>
-           <property name="text">
-            <string notr="true">0</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
           <widget class="QLabel" name="labelLILNodeSTM">
            <property name="geometry">
             <rect>
-             <x>13</x>
-             <y>100</y>
-             <width>98</width>
-             <height>20</height>
+             <x>0</x>
+             <y>98</y>
+             <width>125</width>
+             <height>22</height>
             </rect>
            </property>
            <property name="styleSheet">
@@ -929,29 +913,237 @@ background-color: transparent;</string>
            </property>
           </widget>
          </widget>
-         <widget class="QLabel" name="labelStatisticTotalNode">
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::MinimumExpanding</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>10</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QFrame" name="statisticFrame2">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>130</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <widget class="QWidget" name="layoutWidget">
           <property name="geometry">
            <rect>
             <x>10</x>
-            <y>160</y>
-            <width>783</width>
-            <height>22</height>
+            <y>0</y>
+            <width>391</width>
+            <height>130</height>
            </rect>
           </property>
-          <property name="styleSheet">
-           <string notr="true">margin-left: 10px;
-margin-top: 5px;
-font-size: 16px;
-color:#7982A1;
-
-</string>
-          </property>
-          <property name="text">
-           <string notr="true">1125</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
+          <layout class="QGridLayout" name="statisticGridLayout">
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelStatisticLastScanText">
+             <property name="font">
+              <font>
+               <pointsize>11</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>Last Scan :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="labelStatisticLastScan">
+             <property name="font">
+              <font>
+               <pointsize>11</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>0</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLabel" name="labelCurrentPrice">
+             <property name="font">
+              <font>
+               <pointsize>11</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>0 USD</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="labelCurrentPriceText">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>11</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>SIN Market Value Usd :</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLabel" name="labelCurrentPriceBTC">
+             <property name="font">
+              <font>
+               <pointsize>11</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>0 BTC</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="labelLatestVersionText">
+             <property name="font">
+              <font>
+               <pointsize>11</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Latest Version :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="labelStatisticTotalNode">
+             <property name="font">
+              <font>
+               <family>MS Shell Dlg 2</family>
+               <pointsize>11</pointsize>
+               <weight>75</weight>
+               <italic>false</italic>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string notr="true">1125</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelStatisticTotalNodeText">
+             <property name="font">
+              <font>
+               <pointsize>11</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>Total Burnt Infinitynodes :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLabel" name="labelLatestVersion">
+             <property name="font">
+              <font>
+               <pointsize>11</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Version</string>
+             </property>
+             <property name="openExternalLinks">
+              <bool>true</bool>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::TextBrowserInteraction</set>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="labelCurrentPriceBTCText">
+             <property name="font">
+              <font>
+               <pointsize>11</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>SIN Market Value Btc :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="Line" name="line_2">
+             <property name="autoFillBackground">
+              <bool>true</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="lineWidth">
+              <number>2</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </widget>
        </item>
@@ -1103,6 +1295,7 @@ margin-bottom:20px;</string>
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
          </property>
+         <layout class="QGridLayout" name="gridLayout_3"/>
         </widget>
        </item>
       </layout>

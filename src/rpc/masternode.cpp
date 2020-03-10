@@ -15,6 +15,7 @@
 #include <masternodeman.h>
 #include <infinitynodeman.h>
 #include <infinitynodersv.h>
+#include <infinitynodepeer.h>
 #ifdef ENABLE_WALLET
 #include <wallet/coincontrol.h>
 #endif // ENABLE_WALLET
@@ -819,6 +820,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
                                     && strCommand != "show-lastpaid" && strCommand != "build-stm" && strCommand != "show-stm"
                                     && strCommand != "show-candidate" && strCommand != "show-script" && strCommand != "show-proposal"
                                     && strCommand != "scan-vote" && strCommand != "show-proposals" && strCommand != "keypair"
+                                    && strCommand != "mypeerinfo"
         ))
             throw std::runtime_error(
                 "infinitynode \"command\"...\n"
@@ -826,6 +828,8 @@ UniValue infinitynode(const JSONRPCRequest& request)
                 "\nArguments:\n"
                 "1. \"command\"        (string or set of strings, required) The command to execute\n"
                 "\nAvailable commands:\n"
+                "  keypair                     - Generation the compressed key pair\n"
+                "  mypeerinfo                  - Get status of Peer if this node is Infinitynode\n"
                 "  build-list                  - Build list of all infinitynode from block height 165000 to last block\n"
                 "  show-infos                  - Show the list of nodes and last information\n"
                 "  show-lastscan               - Last nHeight when list is updated\n"
@@ -852,6 +856,17 @@ UniValue infinitynode(const JSONRPCRequest& request)
         obj.push_back(Pair("isComppressed", pubkey.IsCompressed()));
 
         return obj;
+    }
+
+    if (strCommand == "mypeerinfo")
+    {
+        if (!fInfinityNode)
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "This is not a Infinitynode");
+
+        UniValue infObj(UniValue::VOBJ);
+        infinitynodePeer.ManageState(*g_connman);
+        infObj.push_back(Pair("MyPeerInfo", infinitynodePeer.GetMyPeerInfo()));
+        return infObj;
     }
 
     if (strCommand == "build-list")
@@ -1208,10 +1223,10 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
             "\nSend update info.\n"
             "\nArguments:\n"
             "1. \"OwnerAddress\"  (string, required) Address of node OWNER which funds are burnt.\n"
-            "2. \"NodeAddress\"   (string, required) Address of node which will be used for valide Reward, FlashSend...\n"
+            "2. \"PublicKey\"     (string, required) PublicKey of node which will be used for LockReward, FlashSend...\n"
             "3. \"IP\"            (string, required) IP of node.\n"
             "\nResult:\n"
-            "\"UpdateInfo upadted message\"   (string) The Burn transaction id. Need to run infinity node\n"
+            "\"UpdateInfo upadted message\"   (string) Metadata information\n"
             "\nExamples:\n"
             + HelpExampleCli("infinitynodeupdatemeta", "OwnerAddress NodeAddress IP")
         );

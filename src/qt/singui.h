@@ -148,6 +148,9 @@ private:
     QAction* openWebsite7;
     QAction* openWebsite8;
     QAction* openWebsite9;
+    QAction* openWebsite10;
+    QAction* openWebsite11;
+    QAction* openWebsite12;
     
     QAction* Exchangesite1;
     QAction* Exchangesite2;
@@ -169,6 +172,7 @@ private:
     QAction* ResourcesWebsite5;
     QAction* ResourcesWebsite6;
     QAction* ResourcesWebsite7;
+    QAction* ResourcesWebsite8;
 /// end Exhange and Web Links
     QAction *showSpecsHelpAction;
     

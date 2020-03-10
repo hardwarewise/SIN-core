@@ -73,6 +73,7 @@
 //sinovate
 #include <infinitynodeman.h>
 #include <infinitynodersv.h>
+#include <infinitynodepeer.h>
 //
 
 #ifndef WIN32
@@ -1283,29 +1284,24 @@ bool AppInitLockDataDirectory()
 void ThreadCheckInfinityNode(CConnman& connman)
 {
     if(fLiteMode) return; // disable all Dash specific functionality
-
     static bool fOneThread;
     if(fOneThread) return;
     fOneThread = true;
-
     RenameThread("sinovate-ps");
-
     unsigned int nTick = 0;
-
+    //if this node is an Infinitynode peer, so verify the state
+    if(fInfinityNode) {
+        infinitynodePeer.ManageState(connman);
+    }
     while (true)
     {
         MilliSleep(1000);
-
         // try to sync from all available nodes, one step at a time
         masternodeSync.ProcessTick(connman);
         if(masternodeSync.IsBlockchainSynced() && !ShutdownRequested() && masternodeSync.IsSynced()) {
-
             nTick++;
-            LogPrintf("nTick: %d\n",nTick);
-
             // make sure to check all masternodes first
             mnodeman.Check();
-
             // check if we should activate or ping every few minutes,
             // slightly postpone first run to give net thread a chance to connect to some peers
             if(nTick % MASTERNODE_MIN_MNP_SECONDS == 15)
@@ -1323,9 +1319,6 @@ void ThreadCheckInfinityNode(CConnman& connman)
             if(nTick % (60 * 5) == 0) {
                 infnodeman.CheckAndRemove(connman);
                 mnodeman.CheckAndRemoveBurnFundNotUniqueNode(connman);
-                mnodeman.CheckAndRemoveLimitNumberNode(connman, 1, Params().GetConsensus().nLimitSINNODE_1);
-                mnodeman.CheckAndRemoveLimitNumberNode(connman, 5, Params().GetConsensus().nLimitSINNODE_5);
-                mnodeman.CheckAndRemoveLimitNumberNode(connman, 10, Params().GetConsensus().nLimitSINNODE_10);
             }
         }
     }
@@ -1840,6 +1833,17 @@ bool AppInitMain()
 
     // SIN
     fInfinityNode = gArgs.GetBoolArg("-infinitynode", false);
+    if(fInfinityNode) {
+        std::string strInfinityNodePrivKey = gArgs.GetArg("-infinitynodeprivkey", "");
+        if(!strInfinityNodePrivKey.empty()) {
+            if(!CMessageSigner::GetKeysFromSecret(strInfinityNodePrivKey, infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode))
+                return InitError(_("Invalid masternodeprivkey. Please see documentation."));
+            LogPrintf("  pubKeyInfinitynode: %s\n",HexStr(infinitynodePeer.pubKeyInfinitynode));
+            infinitynodePeer.ManageState(connman);
+        } else {
+            return InitError(_("You must specify a infinitynodeprivkey in the configuration. Please see documentation for help."));
+        }
+    }
     //
     // Dash
     // ********************************************************* Step 11a: setup InfinityNode

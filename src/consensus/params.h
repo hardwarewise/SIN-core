@@ -72,6 +72,7 @@ struct Params {
     int nInfinityNodeUpdateMeta;// integer
     int nInfinityNodeVoteValue; // in coins
     int nInfinityNodeNotificationValue; // in coins
+    int nInfinityNodeCallLockRewardDeepth; //in number of blocks
     int nSchnorrActivationHeight; // block height (int)
 
     int nInstantSendKeepLock; // in blocks
