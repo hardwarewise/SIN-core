@@ -201,7 +201,9 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
             if(mapLockRewardRequest.count(nHash)) return;
             if(!ProcessRewardLockRequest(pfrom, lockReq, connman, nCachedBlockHeight)) return;
             LogPrintf("CInfinityNodeLockReward::ProcessMessage -- add new LockRewadRequest from %d\n",pfrom->GetId());
-            AddLockRewardRequest(lockReq);
+            if(AddLockRewardRequest(lockReq)){
+                lockReq.Relay(connman);
+            }
             return;
         }
     }
