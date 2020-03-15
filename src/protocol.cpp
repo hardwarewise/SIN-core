@@ -58,7 +58,9 @@ const char *MNPING="mnp";
 const char *DSEG="dseg";
 const char *SYNCSTATUSCOUNT="ssc";
 const char *MNVERIFY="mnv";
+// SIN message types
 const char *INFLOCKREWARDINIT="inflrwd";
+const char *INFVERIFY="infverify";
 } // namespace NetMsgType
 
 /** All known message types. Keep this in the same order as the list of
@@ -106,6 +108,7 @@ const static std::string allNetMessageTypes[] = {
     NetMsgType::SYNCSTATUSCOUNT,
     NetMsgType::MNVERIFY,
     NetMsgType::INFLOCKREWARDINIT,
+    NetMsgType::INFVERIFY,
 };
 const static std::vector<std::string> allNetMessageTypesVec(allNetMessageTypes, allNetMessageTypes+ARRAYLEN(allNetMessageTypes));
 

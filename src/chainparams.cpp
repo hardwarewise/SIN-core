@@ -97,6 +97,8 @@ public:
         consensus.nInfinityNodeVoteValue=100;
         consensus.nInfinityNodeNotificationValue=1;
         consensus.nInfinityNodeCallLockRewardDeepth=50;
+        consensus.nInfinityNodeCallLockRewardLoop=10; //in number of blocks
+        consensus.nInfinityNodeLockRewardTop=16; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440 * 5; // 1 common year
@@ -236,6 +238,8 @@ public:
         consensus.nInfinityNodeUpdateMeta=5;
         consensus.nInfinityNodeNotificationValue=1;
         consensus.nInfinityNodeCallLockRewardDeepth=5;
+        consensus.nInfinityNodeCallLockRewardLoop=2; //in number of blocks
+        consensus.nInfinityNodeLockRewardTop=5; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
@@ -304,7 +308,7 @@ public:
 
         //vSeeds.emplace_back("206.189.57.75");
         //vSeeds.emplace_back("165.22.81.15");
-		nDefaultPort = 20980;
+        nDefaultPort = 20980;
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,63);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
@@ -361,6 +365,8 @@ public:
         consensus.nInfinityNodeUpdateMeta=5;
         consensus.nInfinityNodeNotificationValue=1;
         consensus.nInfinityNodeCallLockRewardDeepth=5;
+        consensus.nInfinityNodeCallLockRewardLoop=2; //in number of blocks
+        consensus.nInfinityNodeLockRewardTop=5; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
@@ -476,6 +482,8 @@ public:
         consensus.nInfinityNodeUpdateMeta=5;
         consensus.nInfinityNodeNotificationValue=1;
         consensus.nInfinityNodeCallLockRewardDeepth=5;
+        consensus.nInfinityNodeCallLockRewardLoop=2; //in number of blocks
+        consensus.nInfinityNodeLockRewardTop=5; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         consensus.BIP16Exception = uint256();

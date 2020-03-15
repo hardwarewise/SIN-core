@@ -7,6 +7,7 @@
 #include <infinitynodepeer.h>
 #include <messagesigner.h>
 #include <net_processing.h>
+#include <netmessagemaker.h>
 
 #include <boost/lexical_cast.hpp>
 
@@ -99,6 +100,17 @@ void CLockRewardRequest::Relay(CConnman& connman)
 }
 
 /*************************************************************/
+/***** CLockRewardCommitment *********************************/
+/*************************************************************/
+CLockRewardCommitment::CLockRewardCommitment()
+{}
+
+CLockRewardCommitment::CLockRewardCommitment(uint256 nRequestIn, uint256 nCommitmentIn){
+    nHashRequest = nRequestIn;
+    nHashCommitment = nHashCommitment;
+}
+
+/*************************************************************/
 /***** CInfinityNodeLockReward *******************************/
 /*************************************************************/
 void CInfinityNodeLockReward::Clear()
@@ -119,23 +131,18 @@ bool CInfinityNodeLockReward::AlreadyHave(const uint256& hash)
 
 bool CInfinityNodeLockReward::AddLockRewardRequest(const CLockRewardRequest& lockRewardRequest)
 {
+    AssertLockHeld(cs);
     LogPrintf("CInfinityNodeLockReward::AddLockRewardRequest -- lockRewardRequest from %s, SIN type: %d, loop: %d\n",
                lockRewardRequest.burnTxIn.prevout.ToStringShort(), lockRewardRequest.nSINtype, lockRewardRequest.nLoop);
 
     //if we hash this request => don't add it
     if(mapLockRewardRequest.count(lockRewardRequest.GetHash())) return false;
     if(lockRewardRequest.nLoop == 0){
-        {
-            LOCK(cs);
-            mapLockRewardRequest.insert(make_pair(lockRewardRequest.GetHash(), lockRewardRequest));
-        }
+        mapLockRewardRequest.insert(make_pair(lockRewardRequest.GetHash(), lockRewardRequest));
     } else if (lockRewardRequest.nLoop > 0){
         //new request from candidate, so remove old requrest
         RemoveLockRewardRequest(lockRewardRequest);
-        {
-            LOCK(cs);
-            mapLockRewardRequest.insert(make_pair(lockRewardRequest.GetHash(), lockRewardRequest));
-        }
+        mapLockRewardRequest.insert(make_pair(lockRewardRequest.GetHash(), lockRewardRequest));
     }
     return true;
 }
@@ -154,7 +161,7 @@ bool CInfinityNodeLockReward::GetLockRewardRequest(const uint256& reqHash, CLock
  */
 void CInfinityNodeLockReward::RemoveLockRewardRequest(const CLockRewardRequest& lockRewardRequest)
 {
-    LOCK(cs);
+    AssertLockHeld(cs);
     std::map<uint256, CLockRewardRequest>::iterator itRequest = mapLockRewardRequest.begin();
     while(itRequest != mapLockRewardRequest.end()) {
         if(itRequest->second.nRewardHeight == lockRewardRequest.nRewardHeight
@@ -169,22 +176,86 @@ void CInfinityNodeLockReward::RemoveLockRewardRequest(const CLockRewardRequest& 
     }
 }
 
-bool CInfinityNodeLockReward::ProcessRewardLockRequest(CNode* pfrom, CLockRewardRequest& lockRewardRequestRet, CConnman& connman, int nBlockHeight)
+bool CInfinityNodeLockReward::ProcessLockRewardRequest(CNode* pfrom, CLockRewardRequest& lockRewardRequestRet, CConnman& connman, int nBlockHeight)
 {
     AssertLockHeld(cs);
     if(lockRewardRequestRet.nRewardHeight > nBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardDeepth + 2
         || lockRewardRequestRet.nRewardHeight < nBlockHeight){
-        LogPrintf("CInfinityNodeLockReward::ProcessRewardLockRequest -- LockRewardRequest for invalid height: %d, current height: %d\n", lockRewardRequestRet.nRewardHeight, nBlockHeight);
+        LogPrintf("CInfinityNodeLockReward::ProcessLockRewardRequest -- LockRewardRequest for invalid height: %d, current height: %d\n", lockRewardRequestRet.nRewardHeight, nBlockHeight);
         return false;
     }
 
     std::string strError = "";
     if(!lockRewardRequestRet.IsValid(pfrom, nBlockHeight, strError, connman)){
-        LogPrintf("CInfinityNodeLockReward::ProcessRewardLockRequest -- LockRewardRequest is invalid\n");
+        LogPrintf("CInfinityNodeLockReward::ProcessLockRewardRequest -- LockRewardRequest is invalid. ERROR: %s\n",strError);
         return false;
     }
 
     return true;
+}
+
+/*
+ * send verify request to Candidate A at IP(addr) for Request(lockRewardRequestRet)
+ */
+bool CInfinityNodeLockReward::SendVerifyRequest(const CAddress& addr, COutPoint myPeerBurnTx, CLockRewardRequest& lockRewardRequestRet, CConnman& connman)
+{
+    CVerifyRequest vrequest(addr, myPeerBurnTx, GetRandInt(999999), lockRewardRequestRet.nRewardHeight, lockRewardRequestRet.GetHash());
+
+    std::string strMessage = strprintf("%s%d%s", myPeerBurnTx.ToString(), vrequest.nonce, lockRewardRequestRet.GetHash().ToString());
+
+    if(!CMessageSigner::SignMessage(strMessage, vrequest.vchSig1, infinitynodePeer.keyInfinitynode)) {
+        LogPrintf("CInfinityNodeLockReward::SendVerifyReply -- SignMessage() failed\n");
+        return false;
+    }
+
+    std::string strError;
+
+    if(!CMessageSigner::VerifyMessage(infinitynodePeer.pubKeyInfinitynode, vrequest.vchSig1, strMessage, strError)) {
+        LogPrintf("CInfinityNodeLockReward::SendVerifyReply -- VerifyMessage() failed, error: %s\n", strError);
+        return false;
+    }
+
+    // use random nonce, store it and require node to reply with correct one later
+    CNode* pnode = connman.OpenNetworkConnection(addr, false, nullptr, NULL, false, false, false, true);
+    if(pnode == NULL) {
+        LogPrintf("CInfinityNodeLockReward::SendVerifyRequest -- can't connect to node to verify it, addr=%s\n", addr.ToString());
+        return false;
+    }
+
+    LogPrintf("CInfinityNodeLockReward::SendVerifyRequest -- verifying node using nonce %d addr=%s\n", vrequest.nonce, addr.ToString());
+    connman.PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::INFVERIFY, vrequest));
+
+    return true;
+}
+
+bool CInfinityNodeLockReward::ProcessLockRewardCommitment(CLockRewardRequest& lockRewardRequestRet, CConnman& connman)
+{
+    AssertLockHeld(cs);
+    //step 1: chech if mypeer is good candidate to make Musig
+    CInfinitynode infRet;
+    if(!infnodeman.Get(infinitynodePeer.burntx, infRet)){
+        LogPrintf("CInfinityNodeLockReward::ProcessLockRewardCommitment -- Can not identify mypeer in list, height: %d\n");
+        return false;
+    }
+
+    int nScore;
+
+    if(!infnodeman.getNodeScoreAtHeight(infinitynodePeer.burntx, lockRewardRequestRet.nRewardHeight - 101, nScore)) {
+        LogPrintf("CMasternodePaymentVote::ProcessLockRewardCommitment -- Can't calculate score for Infinitynode %s\n",
+                    infinitynodePeer.burntx.ToStringShort());
+        return false;
+    }
+
+    //step 2: if my score is in Top, i can send commitment to build Musig
+    if(nScore < Params().GetConsensus().nInfinityNodeLockRewardTop) {
+        //step 2.1: verify node which send the request is online at IP in metadata
+        //SendVerifyRequest()
+        //step 2.2: send commitment
+        return true;
+    } else {
+        LogPrintf("CMasternodePaymentVote::ProcessLockRewardCommitment -- I am not in Top score\n");
+        return false;
+    }
 }
 
 void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman)
@@ -199,10 +270,16 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
         {
             LOCK(cs);
             if(mapLockRewardRequest.count(nHash)) return;
-            if(!ProcessRewardLockRequest(pfrom, lockReq, connman, nCachedBlockHeight)) return;
-            LogPrintf("CInfinityNodeLockReward::ProcessMessage -- add new LockRewadRequest from %d\n",pfrom->GetId());
+            if(!ProcessLockRewardRequest(pfrom, lockReq, connman, nCachedBlockHeight)){
+                return;
+            }
+            LogPrintf("CInfinityNodeLockReward::ProcessMessage -- add new LockRewardRequest from %d\n",pfrom->GetId());
             if(AddLockRewardRequest(lockReq)){
                 lockReq.Relay(connman);
+                if(!ProcessLockRewardCommitment(lockReq, connman)){
+                    LogPrintf("CInfinityNodeLockReward::ProcessMessage -- can not send commitment. May be i am not in Top score.\n");
+                    return;
+                }
             }
             return;
         }
@@ -228,6 +305,7 @@ bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
     CLockRewardRequest newRequest(nBlockHeight, infRet.getBurntxOutPoint(), infRet.getSINType(), 0);
     // SIGN MESSAGE TO NETWORK WITH OUR MASTERNODE KEYS
     if (newRequest.Sign(infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode)) {
+        LOCK(cs);
         if (AddLockRewardRequest(newRequest)) {
             newRequest.Relay(connman);
             return true;

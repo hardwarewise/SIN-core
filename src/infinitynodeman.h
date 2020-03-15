@@ -18,6 +18,10 @@ extern CInfinitynodeMan infnodeman;
 
 class CInfinitynodeMan
 {
+public:
+    typedef std::pair<arith_uint256, CInfinitynode*> score_pair_t;
+    typedef std::vector<score_pair_t> score_pair_vec_t;
+
 private:
     static const std::string SERIALIZATION_VERSION_STRING;
 
@@ -147,7 +151,10 @@ public:
     std::pair<int, int> getLastStatementBySinType(int nSinType);
     std::string getLastStatementString() const;
     int getRoi(int nSinType, int totalNode);
+
     bool isPossibleForLockReward(std::string nodeOwner);
+    bool getScoreVector(const uint256& nBlockHash, int nSinType, int nBlockHeight, CInfinitynodeMan::score_pair_vec_t& vecScoresRet);
+    bool getNodeScoreAtHeight(const COutPoint& outpoint, int nBlockHeight, int& nRankRet);
 
     //this function update lastStm and size from UpdatedBlockTip and map
     void updateLastStmHeightAndSize(int nBlockHeight, int nSinType);

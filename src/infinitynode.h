@@ -120,6 +120,8 @@ public:
     static bool IsValidNetAddr(CService addrIn);
     static bool IsValidStateForAutoStart(int nMetadataHeight);
 
+    arith_uint256 CalculateScore(const uint256& blockHash);
+
     CInfinitynode& operator=(CInfinitynode const& from)
     {
         static_cast<infinitynode_info_t&>(*this)=from;

@@ -52,3 +52,11 @@ bool CInfinitynode::IsValidStateForAutoStart(int metadataHeight)
 {
     return (metadataHeight > 0);
 }
+
+arith_uint256 CInfinitynode::CalculateScore(const uint256& blockHash)
+{
+    // Deterministically calculate a "score" for a Masternode based on any given (block)hash
+    CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
+    ss << vinBurnFund.prevout << blockHash;
+    return UintToArith256(ss.GetHash());
+}
