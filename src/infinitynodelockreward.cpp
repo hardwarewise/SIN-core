@@ -59,7 +59,8 @@ bool CLockRewardRequest::CheckSignature(CPubKey& pubKeyInfinitynode, int &nDos)
     if(!CMessageSigner::VerifyMessage(pubKeyInfinitynode, vchSig, strMessage, strError)) {
         LogPrintf("CMasternodePing::CheckSignature -- Got bad Infinitynode LockReward signature, ID=%s, error: %s\n", 
                     burnTxIn.prevout.ToStringShort(), strError);
-        nDos = 20;
+        /*TODO: set ban value befor release*/
+        nDos = 0;
         return false;
     }
     return true;

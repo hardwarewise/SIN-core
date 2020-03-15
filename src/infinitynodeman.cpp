@@ -149,13 +149,13 @@ void CInfinitynodeMan::CheckAndRemove(CConnman& connman)
         buildInfinitynodeList(nCachedBlockHeight, nLastScanHeight);
     }
 
-    if (nBIGLastStmHeight + nBIGLastStmSize - nCachedBlockHeight < INF_MATURED_LIMIT && nBIGLastStmHeight + nBIGLastStmSize >= nCachedBlockHeight){
+    if (nBIGLastStmHeight + nBIGLastStmSize - nCachedBlockHeight < INF_MATURED_LIMIT){
         deterministicRewardStatement(10);
     }
-    if (nMIDLastStmHeight + nMIDLastStmSize - nCachedBlockHeight < INF_MATURED_LIMIT && nMIDLastStmHeight + nMIDLastStmSize >= nCachedBlockHeight){
+    if (nMIDLastStmHeight + nMIDLastStmSize - nCachedBlockHeight < INF_MATURED_LIMIT){
         deterministicRewardStatement(5);
     }
-    if (nLILLastStmHeight + nLILLastStmSize - nCachedBlockHeight < INF_MATURED_LIMIT && nLILLastStmHeight + nLILLastStmSize >= nCachedBlockHeight){
+    if (nLILLastStmHeight + nLILLastStmSize - nCachedBlockHeight < INF_MATURED_LIMIT){
         deterministicRewardStatement(1);
     }
 
