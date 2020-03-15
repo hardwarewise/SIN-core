@@ -298,16 +298,20 @@ bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
         return false;
     }
 
-    if(!infnodeman.isPossibleForLockReward(infRet.getCollateralAddress())){
+    int nRewardHeight = infnodeman.isPossibleForLockReward(infRet.getCollateralAddress());
+    if(nRewardHeight == 0 || (nRewardHeight < (nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardLoop))){
         LogPrintf("CInfinityNodeLockReward::ProcessBlock -- Try to LockReward false at height %d\n", nBlockHeight);
         return false;
     }
 
-    CLockRewardRequest newRequest(nBlockHeight, infRet.getBurntxOutPoint(), infRet.getSINType(), 0);
+    // we know that nRewardHeight >= nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardLoop
+    int loop = (Params().GetConsensus().nInfinityNodeCallLockRewardDeepth / (nRewardHeight - nCachedBlockHeight)) - 1;
+    CLockRewardRequest newRequest(nRewardHeight, infRet.getBurntxOutPoint(), infRet.getSINType(), loop);
     // SIGN MESSAGE TO NETWORK WITH OUR MASTERNODE KEYS
     if (newRequest.Sign(infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode)) {
         LOCK(cs);
         if (AddLockRewardRequest(newRequest)) {
+            LogPrintf("CInfinityNodeLockReward::ProcessBlock -- Relay LockRequest loop: %d\n", loop);
             newRequest.Relay(connman);
             return true;
         }
