@@ -20,31 +20,31 @@ Those who are familiar with traditional investment markets have likely heard of 
 
 [Proof-of-Burn](https://www.youtube.com/watch?v=ZabgG6YTZfY&t=1s)
 
-Different Versions of Coin Burning
+**Different Versions of Coin Burning**
 
 With the economic benefits of coin burning so obvious, many projects have taken on their own twist to the practice. Here are a few of the popular ones:
 
-Burning Circulating Supply
+**Burning Circulating Supply**
 
 This describes burning coins held by investors and repurchasing coins from exchanges to be burned. Binance’s version of quarterly coin burning can be put in this category. The size and effectiveness of these burns are variable and relies primarily on market action. In some cases (such as TRX), these burns do not occur regularly.
 
-Burning Non-Circulating Supply
+**Burning Non-Circulating Supply**
 
 This would refer to burning coins that are not currently in circulation (obviously), such as coins held by team members, or in project treasuries. These funds are often held in large accounts. Since these funds are not being taken off of exchanges (or out of circulation), they do not often have a significant impact on the value of non-burned coins.
 
-Burning During Transaction
+**Burning During Transaction**
 
 Ripple (XRP) and VeChain employ this burn model through burning transaction fees. In the case of XRP, the network burns about 0.5 XRP per minute (about 250,000 XRP per year). These numbers can change depending on the throughput demand placed on the XRP network. This method of burning helps to reduce market volatility — employing more of a “slow-burn” than the extensive burns conducted by burning circulating supplies. Another effect of this protocol is that it de-incentivizes DDoS attacks.
 
-Price-Targeted Burns
+**Price-Targeted Burns**
 
 In the case of stablecoins that employ burning (such as USDT), these projects are continually minting and burning coins in order to have the circulating supply match the backing fiat. This is how they guarantee that each coin is backed by the corresponding amount of fiat currency — thus ensuring its value. In this case, when Tether burns coins, it is indicating that money is moving out of its reserves.
 
-What is The History of Coin Burning?
+**What is The History of Coin Burning?**
 
 There are at least two different mainstream cryptos that have employed this functionality to reap economic benefits. They would be TRX and BNB. BNB — the underlying currency of the popular Binance exchange — employs a quarterly coin burn based on the trading volume on their exchange. To date, they have reported over 14.4M BNB coins burned (a value of over $170M).
 
-Coin Burning As A Consensus Protocol
+**Coin Burning As A Consensus Protocol**
 
 Some projects have elected to incorporate coin burning into their consensus protocol, requiring users to burn coins in order to attain mining rights. This is what is called “Proof of Burn” (PoB). Essentially, the number of blocks that a miner can verify (and therefore receive block rewards for) is limited by the number of tokens they burn. In effect, this practice is similar to Proof of Stake (PoS), which requires users to hold collateral in a wallet in order to receive rewards and process the blockchain.
 
@@ -52,13 +52,13 @@ Some projects have elected to incorporate coin burning into their consensus prot
 
 ![](https://lh5.googleusercontent.com/4BIG0FLJ5vRndvTWL4ynQnTJdU0QHg3hX9aH1hRKi3qK9lK3uqGAX-UzQuBXH7NTV38wsOlCJd8x1idJnvBLPf3cn66_MqPKhMMEZppsJtd1MyhhSAhjv_yPrZqtn4L2aAUPw4zq)
 
-Why Coin Burning?
+**Why Coin Burning?**
 
 It is safe to say that the saying “less is more” applies here. Fewer coins available for sale means that the remaining coins will be more valuable in theory. While the effectiveness of coin burns on maintaining value and reducing volatility is debatable, it certainly has not had a negative effect on valuation. Since many projects rely on coin burning on a small scale, the effects of this are not seen right away. Coin burning is a long-term play, as reducing the available supply of coins only produces decisive price action consistent with growing demand. Coin burning can be thought of as applying positive leverage to future purchases.
 
 While the effects of coin burning are not immediate, it is a positive contribution in a non-zero-sum game. The positive effects are cumulative for both investors and the projects themselves.
 
-SINOVATE’s Coin Burning Model
+**SINOVATE’s Coin Burning Model**
 
 SINOVATE has observed the positive economic benefit seen by burning coins and has adopted widespread practice with its twist. The combination of coin burning and masternode technology produces a robust network with an equally powerful economic tool to match it.
 
