@@ -1,6 +1,6 @@
 Many of those reading this article are familiar with the concept of Masternodes. However, for those of you who aren’t, the first section of this article will serve as a brief introduction to this genre of blockchain technology. If you are already familiar with this concept, feel free to skip to the next section.
 
-![](https://miro.medium.com/max/60/0*7U_pxeNjn9PwTYY0?q=20)
+
 
 ![](https://miro.medium.com/max/2884/0*7U_pxeNjn9PwTYY0)
 
@@ -11,7 +11,7 @@ Many coins base their Masternode model after the first coin to pioneer this tech
 Not all nodes require 1000 coins as collateral. Each chain will have its required collateral or multiple collaterals for tiered MN systems. In the case of SINOVATE, there are three tiers as collateral: 100k for “Lil Sin,” 500k for “Mid Sin,” and 1M for “Big Sin.” The idea is  
 that the higher the tier, the higher the reward for posting such substantial collateral(initial investment).
 
-![](https://miro.medium.com/max/60/0*Jage-XW2MIZ1U2ln?q=20)
+
 
 ![](https://miro.medium.com/max/3200/0*Jage-XW2MIZ1U2ln)
 
@@ -20,7 +20,7 @@ that the higher the tier, the higher the reward for posting such substantial col
 If you’ve been in the Masternode market for any length of time, you are likely aware that nearly all Masternode coins dump precipitously. There are many contributing factors, such as the lack of a use case, bear markets, and exit scams, but the common denominator across nearly every failed coin is this: poor economics.  
 Far too many coins offer a deceivingly high ROI to lure investors into purchasing collateral. But the repeating theme is that when the ROI begins to drop due to decreasing block rewards, tons of coins are dumped, and the value plummets. This phenomenon has happened over and over again and is a classic case of supply and demand. If demand > supply, the price will go up. If supply > demand, the price will go down. When coins are flooding the network due to coins not being locked in masternodes, the supply is inevitably higher than demand. The masternode model only works so long as coins are locked in nodes, or are otherwise utilized.
 
-![](https://miro.medium.com/max/60/0*dMZRdyoME2fGv0p0?q=20)
+
 
 ![](https://miro.medium.com/max/2712/0*dMZRdyoME2fGv0p0)
 
@@ -28,7 +28,7 @@ Far too many coins offer a deceivingly high ROI to lure investors into purchasin
 
 The SINOVATE team understood that the fundamental economics behind Masternodes was unsustainable, and sought to find a model that would benefit all investors. That is how Infinity Nodes were born. “Infinity Nodes” differ from traditional masternodes in several ways, and these differences contribute to a positive economic outlook.
 
-![](https://miro.medium.com/max/60/0*NWtAYXmmIoqARwJ-?q=20)
+
 
 ![](https://miro.medium.com/max/2068/0*NWtAYXmmIoqARwJ-)
 
@@ -38,7 +38,7 @@ When a SINOVATE investor posts collateral to run an Infinity Node, that collater
 In the burn process, the coins are destroyed and can never be recovered. However, the burning of coins does not mean the investment is lost; in fact, the investment returns daily from block rewards without the fear of hyper-inflation or big dumps.  
 This model changes the economic outlook from an inflationary one to a deflationary one. The more nodes that are on the network, the fewer coins are in existence. Fewer coins in existence mean there is a lower supply, and when supply < demand, the coin value is high!
 
-![](https://miro.medium.com/max/60/0*I03UcQrMaGCne5c_?q=20)
+
 
 ![](https://miro.medium.com/max/3200/0*I03UcQrMaGCne5c_)
 
@@ -46,7 +46,7 @@ This model changes the economic outlook from an inflationary one to a deflationa
 
 Traditional masternodes have an unlimited life cycle. As long as the collateral is locked in the address, the node will receive rewards indefinitely. To increase the number of coins burned in the SINOVATE network, and to control the inflation of the node counts, Infinity Nodes have a limited life span of one year. This limited-time ensures a continuous demand for coins to be purchased and subsequently burned. The limited life span feature enhances the effect of the collateral burning function to produce a compounding effect on economics, namely price stability.
 
-![](https://miro.medium.com/max/60/0*eVAm7MfLx2Sk278k?q=20)
+
 
 ![](https://miro.medium.com/max/1600/0*eVAm7MfLx2Sk278k)
 
