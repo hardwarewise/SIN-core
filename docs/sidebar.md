@@ -11,6 +11,7 @@
 - **Articles**
 - [Decentralized Cloud](decentralized_cloud)
 - [Proof-of-Burn](proof_of_burn)
+- [Infinity Nodes](infinity_nodes)
 - **Archived**
 - [Stuck block 350094](archive/20200214_stuck_block_350094)
 - **Links**
