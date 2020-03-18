@@ -13,6 +13,7 @@
 - [Proof-of-Burn](proof_of_burn)
 - [Infinity Nodes](infinity_nodes)
 - [Infinity Nodes vs Masternodes](infinity_nodes_vs_masternodes)
+- [Inflation the Curse of Traditional Masternodes](inflation_the_curse_of_traditional_masternodes)
 - **Archived**
 - [Stuck block 350094](archive/20200214_stuck_block_350094)
 - **Links**
