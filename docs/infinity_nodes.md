@@ -2,7 +2,7 @@ Many of those reading this article are familiar with the concept of Masternodes.
 
 
 
-![](https://miro.medium.com/max/2884/0*7U_pxeNjn9PwTYY0)
+![](assets/img/infinity_nodes/1.png)
 
 ## **Introduction to Masternodes**
 
@@ -13,7 +13,7 @@ that the higher the tier, the higher the reward for posting such substantial col
 
 
 
-![](https://miro.medium.com/max/3200/0*Jage-XW2MIZ1U2ln)
+![](assets/img/infinity_nodes/2.png)
 
 ## **Economic Problems with Masternodes**
 
@@ -22,7 +22,7 @@ Far too many coins offer a deceivingly high ROI to lure investors into purchasin
 
 
 
-![](https://miro.medium.com/max/2712/0*dMZRdyoME2fGv0p0)
+![](assets/img/infinity_nodes/3.png)
 
 ## **SINOVATE Economic Solution: Infinity Nodes**
 
@@ -30,7 +30,7 @@ The SINOVATE team understood that the fundamental economics behind Masternodes w
 
 
 
-![](https://miro.medium.com/max/2068/0*NWtAYXmmIoqARwJ-)
+![](assets/img/infinity_nodes/4.png)
 
 ## 1. Node collateral is burned.
 
@@ -40,7 +40,7 @@ This model changes the economic outlook from an inflationary one to a deflationa
 
 
 
-![](https://miro.medium.com/max/3200/0*I03UcQrMaGCne5c_)
+![](assets/img/infinity_nodes/5.png)
 
 ## 2. Limited Node Life Span
 
@@ -48,7 +48,7 @@ Traditional masternodes have an unlimited life cycle. As long as the collateral 
 
 
 
-![](https://miro.medium.com/max/1600/0*eVAm7MfLx2Sk278k)
+![](assets/img/infinity_nodes/5.png)
 
 ## 3. Network Benefits for Infinity Node Holders
 
@@ -57,7 +57,7 @@ Decentralized governance is the future of all successful blockchain projects, an
 The blockchain-based network powered by these Infinity Nodes is incredibly powerful and can be used to store millions of documents for users. SINOVATE has been developing the IDS protocol, which will allow users to digitally document their data on the blockchain, providing them with a free and safe method of decentralized data storage, beginning with DataSend in Q2–2020.  
 DataSend(Blockchain Mail) will allow sending and storing a limited number of documents. Details of IDS Step-1 technically will be published in due course.
 
-![](https://miro.medium.com/max/60/0*Yp7SsXlnJvU_3PHR?q=20)
+![](assets/img/infinity_nodes/7.gif)
 
 ## **Conclusion**
 
