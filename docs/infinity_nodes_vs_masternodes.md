@@ -26,7 +26,7 @@ A node has a lifespan of around a year. However, over the lifetime of the node, 
 
 
 
-![](https://miro.medium.com/max/2160/0*F_fqTyhcVHdGu1VR)
+![](assets/img/infinity_nodes_vs_masternodes/1.png)
 
 This incentivizes users to maintain nodes over their lifetime, while controlling inflation and allowing for a smooth operating blockchain network.
 
@@ -36,7 +36,7 @@ Incentivising the network to lock up nodes for a long period of time, unlike oth
 
 
 
-![](https://miro.medium.com/max/3200/0*8wpTnDr1munTra5z)
+![](assets/img/infinity_nodes_vs_masternodes/2.png)
 
 Readers may have heard of attacks that can affect proof-of-work coins like Bitcoin such as 51% or Genesis attacks. However, coins that use masternodes also have their own attack vectors that can be exploited.
 
@@ -44,7 +44,7 @@ Let’s dive into this….
 
 # Sybil Attacks!
 
-![](https://miro.medium.com/max/3200/0*n1srxXhDNp5PDwii)
+![](assets/img/infinity_nodes_vs_masternodes/3.png)
 
 Sybil attacks are something that occur around the world daily. It is basically where a user will try to take over a peer-to-peer network by creating a vast amount of network identities or nodes to exert an unduly large influence.
 
@@ -78,7 +78,7 @@ With SINOVATE, once all nodes in the group have returned their transactions, a n
 # Finney Attack
 
 
-![](https://miro.medium.com/max/3200/0*SapVwr0XGnnr0rAH)
+![](assets/img/infinity_nodes_vs_masternodes/4.png)
 
 A Finney attack is thus named as was first suggested by Hal Finney, the first known receiver of Bitcoin from Satoshi. In this attack, malicious actors also try to send a transaction to themselves by using the proof-of-work network to execute.
 
@@ -89,7 +89,7 @@ The SIN protocol prevents this by being able to recognize the difference in tran
 Again, the attacker must maintain Infinity Nodes for the complete lifetime or face losing these funds.
 
 
-![](https://miro.medium.com/max/3200/0*OjnMKS_epdJmB3Rk)
+![](assets/img/infinity_nodes_vs_masternodes/5.png)
 
 # Conclusion
 

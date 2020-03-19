@@ -16,7 +16,7 @@ High Inflation is a problem that affects many cryptocurrencies; below will set o
 
 
 
-![](https://miro.medium.com/max/1024/0*ZmGdb5YkWeAEljiZ)
+![](assets/img/inflation_the_curse_of_traditional_masternodes/1.png)
 
 # The traditional world:
 
@@ -46,7 +46,7 @@ In the traditional finance world, an example of this is stock buyback initiative
 
 
 
-![](https://miro.medium.com/max/1024/0*JqkMtkxT21opbgY9)
+![](assets/img/inflation_the_curse_of_traditional_masternodes/2.png)
 
 Who sets the rate at which new money is issued has thus far been decided by governments or corporations, this is where cryptocurrency changes the game! Taking Bitcoin for the first example, its monetary policy (how much new Bitcoin is created by mining) has been known ever since it was first announced, with the code dictating that the reward for mining a block is cut in half at regular intervals.
 
@@ -86,7 +86,7 @@ This can all be tracked here:
 
 
 
-![](https://miro.medium.com/max/1024/0*ICce-chTAJZjWl6Q)
+![](assets/img/inflation_the_curse_of_traditional_masternodes/3.png)
 
 # Infinity Nodes
 
@@ -96,7 +96,7 @@ This feature further secures the network by deterring bad actors who may attempt
 
 
 
-![](https://miro.medium.com/max/3200/0*_eIJtSlVv9S5IZfB)
+![](assets/img/inflation_the_curse_of_traditional_masternodes/4.png)
 
 SINOVATE Infinity nodes operate for a maximum lifetime of one year, after that they are gone forever until the node owner replaces it with a new one, earned over the lifetime of their previous node. The new node, yet again burns the coins needed to set it up.
 
@@ -104,7 +104,7 @@ Governance of the network will also be decided by the network as the roadmap is 
 
 
 
-![](https://miro.medium.com/max/592/0*bxTQVMuyXxk7EIg4)
+![](assets/img/inflation_the_curse_of_traditional_masternodes/5.png)
 
 In the next hard fork in 2020, the limit on the number of nodes able to be created will be increased, but the block rewards will remain the same.
 
