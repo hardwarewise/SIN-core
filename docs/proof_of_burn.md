@@ -16,7 +16,7 @@ Market Cap = Total Supply * Current Price
 
 Those who are familiar with traditional investment markets have likely heard of companies buying back their stock from the market to preserve or raise its value. Coin burning is a similar function designed to achieve similar results. It is buying back a commodity with limited supply to reduce the percentage of shares floating on the market. This reduces sell pressure while simultaneously providing buying pressure — creating ripe conditions for a favorable price movement. Where coin burning goes farther is that it removes coins (in place of shares) permanently through “burning” them.
 
-![](https://lh4.googleusercontent.com/ZcKx4PiPOZ4TQmx56eG-X6LQbfJA3IOPt2QX5OUZpdcM20DrSh0my9g5EeI6xRI0BfYzsWRrp06KYdfHLovhRZm6gBH-1vIbuPo2YGRU--ziZDz8UkevdHf3sorEVHvEdzQLoLH9)
+![](assets/img/proof_of_burn/1.jpg)
 
 [Proof-of-Burn](https://www.youtube.com/watch?v=ZabgG6YTZfY&t=1s)
 
@@ -50,7 +50,7 @@ Some projects have elected to incorporate coin burning into their consensus prot
 
   
 
-![](https://lh5.googleusercontent.com/4BIG0FLJ5vRndvTWL4ynQnTJdU0QHg3hX9aH1hRKi3qK9lK3uqGAX-UzQuBXH7NTV38wsOlCJd8x1idJnvBLPf3cn66_MqPKhMMEZppsJtd1MyhhSAhjv_yPrZqtn4L2aAUPw4zq)
+![](assets/img/proof_of_burn/2.jpg)
 
 **Why Coin Burning?**
 
