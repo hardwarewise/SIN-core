@@ -10,7 +10,7 @@ As known by informed members of the cryptocurrency community, Masternodes are sp
 
 
 
-![](https://miro.medium.com/max/3840/1*iiU1UlkU9RUlQPJtWVZfHA.png)
+![](assets/img/infinity_nodes_groundbreaking_sinovate_evolved_masternodes/1.png)
 
 **SINOVATE**  is confident that Infinity Nodes will solve the unintended consequences of high inflation and bloated coin supply emission witnessed in all other Masternode orientated cryptocurrencies. Scarcity of the SIN coin supply will be attractive to those wishing to invest.
 
@@ -18,41 +18,41 @@ _Key features of Infinity Nodes are:_
 
 
 
-![](https://miro.medium.com/max/300/1*yZswiFiNcZGfoBh_tSkdYA.png)
+![](assets/img/infinity_nodes_groundbreaking_sinovate_evolved_masternodes/2.png)
 
 **·** SIN used to create  **Infinity Nodes**  are  **immediately burnt**, so no longer form part of the overall coin supply. In effect, this decreases the  **sell pressure** on all relevant SIN trading markets, due to the fact that there are fewer wallets containing SIN. Infinity Nodes will provide guaranteed incentives to holders for a limited time of 12 months.
 
 
 
-![](https://miro.medium.com/max/300/1*gUUoj5nznYJq7Vy7ITnRwA.png)
+![](assets/img/infinity_nodes_groundbreaking_sinovate_evolved_masternodes/3.png)
 
 **·** Each Infinity Node can hold a  **maximum of 1,000,000 SIN(BIG SIN) for a 10% additional bonus**. Holders can also choose to acquire either  **100,000 SIN (Little SIN)**  or  **500,000 SIN (Mid SIN) for a 5% bonus**.
 
 
 
-![](https://miro.medium.com/max/300/1*XbUttSiwH_yTHzcUUobECQ.png)
+![](assets/img/infinity_nodes_groundbreaking_sinovate_evolved_masternodes/4.png)
 
 **·**  Infinity Node holders earn a  **minimum guaranteed up to 22% annual ROI**, (only if the limit of 594 million SIN are locked in Infinity Nodes) after they have operated a node for  **12 months**. Upon annual maturity, nodes will no longer form part of the network protocol node count (a unique and revolutionary feature of Infinity Nodes).
 
-![](https://miro.medium.com/proxy/0*FowxOiTMbsMDr1Na)
+![](assets/img/infinity_nodes_groundbreaking_sinovate_evolved_masternodes/5.png)
 
 **Infinity Node Use Cases**
 
 
 
-![](https://miro.medium.com/max/3840/1*SVNbCjnyPIsgG1i0VJvpJw.jpeg)
+![](assets/img/infinity_nodes_groundbreaking_sinovate_evolved_masternodes/6.jpg)
 
 Similar to how Masternodes work, Infinity Node holders will be able to perform specific tasks. There are an unforeseen number of potential use cases, some of which are listed below:
 
 
 
-![](https://miro.medium.com/max/592/1*OERkqc2k8FcP_fQgh54Y8A.png)
+![](assets/img/infinity_nodes_groundbreaking_sinovate_evolved_masternodes/7.png)
 
 ·  **FlashSend**  allows for the instantaneous transfer of SIN between wallets by using the Infinity Node consensus mechanism. Currently, the SINOVATE network protocol can handle a maximum of  **533 transactions per second**. FlashSend permits less than  **3 second** transfers, whereas normal SIN transactions usually require less than 10 confirmations.
 
 
 
-![](https://miro.medium.com/max/592/1*NCajfRqUBoOF_tVOvBho0w.png)
+![](assets/img/infinity_nodes_groundbreaking_sinovate_evolved_masternodes/8.png)
 
 ·  **ShadowSend** allows for the  **anonymous**  transfer of SIN, with mixing of 5 rounds set as a default.
 
@@ -60,13 +60,13 @@ Similar to how Masternodes work, Infinity Node holders will be able to perform s
 
 
 
-![](https://miro.medium.com/max/592/1*TbQHsGfIjqJ3-mcK2jFoyw.png)
+![](assets/img/infinity_nodes_groundbreaking_sinovate_evolved_masternodes/9.png)
 
 · Infinity Node holders can participate in decentralised voting by using the enhanced in-built  **E-Governance system**, known as  **Revolving Sovereignty Votes (RSV)**.  Revolving votes will encourage the SINOVATE network to obtain significantly greater nodes than traditional Masternodes, where voting lacks true transparency and mass community involvement. Voting rights have to be renewed every 12 months, due to the lifespan of nodes.
 
 
 
-![](https://miro.medium.com/max/592/1*e_Jmxl4geLrqLXewBdtHwA.png)
+![](assets/img/infinity_nodes_groundbreaking_sinovate_evolved_masternodes/10.png)
 
 **Private Networking — Incorruptible Data Storage**
 
