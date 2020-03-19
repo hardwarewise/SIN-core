@@ -8,7 +8,7 @@ Cuda 10 is preferred.
 
 [https://github.com/trexminer/T-Rex/releases](https://github.com/trexminer/T-Rex/releases)
 
-![](assets/img/x25x_pow_gpu_mining/1.jpg)
+![](assets/img/x25x_pow_gpu_mining/1.png)
 
 2-  Update Nvidia GPU Driver
 
@@ -16,7 +16,7 @@ If your video card driver is not up-to-date, it is recommended that you update i
 
 [https://www.nvidia.com/Download/index.aspx?lang=en-us](https://www.nvidia.com/Download/index.aspx?lang=en-us)
 
-![](assets/img/x25x_pow_gpu_mining/2.jpg)
+![](assets/img/x25x_pow_gpu_mining/2.png)
 
   
 
@@ -24,7 +24,7 @@ If your video card driver is not up-to-date, it is recommended that you update i
 
 Go to the folder located in the T-Rex miner.
 
-![](assets/img/x25x_pow_gpu_mining/3.jpg)
+![](assets/img/x25x_pow_gpu_mining/3.png)
 
   
   
@@ -53,11 +53,11 @@ We used the European server in our example.
 
 Please do not forget to write your own wallet address.
 
-![](assets/img/x25x_pow_gpu_mining/4.jpg)
+![](assets/img/x25x_pow_gpu_mining/4.png)
 
 Select Save as and name the start.bat file.
 
-![](assets/img/x25x_pow_gpu_mining/5.jpg)
+![](assets/img/x25x_pow_gpu_mining/5.png)
 
 4-  Start the mining
 
@@ -65,6 +65,6 @@ Please double-click the start.bat file you just created. The T-Rex will connect 
 
   
 
-![](assets/img/x25x_pow_gpu_mining/6.jpg)
+![](assets/img/x25x_pow_gpu_mining/6.png)
 
 For more detailed use of the T-Rex Miner, please see the Readme file at [https://github.com/trexminer/T-Rex](https://github.com/trexminer/T-Rex)
