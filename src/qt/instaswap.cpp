@@ -40,7 +40,11 @@ InstaSwap::InstaSwap(const PlatformStyle *_platformStyle, QWidget *parent) :
     ENDPOINT = QString::fromStdString(gArgs.GetArg("-instaswapurl", "https://instaswap.sinovate.io/instaswap_service.php"));
 
     setupSwapList();
-    populatePairsCombo();
+
+    ui->addressBookButton->setIcon(platformStyle->SingleColorIcon(":/icons/address-book"));
+
+    // normal sin address field
+    GUIUtil::setupAddressWidget(ui->receivingAddressEdit, this);
 
     // managers and settings
     ConnectionManager = new QNetworkAccessManager(this);
@@ -67,6 +71,13 @@ InstaSwap::~InstaSwap()
     delete ConnectionManager;
 }
 
+// overrride
+void InstaSwap::showEvent( QShowEvent* event ) {
+    QWidget::showEvent( event );
+    //your code here
+    populatePairsCombo();
+}
+
 void InstaSwap::setClientModel(ClientModel* model)
 {
     this->clientModel = model;
@@ -76,9 +87,10 @@ void InstaSwap::setClientModel(ClientModel* model)
     }
 }
 
-void InstaSwap::showContextMenu(const QModelIndex &index)
+void InstaSwap::showSwapContextMenu(const QPoint &point)
 {
-    swapListContextMenu->exec(QCursor::pos());
+    QTableWidgetItem *item = ui->swapsTable->itemAt(point);
+    if(item) swapListContextMenu->exec(QCursor::pos());
 }
 
 void InstaSwap::setWalletModel(WalletModel* model)
@@ -127,9 +139,9 @@ void InstaSwap::setupSwapList() {
     swapListContextMenu = new QMenu();
     swapListContextMenu->addAction(copyTransactionIdAction);
     swapListContextMenu->addAction(copyDepositAddressAction);
-    connect(ui->swapsTable, SIGNAL(pressed(const QModelIndex&)), this, SLOT(swapListContextMenu(const QModelIndex&)));
-    connect(copyTransactionIdAction, SIGNAL(triggered()), this, SLOT(on_copyTransactionIdAction_clicked()));
-    connect(copyDepositAddressAction, SIGNAL(triggered()), this, SLOT(on_copyDepositAddressAction_clicked()));
+    connect(ui->swapsTable, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showSwapContextMenu(const QPoint &)));
+    connect(copyTransactionIdAction, SIGNAL(triggered()), this, SLOT(onCopyTransactionActionClicked()));
+    connect(copyDepositAddressAction, SIGNAL(triggered()), this, SLOT(onCopyDepositActionClicked()));
 }
 
 void InstaSwap::populatePairsCombo()
@@ -159,6 +171,7 @@ QJsonDocument InstaSwap::callAllowedPairs( )
     urlQuery.addQueryItem("s", Service);
     url.setQuery( urlQuery );
 
+    LogPrintf("Call allowed pairs %s", url.toString());
     QNetworkRequest request( url );
     QNetworkReply *reply = ConnectionManager->get(request);
     QEventLoop loop;
@@ -315,12 +328,12 @@ void InstaSwap::updateSwapList()
     return;
 }
 
-void InstaSwap::on_copyTransactionIdAction_clicked()
+void InstaSwap::onCopyTransactionActionClicked()
 {
     CopyListColumn( ui->swapsTable, 0 );
 }
 
-void InstaSwap::on_copyDepositAddressAction_clicked()
+void InstaSwap::onCopyDepositActionClicked()
 {
     CopyListColumn( ui->swapsTable, 3 );
 }
@@ -342,18 +355,21 @@ void InstaSwap::CopyListColumn( QTableWidget *QTW, int nColumn )
 
 void InstaSwap::on_addressBookButton_clicked()
 {
+    LogPrintf("addressBook clicked, START");
     if (walletModel && walletModel->getAddressTableModel()) {
+        LogPrintf("addressBook clicked, OK");
         AddressBookPage dlg(platformStyle, AddressBookPage::ForSelection, AddressBookPage::ReceivingTab, this);
         dlg.setModel(walletModel->getAddressTableModel());
         if (dlg.exec())
             setAddress(dlg.getReturnValue(), ui->receivingAddressEdit);
-    }
+    }   
 }
 
 void InstaSwap::on_depositAmountEdit_textChanged(const QString &arg1)
 {
     bool isNumeric = false;
     double value = arg1.toDouble( &isNumeric );
+    LogPrintf("Text changed to %s", arg1);
     if ( isNumeric && value>0 ) {
         QJsonDocument json = callTicker();
 
