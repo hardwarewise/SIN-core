@@ -143,7 +143,7 @@ void InstaSwap::setupSwapList() {
     swapListContextMenu = new QMenu();
     swapListContextMenu->addAction(copyTransactionIdAction);
     swapListContextMenu->addAction(copyDepositAddressAction);
-    connect(ui->swapsTable, SIGNAL(pressed(const QPoint &)), this, SLOT(swapListContextMenu(const QPoint &)));
+    connect(ui->swapsTable, SIGNAL(pressed(const QPoint &)), this, SLOT(showContextMenu(const QPoint &)));
     connect(copyTransactionIdAction, SIGNAL(triggered()), this, SLOT(onCopyTransactionActionClicked()));
     connect(copyDepositAddressAction, SIGNAL(triggered()), this, SLOT(onCopyDepositActionClicked()));
 }
@@ -386,6 +386,12 @@ void InstaSwap::on_depositAmountEdit_textChanged(const QString &arg1)
     }
 }
 
+bool InstaSwap::validateBitcoinAddress(QString address) {
+
+    QRegExp pattern = "^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$";
+    return address.contains(pattern);
+}
+
 void InstaSwap::on_receivingAddressEdit_textChanged(const QString &arg1)
 {
     if ( walletModel->validateAddress(arg1) )    {
@@ -395,13 +401,20 @@ void InstaSwap::on_receivingAddressEdit_textChanged(const QString &arg1)
 
 void InstaSwap::on_sendSwapButton_clicked()
 {
+    if (!validateBitcoinAddress( ui->refundAddressEdit->text() ))  {
+        QString error = QString("Please enter a valid BTC refund address");
+        ui->errorLabel->setText( "ERROR: " + error );
+        return;
+    }
+
     QJsonDocument json = callDoSwap();
 
     if ( json.object()["apiInfo"]=="OK" && json.object().contains("response") && json.object()["response"].isObject() )
     {
         QJsonObject response = json.object()["response"].toObject();
         QString value = response["depositWallet"].toString();
-        ui->errorLabel->setText( "Success, deposit address: " + value );
+        ui->errorLabel->setText( "Success, deposit address copied to clipboard: " + value );
+        GUIUtil::setClipboard( value );
         updateSwapList();
     }
     else

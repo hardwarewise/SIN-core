@@ -32,6 +32,7 @@ public:
     void setWalletModel(WalletModel* walletModel);
     void setAddress(const QString& address);
     void setAddress(const QString& address, QLineEdit* addrEdit);
+    bool validateBitcoinAddress(QString address);
 
 public Q_SLOTS:
     void updateSwapList();
