@@ -36,11 +36,20 @@ InstaSwap::InstaSwap(const PlatformStyle *_platformStyle, QWidget *parent) :
 {
     ui->setupUi(this);
 
+    if (!_platformStyle->getImagesOnButtons()) {
+        ui->addressBookButton->setIcon(QIcon());
+    } else {
+        ui->addressBookButton->setIcon(platformStyle->SingleColorIcon(":/icons/address-book"));
+    }
+
     PURCHASECOIN = "SIN";
     ENDPOINT = QString::fromStdString(gArgs.GetArg("-instaswapurl", "https://instaswap.sinovate.io/instaswap_service.php"));
 
     setupSwapList();
-    populatePairsCombo();
+
+
+    // normal sin address field
+    GUIUtil::setupAddressWidget(ui->receivingAddressEdit, this);
 
     // managers and settings
     ConnectionManager = new QNetworkAccessManager(this);
@@ -67,6 +76,13 @@ InstaSwap::~InstaSwap()
     delete ConnectionManager;
 }
 
+// overrride
+void InstaSwap::showEvent( QShowEvent* event ) {
+    QWidget::showEvent( event );
+    //your code here
+    populatePairsCombo();
+}
+
 void InstaSwap::setClientModel(ClientModel* model)
 {
     this->clientModel = model;
@@ -76,7 +92,7 @@ void InstaSwap::setClientModel(ClientModel* model)
     }
 }
 
-void InstaSwap::showContextMenu(const QModelIndex &index)
+void InstaSwap::showContextMenu(const QPoint &point)
 {
     swapListContextMenu->exec(QCursor::pos());
 }
@@ -99,16 +115,16 @@ void InstaSwap::setAddress(const QString& address, QLineEdit* addrEdit)
 
 void InstaSwap::setupSwapList() {
     // Swap List table
-    int columnTransactionIdWidth = 100;
-    int columnStatusWidth = 150;
-    int columnTimestampWidth = 150;
-    int columnDepositAddressWidth = 200;
-    int columnSendCoinWidth = 100;
+    int columnTransactionIdWidth = 120;
+    int columnStatusWidth = 130;
+    int columnTimestampWidth = 120;
+    int columnDepositAddressWidth = 160;
+    int columnSendCoinWidth = 80;
     int columnSendAmounWidth = 100;
-    int columnReceiveAddressWidth = 200;
-    int columnReceiveCoinWidth = 100;
+    int columnReceiveAddressWidth = 160;
+    int columnReceiveCoinWidth = 80;
     int columnReceiveAmountWidth = 100;
-    int columnRefundAddressWidth = 200;
+    int columnRefundAddressWidth = 160;
 
     ui->swapsTable->setColumnWidth(0, columnTransactionIdWidth);
     ui->swapsTable->setColumnWidth(1, columnStatusWidth);
@@ -127,13 +143,15 @@ void InstaSwap::setupSwapList() {
     swapListContextMenu = new QMenu();
     swapListContextMenu->addAction(copyTransactionIdAction);
     swapListContextMenu->addAction(copyDepositAddressAction);
-    connect(ui->swapsTable, SIGNAL(pressed(const QModelIndex&)), this, SLOT(swapListContextMenu(const QModelIndex&)));
-    connect(copyTransactionIdAction, SIGNAL(triggered()), this, SLOT(on_copyTransactionIdAction_clicked()));
-    connect(copyDepositAddressAction, SIGNAL(triggered()), this, SLOT(on_copyDepositAddressAction_clicked()));
+    connect(ui->swapsTable, SIGNAL(pressed(const QPoint &)), this, SLOT(swapListContextMenu(const QPoint &)));
+    connect(copyTransactionIdAction, SIGNAL(triggered()), this, SLOT(onCopyTransactionActionClicked()));
+    connect(copyDepositAddressAction, SIGNAL(triggered()), this, SLOT(onCopyDepositActionClicked()));
 }
 
 void InstaSwap::populatePairsCombo()
 {
+    if (ui->allowedPairsCombo->count()>0)   return;
+
     QJsonDocument json = callAllowedPairs();
 
     if ( json.object()["apiInfo"]=="OK" && json.object().contains("response") && json.object()["response"].isArray() )
@@ -315,12 +333,12 @@ void InstaSwap::updateSwapList()
     return;
 }
 
-void InstaSwap::on_copyTransactionIdAction_clicked()
+void InstaSwap::onCopyTransactionActionClicked()
 {
     CopyListColumn( ui->swapsTable, 0 );
 }
 
-void InstaSwap::on_copyDepositAddressAction_clicked()
+void InstaSwap::onCopyDepositActionClicked()
 {
     CopyListColumn( ui->swapsTable, 3 );
 }
@@ -342,7 +360,7 @@ void InstaSwap::CopyListColumn( QTableWidget *QTW, int nColumn )
 
 void InstaSwap::on_addressBookButton_clicked()
 {
-    if (walletModel && walletModel->getAddressTableModel()) {
+    if (walletModel) {
         AddressBookPage dlg(platformStyle, AddressBookPage::ForSelection, AddressBookPage::ReceivingTab, this);
         dlg.setModel(walletModel->getAddressTableModel());
         if (dlg.exec())
@@ -370,5 +388,23 @@ void InstaSwap::on_receivingAddressEdit_textChanged(const QString &arg1)
 {
     if ( walletModel->validateAddress(arg1) )    {
         updateSwapList();
+    }
+}
+
+void InstaSwap::on_sendSwapButton_clicked()
+{
+    QJsonDocument json = callDoSwap();
+
+    if ( json.object()["apiInfo"]=="OK" && json.object().contains("response") && json.object()["response"].isObject() )
+    {
+        QJsonObject response = json.object()["response"].toObject();
+        QString value = response["depositWallet"].toString();
+        ui->errorLabel->setText( "Success, deposit address: " + value );
+        updateSwapList();
+    }
+    else
+    {
+        QString error = QString("An error occurred while sending swap to Instaswap");
+        ui->errorLabel->setText( "ERROR: " + error );
     }
 }

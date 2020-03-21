@@ -35,17 +35,20 @@ public:
 
 public Q_SLOTS:
     void updateSwapList();
-    void showContextMenu(const QModelIndex&);
+    void showContextMenu(const QPoint&);
 
 private Q_SLOTS:
     void on_addressBookButton_clicked();
     //void on_userButton_clicked();
-    void on_copyTransactionIdAction_clicked();
-    void on_copyDepositAddressAction_clicked();
+    void onCopyTransactionActionClicked();
+    void onCopyDepositActionClicked();
     void on_depositAmountEdit_textChanged(const QString &arg1);
     void on_receivingAddressEdit_textChanged(const QString &arg1);
 
+    void on_sendSwapButton_clicked();
+
 private:
+    void showEvent( QShowEvent*  );
     static const char* TransactionStateString[];
     QMenu* swapListContextMenu;
     Ui::InstaSwap *ui;

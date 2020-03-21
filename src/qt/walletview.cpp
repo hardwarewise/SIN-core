@@ -162,6 +162,10 @@ void WalletView::setWalletModel(WalletModel *_walletModel)
     }
     //
 
+    // Instaswap
+    instaswapListPage->setWalletModel(walletModel);
+    //
+
     receiveCoinsPage->setModel(_walletModel);
     sendCoinsPage->setModel(_walletModel);
     depositCoinsPage->setModel(_walletModel);

@@ -128,7 +128,7 @@
       </widget>
      </item>
      <item row="1" column="1" colspan="3">
-      <widget class="QLineEdit" name="receivingAddressEdit">
+      <widget class="QValidatedLineEdit" name="receivingAddressEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -168,6 +168,9 @@
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="receivingAddressLabel">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <property name="text">
         <string>Receiving address</string>
        </property>
@@ -227,7 +230,7 @@
         <locale language="English" country="UnitedStates"/>
        </property>
        <property name="placeholderText">
-        <string>Enter the receiving address</string>
+        <string>Enter the BTC refund address</string>
        </property>
       </widget>
      </item>
@@ -247,7 +250,7 @@
      <item row="5" column="2">
       <widget class="QLabel" name="receivingAmountLabel">
        <property name="text">
-        <string>222 SIN</string>
+        <string>--- SIN</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -266,11 +269,7 @@
         <string>Choose an address from the address book</string>
        </property>
        <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../sin.qrc">
-         <normaloff>:/icons/address-book</normaloff>:/icons/address-book</iconset>
+        <string>...</string>
        </property>
        <property name="shortcut">
         <string>Alt+A</string>
@@ -324,8 +323,13 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../sin.qrc"/>
- </resources>
+ <customwidgets>
+  <customwidget>
+   <class>QValidatedLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>qt/qvalidatedlineedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
  <connections/>
 </ui>
