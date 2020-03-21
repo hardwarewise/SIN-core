@@ -48,6 +48,8 @@ private Q_SLOTS:
 
     void on_sendSwapButton_clicked();
 
+    void on_allowedPairsCombo_currentIndexChanged(const QString &arg1);
+
 private:
     void showEvent( QShowEvent*  );
     static const char* TransactionStateString[];
