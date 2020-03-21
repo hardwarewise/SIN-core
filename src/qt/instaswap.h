@@ -35,7 +35,7 @@ public:
 
 public Q_SLOTS:
     void updateSwapList();
-    void showSwapContextMenu(const QPoint &);
+    void showContextMenu(const QPoint&);
 
 private Q_SLOTS:
     void on_addressBookButton_clicked();
@@ -44,6 +44,8 @@ private Q_SLOTS:
     void onCopyDepositActionClicked();
     void on_depositAmountEdit_textChanged(const QString &arg1);
     void on_receivingAddressEdit_textChanged(const QString &arg1);
+
+    void on_sendSwapButton_clicked();
 
 private:
     void showEvent( QShowEvent*  );
