@@ -47,7 +47,6 @@ InstaSwap::InstaSwap(const PlatformStyle *_platformStyle, QWidget *parent) :
 
     setupSwapList();
 
-
     // normal sin address field
     GUIUtil::setupAddressWidget(ui->receivingAddressEdit, this);
 
@@ -94,7 +93,8 @@ void InstaSwap::setClientModel(ClientModel* model)
 
 void InstaSwap::showContextMenu(const QPoint &point)
 {
-    swapListContextMenu->exec(QCursor::pos());
+    QTableWidgetItem *item = ui->swapsTable->itemAt(point);
+    if(item) swapListContextMenu->exec(QCursor::pos());
 }
 
 void InstaSwap::setWalletModel(WalletModel* model)
@@ -177,6 +177,7 @@ QJsonDocument InstaSwap::callAllowedPairs( )
     urlQuery.addQueryItem("s", Service);
     url.setQuery( urlQuery );
 
+    LogPrintf("Call allowed pairs %s", url.toString());
     QNetworkRequest request( url );
     QNetworkReply *reply = ConnectionManager->get(request);
     QEventLoop loop;
@@ -365,13 +366,14 @@ void InstaSwap::on_addressBookButton_clicked()
         dlg.setModel(walletModel->getAddressTableModel());
         if (dlg.exec())
             setAddress(dlg.getReturnValue(), ui->receivingAddressEdit);
-    }
+    }   
 }
 
 void InstaSwap::on_depositAmountEdit_textChanged(const QString &arg1)
 {
     bool isNumeric = false;
     double value = arg1.toDouble( &isNumeric );
+    LogPrintf("Text changed to %s", arg1);
     if ( isNumeric && value>0 ) {
         QJsonDocument json = callTicker();
 

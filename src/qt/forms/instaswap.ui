@@ -286,7 +286,7 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="4">
+     <item row="5" column="3">
       <widget class="QPushButton" name="sendSwapButton">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -296,13 +296,6 @@
        </property>
        <property name="text">
         <string>Send Swap Request</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="3">
-      <widget class="QLabel" name="dummy1Label_3">
-       <property name="text">
-        <string/>
        </property>
       </widget>
      </item>
@@ -330,6 +323,8 @@
    <header>qt/qvalidatedlineedit.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../sin.qrc"/>
+ </resources>
  <connections/>
 </ui>
