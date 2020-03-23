@@ -119,6 +119,11 @@ QT_FORMS_UI += \
   qt/forms/masternodelist.ui
 #
 
+# Instaswap
+QT_FORMS_UI += \
+  qt/forms/instaswap.ui
+#
+
 QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
   qt/moc_addresstablemodel.cpp \
@@ -171,6 +176,11 @@ QT_MOC_CPP = \
 # Dash
 QT_MOC_CPP += \
   qt/moc_masternodelist.cpp
+#
+
+# Instaswap
+QT_MOC_CPP += \
+  qt/moc_instaswap.cpp
 #
 
 BITCOIN_MM = \
@@ -255,6 +265,11 @@ BITCOIN_QT_H += \
   qt/masternodelist.h
 #
 
+# Instaswap
+BITCOIN_QT_H += \
+  qt/instaswap.h
+#
+
 RES_ICONS = \
   qt/res/icons/add.png \
   qt/res/icons/address-book.png \
@@ -319,6 +334,11 @@ RES_ICONS += \
   qt/res/icons/masternodes.png
 #
 
+# Dash
+RES_ICONS += \
+  qt/res/icons/instaswap.png
+#
+
 BITCOIN_QT_BASE_CPP = \
   qt/bantablemodel.cpp \
   qt/sinaddressvalidator.cpp \
@@ -377,6 +397,11 @@ BITCOIN_QT_WALLET_CPP = \
 # Dash
 BITCOIN_QT_WALLET_CPP += \
   qt/masternodelist.cpp
+#
+
+# Dash
+BITCOIN_QT_WALLET_CPP += \
+  qt/instaswap.cpp
 #
 
 BITCOIN_QT_CPP = $(BITCOIN_QT_BASE_CPP)
