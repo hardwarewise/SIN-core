@@ -11,6 +11,10 @@
 #include <qt/masternodelist.h>
 //
 
+// Instaswap
+#include <qt/instaswap.h>
+//
+
 #include <QStackedWidget>
 
 class BitcoinGUI;
@@ -76,6 +80,10 @@ private:
     MasternodeList *masternodeListPage;
     //
 
+    // Instaswap
+    InstaSwap *instaswapListPage;
+    //
+
     TransactionView *transactionView;
 
     QProgressDialog *progressDialog;
@@ -90,6 +98,11 @@ public Q_SLOTS:
     // Dash
     /** Switch to masternode page */
     void gotoMasternodePage();
+    //
+
+    // Instaswap
+    /** Switch to instaswap page */
+    void gotoInstaswapPage();
     //
 
     /** Switch to receive coins page */

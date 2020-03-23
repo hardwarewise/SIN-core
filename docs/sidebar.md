@@ -4,8 +4,17 @@
 - [Infinity Node setup](infinity_node_setup_guide)
 - [Bootstrap](bootstrap)
 - [Wallet](wallet)
-- **Tutorials**
+- **Tutorials & Guides**
 - [Infinity Node tips](infinity_node_tips)
+- [SUQA Coins Conflict](suqa_conflict)
+- [X25X Pow GPU Mining](X25X-PoW-GPU-Mining)
+- **Articles**
+- [Decentralized Cloud](decentralized_cloud)
+- [Proof-of-Burn](proof_of_burn)
+- [Infinity Nodes](infinity_nodes)
+- [Infinity Nodes vs Masternodes](infinity_nodes_vs_masternodes)
+- [Inflation the Curse of Traditional Masternodes](inflation_the_curse_of_traditional_masternodes)
+- [Infinity Nodes Groundbreaking Sinovate Evolved Masternodes](infinity_nodes_groundbreaking_sinovate_evolved_masternodes)
 - **Archived**
 - [Stuck block 350094](archive/20200214_stuck_block_350094)
 - **Links**

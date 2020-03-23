@@ -80,6 +80,11 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     }
     //
 
+    // Instaswap
+    instaswapListPage = new InstaSwap(platformStyle);
+    addWidget(instaswapListPage);
+    //
+
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
     connect(overviewPage, SIGNAL(outOfSyncWarningClicked()), this, SLOT(requestedSyncWarningInfo()));
@@ -157,6 +162,10 @@ void WalletView::setWalletModel(WalletModel *_walletModel)
     }
     //
 
+    // Instaswap
+    instaswapListPage->setWalletModel(walletModel);
+    //
+
     receiveCoinsPage->setModel(_walletModel);
     sendCoinsPage->setModel(_walletModel);
     depositCoinsPage->setModel(_walletModel);
@@ -225,6 +234,13 @@ void WalletView::gotoMasternodePage()
     if (settings.value("fShowMasternodesTab").toBool()) {
         setCurrentWidget(masternodeListPage);
     }
+}
+//
+
+// Dash
+void WalletView::gotoInstaswapPage()
+{
+    setCurrentWidget(instaswapListPage);
 }
 //
 
