@@ -5,6 +5,7 @@
 #include <infinitynode.h>
 #include <infinitynodepeer.h>
 #include <infinitynodeman.h>
+#include <infinitynodemeta.h>
 #include <util.h>
 #include <logging.h>
 #include <utilstrencodings.h>
@@ -80,8 +81,10 @@ std::string CInfinitynodePeer::GetMyPeerInfo() const
     {
         return GetStatus();
     }
-    if(infnodeman.GetInfinitynodeInfo(HexStr(pubKeyInfinitynode), infoInf) && eType == INFINITYNODE_REMOTE && nState == INFINITYNODE_PEER_STARTED) {
-        myPeerInfo = strprintf("My Peer is running at %s", infoInf.metadataService.ToString());
+    //check if publicKey exist in metadata and in Deterministic Infinitynode list
+    if(infnodeman.GetInfinitynodeInfo(EncodeBase64(pubKeyInfinitynode.begin(), pubKeyInfinitynode.size()), infoInf)
+      && eType == INFINITYNODE_REMOTE && nState == INFINITYNODE_PEER_STARTED) {
+        myPeerInfo = strprintf("My Peer is running with metadata ID: %s", infoInf.metadataID);
     } else {
         myPeerInfo = strprintf("Peer is not ready. Please update the metadata of Infinitynode.");
     }
@@ -96,7 +99,7 @@ bool CInfinitynodePeer::AutoCheck(CConnman& connman)
     }
 
     infinitynode_info_t infoInf;
-    if(!infnodeman.GetInfinitynodeInfo(HexStr(pubKeyInfinitynode), infoInf))
+    if(!infnodeman.GetInfinitynodeInfo(EncodeBase64(pubKeyInfinitynode.begin(), pubKeyInfinitynode.size()), infoInf))
     {
         strNotCapableReason = "Cannot find the Peer's Key in Deterministic node list";
         nState = INFINITYNODE_PEER_NOT_CAPABLE;
@@ -189,23 +192,33 @@ void CInfinitynodePeer::ManageStateRemote()
              GetStatus(), GetTypeString(), fPingerEnabled, pubKeyInfinitynode.GetID().ToString());
 
     infinitynode_info_t infoInf;
-    if(infnodeman.GetInfinitynodeInfo(HexStr(pubKeyInfinitynode), infoInf)) {
+    if(infnodeman.GetInfinitynodeInfo(EncodeBase64(pubKeyInfinitynode.begin(), pubKeyInfinitynode.size()), infoInf)) {
         if(infoInf.nProtocolVersion != PROTOCOL_VERSION) {
             nState = INFINITYNODE_PEER_NOT_CAPABLE;
             strNotCapableReason = "Invalid protocol version";
             LogPrintf("CInfinitynodePeer::ManageStateRemote -- %s: %s\n", GetStateString(), strNotCapableReason);
             return;
         }
-        if(!CInfinitynode::IsValidStateForAutoStart(infoInf.nMetadataHeight)) {
+
+        CMetadata meta = infnodemeta.Find(infoInf.metadataID);
+        if (meta.getMetadataHeight() == 0){
             nState = INFINITYNODE_PEER_NOT_CAPABLE;
-            strNotCapableReason = strprintf("Infinitynode metadata height is %d", infoInf.nMetadataHeight);
+            strNotCapableReason = "Metatdata not found.";
             LogPrintf("CInfinitynodePeer::ManageStateRemote -- %s: %s\n", GetStateString(), strNotCapableReason);
             return;
         }
+
+        if(!CInfinitynode::IsValidStateForAutoStart(meta.getMetadataHeight())) {
+            nState = INFINITYNODE_PEER_NOT_CAPABLE;
+            strNotCapableReason = strprintf("Infinitynode metadata height is %d", meta.getMetadataHeight());
+            LogPrintf("CInfinitynodePeer::ManageStateRemote -- %s: %s\n", GetStateString(), strNotCapableReason);
+            return;
+        }
+
         if(nState != INFINITYNODE_PEER_STARTED) {
             LogPrintf("CInfinitynodePeer::ManageStateRemote -- STARTED!\n");
             burntx = infoInf.vinBurnFund.prevout; //initial value
-            service = infoInf.metadataService;
+            service = meta.getService();
             fPingerEnabled = true;
             nSINType = infoInf.nSINType;
             nState = INFINITYNODE_PEER_STARTED;

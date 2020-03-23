@@ -4,6 +4,7 @@
 
 #include <infinitynodeman.h>
 #include <infinitynodersv.h>
+#include <infinitynodemeta.h>
 
 #include <util.h> //fMasterNode variable
 #include <chainparams.h>
@@ -383,19 +384,79 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
                                     int check=0;
                                     std::string publicKeyString;
                                     CService service;
+                                    std::string burnTxID;
                                     while (getline(ss, s,';')) {
                                         CTxDestination NodeAddress;
                                         //1st position: Node Address
                                         if (i==0) {
                                             publicKeyString = s;
-                                            if (publicKeyString.length() == 66) {check++;}
+                                            std::vector<unsigned char> tx_data = DecodeBase64(publicKeyString.c_str());
+                                            CPubKey decodePubKey(tx_data.begin(), tx_data.end());
+                                            if (decodePubKey.IsValid()) {check++;}
                                         }
                                         //2nd position: Node IP
-                                        if (i==1 && Lookup(s.c_str(), service, 0, false)) {check++;}
-
+                                        if (i==1 && Lookup(s.c_str(), service, 0, false)) {
+                                            check++;
+                                        }
+                                        //3th position: 12 character from Infinitynode BurnTx
+                                        if (i==2 && s.length() >= 16) {
+                                            check++;
+                                            burnTxID = s.substr(0, 16);
+                                        }
                                         //Update node metadata if nHeight is bigger
-                                        if (check == 2){
+                                        if (check == 3){
                                             //prevBlockIndex->nHeight
+                                            const CTxIn& txin = tx->vin[0];
+                                            int index = txin.prevout.n;
+
+                                            CTransactionRef prevtx;
+                                            uint256 hashblock;
+                                            if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false)) {
+                                                LogPrintf("CInfinitynodeMeta::metaScan -- PrevBurnFund tx is not in block.\n");
+                                                return false;
+                                            }
+
+                                            CTxDestination addressBurnFund;
+                                            if(!ExtractDestination(prevtx->vout[index].scriptPubKey, addressBurnFund)){
+                                                LogPrintf("CInfinitynodeMeta::metaScan -- False when extract payee from BurnFund tx.\n");
+                                                return false;
+                                            }
+
+                                            std::ostringstream streamInfo;
+                                            streamInfo << EncodeDestination(addressBurnFund) << "-" << burnTxID;
+
+                                            LogPrintf("CInfinitynodeMeta:: meta update: %s, %s, %s\n", 
+                                                         streamInfo.str(), publicKeyString, service.ToString());
+                                            int avtiveBK = 0;
+                                            CMetadata meta = CMetadata(streamInfo.str(), publicKeyString, service, prevBlockIndex->nHeight, avtiveBK);
+                                            infnodemeta.Add(meta);
+                                        }
+                                        i++;
+                                    }
+                                }
+                            }
+                        }
+                        //Amount to Notification
+                        if (whichType == TX_BURN_DATA && Params().GetConsensus().cNotifyAddress == EncodeDestination(CKeyID(uint160(vSolutions[0]))))
+                        {
+                            //Amount for UpdateMeta
+                            if ( (Params().GetConsensus().nInfinityNodeNotificationValue - 1) * COIN <= out.nValue
+                                 && out.nValue <= (Params().GetConsensus().nInfinityNodeNotificationValue) * COIN){
+                                if (vSolutions.size() == 2){
+                                    std::string metadata(vSolutions[1].begin(), vSolutions[1].end());
+                                    string s;
+                                    stringstream ss(metadata);
+                                    int i=0;
+                                    int check=0;
+                                    std::string burnTxID;
+                                    while (getline(ss, s,';')) {
+                                        //3th position: 12 character from Infinitynode BurnTx
+                                        if (i==0 && s.length() >= 16) {
+                                            check++;
+                                            burnTxID = s.substr(0, 16);
+                                        }
+                                        if (check == 1){
+                                            //Address payee: we known that there is only 1 input
                                             const CTxIn& txin = tx->vin[0];
                                             int index = txin.prevout.n;
 
@@ -411,38 +472,13 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
                                                 LogPrintf("CInfinitynodeMan::updateInfinityNodeInfo -- False when extract payee from BurnFund tx.\n");
                                                 return false;
                                             }
-                                            LogPrintf("CInfinitynodeMan:: meta update: %s, %s, %s\n", EncodeDestination(addressBurnFund), publicKeyString, service.ToString());
-                                            updateMetadata(EncodeDestination(addressBurnFund), publicKeyString, service, prevBlockIndex->nHeight);
+                                            std::ostringstream streamInfo;
+                                            streamInfo << EncodeDestination(addressBurnFund) << "-" << burnTxID;
+                                            infnodemeta.setActiveBKAddress(streamInfo.str());
                                         }
-                                        i++;
                                     }
                                 }
-                            }
-                        }
-                        //Amount to Notification
-                        if (whichType == TX_BURN_DATA && Params().GetConsensus().cNotifyAddress == EncodeDestination(CKeyID(uint160(vSolutions[0]))))
-                        {
-                            //Amount for UpdateMeta
-                            if ( (Params().GetConsensus().nInfinityNodeNotificationValue - 1) * COIN <= out.nValue
-                                 && out.nValue <= (Params().GetConsensus().nInfinityNodeNotificationValue) * COIN){
-                                //Address payee: we known that there is only 1 input
-                                const CTxIn& txin = tx->vin[0];
-                                int index = txin.prevout.n;
-
-                                CTransactionRef prevtx;
-                                uint256 hashblock;
-                                if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false)) {
-                                    LogPrintf("CInfinitynodeMan::updateInfinityNodeInfo -- PrevBurnFund tx is not in block.\n");
-                                    return false;
-                                }
-
-                                CTxDestination addressBurnFund;
-                                if(!ExtractDestination(prevtx->vout[index].scriptPubKey, addressBurnFund)){
-                                    LogPrintf("CInfinitynodeMan::updateInfinityNodeInfo -- False when extract payee from BurnFund tx.\n");
-                                    return false;
-                                }
-                                updateNotification(EncodeDestination(addressBurnFund),"BackupAddress");
-                            }
+                            }//Amount for UpdateMeta
                         }
                     } //end loop for all output
                 } else { //Coinbase tx => update mapLastPaid
@@ -486,9 +522,13 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
 
 bool CInfinitynodeMan::GetInfinitynodeInfo(std::string nodePublicKey, infinitynode_info_t& infInfoRet)
 {
+    CMetadata meta;
+    if(!infnodemeta.Get(nodePublicKey, meta)){
+        return false;
+    }
     LOCK(cs);
     for (auto& infpair : mapInfinitynodes) {
-        if (infpair.second.getMetaPublicKey() == nodePublicKey) {
+        if (infpair.second.getMetaID() == meta.getMetaID()) {
             infInfoRet = infpair.second.GetInfo();
             return true;
         }
@@ -505,34 +545,6 @@ bool CInfinitynodeMan::GetInfinitynodeInfo(const COutPoint& outpoint, infinityno
     }
     infInfoRet = it->second.GetInfo();
     return true;
-}
-
-void CInfinitynodeMan::updateMetadata(std::string nodeowner, std::string nodePublicKey, CService nodeService, int nHeightUpdate)
-{
-    AssertLockHeld(cs);
-
-    for (auto& infpair : mapInfinitynodes) {
-        if (infpair.second.collateralAddress == nodeowner) {
-            if (infpair.second.getMetadataHeight() < nHeightUpdate){
-                infpair.second.setNodePublicKey(nodePublicKey);
-                infpair.second.setService(nodeService);
-                infpair.second.setMetadataHeight(nHeightUpdate);
-            }
-        }
-    }
-}
-
-void CInfinitynodeMan::updateNotification(std::string nodeowner, std::string code)
-{
-    AssertLockHeld(cs);
-
-    for (auto& infpair : mapInfinitynodes) {
-        if (infpair.second.collateralAddress == nodeowner) {
-            if (code == "BackupAddress") {
-                infpair.second.setActiveBackupAddress(1);
-            }
-        }
-    }
 }
 
 void CInfinitynodeMan::updateLastPaid()
@@ -898,25 +910,6 @@ bool CInfinitynodeMan::getNodeScoreAtHeight(const COutPoint& outpoint, int nBloc
 }
 
 /*
-bool CInfinitynodeMan::SendVerifyRequest(const CAddress& addr, const std::vector<CMasternode*>& vSortedByAddr, CConnman& connman)
-{
-    std::string strMessage = strprintf("%s%d%s", activeMasternode.service.ToString(false), mnv.nonce, blockHash.ToString());
-    CNode* pnode = connman.OpenNetworkConnection(addr, false, nullptr, NULL, false, false, false, true);
-    if(pnode == NULL) {
-        LogPrintf("CInfinitynodeMan::SendVerifyRequest -- can't connect to node to verify it, addr=%s\n", addr.ToString());
-        return false;
-    }
-
-    netfulfilledman.AddFulfilledRequest(addr, strprintf("%s", NetMsgType::MNVERIFY)+"-request");
-    // use random nonce, store it and require node to reply with correct one later
-    CMasternodeVerification mnv(addr, GetRandInt(999999), nCachedBlockHeight - 1);
-    mWeAskedForVerification[addr] = mnv;
-    LogPrintf("CInfinitynodeMan::SendVerifyRequest -- verifying node using nonce %d addr=%s\n", mnv.nonce, addr.ToString());
-    connman.PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::MNVERIFY, mnv));
-
-    return true;
-}
-
 void CInfinitynodeMan::SendVerifyReply(CNode* pnode, CMasternodeVerification& mnv, CConnman& connman)
 {
     AssertLockHeld(cs_main);

@@ -5,9 +5,11 @@
 #include <infinitynodelockreward.h>
 #include <infinitynodeman.h>
 #include <infinitynodepeer.h>
+#include <infinitynodemeta.h>
 #include <messagesigner.h>
 #include <net_processing.h>
 #include <netmessagemaker.h>
+#include <utilstrencodings.h>
 
 #include <boost/lexical_cast.hpp>
 
@@ -80,9 +82,11 @@ bool CLockRewardRequest::IsValid(CNode* pnode, int nValidationHeight, std::strin
     }
 
     int nDos = 0;
-    std::string metaPublicKey = inf.getMetaPublicKey();
-    std::vector<char> v(metaPublicKey.begin(), metaPublicKey.end());
-    CPubKey pubKey(v.begin(), v.end());
+    CMetadata meta = infnodemeta.Find(inf.getMetaID());
+    std::string metaPublicKey = meta.getMetaPublicKey();
+    std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
+    CPubKey pubKey(tx_data.begin(), tx_data.end());
+
     if(!CheckSignature(pubKey, nDos)){
         LOCK(cs_main);
         Misbehaving(pnode->GetId(), nDos);
@@ -133,8 +137,8 @@ bool CInfinityNodeLockReward::AlreadyHave(const uint256& hash)
 bool CInfinityNodeLockReward::AddLockRewardRequest(const CLockRewardRequest& lockRewardRequest)
 {
     AssertLockHeld(cs);
-    LogPrintf("CInfinityNodeLockReward::AddLockRewardRequest -- lockRewardRequest from %s, SIN type: %d, loop: %d\n",
-               lockRewardRequest.burnTxIn.prevout.ToStringShort(), lockRewardRequest.nSINtype, lockRewardRequest.nLoop);
+    //LogPrintf("CInfinityNodeLockReward::AddLockRewardRequest -- lockRewardRequest from %s, SIN type: %d, loop: %d\n",
+    //           lockRewardRequest.burnTxIn.prevout.ToStringShort(), lockRewardRequest.nSINtype, lockRewardRequest.nLoop);
 
     //if we hash this request => don't add it
     if(mapLockRewardRequest.count(lockRewardRequest.GetHash())) return false;

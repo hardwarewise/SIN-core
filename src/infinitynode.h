@@ -43,10 +43,7 @@ struct infinitynode_info_t
     CScript scriptPubKey{};
     std::string backupAddress = "BackupAddress";
     int nRank=0;
-    int nMetadataHeight=0;
-    std::string metadataPublicKey = "PublicKey";
-    CService metadataService{};
-    int activeBackupAddress = 0;
+    std::string metadataID="";
 };
 
 class CInfinitynode : public infinitynode_info_t
@@ -80,24 +77,23 @@ public:
         READWRITE(collateralAddress);
         READWRITE(scriptPubKey);
         READWRITE(backupAddress);
-        READWRITE(nMetadataHeight);
-        READWRITE(metadataPublicKey);
-        READWRITE(metadataService);
-        READWRITE(activeBackupAddress);
+        READWRITE(metadataID);
     }
 
     void setHeight(int nInHeight){nHeight = nInHeight; nExpireHeight=nInHeight + 720*365;}
-    void setCollateralAddress(std::string address) { collateralAddress = address;}
+    void setCollateralAddress(std::string address) {
+        collateralAddress = address;
+        std::string burnfundTxId = vinBurnFund.prevout.ToString().substr(0, 16);
+        std::ostringstream streamInfo;
+        streamInfo << collateralAddress << "-" << burnfundTxId;
+        metadataID = streamInfo.str();
+    }
     void setScriptPublicKey(CScript scriptpk){scriptPubKey = scriptpk;}
     void setBurnValue(CAmount burnFund){nBurnValue = burnFund;}
     void setSINType(int SINType){nSINType = SINType;}
     void setLastRewardHeight(int nReward){nLastRewardHeight = nReward;}
     void setRank(int nRankIn){nRank=nRankIn;}
     void setBackupAddress(std::string address) { backupAddress = address;}
-    void setNodePublicKey(std::string publicKey) { metadataPublicKey = publicKey;}
-    void setService(CService addrNew) { metadataService = addrNew;}
-    void setMetadataHeight(int nHeight) { nMetadataHeight = nHeight;}
-    void setActiveBackupAddress(int active) { activeBackupAddress = active;}
 
     infinitynode_info_t GetInfo();
     COutPoint getBurntxOutPoint(){return vinBurnFund.prevout;}
@@ -110,10 +106,7 @@ public:
     int getSINType(){return nSINType;}
     int getLastRewardHeight(){return nLastRewardHeight;}
     int getRank(){return nRank;}
-    int getMetadataHeight(){return nMetadataHeight;}
-    std::string getMetaPublicKey(){return metadataPublicKey;}
-    CService getMetaService(){return metadataService;}
-    int getActiveBackupAddress(){return activeBackupAddress;}
+    std::string getMetaID(){return metadataID;};
     bool isRewardInNextStm(int nEndCurrentStmHeight){return nExpireHeight <= nEndCurrentStmHeight;}
 
     bool IsValidNetAddr();

@@ -124,6 +124,7 @@ BITCOIN_CORE_H = \
   infinitynode.h \
   infinitynodeman.h \
   infinitynodesrv.h \
+  infinitynodemeta.h \
   infinitynodepeer.h \
   infinitynodelockreward.h \
   interfaces/handler.h \
@@ -291,6 +292,7 @@ libsin_server_a_SOURCES += \
   infinitynode.cpp \
   infinitynodeman.cpp \
   infinitynodersv.cpp \
+  infinitynodemeta.cpp \
   infinitynodepeer.cpp \
   infinitynodelockreward.cpp \
   leveldbwrapper.cpp \

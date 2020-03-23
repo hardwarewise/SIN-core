@@ -34,12 +34,12 @@ infinitynode_info_t CInfinitynode::GetInfo()
     infinitynode_info_t info{*this};
     return info;
 }
-
+/*
 bool CInfinitynode::IsValidNetAddr()
 {
     return IsValidNetAddr(metadataService);
 }
-
+*/
 bool CInfinitynode::IsValidNetAddr(CService addrIn)
 {
     // TODO: regtest is fine with any addresses for now,

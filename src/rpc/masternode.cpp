@@ -15,6 +15,7 @@
 #include <masternodeman.h>
 #include <infinitynodeman.h>
 #include <infinitynodersv.h>
+#include <infinitynodemeta.h>
 #include <infinitynodepeer.h>
 #ifdef ENABLE_WALLET
 #include <wallet/coincontrol.h>
@@ -820,7 +821,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
                                     && strCommand != "show-lastpaid" && strCommand != "build-stm" && strCommand != "show-stm"
                                     && strCommand != "show-candidate" && strCommand != "show-script" && strCommand != "show-proposal"
                                     && strCommand != "scan-vote" && strCommand != "show-proposals" && strCommand != "keypair"
-                                    && strCommand != "mypeerinfo"
+                                    && strCommand != "mypeerinfo" && strCommand != "checkkey" && strCommand != "scan-meta" 
         ))
             throw std::runtime_error(
                 "infinitynode \"command\"...\n"
@@ -848,11 +849,35 @@ UniValue infinitynode(const JSONRPCRequest& request)
         CPubKey pubkey = secret.GetPubKey();
         assert(secret.VerifyPubKey(pubkey));
 
-        std::string s(pubkey.begin(), pubkey.end());
+        std::string sBase64 = EncodeBase64(pubkey.begin(), pubkey.size());
+        std::vector<unsigned char> tx_data = DecodeBase64(sBase64.c_str());
+        CPubKey decodePubKey(tx_data.begin(), tx_data.end());
 
         obj.push_back(Pair("PrivateKey", EncodeSecret(secret)));
-        obj.push_back(Pair("PublicKey", EncodeBase64(pubkey.begin(), pubkey.size())));
-        obj.push_back(Pair("PublicKeyHex", HexStr(pubkey)));
+        obj.push_back(Pair("PublicKey", sBase64));
+        obj.push_back(Pair("DecodePublicKey", decodePubKey.GetID().ToString()));
+        obj.push_back(Pair("isComppressed", pubkey.IsCompressed()));
+
+
+        return obj;
+    }
+
+    if (strCommand == "checkkey")
+    {
+        std::string strKey = request.params[1].get_str();
+        CKey secret = DecodeSecret(strKey);
+        if (!secret.IsValid()) throw JSONRPCError(RPC_INTERNAL_ERROR, "Secret is KO");
+
+        CPubKey pubkey = secret.GetPubKey();
+        assert(secret.VerifyPubKey(pubkey));
+
+        std::string sBase64 = EncodeBase64(pubkey.begin(), pubkey.size());
+        std::vector<unsigned char> tx_data = DecodeBase64(sBase64.c_str());
+        CPubKey decodePubKey(tx_data.begin(), tx_data.end());
+
+        obj.push_back(Pair("PrivateKey", EncodeSecret(secret)));
+        obj.push_back(Pair("PublicKey", sBase64));
+        obj.push_back(Pair("DecodePublicKey", decodePubKey.GetID().ToString()));
         obj.push_back(Pair("isComppressed", pubkey.IsCompressed()));
 
         return obj;
@@ -952,9 +977,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
                                inf.getLastRewardHeight() << " " <<
                                inf.getRank() << " " << 
                                infnodeman.getLastStatementSize(inf.getSINType()) << " " <<
-                               inf.getMetadataHeight() << " " <<
-                               inf.getMetaPublicKey() << " " <<
-                               inf.getMetaService().ToString()
+                               inf.getMetaID()
                                ;
                 std::string strInfo = streamInfo.str();
                 obj.push_back(Pair(strOutpoint, strInfo));
@@ -1033,6 +1056,20 @@ UniValue infinitynode(const JSONRPCRequest& request)
         bool result = infnodersv.rsvScan(pindex->nHeight);
         obj.push_back(Pair("Result", result));
         obj.push_back(Pair("Details", infnodersv.ToString()));
+        return obj;
+    }
+
+    if (strCommand == "scan-meta")
+    {
+        CBlockIndex* pindex = NULL;
+        {
+                LOCK(cs_main);
+                pindex = chainActive.Tip();
+        }
+
+        bool result = infnodemeta.metaScan(pindex->nHeight);
+        obj.push_back(Pair("Result", result));
+        obj.push_back(Pair("Details", infnodemeta.ToString()));
         return obj;
     }
     return NullUniValue;
@@ -1217,14 +1254,15 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     CWallet* const pwallet = wallet.get();
 
-    if (request.fHelp || request.params.size() != 3)
+    if (request.fHelp || request.params.size() != 4)
        throw std::runtime_error(
             "infinitynodeupdatemeta INFAddress UpdateInfo"
             "\nSend update info.\n"
             "\nArguments:\n"
-            "1. \"OwnerAddress\"  (string, required) Address of node OWNER which funds are burnt.\n"
-            "2. \"PublicKey\"     (string, required) PublicKey of node which will be used for LockReward, FlashSend...\n"
-            "3. \"IP\"            (string, required) IP of node.\n"
+            "1. \"OwnerAddress\"      (string, required) Address of node OWNER which funds are burnt.\n"
+            "2. \"PublicKey\"         (string, required) PublicKey of node which will be used for LockReward, FlashSend...\n"
+            "3. \"IP\"                (string, required) IP of node.\n"
+            "4. \"NodeBurnFundTx\"    (string, required) 16 characters.\n"
             "\nResult:\n"
             "\"UpdateInfo upadted message\"   (string) Metadata information\n"
             "\nExamples:\n"
@@ -1240,15 +1278,23 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
 
     //limit data carrier, so we accept only 66 char
     std::string nodePublickeyHexStr = "";
-    if(IsHex(request.params[1].get_str()) && (request.params[1].get_str().length() == 66)){
+    if(request.params[1].get_str().length() == 44){
         nodePublickeyHexStr = request.params[1].get_str();
     } else {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid node publickey");
     }
+
     std::string strService = request.params[2].get_str();
     CService service;
     if (!Lookup(strService.c_str(), service, 0, false)){
            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "IP address is not valide");
+    }
+
+    std::string burnfundTxID = "";
+    if(request.params[3].get_str().length() == 16){
+        burnfundTxID = request.params[3].get_str();
+    } else {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "node BurnFundTx ID is invalid. Please enter first 16 characters of BurnFundTx");
     }
 
     LOCK2(cs_main, pwallet->cs_wallet);
@@ -1291,7 +1337,7 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
             coin_control.Select(COutPoint(out.tx->GetHash(), out.i));
             coin_control.destChange = INFAddress;
 
-            streamInfo << nodePublickeyHexStr << ";" << strService;
+            streamInfo << nodePublickeyHexStr << ";" << strService << ";" << burnfundTxID;
             std::string strInfo = streamInfo.str();
             CScript script;
             script = GetScriptForBurn(keyid, streamInfo.str());
