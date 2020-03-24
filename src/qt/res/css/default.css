@@ -1988,3 +1988,77 @@ QProgressBar {
 QToolTip { 
 	color: #000000; background-color: #ffffff; border: 1px solid white; 
 }
+
+/*INSTASWAP PAGE*/
+
+QWidget#InstaSwap .QLabel#receivingAddressLabel { /* receiving Address Label */
+  min-width:160px;
+  font-size:14px;
+  font-weight:bold;
+  color:#ffffff;
+  border-radius: 10px;
+  background-color:#00023B;
+  margin-right:5px;
+  padding-right:5px;
+}
+
+QWidget#InstaSwap .QLabel#refundAddressLabel { /*refund Address Label */
+  min-width:160px;
+  font-size:14px;
+  font-weight:bold;
+  color:#ffffff;
+  border-radius: 10px;
+  background-color:#00023B;
+  margin-right:5px;
+  padding-right:5px;
+}
+
+QWidget#InstaSwap .QLabel#depositAmountLabel { /* deposit Amount Label  */
+  min-width:160px;
+  font-size:14px;
+  font-weight:bold;
+  color:#ffffff;
+  border-radius: 10px;
+  background-color:#00023B;
+  margin-right:5px;
+  padding-right:5px;
+}
+
+
+QWidget#InstaSwap .QPushButton#addressBookButton {
+background-color: transparent;
+margin-left: 5px;
+}
+
+
+QWidget#InstaSwap .QLabel#allowedPairsLabel { /*allowed Pairs Label*/
+  min-width:160px;
+  font-size:14px;
+  font-weight:bold;
+  color:#ffffff;
+  border-radius: 10px;
+  background-color:#00023B;
+  margin-right:5px;
+  padding-right:5px;
+}
+
+QWidget#InstaSwap .QLabel#errorLabel {
+color: red;
+font-weight:bold;
+padding-left: 10px;
+}
+
+
+QWidget#InstaSwap .QLabel#receivingAmountTitleLabel {
+font-weight:bold;
+padding-right: 5px;
+}
+
+
+QWidget#InstaSwap .QLabel#receivingAmountLabel {
+color: #BC8F3A;
+font-weight:bold;
+}
+
+
+
