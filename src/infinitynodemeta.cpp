@@ -121,12 +121,17 @@ bool CInfinitynodeMeta::metaScan(int nBlockHeight)
                                     std::string burnTxID;
                                     while (getline(ss, s,';')) {
                                         CTxDestination NodeAddress;
-                                        //1st position: Node Address
+                                        //1st position: publicKey
                                         if (i==0) {
                                             publicKeyString = s;
                                             std::vector<unsigned char> tx_data = DecodeBase64(publicKeyString.c_str());
+                                            LogPrintf("CInfinitynodeMeta::metaScan -- publicKey: %s\n", publicKeyString);
                                             CPubKey decodePubKey(tx_data.begin(), tx_data.end());
-                                            if (decodePubKey.IsValid()) {check++;}
+                                            if (decodePubKey.IsValid()) {
+                                                check++;
+                                            }else{
+                                                LogPrintf("CInfinitynodeMeta::metaScan -- ERROR: publicKey is not valid: %s\n", publicKeyString);
+                                            }
                                         }
                                         //2nd position: Node IP
                                         if (i==1 && Lookup(s.c_str(), service, 0, false)) {
@@ -159,10 +164,11 @@ bool CInfinitynodeMeta::metaScan(int nBlockHeight)
                                             std::ostringstream streamInfo;
                                             streamInfo << EncodeDestination(addressBurnFund) << "-" << burnTxID;
 
-                                            LogPrintf("CInfinitynodeMeta:: meta update: %s, %s, %s\n", 
-                                                         streamInfo.str(), publicKeyString, service.ToString());
+                                            LogPrintf("CInfinitynodeMeta:: meta update: %s, %s, %s, %d\n", 
+                                                         streamInfo.str(), publicKeyString, service.ToString(), prevBlockIndex->nHeight);
                                             int avtiveBK = 0;
-                                            CMetadata meta = CMetadata(streamInfo.str(), publicKeyString, service, prevBlockIndex->nHeight, avtiveBK);
+                                            int nHeight = prevBlockIndex->nHeight;
+                                            CMetadata meta = CMetadata(streamInfo.str(), publicKeyString, service, nHeight, avtiveBK);
                                             Add(meta);
                                         }
                                         i++;
@@ -204,10 +210,10 @@ std::string CInfinitynodeMeta::ToString() const
 {
     std::ostringstream info;
     LOCK(cs);
-    info << "Metadata: " << (int)mapNodeMetadata.size();
+    info << "Metadata: " << (int)mapNodeMetadata.size() << "\n";
     for (auto& infpair : mapNodeMetadata) {
         CMetadata m = infpair.second;
-        info << " CollateralAddress: " << infpair.first << " PublicKey: " << m.getMetaPublicKey();
+        info << " MetadataID: " << infpair.first << " PublicKey: " << m.getMetaPublicKey();
     }
 
     return info.str();

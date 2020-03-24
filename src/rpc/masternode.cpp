@@ -821,7 +821,8 @@ UniValue infinitynode(const JSONRPCRequest& request)
                                     && strCommand != "show-lastpaid" && strCommand != "build-stm" && strCommand != "show-stm"
                                     && strCommand != "show-candidate" && strCommand != "show-script" && strCommand != "show-proposal"
                                     && strCommand != "scan-vote" && strCommand != "show-proposals" && strCommand != "keypair"
-                                    && strCommand != "mypeerinfo" && strCommand != "checkkey" && strCommand != "scan-meta" 
+                                    && strCommand != "mypeerinfo" && strCommand != "checkkey" && strCommand != "scan-meta"
+                                    && strCommand != "show-metadata"
         ))
             throw std::runtime_error(
                 "infinitynode \"command\"...\n"
@@ -1042,6 +1043,16 @@ UniValue infinitynode(const JSONRPCRequest& request)
             obj.push_back(Pair(infpair.first, (int)infpair.second.size()));
         }
 
+        return obj;
+    }
+
+    if (strCommand == "show-metadata")
+    {
+        std::map<std::string, CMetadata>  mapCopy = infnodemeta.GetFullNodeMetadata();
+        obj.push_back(Pair("Metadata", (int)mapCopy.size()));
+        for (auto& infpair : mapCopy) {
+            obj.push_back(Pair(infpair.first, infpair.second.getMetaPublicKey()));
+        }
         return obj;
     }
 

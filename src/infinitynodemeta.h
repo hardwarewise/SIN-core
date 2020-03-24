@@ -54,7 +54,7 @@ public:
 
     std::string getMetaPublicKey(){return metadataPublicKey;}
     CService getService(){return metadataService;}
-    bool getMetadataHeight(){return nMetadataHeight;}
+    int getMetadataHeight(){return nMetadataHeight;}
     int getFlagActiveBackupAddress(){return activeBackupAddress;}
     std::string getMetaID(){return metaID;}
 

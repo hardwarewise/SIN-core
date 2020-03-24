@@ -74,6 +74,7 @@
 #include <infinitynodeman.h>
 #include <infinitynodersv.h>
 #include <infinitynodepeer.h>
+#include <infinitynodemeta.h>
 //
 
 #ifndef WIN32
@@ -1956,6 +1957,13 @@ bool AppInitMain()
     CFlatDB<CInfinitynodersv> flatdb6(strDBName, "magicInfinityRSV");
     if(!flatdb6.Load(infnodersv)) {
         return InitError(_("Failed to load RSV vote cache from") + "\n" + (pathDB / strDBName).string());
+    }
+
+    strDBName = "infinitynodemeta.dat";
+    uiInterface.InitMessage(_("Loading infinitynode Meta..."));
+    CFlatDB<CInfinitynodeMeta> flatdb7(strDBName, "magicInfinityMeta");
+    if(!flatdb7.Load(infnodemeta)) {
+        return InitError(_("Failed to load Metatdata cache from") + "\n" + (pathDB / strDBName).string());
     }
 
     LogPrintf("InfinityNode last scan height: %d and active Height: %d\n", infnodeman.getLastScan(), chainActive.Height());
