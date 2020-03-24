@@ -461,8 +461,8 @@ void BitcoinGUI::createActions()
     //
 
     // Instaswap
-    instaswapAction = new QAction(platformStyle->SingleColorIcon(":/icons/instaswap"), tr("&Instaswap"), this);
-    instaswapAction->setStatusTip(tr("Browse Infinitynodes"));
+    instaswapAction = new QAction(platformStyle->SingleColorIcon(":/icons/instaswap1"), tr("&Instaswap"), this);
+    instaswapAction->setStatusTip(tr("Exchange your SIN rapidly"));
     instaswapAction->setToolTip(instaswapAction->statusTip());
     instaswapAction->setCheckable(true);
 #ifdef Q_OS_MAC
@@ -844,9 +844,9 @@ void BitcoinGUI::createToolBars()
 
         //add LOGO
 
-        QLabel* label = new QLabel();
-        label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        toolbar->addWidget(label);
+        //QLabel* label = new QLabel();
+        //label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        //toolbar->addWidget(label);
 
         
         QLabel* labelLogo = new QLabel();
