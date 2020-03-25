@@ -461,6 +461,7 @@ void BitcoinGUI::createActions()
     //
 
     // Instaswap
+    if (settings.value("fShowInstaSwapTab").toBool()) {
     instaswapAction = new QAction(platformStyle->SingleColorIcon(":/icons/instaswap1"), tr("&Instaswap"), this);
     instaswapAction->setStatusTip(tr("Exchange your SIN rapidly"));
     instaswapAction->setToolTip(instaswapAction->statusTip());
@@ -473,6 +474,7 @@ void BitcoinGUI::createActions()
     tabGroup->addAction(instaswapAction);
     connect(instaswapAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(instaswapAction, SIGNAL(triggered()), this, SLOT(gotoInstaswapPage()));
+	}
     //
 
     // These showNormalIfMinimized are needed because Send Coins and Receive Coins
@@ -840,7 +842,12 @@ void BitcoinGUI::createToolBars()
         {
             toolbar->addAction(masternodeAction);
         }
+        
+        //InstaSwap
+        if (settings.value("fShowInstaSwapTab").toBool())
+        {
         toolbar->addAction(instaswapAction);
+    	}
 
         //add LOGO
 
@@ -1022,7 +1029,9 @@ void BitcoinGUI::setWalletActionsEnabled(bool enabled)
     //
 
     // Instaswap
+    if (settings.value("fShowInstaSwapTab").toBool() && instaswapAction) {
     instaswapAction->setEnabled(enabled);
+	}
     //
 
     encryptWalletAction->setEnabled(enabled);
@@ -1250,8 +1259,11 @@ void BitcoinGUI::gotoMasternodePage()
 // Instaswap
 void BitcoinGUI::gotoInstaswapPage()
 {
-    instaswapAction->setChecked(true);
-    if (walletFrame) walletFrame->gotoInstaswapPage();
+    QSettings settings;
+    if (settings.value("fShowInstaSwapTab").toBool()) {
+    	instaswapAction->setChecked(true);
+    	if (walletFrame) walletFrame->gotoInstaswapPage();
+    }
 }
 //
 
