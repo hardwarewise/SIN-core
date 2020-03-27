@@ -180,16 +180,13 @@ public:
     /*TODO: Verify node at IP*/
 
     bool SendVerifyRequest(const CAddress& addr, COutPoint myPeerBurnTx, CLockRewardRequest& lockRewardRequestRet, CConnman& connman);
-    /*
-    void SendVerifyReply(CNode* pnode, CMasternodeVerification& mnv, CConnman& connman);
-    void ProcessVerifyReply(CNode* pnode, CMasternodeVerification& mnv);
-    void ProcessVerifyBroadcast(CNode* pnode, const CMasternodeVerification& mnv);
-    */
+    bool SendVerifyReply(CNode* pnode, CVerifyRequest& vrequest, CConnman& connman);
+    bool CheckVerifyReply(CNode* pnode, CVerifyRequest& vrequest);
 
     //process consensus request message
     bool getCkeyForRequest(uint256 nRequest);
-    bool ProcessLockRewardRequest(CNode* pfrom, CLockRewardRequest& lockRewardRequestRet, CConnman& connman, int nBlockHeight);
-    bool ProcessLockRewardCommitment(CLockRewardRequest& lockRewardRequestRet, CConnman& connman);
+    bool CheckLockRewardRequest(CNode* pfrom, CLockRewardRequest& lockRewardRequestRet, CConnman& connman, int nBlockHeight);
+    bool VerifyLockRewardCandidate(CLockRewardRequest& lockRewardRequestRet, CConnman& connman);
     /*call in UpdatedBlockTip*/
     bool ProcessBlock(int nBlockHeight, CConnman& connman);
     /*call in processing.cpp when node receive INV*/
