@@ -272,6 +272,8 @@ void Shutdown()
     flatdb5.Dump(infnodeman);
     CFlatDB<CInfinitynodersv> flatdb6("infinitynodersv.dat", "magicInfinityRSV");
     flatdb6.Dump(infnodersv);
+    CFlatDB<CInfinitynodeMeta> flatdb7("infinitynodemeta.dat", "magicInfinityMeta");
+    flatdb7.Dump(infnodemeta);
     //
 
     if (fFeeEstimatesInitialized)

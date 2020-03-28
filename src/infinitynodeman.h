@@ -152,7 +152,7 @@ public:
 
     int isPossibleForLockReward(std::string nodeOwner);
     bool getScoreVector(const uint256& nBlockHash, int nSinType, int nBlockHeight, CInfinitynodeMan::score_pair_vec_t& vecScoresRet);
-    bool getNodeScoreAtHeight(const COutPoint& outpoint, int nBlockHeight, int& nRankRet);
+    bool getNodeScoreAtHeight(const COutPoint& outpoint, int nSinType, int nBlockHeight, int& nRankRet);
 
     //this function update lastStm and size from UpdatedBlockTip and map
     void updateLastStmHeightAndSize(int nBlockHeight, int nSinType);

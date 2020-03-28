@@ -881,7 +881,7 @@ bool CInfinitynodeMan::getScoreVector(const uint256& nBlockHash, int nSinType, i
     return !vecScoresRet.empty();
 }
 
-bool CInfinitynodeMan::getNodeScoreAtHeight(const COutPoint& outpoint, int nBlockHeight, int& nScoreRet)
+bool CInfinitynodeMan::getNodeScoreAtHeight(const COutPoint& outpoint, int nSinType, int nBlockHeight, int& nScoreRet)
 {
     nScoreRet = -1;
 
@@ -894,7 +894,8 @@ bool CInfinitynodeMan::getNodeScoreAtHeight(const COutPoint& outpoint, int nBloc
     }
 
     score_pair_vec_t vecScores;
-    if (!getScoreVector(nBlockHash, 10, nBlockHeight, vecScores))
+    /*TODO: change to SINtype 10 can lock*/
+    if (!getScoreVector(nBlockHash, nSinType, nBlockHeight, vecScores))
         return false;
 
     int nRank = 0;
