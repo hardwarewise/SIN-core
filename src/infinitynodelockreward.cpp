@@ -112,9 +112,52 @@ void CLockRewardRequest::Relay(CConnman& connman)
 CLockRewardCommitment::CLockRewardCommitment()
 {}
 
-CLockRewardCommitment::CLockRewardCommitment(uint256 nRequestIn, uint256 nCommitmentIn){
-    nHashRequest = nRequestIn;
-    nHashCommitment = nHashCommitment;
+CLockRewardCommitment::CLockRewardCommitment(uint256 nRequest, CKey key){
+    random = key;
+    pubkeyR = key.GetPubKey();
+    nHashRequest = nRequest;
+    nonce = GetRandInt(999999);
+}
+
+bool CLockRewardCommitment::Sign(const CKey& keyInfinitynode, const CPubKey& pubKeyInfinitynode)
+{
+    std::string strError;
+    std::string strSignMessage;
+
+    std::string strMessage = boost::lexical_cast<std::string>(nonce) + nHashRequest.ToString();
+
+    if(!CMessageSigner::SignMessage(strMessage, vchSig, keyInfinitynode)) {
+        LogPrintf("CLockRewardCommitment::Sign -- SignMessage() failed\n");
+        return false;
+    }
+
+    if(!CMessageSigner::VerifyMessage(pubKeyInfinitynode, vchSig, strMessage, strError)) {
+        LogPrintf("CLockRewardCommitment::Sign -- VerifyMessage() failed, error: %s\n", strError);
+        return false;
+    }
+
+    return true;
+}
+
+bool CLockRewardCommitment::CheckSignature(CPubKey& pubKeyInfinitynode, int &nDos)
+{
+    std::string strMessage = boost::lexical_cast<std::string>(nonce) + nHashRequest.ToString();
+    std::string strError = "";
+
+    if(!CMessageSigner::VerifyMessage(pubKeyInfinitynode, vchSig, strMessage, strError)) {
+        LogPrintf("CLockRewardCommitment::CheckSignature -- Got bad Infinitynode LockReward signature, error: %s\n", strError);
+        /*TODO: set ban value befor release*/
+        nDos = 0;
+        return false;
+    }
+    return true;
+}
+
+void CLockRewardCommitment::Relay(CConnman& connman)
+{
+
+    CInv inv(MSG_INFCOMMITMENT, GetHash());
+    connman.RelayInv(inv);
 }
 
 /*************************************************************/
@@ -124,16 +167,14 @@ void CInfinityNodeLockReward::Clear()
 {
     LOCK(cs);
     mapLockRewardRequest.clear();
-    mapInfinityNodeRandom.clear();
-    mapInfinityNodeCommitment.clear();
+    mapLockRewardCommitment.clear();
 }
 
 bool CInfinityNodeLockReward::AlreadyHave(const uint256& hash)
 {
     LOCK(cs);
     return mapLockRewardRequest.count(hash) ||
-            mapInfinityNodeRandom.count(hash) ||
-            mapInfinityNodeCommitment.count(hash);
+            mapLockRewardCommitment.count(hash);
 }
 
 bool CInfinityNodeLockReward::AddLockRewardRequest(const CLockRewardRequest& lockRewardRequest)
@@ -166,6 +207,7 @@ bool CInfinityNodeLockReward::GetLockRewardRequest(const uint256& reqHash, CLock
 void CInfinityNodeLockReward::RemoveLockRewardRequest(const CLockRewardRequest& lockRewardRequest)
 {
     AssertLockHeld(cs);
+
     std::map<uint256, CLockRewardRequest>::iterator itRequest = mapLockRewardRequest.begin();
     while(itRequest != mapLockRewardRequest.end()) {
         if(itRequest->second.nRewardHeight == lockRewardRequest.nRewardHeight
@@ -178,6 +220,15 @@ void CInfinityNodeLockReward::RemoveLockRewardRequest(const CLockRewardRequest& 
             ++itRequest;
         }
     }
+}
+
+bool CInfinityNodeLockReward::AddCommitment(const CLockRewardCommitment& commitment)
+{
+    AssertLockHeld(cs);
+
+    if(mapLockRewardCommitment.count(commitment.GetHash())) return false;
+        mapLockRewardCommitment.insert(make_pair(commitment.GetHash(), commitment));
+    return true;
 }
 
 /*
@@ -280,11 +331,13 @@ bool CInfinityNodeLockReward::VerifyLockRewardCandidate(CLockRewardRequest& lock
  *
  * STEP 1.3 send verify request to Candidate A at IP(addr) for Request(lockRewardRequestRet)
  */
-bool CInfinityNodeLockReward::SendVerifyRequest(const CAddress& addr, COutPoint myPeerBurnTx, CLockRewardRequest& lockRewardRequestRet, CConnman& connman)
+bool CInfinityNodeLockReward::SendVerifyRequest(const CAddress& addr, COutPoint& myPeerBurnTx, CLockRewardRequest& lockRewardRequestRet, CConnman& connman)
 {
-    CVerifyRequest vrequest(addr, myPeerBurnTx, GetRandInt(999999), lockRewardRequestRet.nRewardHeight, lockRewardRequestRet.GetHash());
+    CVerifyRequest vrequest(addr, myPeerBurnTx, lockRewardRequestRet.burnTxIn.prevout, GetRandInt(999999),
+                            lockRewardRequestRet.nRewardHeight, lockRewardRequestRet.GetHash());
 
-    std::string strMessage = strprintf("%s%d%s", myPeerBurnTx.ToString(), vrequest.nonce, lockRewardRequestRet.GetHash().ToString());
+    std::string strMessage = strprintf("%s%s%d%s", myPeerBurnTx.ToString(), lockRewardRequestRet.burnTxIn.prevout.ToString(),
+                                       vrequest.nonce, lockRewardRequestRet.GetHash().ToString());
 
     if(!CMessageSigner::SignMessage(strMessage, vrequest.vchSig1, infinitynodePeer.keyInfinitynode)) {
         LogPrintf("CInfinityNodeLockReward::SendVerifyRequest -- SignMessage() failed\n");
@@ -321,7 +374,8 @@ bool CInfinityNodeLockReward::SendVerifyRequest(const CAddress& addr, COutPoint 
             return false;
         }
 
-        LogPrintf("CInfinityNodeLockReward::SendVerifyRequest -- verifying node using nonce %d addr=%s\n", vrequest.nonce, addr.ToString());
+        LogPrintf("CInfinityNodeLockReward::SendVerifyRequest -- verifying node using nonce %d, addr=%s, Sig1 :%d\n",
+                    vrequest.nonce, addr.ToString(), vrequest.vchSig1.size());
         connman.PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::INFVERIFY, vrequest));
     }
 
@@ -366,7 +420,8 @@ bool CInfinityNodeLockReward::SendVerifyReply(CNode* pnode, CVerifyRequest& vreq
     CPubKey pubKey(tx_data.begin(), tx_data.end());
 
     std::string strError;
-    std::string strMessage = strprintf("%s%d%s", vrequest.vin1.prevout.ToString(), vrequest.nonce, vrequest.nHashRequest.ToString());
+    std::string strMessage = strprintf("%s%s%d%s", vrequest.vin1.prevout.ToString(), vrequest.vin2.prevout.ToString(),
+                                       vrequest.nonce, vrequest.nHashRequest.ToString());
     if(!CMessageSigner::VerifyMessage(pubKey, vrequest.vchSig1, strMessage, strError)) {
         LogPrintf("CInfinityNodeLockReward::SendVerifyReply -- VerifyMessage() failed, error: %s, message: \n", strError, strMessage);
         return false;
@@ -376,7 +431,6 @@ bool CInfinityNodeLockReward::SendVerifyReply(CNode* pnode, CVerifyRequest& vreq
 
     //step 2.2 sign a new message and send it back to sender
     vrequest.addr = infinitynodePeer.service;
-    vrequest.vin2 = CTxIn(infinitynodePeer.burntx);
     std::string strMessage2 = strprintf("%s%d%s%s%s", vrequest.addr.ToString(false), vrequest.nonce, vrequest.nHashRequest.ToString(),
         vrequest.vin1.prevout.ToStringShort(), vrequest.vin2.prevout.ToStringShort());
 
@@ -399,11 +453,84 @@ bool CInfinityNodeLockReward::SendVerifyReply(CNode* pnode, CVerifyRequest& vreq
  * - send the commitment
  * - disconect node
  */
-bool CInfinityNodeLockReward::CheckVerifyReply(CNode* pnode, CVerifyRequest& vrequest)
+bool CInfinityNodeLockReward::CheckVerifyReply(CNode* pnode, CVerifyRequest& vrequest, CConnman& connman)
 {
+    // only Infinitynode will answer the verify requrest
+    if(fLiteMode || !fInfinityNode) {return false;}
+
+    AssertLockHeld(cs);
+
+    //step 3.0 LockReward height > currentHeight
+    if(vrequest.nBlockHeight <= nCachedBlockHeight){
+        LogPrintf("CInfinityNodeLockReward::CheckVerifyReply -- nHeight of request %d is inferior than current height %d\n", vrequest.nBlockHeight, nCachedBlockHeight);
+        return false;
+    }
+
+    //step 3.1 Sig1 from me
+    std::string strMessage = strprintf("%s%s%d%s", infinitynodePeer.burntx.ToString(), vrequest.vin2.prevout.ToString(), vrequest.nonce, vrequest.nHashRequest.ToString());
+    std::string strError;
+    if(!CMessageSigner::VerifyMessage(infinitynodePeer.pubKeyInfinitynode, vrequest.vchSig1, strMessage, strError)) {
+        LogPrintf("CInfinityNodeLockReward::CheckVerifyReply -- VerifyMessage(Sig1) failed, error: %s\n", strError);
+        return false;
+    }
+
+    //step 3.2 Sig2 from Candidate
+    std::string strMessage2 = strprintf("%s%d%s%s%s", vrequest.addr.ToString(false), vrequest.nonce, vrequest.nHashRequest.ToString(),
+        vrequest.vin1.prevout.ToStringShort(), vrequest.vin2.prevout.ToStringShort());
+
+    infinitynode_info_t infoInf;
+    if(!infnodeman.GetInfinitynodeInfo(vrequest.vin2.prevout, infoInf)){
+        LogPrintf("CInfinityNodeLockReward::CheckVerifyReply -- Cannot find sender from list %s\n");
+        return false;
+    }
+
+    CMetadata metaCandidate = infnodemeta.Find(infoInf.metadataID);
+    if (metaCandidate.getMetadataHeight() == 0){
+        LogPrintf("CInfinityNodeLockReward::CheckVerifyReply -- Cannot find sender from list %s\n");
+        return false;
+    }
+
+    std::string metaPublicKey = metaCandidate.getMetaPublicKey();
+    std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
+    CPubKey pubKey(tx_data.begin(), tx_data.end());
+
+    if(!CMessageSigner::VerifyMessage(pubKey, vrequest.vchSig2, strMessage2, strError)){
+        LogPrintf("CInfinityNodeLockReward::CheckVerifyReply -- VerifyMessage(Sig2) failed, error: %s\n", strError);
+        return false;
+    }
+
+    //step 3.3 send commitment
+    if(!SendCommitment(vrequest.nHashRequest, connman)){
+        LogPrintf("CInfinityNodeLockReward::CheckVerifyReply -- Cannot send commitment\n", strError);
+        return false;
+    }
+
     pnode->fDisconnect = true;
+    return true;
 }
 
+/*
+ * STEP 4: Create and Relay Commitment
+ */
+bool CInfinityNodeLockReward::SendCommitment(const uint256& reqHash, CConnman& connman)
+{
+    if(fLiteMode || !fInfinityNode) return false;
+
+    AssertLockHeld(cs);
+
+    CKey secret;
+    secret.MakeNewKey(true);
+
+    CLockRewardCommitment commitment(reqHash, secret);
+    if(commitment.Sign(infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode)) {
+        if(AddCommitment(commitment)){
+            LogPrintf("CInfinityNodeLockReward::SendCommitment -- Relay Commitment\n");
+            commitment.Relay(connman);
+            return true;
+        }
+    }
+    return false;
+}
 /*
  * STEP 0: create LockRewardRequest if i am a candidate at nHeight
  */
@@ -466,17 +593,20 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
     } else if (strCommand == NetMsgType::INFVERIFY) {
         CVerifyRequest vrequest;
         vRecv >> vrequest;
-        LogPrintf("CInfinityNodeLockReward::ProcessMessage -- new VerifyRequest from %d\n",pfrom->GetId());
+        LogPrintf("CInfinityNodeLockReward::ProcessMessage -- new VerifyRequest from %d, Sig1: %d, Sig2: %d\n",
+                     pfrom->GetId(), vrequest.vchSig1.size(), vrequest.vchSig2.size());
         pfrom->setAskFor.erase(vrequest.GetHash());
         {
             LOCK(cs);
             if(!vrequest.vchSig1.empty() &&  vrequest.vchSig2.empty()) {
-                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- question request from %d\n",pfrom->GetId());
+                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- VerifyRequest: question from %d\n",pfrom->GetId());
                 SendVerifyReply(pfrom, vrequest, connman);
             }
             if(!vrequest.vchSig1.empty() &&  !vrequest.vchSig2.empty()) {
-                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- answer reply from %d\n",pfrom->GetId());
-                CheckVerifyReply(pfrom, vrequest);
+                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- VerifyRequest: receive an answer from %d\n",pfrom->GetId());
+                if(CheckVerifyReply(pfrom, vrequest, connman)){
+                    LogPrintf("CInfinityNodeLockReward::ProcessMessage -- Candidate is valid. Broadcasting the my random for Musig...");
+                }
             }
             return;
         }

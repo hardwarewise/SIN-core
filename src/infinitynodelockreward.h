@@ -69,8 +69,9 @@ public:
 
     CVerifyRequest() = default;
 
-    CVerifyRequest(CService addrToConnect, COutPoint myPeerBurnTxIn, int nonce, int nBlockHeight, uint256 nRequest) :
+    CVerifyRequest(CService addrToConnect, COutPoint myPeerBurnTxIn, COutPoint candidateBurnTxIn, int nonce, int nBlockHeight, uint256 nRequest) :
         vin1(CTxIn(myPeerBurnTxIn)),
+        vin2(CTxIn(candidateBurnTxIn)),
         addr(addrToConnect),
         nonce(nonce),
         nBlockHeight(nBlockHeight),
@@ -113,19 +114,23 @@ public:
 class CLockRewardCommitment
 {
 public:
-    uint256 nHashRequest;
-    uint256 nHashCommitment;
+    CTxIn vin{};//Top node ID
+    uint256 nHashRequest;//LockRewardRequest hash
+    int nonce{};
     std::vector<unsigned char> vchSig{};
+    CKey random;//r of schnorr Musig
+    CPubKey pubkeyR;
 
     CLockRewardCommitment();
-    CLockRewardCommitment(uint256 nRequest, uint256 nCommitment);
+    CLockRewardCommitment(uint256 nRequest, CKey key);
 
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(vin);
         READWRITE(nHashRequest);
-        READWRITE(nHashCommitment);
+        READWRITE(nonce);
         READWRITE(vchSig);
     }
 
@@ -133,13 +138,12 @@ public:
     {
         CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
         ss << nHashRequest;
-        ss << nHashCommitment;
+        ss << nonce;
         return ss.GetHash();
     }
 
     bool Sign(const CKey& keyInfinitynode, const CPubKey& pubKeyInfinitynode);
     bool CheckSignature(CPubKey& pubKeyInfinitynode, int &nDos);
-    bool IsValid(CNode* pnode, int nValidationHeight, std::string& strError, CConnman& connman);
     void Relay(CConnman& connman);
 };
 
@@ -150,9 +154,6 @@ private:
     mutable CCriticalSection cs;
     std::map<uint256, CLockRewardRequest> mapLockRewardRequest;
     std::map<uint256, CLockRewardCommitment> mapLockRewardCommitment;
-    std::map<uint256, CKey> mapRequestCKey;
-    std::map<uint256, int> mapInfinityNodeCommitment;
-    std::map<uint256, int> mapInfinityNodeRandom;
     // Keep track of current block height
     int nCachedBlockHeight;
 
@@ -165,33 +166,38 @@ public:
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
         READWRITE(mapLockRewardRequest);
+        READWRITE(mapLockRewardCommitment);
     }
 
     void Clear();
 
     bool AlreadyHave(const uint256& hash);
 
-    /*TODO: LockRewardRequest*/
+    //LockRewardRequest
     bool AddLockRewardRequest(const CLockRewardRequest& lockRewardRequest);
     void RemoveLockRewardRequest(const CLockRewardRequest& lockRewardRequest);
     bool HasLockRewardRequest(const uint256& reqHash);
     bool GetLockRewardRequest(const uint256& reqHash, CLockRewardRequest& lockRewardRequestRet);
 
-    /*TODO: Verify node at IP*/
-
-    bool SendVerifyRequest(const CAddress& addr, COutPoint myPeerBurnTx, CLockRewardRequest& lockRewardRequestRet, CConnman& connman);
-    bool SendVerifyReply(CNode* pnode, CVerifyRequest& vrequest, CConnman& connman);
-    bool CheckVerifyReply(CNode* pnode, CVerifyRequest& vrequest);
-
     //process consensus request message
     bool getCkeyForRequest(uint256 nRequest);
     bool CheckLockRewardRequest(CNode* pfrom, CLockRewardRequest& lockRewardRequestRet, CConnman& connman, int nBlockHeight);
     bool VerifyLockRewardCandidate(CLockRewardRequest& lockRewardRequestRet, CConnman& connman);
-    /*call in UpdatedBlockTip*/
+
+    //Verify node at IP
+    bool SendVerifyRequest(const CAddress& addr, COutPoint& myPeerBurnTx, CLockRewardRequest& lockRewardRequestRet, CConnman& connman);
+    bool SendVerifyReply(CNode* pnode, CVerifyRequest& vrequest, CConnman& connman);
+    bool CheckVerifyReply(CNode* pnode, CVerifyRequest& vrequest, CConnman& connman);
+
+    //commitment
+    bool AddCommitment(const CLockRewardCommitment& commitment);
+    bool SendCommitment(const uint256& reqHash, CConnman& connman);
+
+    //call in UpdatedBlockTip
     bool ProcessBlock(int nBlockHeight, CConnman& connman);
-    /*call in processing.cpp when node receive INV*/
+    //call in processing.cpp when node receive INV
     void ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman);
-    /*call in dsnotificationinterface.cpp when node connect a new block*/
+    //call in dsnotificationinterface.cpp when node connect a new block
     void UpdatedBlockTip(const CBlockIndex *pindex, CConnman& connman);
 };
 #endif // SIN_INFINITYNODELOCKREWARD_H
