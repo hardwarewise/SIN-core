@@ -11,7 +11,7 @@ proof-of-integrity, proof-of-inheritance, and inflation are some of the resoluti
 
 # Features and Innovations
 
- - **x25X** GPU Algorithm. Leading-edge, in-house built,custom GPU mining algorithm. More complex,less power-hungry.
+ - **X25X** GPU Algorithm. Leading-edge, in-house built,custom GPU mining algorithm. More complex,less power-hungry.
  - **Infinity Nodes** Explicitly designed to overcome the hyperinflation all cryptocurrency projects face. Infinity nodes burn the collateral with unprecedented network security and stability.
  - **Incorruptible Data Storage** Incorruptible Data Storage. DataSend, DataStore and Blockchain-mail. Proof-of-Integrity. Unlimited private networking of big data storage.
  - **FlashSend** Instanteneous trasnactions in less than 2 seconds.
