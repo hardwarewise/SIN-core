@@ -593,23 +593,25 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
     } else if (strCommand == NetMsgType::INFVERIFY) {
         CVerifyRequest vrequest;
         vRecv >> vrequest;
-        LogPrintf("CInfinityNodeLockReward::ProcessMessage -- new VerifyRequest from %d, Sig1: %d, Sig2: %d\n",
-                     pfrom->GetId(), vrequest.vchSig1.size(), vrequest.vchSig2.size());
+        LogPrintf("CInfinityNodeLockReward::ProcessMessage -- new VerifyRequest from %d, Sig1: %d, Sig2: %d, hash: %s\n",
+                     pfrom->GetId(), vrequest.vchSig1.size(), vrequest.vchSig2.size(), vrequest.GetHash().ToString());
         pfrom->setAskFor.erase(vrequest.GetHash());
         {
             LOCK(cs);
-            if(!vrequest.vchSig1.empty() &&  vrequest.vchSig2.empty()) {
+            if(vrequest.vchSig1.size() > 0 &&  vrequest.vchSig2.size() == 0) {
                 LogPrintf("CInfinityNodeLockReward::ProcessMessage -- VerifyRequest: question from %d\n",pfrom->GetId());
                 SendVerifyReply(pfrom, vrequest, connman);
             }
-            if(!vrequest.vchSig1.empty() &&  !vrequest.vchSig2.empty()) {
+            if(vrequest.vchSig1.size() > 0 &&  !vrequest.vchSig2.size() > 0) {
                 LogPrintf("CInfinityNodeLockReward::ProcessMessage -- VerifyRequest: receive an answer from %d\n",pfrom->GetId());
                 if(CheckVerifyReply(pfrom, vrequest, connman)){
-                    LogPrintf("CInfinityNodeLockReward::ProcessMessage -- Candidate is valid. Broadcasting the my random for Musig...");
+                    LogPrintf("CInfinityNodeLockReward::ProcessMessage -- Candidate is valid. Broadcasting the my random for Musig...\n");
                 }
             }
             return;
         }
+    } else if (strCommand == NetMsgType::INFCOMMITMENT) {
+    } else if (strCommand == NetMsgType::INFLRMUSIG) {
     }
 }
 
