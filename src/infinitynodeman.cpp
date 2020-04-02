@@ -133,7 +133,7 @@ std::string CInfinitynodeMan::ToString() const
 void CInfinitynodeMan::CheckAndRemove(CConnman& connman)
 {
     /*this function is called in InfinityNode thread and after sync of node*/
-    LOCK(cs);
+    LOCK2(cs, cs_main); //Make sure we also lock main
 
     LogPrintf("CInfinitynodeMan::CheckAndRemove -- at Height: %d, last build height: %d nodes\n", nCachedBlockHeight, nLastScanHeight);
     //first scan -- normaly, list is built in init.cpp
@@ -186,7 +186,7 @@ bool CInfinitynodeMan::initialInfinitynodeList(int nBlockHeight)
 
 bool CInfinitynodeMan::updateInfinitynodeList(int nBlockHeight)
 {
-    LOCK(cs);
+    LOCK2(cs, cs_main); //Make sure we also lock main
     if (nLastScanHeight == 0) {
         LogPrintf("CInfinitynodeMan::updateInfinitynodeList -- update list for 1st scan at Height %d\n",nBlockHeight); 
         return buildInfinitynodeList(nBlockHeight, Params().GetConsensus().nInfinityNodeBeginHeight);
