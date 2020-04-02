@@ -178,7 +178,7 @@ int CInfinitynodeMan::getRoi(int nSinType, int totalNode)
 
 bool CInfinitynodeMan::initialInfinitynodeList(int nBlockHeight)
 {
-    LOCK(cs);
+    LOCK2(cs, cs_main); //Make sure we also lock main
     if(nBlockHeight < Params().GetConsensus().nInfinityNodeBeginHeight) return false;
     LogPrintf("CInfinitynodeMan::initialInfinitynodeList -- initial at height: %d, last scan height: %d\n", nBlockHeight, nLastScanHeight);
     return buildInfinitynodeList(nBlockHeight, Params().GetConsensus().nInfinityNodeBeginHeight);
@@ -203,6 +203,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
         return true;
     }
     AssertLockHeld(cs);
+    AssertLockHeld(cs_main); //Needed for index-dependent parts
     mapInfinitynodesNonMatured.clear();
 
     //first run, make sure that all variable is clear
