@@ -611,6 +611,19 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
             return;
         }
     } else if (strCommand == NetMsgType::INFCOMMITMENT) {
+        CLockRewardCommitment commitment;
+        vRecv >> commitment;
+        uint256 nHash = commitment.GetHash();
+        pfrom->setAskFor.erase(nHash);
+        {
+            LOCK(cs);
+            if(mapLockRewardCommitment.count(nHash)) return;
+            if(AddCommitment(commitment)){
+                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- Relay Commitment\n");
+                commitment.Relay(connman);
+            }
+            return;
+        }
     } else if (strCommand == NetMsgType::INFLRMUSIG) {
     }
 }

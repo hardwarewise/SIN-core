@@ -63,6 +63,7 @@ const char *INFLOCKREWARDINIT="inflrwd";
 const char *INFVERIFY="infverify";
 const char *INFCOMMITMENT="infcommit";
 const char *INFLRMUSIG="inflrmusig";
+const char *INFLRGROUP="inflrgroup";
 } // namespace NetMsgType
 
 /** All known message types. Keep this in the same order as the list of
@@ -113,6 +114,7 @@ const static std::string allNetMessageTypes[] = {
     NetMsgType::INFVERIFY,
     NetMsgType::INFCOMMITMENT,
     NetMsgType::INFLRMUSIG,
+    NetMsgType::INFLRGROUP,
 };
 const static std::vector<std::string> allNetMessageTypesVec(allNetMessageTypes, allNetMessageTypes+ARRAYLEN(allNetMessageTypes));
 
@@ -240,6 +242,7 @@ std::string CInv::GetCommand() const
     case MSG_INFCOMMITMENT:            return cmd.append(NetMsgType::INFCOMMITMENT);
     case MSG_INFVERIFY:                return cmd.append(NetMsgType::INFVERIFY);
     case MSG_INFLRMUSIG:               return cmd.append(NetMsgType::INFLRMUSIG);
+    case MSG_INFLRGROUP:               return cmd.append(NetMsgType::INFLRMUSIG);
     default:
         throw std::out_of_range(strprintf("CInv::GetCommand(): type=%d unknown type", type));
     }

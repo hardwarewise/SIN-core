@@ -130,6 +130,7 @@ public:
     inline void SerializationOp(Stream& s, Operation ser_action) {
         READWRITE(vin);
         READWRITE(nHashRequest);
+        READWRITE(pubkeyR);
         READWRITE(nonce);
         READWRITE(vchSig);
     }
@@ -137,7 +138,9 @@ public:
     uint256 GetHash() const
     {
         CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
+        ss << vin;
         ss << nHashRequest;
+        ss << pubkeyR;
         ss << nonce;
         return ss.GetHash();
     }
@@ -192,6 +195,7 @@ public:
     //commitment
     bool AddCommitment(const CLockRewardCommitment& commitment);
     bool SendCommitment(const uint256& reqHash, CConnman& connman);
+    bool VerifyCommitment(const uint256& reqHash, const CLockRewardCommitment& commitment);
 
     //call in UpdatedBlockTip
     bool ProcessBlock(int nBlockHeight, CConnman& connman);
