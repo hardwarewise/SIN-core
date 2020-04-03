@@ -157,8 +157,13 @@ private:
     mutable CCriticalSection cs;
     std::map<uint256, CLockRewardRequest> mapLockRewardRequest;
     std::map<uint256, CLockRewardCommitment> mapLockRewardCommitment;
+
+    std::map<uint256, std::vector<COutPoint>> mapSigners; //list of signers for my request only
     // Keep track of current block height
     int nCachedBlockHeight;
+    // Keep track my current LockRequestHash
+    int nFutureRewardHeight;
+    uint256 currentLockRequestHash;
 
 public:
 
@@ -196,6 +201,10 @@ public:
     bool AddCommitment(const CLockRewardCommitment& commitment);
     bool SendCommitment(const uint256& reqHash, CConnman& connman);
     bool VerifyCommitment(const uint256& reqHash, const CLockRewardCommitment& commitment);
+
+    //Musig
+    void AddMySignersMap(const CLockRewardCommitment& commitment);
+    bool FindSignersGroup(int nSigners);
 
     //call in UpdatedBlockTip
     bool ProcessBlock(int nBlockHeight, CConnman& connman);

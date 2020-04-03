@@ -168,6 +168,7 @@ void CInfinityNodeLockReward::Clear()
     LOCK(cs);
     mapLockRewardRequest.clear();
     mapLockRewardCommitment.clear();
+    mapSigners.clear();
 }
 
 bool CInfinityNodeLockReward::AlreadyHave(const uint256& hash)
@@ -187,10 +188,18 @@ bool CInfinityNodeLockReward::AddLockRewardRequest(const CLockRewardRequest& loc
     if(mapLockRewardRequest.count(lockRewardRequest.GetHash())) return false;
     if(lockRewardRequest.nLoop == 0){
         mapLockRewardRequest.insert(make_pair(lockRewardRequest.GetHash(), lockRewardRequest));
+        //track my last request
+        currentLockRequestHash = lockRewardRequest.GetHash();
+        nFutureRewardHeight = lockRewardRequest.nRewardHeight;
     } else if (lockRewardRequest.nLoop > 0){
         //new request from candidate, so remove old requrest
         RemoveLockRewardRequest(lockRewardRequest);
         mapLockRewardRequest.insert(make_pair(lockRewardRequest.GetHash(), lockRewardRequest));
+        //remove current SignerMap
+        mapSigners.clear();
+        //track my last request
+        currentLockRequestHash = lockRewardRequest.GetHash();
+        nFutureRewardHeight = lockRewardRequest.nRewardHeight;
     }
     return true;
 }
@@ -510,7 +519,10 @@ bool CInfinityNodeLockReward::CheckVerifyReply(CNode* pnode, CVerifyRequest& vre
 }
 
 /*
- * STEP 4: Create and Relay Commitment
+ * STEP 4: Create, Relay, Update the commitments
+ *
+ * STEP 4.1 create/send/relay commitment
+ * control if i am candidate and how many commitment receive to decide MuSig workers
  */
 bool CInfinityNodeLockReward::SendCommitment(const uint256& reqHash, CConnman& connman)
 {
@@ -531,6 +543,44 @@ bool CInfinityNodeLockReward::SendCommitment(const uint256& reqHash, CConnman& c
     }
     return false;
 }
+
+void CInfinityNodeLockReward::AddMySignersMap(const CLockRewardCommitment& commitment)
+{
+    if(fLiteMode || !fInfinityNode) return;
+
+    AssertLockHeld(cs);
+
+    auto it = mapSigners.find(currentLockRequestHash);
+    if(it == mapSigners.end()){
+        LogPrintf("CInfinityNodeLockReward::AddMySignersMap -- add commitment to my signer mapp: %s\n", commitment.GetHash().ToString());
+        mapSigners[currentLockRequestHash].push_back(commitment.vin.prevout);
+    } else {
+        bool found=false;
+        for (auto& v : it->second){
+            if(v == commitment.vin.prevout){found = true;}
+        }
+        if(!found){
+            LogPrintf("CInfinityNodeLockReward::AddMySignersMap -- update commitment to my signer mapp: %s\n", commitment.GetHash().ToString());
+            mapSigners[currentLockRequestHash].push_back(commitment.vin.prevout);
+        }
+    }
+}
+
+/*
+ * STEP 4.3
+ *
+ * read commitment map and myLockRequest, if there is enough commitment was sent
+ * => broadcast it
+ */
+bool CInfinityNodeLockReward::FindSignersGroup(int nSigners)
+{
+    if(fLiteMode || !fInfinityNode) return false;
+
+    AssertLockHeld(cs);
+
+    return true;
+}
+
 /*
  * STEP 0: create LockRewardRequest if i am a candidate at nHeight
  */
@@ -621,6 +671,7 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
             if(AddCommitment(commitment)){
                 LogPrintf("CInfinityNodeLockReward::ProcessMessage -- Relay Commitment\n");
                 commitment.Relay(connman);
+                AddMySignersMap(commitment);
             }
             return;
         }
