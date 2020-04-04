@@ -652,13 +652,11 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
                 LogPrintf("CInfinityNodeLockReward::ProcessMessage -- VerifyRequest: I am candidate. Reply the verify from: %d, hash: %s\n",
                           pfrom->GetId(), vrequest.GetHash().ToString());
                 SendVerifyReply(pfrom, vrequest, connman);
-            }
-            if(vrequest.vchSig1.size() > 0 &&  vrequest.vchSig2.size() > 0) {
+            } else if(vrequest.vchSig1.size() > 0 &&  vrequest.vchSig2.size() > 0) {
                 LogPrintf("CInfinityNodeLockReward::ProcessMessage -- VerifyRequest: I am TopNode. Receive a reply from candidate %d, hash: %s\n",
                           pfrom->GetId(), vrequest.GetHash().ToString());
                 if(CheckVerifyReply(pfrom, vrequest, connman)){
                     LogPrintf("CInfinityNodeLockReward::ProcessMessage -- Candidate is valid. Broadcast the my Rpubkey for Musig and disconnect the direct connect to candidata\n");
-                    //TODO: generate commitment and broadcast
                 }else{
                     LogPrintf("CInfinityNodeLockReward::ProcessMessage -- Candidate is NOT valid.\n");
                 }
