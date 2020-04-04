@@ -1399,6 +1399,16 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& chainparams, CConnm
                         pushed = true;
                     }
                 }
+                if (!pushed && inv.type == MSG_INFCOMMITMENT) {
+                    CLockRewardCommitment commitment;
+                    if(inflockreward.GetLockRewardCommitment(inv.hash,commitment)) {
+                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+                        ss.reserve(1000);
+                        ss << commitment;
+                        connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::INFCOMMITMENT, ss));
+                        pushed = true;
+                    }
+                }
                 //
                 if (!pushed && inv.type == MSG_TXLOCK_REQUEST) {
                     CTxLockRequest txLockRequest;

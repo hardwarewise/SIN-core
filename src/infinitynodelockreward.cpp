@@ -240,6 +240,15 @@ bool CInfinityNodeLockReward::AddCommitment(const CLockRewardCommitment& commitm
     return true;
 }
 
+bool CInfinityNodeLockReward::GetLockRewardCommitment(const uint256& reqHash, CLockRewardCommitment& commitmentRet)
+{
+    LOCK(cs);
+    std::map<uint256, CLockRewardCommitment>::iterator it = mapLockRewardCommitment.find(reqHash);
+    if(it == mapLockRewardCommitment.end()) return false;
+    commitmentRet = it->second;
+    return true;
+}
+
 /*
  * STEP 1: get a new LockRewardRequest, check it and send verify message
  *

@@ -201,6 +201,7 @@ public:
     bool AddCommitment(const CLockRewardCommitment& commitment);
     bool SendCommitment(const uint256& reqHash, CConnman& connman);
     bool VerifyCommitment(const uint256& reqHash, const CLockRewardCommitment& commitment);
+    bool GetLockRewardCommitment(const uint256& reqHash, CLockRewardCommitment& commitment);
 
     //Musig
     void AddMySignersMap(const CLockRewardCommitment& commitment);
