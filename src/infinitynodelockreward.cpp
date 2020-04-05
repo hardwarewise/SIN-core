@@ -545,7 +545,7 @@ bool CInfinityNodeLockReward::SendCommitment(const uint256& reqHash, CConnman& c
     CLockRewardCommitment commitment(reqHash, secret);
     if(commitment.Sign(infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode)) {
         if(AddCommitment(commitment)){
-            LogPrintf("CInfinityNodeLockReward::SendCommitment -- Relay Commitment\n");
+            LogPrintf("CInfinityNodeLockReward::SendCommitment -- Send my commitment\n");
             commitment.Relay(connman);
             return true;
         }
@@ -679,11 +679,16 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
         pfrom->setAskFor.erase(nHash);
         {
             LOCK(cs);
-            if(mapLockRewardCommitment.count(nHash)) return;
+            if(mapLockRewardCommitment.count(nHash)){
+                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- I had it. end process\n");
+                return;
+            }
             if(AddCommitment(commitment)){
                 LogPrintf("CInfinityNodeLockReward::ProcessMessage -- Relay Commitment\n");
                 commitment.Relay(connman);
                 AddMySignersMap(commitment);
+            } else {
+                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- Cannot relay commitment in network\n");
             }
             return;
         }
