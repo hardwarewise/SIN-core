@@ -1072,6 +1072,8 @@ bool static AlreadyHave(const CInv& inv) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
     case MSG_WITNESS_BLOCK:
         return LookupBlockIndex(inv.hash) != nullptr;
     // SIN
+    case MSG_INFCOMMITMENT:
+        return inflockreward.AlreadyHave(inv.hash);
     case MSG_LOCKREWARD_INIT:
         return inflockreward.AlreadyHave(inv.hash);
     //
