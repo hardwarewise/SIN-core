@@ -392,7 +392,7 @@ bool CInfinityNodeLockReward::SendVerifyRequest(const CAddress& addr, COutPoint&
             return false;
         }
 
-        LogPrintf("CInfinityNodeLockReward::SendVerifyRequest -- verifying node using nonce %d, addr=%s, Sig1 :%d\n",
+        LogPrintf("CInfinityNodeLockReward::SendVerifyRequest -- verifying node by direct connection using nonce %d, addr=%s, Sig1 :%d\n",
                     vrequest.nonce, addr.ToString(), vrequest.vchSig1.size());
         connman.PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::INFVERIFY, vrequest));
     }
@@ -523,7 +523,7 @@ bool CInfinityNodeLockReward::CheckVerifyReply(CNode* pnode, CVerifyRequest& vre
         return false;
     }
 
-    pnode->fDisconnect = true;
+    //pnode->fDisconnect = true;
     return true;
 }
 
@@ -545,7 +545,7 @@ bool CInfinityNodeLockReward::SendCommitment(const uint256& reqHash, CConnman& c
     CLockRewardCommitment commitment(reqHash, secret);
     if(commitment.Sign(infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode)) {
         if(AddCommitment(commitment)){
-            LogPrintf("CInfinityNodeLockReward::SendCommitment -- Send my commitment\n");
+            LogPrintf("CInfinityNodeLockReward::SendCommitment -- Send my commitment %s\n", commitment.GetHash().ToString());
             commitment.Relay(connman);
             return true;
         }
@@ -558,6 +558,11 @@ void CInfinityNodeLockReward::AddMySignersMap(const CLockRewardCommitment& commi
     if(fLiteMode || !fInfinityNode) return;
 
     AssertLockHeld(cs);
+
+    if(commitment.nHashRequest != currentLockRequestHash){
+        LogPrintf("CInfinityNodeLockReward::AddMySignersMap -- commitment is not mine. LockRequest hash: %s\n", commitment.nHashRequest.ToString());
+        return;
+    }
 
     auto it = mapSigners.find(currentLockRequestHash);
     if(it == mapSigners.end()){
@@ -684,7 +689,8 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
                 return;
             }
             if(AddCommitment(commitment)){
-                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- Relay Commitment\n");
+                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- Relay Commitment. Remind nFutureRewardHeight: %d, LockRequest: %s\n",
+                           nFutureRewardHeight, currentLockRequestHash.ToString());
                 commitment.Relay(connman);
                 AddMySignersMap(commitment);
             } else {
