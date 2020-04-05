@@ -385,7 +385,6 @@ bool CInfinityNodeLockReward::SendVerifyRequest(const CAddress& addr, COutPoint&
     connman.ReleaseNodeVector(vNodesCopy);
 
     if(!fconnected){
-        // use random nonce, store it and require node to reply with correct one later
         CNode* pnode = connman.OpenNetworkConnection(add, false, nullptr, NULL, false, false, false, true);
         if(pnode == NULL) {
             LogPrintf("CInfinityNodeLockReward::SendVerifyRequest -- can't connect to node to verify it, addr=%s\n", addr.ToString());
@@ -394,7 +393,7 @@ bool CInfinityNodeLockReward::SendVerifyRequest(const CAddress& addr, COutPoint&
 
         LogPrintf("CInfinityNodeLockReward::SendVerifyRequest -- verifying node by direct connection using nonce %d, addr=%s, Sig1 :%d\n",
                     vrequest.nonce, addr.ToString(), vrequest.vchSig1.size());
-        connman.PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::INFVERIFY, vrequest));
+        connman.PushMessage(pnode, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::INFVERIFY, vrequest));
     }
 
     return true;
