@@ -237,7 +237,7 @@ obj/build.h: FORCE
 	  "$(abs_top_srcdir)"
 libsin_util_a-clientversion.$(OBJEXT): obj/build.h
 
-# server: shared between sind and bitcoin-qt
+# server: shared between sind and sin-qt
 libsin_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 libsin_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libsin_server_a_SOURCES = \
