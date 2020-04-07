@@ -377,7 +377,8 @@ bool CInfinityNodeLockReward::SendVerifyRequest(const CAddress& addr, COutPoint&
     {
         if (pnode->addr.ToStringIP() == add.ToStringIP()){
             fconnected = true;
-            LogPrintf("CInfinityNodeLockReward::SendVerifyRequest -- verifying node using nonce %d addr=%s\n", vrequest.nonce, addr.ToString());
+            LogPrintf("CInfinityNodeLockReward::SendVerifyRequest -- verifying node by direct connection nVersion: %d, using nonce %d, addr=%s, Sig1 :%d\n",
+                    pnode->GetSendVersion(), vrequest.nonce, addr.ToString(), vrequest.vchSig1.size());
             connman.PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::INFVERIFY, vrequest));
         }
     }
@@ -390,10 +391,10 @@ bool CInfinityNodeLockReward::SendVerifyRequest(const CAddress& addr, COutPoint&
             LogPrintf("CInfinityNodeLockReward::SendVerifyRequest -- can't connect to node to verify it, addr=%s\n", addr.ToString());
             return false;
         }
-
-        LogPrintf("CInfinityNodeLockReward::SendVerifyRequest -- verifying node by direct connection using nonce %d, addr=%s, Sig1 :%d\n",
-                    vrequest.nonce, addr.ToString(), vrequest.vchSig1.size());
-        connman.PushMessage(pnode, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::INFVERIFY, vrequest));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+        LogPrintf("CInfinityNodeLockReward::SendVerifyRequest -- verifying node by direct connection nVersion: %d, using nonce %d, addr=%s, Sig1 :%d\n",
+                    pnode->GetSendVersion(), vrequest.nonce, addr.ToString(), vrequest.vchSig1.size());
+        connman.PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::INFVERIFY, vrequest));
     }
 
     return true;
@@ -628,9 +629,39 @@ bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
     return true;
 }
 
+void CInfinityNodeLockReward::ProcessDirectMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman)
+{
+    if(fLiteMode  || !fInfinityNode) return;
+
+    if (strCommand == NetMsgType::INFVERIFY) {
+        CVerifyRequest vrequest;
+        vRecv >> vrequest;
+        LogPrintf("CInfinityNodeLockReward::ProcessDirectMessage -- new VerifyRequest from %d, Sig1: %d, Sig2: %d, hash: %s\n",
+                     pfrom->GetId(), vrequest.vchSig1.size(), vrequest.vchSig2.size(), vrequest.GetHash().ToString());
+        pfrom->setAskFor.erase(vrequest.GetHash());
+        {
+            LOCK(cs);
+            if(vrequest.vchSig1.size() > 0 &&  vrequest.vchSig2.size() == 0) {
+                LogPrintf("CInfinityNodeLockReward::ProcessDirectMessage -- VerifyRequest: I am candidate. Reply the verify from: %d, hash: %s\n",
+                          pfrom->GetId(), vrequest.GetHash().ToString());
+                SendVerifyReply(pfrom, vrequest, connman);
+            } else if(vrequest.vchSig1.size() > 0 &&  vrequest.vchSig2.size() > 0) {
+                LogPrintf("CInfinityNodeLockReward::ProcessDirectMessage -- VerifyRequest: I am TopNode. Receive a reply from candidate %d, hash: %s\n",
+                          pfrom->GetId(), vrequest.GetHash().ToString());
+                if(CheckVerifyReply(pfrom, vrequest, connman)){
+                    LogPrintf("CInfinityNodeLockReward::ProcessDirectMessage -- Candidate is valid. Broadcast the my Rpubkey for Musig and disconnect the direct connect to candidata\n");
+                }else{
+                    LogPrintf("CInfinityNodeLockReward::ProcessDirectMessage -- Candidate is NOT valid.\n");
+                }
+            }
+            return;
+        }
+    }
+}
+
 void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman)
 {
-    if(fLiteMode) return; // disable all SIN specific functionality
+    if(fLiteMode  || !fInfinityNode) return; // disable all SIN specific functionality
     if (strCommand == NetMsgType::INFLOCKREWARDINIT) {
         CLockRewardRequest lockReq;
         vRecv >> lockReq;
@@ -649,29 +680,6 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
                 if(!VerifyLockRewardCandidate(lockReq, connman)){
                     LogPrintf("CInfinityNodeLockReward::ProcessMessage -- VerifyLockRewardCandidate at IP is false.\n");
                     return;
-                }
-            }
-            return;
-        }
-    } else if (strCommand == NetMsgType::INFVERIFY) {
-        CVerifyRequest vrequest;
-        vRecv >> vrequest;
-        LogPrintf("CInfinityNodeLockReward::ProcessMessage -- new VerifyRequest from %d, Sig1: %d, Sig2: %d, hash: %s\n",
-                     pfrom->GetId(), vrequest.vchSig1.size(), vrequest.vchSig2.size(), vrequest.GetHash().ToString());
-        pfrom->setAskFor.erase(vrequest.GetHash());
-        {
-            LOCK(cs);
-            if(vrequest.vchSig1.size() > 0 &&  vrequest.vchSig2.size() == 0) {
-                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- VerifyRequest: I am candidate. Reply the verify from: %d, hash: %s\n",
-                          pfrom->GetId(), vrequest.GetHash().ToString());
-                SendVerifyReply(pfrom, vrequest, connman);
-            } else if(vrequest.vchSig1.size() > 0 &&  vrequest.vchSig2.size() > 0) {
-                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- VerifyRequest: I am TopNode. Receive a reply from candidate %d, hash: %s\n",
-                          pfrom->GetId(), vrequest.GetHash().ToString());
-                if(CheckVerifyReply(pfrom, vrequest, connman)){
-                    LogPrintf("CInfinityNodeLockReward::ProcessMessage -- Candidate is valid. Broadcast the my Rpubkey for Musig and disconnect the direct connect to candidata\n");
-                }else{
-                    LogPrintf("CInfinityNodeLockReward::ProcessMessage -- Candidate is NOT valid.\n");
                 }
             }
             return;

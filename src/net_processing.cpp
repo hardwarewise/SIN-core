@@ -1800,7 +1800,17 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         }
     }
 
-    if (strCommand == NetMsgType::REJECT)
+    //SIN exception
+    if (strCommand ==  NetMsgType::INFVERIFY)
+    {
+        //do nothing if i am in LiteMode or not InfinityNode
+        if(fLiteMode || !fInfinityNode) return true;
+
+        inflockreward.ProcessDirectMessage(pfrom, strCommand, vRecv, *connman);
+    }
+    //
+
+    else if (strCommand == NetMsgType::REJECT)
     {
         if (LogAcceptCategory(BCLog::NET)) {
             try {
