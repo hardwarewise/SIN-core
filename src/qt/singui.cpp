@@ -340,6 +340,17 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
     ///end Exhange, Resources and Web Links
 
 
+    ////Governance and I.D.S. Menu
+
+    connect(GovernanceMenu1, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks1_slot1()));
+    connect(GovernanceMenu2, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks1_slot2()));
+        
+    connect(IDSMenu1, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks2_slot1()));
+    connect(IDSMenu2, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks2_slot2()));
+    connect(IDSMenu3, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks2_slot3()));
+
+
+
 
     modalOverlay = new ModalOverlay(this->centralWidget());
 #ifdef ENABLE_WALLET
@@ -612,9 +623,17 @@ void BitcoinGUI::createActions()
     ResourcesWebsite10 = new QAction(QIcon(":/icons/info"), tr("&Social Media Channels"), this);
 
 
+//end Resources Web Links
 
-
-//end Exchange and Web Links
+/// Governance and I.D.S. Menu
+	GovernanceMenu1 = new QAction(QIcon(":/icons/info"), tr("&Make a proposal"), this);
+    GovernanceMenu2 = new QAction(QIcon(":/icons/info"), tr("&Cast a Vote"), this);
+    
+    
+    IDSMenu1 = new QAction(QIcon(":/icons/info"), tr("&Send Documents"), this);
+    IDSMenu2 = new QAction(QIcon(":/icons/info"), tr("&Receive Documents"), this);
+    IDSMenu3 = new QAction(QIcon(":/icons/info"), tr("&SIN Messenger"), this);
+///
 
 #ifdef ENABLE_WALLET
     if(walletFrame)
@@ -668,6 +687,28 @@ void BitcoinGUI::createMenuBar()
     file->addAction(quitAction);
 
    
+   //start Governance Menu
+
+    if (walletFrame) {
+        QMenu* hyperlinks1 = appMenuBar->addMenu(tr("&Governance"));
+        hyperlinks1->addAction(GovernanceMenu1);
+        hyperlinks1->addAction(GovernanceMenu2);
+        
+        
+    }
+    //end Governance Menu
+
+    //start I.D.S. Menu
+
+    if (walletFrame) {
+        QMenu* hyperlinks2 = appMenuBar->addMenu(tr("&I.D.S."));
+        hyperlinks2->addAction(IDSMenu1);
+        hyperlinks2->addAction(IDSMenu2);
+        hyperlinks2->addAction(IDSMenu3);
+        
+        
+    }
+    //end I.D.S. Menu
 
     
 
@@ -995,9 +1036,19 @@ void BitcoinGUI::createTrayIconMenu()
     trayIconMenu->addAction(ResourcesWebsite7);
     trayIconMenu->addAction(ResourcesWebsite8);
 
-
 //end Exchange and Web Links
 
+
+//start Governance and I.D.S. Menu
+
+    trayIconMenu->addAction(GovernanceMenu1);
+    trayIconMenu->addAction(GovernanceMenu2);
+    
+    trayIconMenu->addAction(IDSMenu1);
+    trayIconMenu->addAction(IDSMenu2);
+    trayIconMenu->addAction(IDSMenu3);
+
+//end Governance and I.D.S. Menu
 
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
