@@ -20,6 +20,28 @@
 
 #define NEVER 2000000000
 
+//Useful for devnets
+
+bool CheckProof(uint256 hash, unsigned int nBits)
+{
+    bool fNegative;
+    bool fOverflow;
+    arith_uint256 bnTarget;
+
+
+    bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
+
+    // Check range
+    if (fNegative || bnTarget == 0 || fOverflow)
+        return false; //error("CheckProofOfWork() : nBits below minimum work");
+
+    // Check proof of work matches claimed amount
+    if (UintToArith256(hash) > bnTarget)
+        return false; //error("CheckProofOfWork() : hash doesn't match nBits");
+
+    return true;
+}
+
 static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
     CMutableTransaction txNew;
@@ -523,10 +545,10 @@ public:
         nDefaultPort = 18444;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1296688602, 2, 0x207fffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1586274218, 3, 0x207fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        // assert(consensus.hashGenesisBlock == uint256S("0000000000000000000000000000000000000000000000000000000000000000"));
-        // assert(genesis.hashMerkleRoot == uint256S("0000000000000000000000000000000000000000000000000000000000000000"));
+        assert(consensus.hashGenesisBlock == uint256S("0x488789b09f6cf281a39947ec3b5a7cc9d6e27f93444a2e384969b95e2b324e2b"));
+        assert(genesis.hashMerkleRoot == uint256S("0x2fa6ca3a7c3115918d274574d4016a660e9d9dec86ea984d8815b68e956bb24a"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.

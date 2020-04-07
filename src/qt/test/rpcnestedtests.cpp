@@ -38,8 +38,9 @@ void RPCNestedTests::rpcNestedTests()
     // could be moved to a more generic place when we add more tests on QT level
     tableRPC.appendCommand("rpcNestedTest", &vRPCCommands[0]);
     //mempool.setSanityCheck(1.0);
-
-    LogInstance().DisconnectTestLogger(); // Already started by the common test setup, so stop it to avoid interference
+    
+    ECC_Stop(); // Already started by the common test setup, so stop it to avoid interference
+    LogInstance().DisconnectTestLogger();
     TestingSetup test;
 
     SetRPCWarmupFinished();
