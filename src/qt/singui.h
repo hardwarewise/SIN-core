@@ -155,6 +155,17 @@ private:
     QAction* ResourcesWebsite9;
     QAction* ResourcesWebsite10;
 /// end Resources Web Links
+
+////start Governance and I.D.S. Menu
+
+    QAction* GovernanceMenu1;
+    QAction* GovernanceMenu2;
+    
+    QAction* IDSMenu1;
+    QAction* IDSMenu2;
+    QAction* IDSMenu3;
+////end Governance and I.D.S. Menu
+
     QAction *showSpecsHelpAction;
     
     QLabel *m_wallet_selector_label = nullptr;
