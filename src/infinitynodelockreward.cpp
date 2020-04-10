@@ -601,6 +601,10 @@ bool CInfinityNodeLockReward::FindSignersGroup(int nSigners)
 bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
 {
     if(fLiteMode || !fInfinityNode) return false;
+    //DIN must be built before begin the process
+    if(infnodeman.getMapStatus() == false) return false;
+    //mypeer must have status STARTED
+    if(infinitynodePeer.nState != INFINITYNODE_PEER_STARTED) return false;
 
     //step 0.1: Check if this InfinitynodePeer is a candidate at nBlockHeight
     CInfinitynode infRet;
@@ -662,8 +666,6 @@ void CInfinityNodeLockReward::ProcessDirectMessage(CNode* pfrom, const std::stri
 void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman)
 {
     if(fLiteMode  || !fInfinityNode) return; // disable all SIN specific functionality
-
-    if(infnodeman.getMapStatus() == false) return;
 
     if (strCommand == NetMsgType::INFLOCKREWARDINIT) {
         CLockRewardRequest lockReq;
