@@ -27,8 +27,9 @@ private:
 
     // critical section to protect the inner data structures
     mutable CCriticalSection cs;
-    // Keep track of current block height
+    // Keep track of current block height and first download block
     int nCachedBlockHeight;
+    bool fMapInfinitynodeUpdated = false;
 
     //make sure that this value is sup than chain reorg limit. After this depth, situation of MAP is matured
     static const int INF_MATURED_LIMIT = 55;
@@ -92,6 +93,8 @@ public:
     }
 
     std::string ToString() const;
+
+    bool getMapStatus(){LOCK(cs);  return fMapInfinitynodeUpdated;}
 
     bool Add(CInfinitynode &inf);
     bool AddUpdateLastPaid(CScript scriptPubKey, int nHeightLastPaid);

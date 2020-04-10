@@ -511,11 +511,16 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
     nLastScanHeight = nBlockHeight - INF_MATURED_LIMIT;
     updateLastPaid();
 
+    fMapInfinitynodeUpdated = true;
+
     CFlatDB<CInfinitynodeMan> flatdb5("infinitynode.dat", "magicInfinityNodeCache");
     flatdb5.Dump(infnodeman);
 
     CFlatDB<CInfinitynodersv> flatdb6("infinitynodersv.dat", "magicInfinityRSV");
     flatdb6.Dump(infnodersv);
+
+    CFlatDB<CInfinitynodeMeta> flatdb7("infinitynodemeta.dat", "magicInfinityMeta");
+    flatdb7.Dump(infnodemeta);
 
     LogPrintf("CInfinitynodeMan::buildInfinitynodeList -- list infinity node was built from blockchain at Height: %s\n", nBlockHeight);
     return true;

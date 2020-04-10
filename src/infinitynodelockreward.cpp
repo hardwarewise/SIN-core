@@ -662,6 +662,9 @@ void CInfinityNodeLockReward::ProcessDirectMessage(CNode* pfrom, const std::stri
 void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman)
 {
     if(fLiteMode  || !fInfinityNode) return; // disable all SIN specific functionality
+
+    if(infnodeman.getMapStatus() == false) return;
+
     if (strCommand == NetMsgType::INFLOCKREWARDINIT) {
         CLockRewardRequest lockReq;
         vRecv >> lockReq;
