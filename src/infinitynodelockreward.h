@@ -190,7 +190,7 @@ public:
     //process consensus request message
     bool getCkeyForRequest(uint256 nRequest);
     bool CheckLockRewardRequest(CNode* pfrom, CLockRewardRequest& lockRewardRequestRet, CConnman& connman, int nBlockHeight);
-    bool VerifyLockRewardCandidate(CLockRewardRequest& lockRewardRequestRet, CConnman& connman);
+    bool VerifyMyPeerAndSendVerifyRequest(CNode* pfrom, CLockRewardRequest& lockRewardRequestRet, CConnman& connman);
 
     //Verify node at IP
     bool SendVerifyRequest(const CAddress& addr, COutPoint& myPeerBurnTx, CLockRewardRequest& lockRewardRequestRet, CConnman& connman);

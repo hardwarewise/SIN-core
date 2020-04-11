@@ -121,6 +121,7 @@ public:
         consensus.nInfinityNodeCallLockRewardDeepth=50;
         consensus.nInfinityNodeCallLockRewardLoop=10; //in number of blocks
         consensus.nInfinityNodeLockRewardTop=16; //in number
+        consensus.nInfinityNodeLockRewardSINType=10; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440 * 5; // 1 common year
@@ -262,6 +263,7 @@ public:
         consensus.nInfinityNodeCallLockRewardDeepth=5;
         consensus.nInfinityNodeCallLockRewardLoop=2; //in number of blocks
         consensus.nInfinityNodeLockRewardTop=5; //in number
+        consensus.nInfinityNodeLockRewardSINType=1; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
@@ -389,6 +391,7 @@ public:
         consensus.nInfinityNodeCallLockRewardDeepth=5;
         consensus.nInfinityNodeCallLockRewardLoop=2; //in number of blocks
         consensus.nInfinityNodeLockRewardTop=5; //in number
+        consensus.nInfinityNodeLockRewardSINType=1; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
@@ -506,6 +509,7 @@ public:
         consensus.nInfinityNodeCallLockRewardDeepth=5;
         consensus.nInfinityNodeCallLockRewardLoop=2; //in number of blocks
         consensus.nInfinityNodeLockRewardTop=5; //in number
+        consensus.nInfinityNodeLockRewardSINType=1; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         consensus.BIP16Exception = uint256();
