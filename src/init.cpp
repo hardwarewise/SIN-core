@@ -1841,7 +1841,7 @@ bool AppInitMain()
         if(!strInfinityNodePrivKey.empty()) {
             if(!CMessageSigner::GetKeysFromSecret(strInfinityNodePrivKey, infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode))
                 return InitError(_("Invalid masternodeprivkey. Please see documentation."));
-            LogPrintf("  pubKeyInfinitynode: %s\n",HexStr(infinitynodePeer.pubKeyInfinitynode));
+            LogPrintf("  pubKeyInfinitynode: %s\n", infinitynodePeer.pubKeyInfinitynode.GetID().ToString());
             infinitynodePeer.ManageState(connman);
         } else {
             return InitError(_("You must specify a infinitynodeprivkey in the configuration. Please see documentation for help."));

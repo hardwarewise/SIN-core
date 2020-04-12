@@ -191,6 +191,7 @@ bool CInfinityNodeLockReward::AddLockRewardRequest(const CLockRewardRequest& loc
         //track my last request
         currentLockRequestHash = lockRewardRequest.GetHash();
         nFutureRewardHeight = lockRewardRequest.nRewardHeight;
+        nGroupSigners = 0;
     } else if (lockRewardRequest.nLoop > 0){
         //new request from candidate, so remove old requrest
         RemoveLockRewardRequest(lockRewardRequest);
@@ -200,6 +201,7 @@ bool CInfinityNodeLockReward::AddLockRewardRequest(const CLockRewardRequest& loc
         //track my last request
         currentLockRequestHash = lockRewardRequest.GetHash();
         nFutureRewardHeight = lockRewardRequest.nRewardHeight;
+        nGroupSigners = 0;
     }
     return true;
 }
@@ -617,13 +619,33 @@ void CInfinityNodeLockReward::AddMySignersMap(const CLockRewardCommitment& commi
  * read commitment map and myLockRequest, if there is enough commitment was sent
  * => broadcast it
  */
-bool CInfinityNodeLockReward::FindSignersGroup(int nSigners)
+bool CInfinityNodeLockReward::FindAndSendSignersGroup()
 {
     if(fLiteMode || !fInfinityNode) return false;
 
     AssertLockHeld(cs);
 
-    return true;
+    int loop = Params().GetConsensus().nInfinityNodeCallLockRewardDeepth / Params().GetConsensus().nInfinityNodeCallLockRewardLoop;
+
+    for (int i=0; i <= loop; i++)
+    {
+        if(i >=1 && mapSigners.size() >= Params().GetConsensus().nInfinityNodeCallLockRewardLoop * i && nGroupSigners < i){
+            std::vector<COutPoint> signers;
+            for(int j=Params().GetConsensus().nInfinityNodeCallLockRewardLoop * (i - 1); j < Params().GetConsensus().nInfinityNodeCallLockRewardLoop * i; j++){
+                signers.push_back(mapSigners[currentLockRequestHash].at(j));
+            }
+
+            if(signers.size() == Params().GetConsensus().nInfinityNodeCallLockRewardLoop){
+                nGroupSigners = i;//track signer group sent
+                int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType;
+                std::string signerIndex = infnodeman.getVectorNodeScoreAtHeight(signers, nSINtypeCanLockReward, mapLockRewardRequest[currentLockRequestHash].nRewardHeight);
+                LogPrintf("CInfinityNodeLockReward::FindAndSendSignersGroup -- send this group: %d, signers: %s\n", nGroupSigners, signerIndex);
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 /*

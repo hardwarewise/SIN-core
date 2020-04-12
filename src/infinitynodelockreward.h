@@ -161,9 +161,10 @@ private:
     std::map<uint256, std::vector<COutPoint>> mapSigners; //list of signers for my request only
     // Keep track of current block height
     int nCachedBlockHeight;
-    // Keep track my current LockRequestHash
+    // Keep track my current LockRequestHash and all related informations
     int nFutureRewardHeight;
     uint256 currentLockRequestHash;
+    int nGroupSigners; //number of group signer found for currentLockRequest
 
 public:
 
@@ -205,7 +206,7 @@ public:
 
     //Musig
     void AddMySignersMap(const CLockRewardCommitment& commitment);
-    bool FindSignersGroup(int nSigners);
+    bool FindAndSendSignersGroup();
 
     //call in UpdatedBlockTip
     bool ProcessBlock(int nBlockHeight, CConnman& connman);

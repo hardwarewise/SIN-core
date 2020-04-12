@@ -15,9 +15,9 @@ CInfinitynodePeer infinitynodePeer;
 
 void CInfinitynodePeer::ManageState(CConnman& connman)
 {
-    LogPrint(BCLog::MASTERNODE, "CActiveMasternode::ManageState -- Start\n");
-    if(!fMasterNode) {
-        LogPrint(BCLog::MASTERNODE, "CActiveMasternode::ManageState -- Not a masternode, returning\n");
+    LogPrintf("CInfinitynodePeer::ManageState -- Start\n");
+    if(!fInfinityNode) {
+        LogPrintf("CInfinitynodePeer::ManageState -- Not a masternode, returning\n");
         return;
     }
 

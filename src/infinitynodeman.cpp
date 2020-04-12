@@ -900,7 +900,7 @@ bool CInfinitynodeMan::getNodeScoreAtHeight(const COutPoint& outpoint, int nSinT
     }
 
     score_pair_vec_t vecScores;
-    /*TODO: change to SINtype 10 can lock*/
+
     if (!getScoreVector(nBlockHash, nSinType, nBlockHeight, vecScores))
         return false;
 
@@ -914,6 +914,41 @@ bool CInfinitynodeMan::getNodeScoreAtHeight(const COutPoint& outpoint, int nSinT
     }
 
     return false;
+}
+
+std::string CInfinitynodeMan::getVectorNodeScoreAtHeight(const std::vector<COutPoint>  &vOutpoint, int nSinType, int nBlockHeight)
+{
+    std::string ret="";
+
+    LOCK(cs);
+
+    uint256 nBlockHash = uint256();
+    if (!GetBlockHash(nBlockHash, nBlockHeight)) {
+        LogPrintf("CMasternodeMan::%s -- ERROR: GetBlockHash() failed at nBlockHeight %d\n", __func__, nBlockHeight);
+        return ret;
+    }
+
+    score_pair_vec_t vecScores;
+
+    if (!getScoreVector(nBlockHash, nSinType, nBlockHeight, vecScores))
+        return ret;
+
+    std::ostringstream streamInfo;
+    for (const auto &outpoint : vOutpoint)
+    {
+        int nRank = 0;
+        for (auto& scorePair : vecScores) {
+            nRank++;
+            if(scorePair.second->vinBurnFund.prevout == outpoint)
+            {
+                streamInfo << nRank << ";";
+                break;
+            }
+        }
+    }
+
+    ret = streamInfo.str();
+    return ret;
 }
 
 void CInfinitynodeMan::UpdatedBlockTip(const CBlockIndex *pindex)
