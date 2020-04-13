@@ -122,7 +122,7 @@ public:
     CPubKey pubkeyR;
 
     CLockRewardCommitment();
-    CLockRewardCommitment(uint256 nRequest, CKey key);
+    CLockRewardCommitment(uint256 nRequest, COutPoint myPeerBurnTxIn, CKey key);
 
     ADD_SERIALIZE_METHODS;
 

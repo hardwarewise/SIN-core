@@ -112,7 +112,8 @@ void CLockRewardRequest::Relay(CConnman& connman)
 CLockRewardCommitment::CLockRewardCommitment()
 {}
 
-CLockRewardCommitment::CLockRewardCommitment(uint256 nRequest, CKey key){
+CLockRewardCommitment::CLockRewardCommitment(uint256 nRequest, COutPoint myPeerBurnTxIn, CKey key){
+    vin=(CTxIn(myPeerBurnTxIn));
     random = key;
     pubkeyR = key.GetPubKey();
     nHashRequest = nRequest;
@@ -575,7 +576,7 @@ bool CInfinityNodeLockReward::SendCommitment(const uint256& reqHash, CConnman& c
     CKey secret;
     secret.MakeNewKey(true);
 
-    CLockRewardCommitment commitment(reqHash, secret);
+    CLockRewardCommitment commitment(reqHash, infinitynodePeer.burntx, secret);
     if(commitment.Sign(infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode)) {
         if(AddCommitment(commitment)){
             LogPrintf("CInfinityNodeLockReward::SendCommitment -- Send my commitment %s\n", commitment.GetHash().ToString());
@@ -599,12 +600,15 @@ void CInfinityNodeLockReward::AddMySignersMap(const CLockRewardCommitment& commi
 
     auto it = mapSigners.find(currentLockRequestHash);
     if(it == mapSigners.end()){
-        LogPrintf("CInfinityNodeLockReward::AddMySignersMap -- add commitment to my signer mapp: %s\n", commitment.GetHash().ToString());
+        LogPrintf("CInfinityNodeLockReward::AddMySignersMap -- add commitment to my signer mapp: %s\n", commitment.vin.prevout.ToStringShort());
         mapSigners[currentLockRequestHash].push_back(commitment.vin.prevout);
     } else {
         bool found=false;
         for (auto& v : it->second){
-            if(v == commitment.vin.prevout){found = true;}
+            if(v == commitment.vin.prevout){
+                found = true;
+                LogPrintf("CInfinityNodeLockReward::AddMySignersMap -- commitment from same signer: %s\n", commitment.vin.prevout.ToStringShort());
+            }
         }
         if(!found){
             LogPrintf("CInfinityNodeLockReward::AddMySignersMap -- update commitment to my signer mapp: %s\n", commitment.GetHash().ToString());
@@ -754,8 +758,8 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
                 return;
             }
             if(AddCommitment(commitment)){
-                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- relay Commitment. Remind nFutureRewardHeight: %d, LockRequest: %s\n",
-                           nFutureRewardHeight, currentLockRequestHash.ToString());
+                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- relay Commitment for LockRequest %s. Remind nFutureRewardHeight: %d, LockRequest: %s\n",
+                           commitment.nHashRequest.ToString(), nFutureRewardHeight, currentLockRequestHash.ToString());
                 commitment.Relay(connman);
                 AddMySignersMap(commitment);
             } else {
