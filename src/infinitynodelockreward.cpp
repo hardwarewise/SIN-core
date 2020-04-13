@@ -600,8 +600,9 @@ void CInfinityNodeLockReward::AddMySignersMap(const CLockRewardCommitment& commi
 
     auto it = mapSigners.find(currentLockRequestHash);
     if(it == mapSigners.end()){
-        LogPrintf("CInfinityNodeLockReward::AddMySignersMap -- add commitment to my signer mapp: %s\n", commitment.vin.prevout.ToStringShort());
         mapSigners[currentLockRequestHash].push_back(commitment.vin.prevout);
+        LogPrintf("CInfinityNodeLockReward::AddMySignersMap -- add commitment to my signer mapp (%d): %s\n",
+                   mapSigners[currentLockRequestHash].size(),commitment.vin.prevout.ToStringShort());
     } else {
         bool found=false;
         for (auto& v : it->second){
@@ -762,6 +763,7 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
                            commitment.nHashRequest.ToString(), nFutureRewardHeight, currentLockRequestHash.ToString());
                 commitment.Relay(connman);
                 AddMySignersMap(commitment);
+                FindAndSendSignersGroup();
             } else {
                 LogPrintf("CInfinityNodeLockReward::ProcessMessage -- Cannot relay commitment in network\n");
             }
