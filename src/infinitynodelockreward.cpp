@@ -189,20 +189,10 @@ bool CInfinityNodeLockReward::AddLockRewardRequest(const CLockRewardRequest& loc
     if(mapLockRewardRequest.count(lockRewardRequest.GetHash())) return false;
     if(lockRewardRequest.nLoop == 0){
         mapLockRewardRequest.insert(make_pair(lockRewardRequest.GetHash(), lockRewardRequest));
-        //track my last request
-        currentLockRequestHash = lockRewardRequest.GetHash();
-        nFutureRewardHeight = lockRewardRequest.nRewardHeight;
-        nGroupSigners = 0;
     } else if (lockRewardRequest.nLoop > 0){
         //new request from candidate, so remove old requrest
         RemoveLockRewardRequest(lockRewardRequest);
         mapLockRewardRequest.insert(make_pair(lockRewardRequest.GetHash(), lockRewardRequest));
-        //remove current SignerMap
-        mapSigners.clear();
-        //track my last request
-        currentLockRequestHash = lockRewardRequest.GetHash();
-        nFutureRewardHeight = lockRewardRequest.nRewardHeight;
-        nGroupSigners = 0;
     }
     return true;
 }
@@ -674,6 +664,10 @@ bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
     int nRewardHeight = infnodeman.isPossibleForLockReward(infRet.getCollateralAddress());
     if(nRewardHeight == 0 || (nRewardHeight < (nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardLoop))){
         LogPrintf("CInfinityNodeLockReward::ProcessBlock -- Try to LockReward false at height %d\n", nBlockHeight);
+        mapSigners.clear();
+        currentLockRequestHash = uint256();
+        nFutureRewardHeight = 0;
+        nGroupSigners = 0;
         return false;
     }
 
@@ -683,6 +677,12 @@ bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
     if (newRequest.Sign(infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode)) {
         LOCK(cs);
         if (AddLockRewardRequest(newRequest)) {
+            //track my last request
+            mapSigners.clear();
+            currentLockRequestHash = newRequest.GetHash();
+            nFutureRewardHeight = newRequest.nRewardHeight;
+            nGroupSigners = 0;
+            //relay it
             LogPrintf("CInfinityNodeLockReward::ProcessBlock -- relay my LockRequest loop: %d, hash: %s\n", loop, newRequest.GetHash().ToString());
             newRequest.Relay(connman);
             return true;

@@ -260,9 +260,9 @@ public:
         consensus.nInfinityNodeGenesisStatement=110;
         consensus.nInfinityNodeUpdateMeta=5;
         consensus.nInfinityNodeNotificationValue=1;
-        consensus.nInfinityNodeCallLockRewardDeepth=5;
-        consensus.nInfinityNodeCallLockRewardLoop=2; //in number of blocks
-        consensus.nInfinityNodeLockRewardTop=5; //in number
+        consensus.nInfinityNodeCallLockRewardDeepth=12;
+        consensus.nInfinityNodeCallLockRewardLoop=5; //next LR will be in 5 blocks
+        consensus.nInfinityNodeLockRewardTop=20; //top 20 nodes will build Musig in number
         consensus.nInfinityNodeLockRewardSINType=1; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
