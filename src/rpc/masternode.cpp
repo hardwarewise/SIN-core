@@ -821,7 +821,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
                                     && strCommand != "show-lastpaid" && strCommand != "build-stm" && strCommand != "show-stm"
                                     && strCommand != "show-candidate" && strCommand != "show-script" && strCommand != "show-proposal"
                                     && strCommand != "scan-vote" && strCommand != "show-proposals" && strCommand != "keypair"
-                                    && strCommand != "mypeerinfo" && strCommand != "checkkey" && strCommand != "scan-meta"
+                                    && strCommand != "mypeerinfo" && strCommand != "checkkey" && strCommand != "scan-metadata"
                                     && strCommand != "show-metadata"
         ))
             throw std::runtime_error(
@@ -833,12 +833,15 @@ UniValue infinitynode(const JSONRPCRequest& request)
                 "  keypair                     - Generation the compressed key pair\n"
                 "  mypeerinfo                  - Get status of Peer if this node is Infinitynode\n"
                 "  build-list                  - Build list of all infinitynode from block height 165000 to last block\n"
+                "  build-stm                   - Build statement list from genesis parameter\n"
                 "  show-infos                  - Show the list of nodes and last information\n"
                 "  show-lastscan               - Last nHeight when list is updated\n"
                 "  show-lastpaid               - Last paid of all nodes\n"
-                "  build-stm                   - Build statement list from genesis parameter\n"
                 "  show-stm                    - Last statement of each SinType\n"
-                "  show-candidate nHeight      - Last statement of each SinType\n"
+                "  show-metadata               - Show the list of metadata\n"
+                "  show-candidate nHeight      - Show candidata of reward at Height\n"
+                "  scan-vote                   - Build list voted\n"
+                "  scan-metadata               - Build/update list metadata\n"
                 );
 
     UniValue obj(UniValue::VOBJ);
@@ -1051,7 +1054,13 @@ UniValue infinitynode(const JSONRPCRequest& request)
         std::map<std::string, CMetadata>  mapCopy = infnodemeta.GetFullNodeMetadata();
         obj.push_back(Pair("Metadata", (int)mapCopy.size()));
         for (auto& infpair : mapCopy) {
-            obj.push_back(Pair(infpair.first, infpair.second.getMetaPublicKey()));
+            std::ostringstream streamInfo;
+                streamInfo << std::setw(8) <<
+                               infpair.second.getMetaPublicKey() << " " <<
+                               infpair.second.getService().ToString() << " " <<
+                               infpair.second.getMetadataHeight();
+                std::string strInfo = streamInfo.str();
+            obj.push_back(Pair(infpair.first, strInfo));
         }
         return obj;
     }
@@ -1070,7 +1079,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
         return obj;
     }
 
-    if (strCommand == "scan-meta")
+    if (strCommand == "scan-metadata")
     {
         CBlockIndex* pindex = NULL;
         {
@@ -1080,7 +1089,6 @@ UniValue infinitynode(const JSONRPCRequest& request)
 
         bool result = infnodemeta.metaScan(pindex->nHeight);
         obj.push_back(Pair("Result", result));
-        obj.push_back(Pair("Details", infnodemeta.ToString()));
         return obj;
     }
     return NullUniValue;

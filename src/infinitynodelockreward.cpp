@@ -591,7 +591,7 @@ void CInfinityNodeLockReward::AddMySignersMap(const CLockRewardCommitment& commi
     auto it = mapSigners.find(currentLockRequestHash);
     if(it == mapSigners.end()){
         mapSigners[currentLockRequestHash].push_back(commitment.vin.prevout);
-        LogPrintf("CInfinityNodeLockReward::AddMySignersMap -- add commitment to my signer mapp (%d): %s\n",
+        LogPrintf("CInfinityNodeLockReward::AddMySignersMap -- add commitment to my signer map(%d): %s\n",
                    mapSigners[currentLockRequestHash].size(),commitment.vin.prevout.ToStringShort());
     } else {
         bool found=false;
@@ -602,7 +602,8 @@ void CInfinityNodeLockReward::AddMySignersMap(const CLockRewardCommitment& commi
             }
         }
         if(!found){
-            LogPrintf("CInfinityNodeLockReward::AddMySignersMap -- update commitment to my signer mapp: %s\n", commitment.GetHash().ToString());
+            LogPrintf("CInfinityNodeLockReward::AddMySignersMap -- update commitment to my signer map(%d): %s\n",
+                       mapSigners[currentLockRequestHash].size(),commitment.vin.prevout.ToStringShort());
             mapSigners[currentLockRequestHash].push_back(commitment.vin.prevout);
         }
     }
