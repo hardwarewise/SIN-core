@@ -121,6 +121,7 @@ public:
         consensus.nInfinityNodeCallLockRewardDeepth=50;
         consensus.nInfinityNodeCallLockRewardLoop=10; //in number of blocks
         consensus.nInfinityNodeLockRewardTop=16; //in number
+        consensus.nInfinityNodeLockRewardSigners=5; //in number
         consensus.nInfinityNodeLockRewardSINType=10; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
@@ -263,6 +264,7 @@ public:
         consensus.nInfinityNodeCallLockRewardDeepth=12;
         consensus.nInfinityNodeCallLockRewardLoop=5; //next LR will be in 5 blocks
         consensus.nInfinityNodeLockRewardTop=20; //top 20 nodes will build Musig in number
+        consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
         consensus.nInfinityNodeLockRewardSINType=1; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
@@ -391,6 +393,7 @@ public:
         consensus.nInfinityNodeCallLockRewardDeepth=5;
         consensus.nInfinityNodeCallLockRewardLoop=2; //in number of blocks
         consensus.nInfinityNodeLockRewardTop=5; //in number
+        consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
         consensus.nInfinityNodeLockRewardSINType=1; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
@@ -509,6 +512,7 @@ public:
         consensus.nInfinityNodeCallLockRewardDeepth=5;
         consensus.nInfinityNodeCallLockRewardLoop=2; //in number of blocks
         consensus.nInfinityNodeLockRewardTop=5; //in number
+        consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
         consensus.nInfinityNodeLockRewardSINType=1; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 

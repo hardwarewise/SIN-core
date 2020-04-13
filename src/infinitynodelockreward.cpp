@@ -621,17 +621,17 @@ bool CInfinityNodeLockReward::FindAndSendSignersGroup()
 
     AssertLockHeld(cs);
 
-    int loop = Params().GetConsensus().nInfinityNodeCallLockRewardDeepth / Params().GetConsensus().nInfinityNodeCallLockRewardLoop;
+    int loop = Params().GetConsensus().nInfinityNodeLockRewardTop / Params().GetConsensus().nInfinityNodeLockRewardSigners;
 
     for (int i=0; i <= loop; i++)
     {
-        if(i >=1 && mapSigners.size() >= Params().GetConsensus().nInfinityNodeCallLockRewardLoop * i && nGroupSigners < i){
+        if(i >=1 && mapSigners.size() >= Params().GetConsensus().nInfinityNodeLockRewardSigners * i && nGroupSigners < i){
             std::vector<COutPoint> signers;
-            for(int j=Params().GetConsensus().nInfinityNodeCallLockRewardLoop * (i - 1); j < Params().GetConsensus().nInfinityNodeCallLockRewardLoop * i; j++){
+            for(int j=Params().GetConsensus().nInfinityNodeLockRewardSigners * (i - 1); j < Params().GetConsensus().nInfinityNodeLockRewardSigners * i; j++){
                 signers.push_back(mapSigners[currentLockRequestHash].at(j));
             }
 
-            if(signers.size() == Params().GetConsensus().nInfinityNodeCallLockRewardLoop){
+            if(signers.size() == Params().GetConsensus().nInfinityNodeLockRewardSigners){
                 nGroupSigners = i;//track signer group sent
                 int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType;
                 std::string signerIndex = infnodeman.getVectorNodeScoreAtHeight(signers, nSINtypeCanLockReward, mapLockRewardRequest[currentLockRequestHash].nRewardHeight);
