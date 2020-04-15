@@ -147,7 +147,7 @@ public:
     //this function build the map of STM from genesis
     bool deterministicRewardStatement(int nSinType);
     bool deterministicRewardAtHeight(int nBlockHeight, int nSinType, CInfinitynode& infinitynodeRet);
-    std::map<int, CInfinitynode> calculInfinityNodeRank(int nBlockHeight, int nSinType, bool updateList=false);
+    std::map<int, CInfinitynode> calculInfinityNodeRank(int nBlockHeight, int nSinType, bool updateList=false, bool flagExtCall = false);
     void calculAllInfinityNodesRankAtLastStm();
     std::pair<int, int> getLastStatementBySinType(int nSinType);
     std::string getLastStatementString() const;

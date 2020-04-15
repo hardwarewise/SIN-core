@@ -14,6 +14,8 @@ class CLockRewardCommitment;
 
 extern CInfinityNodeLockReward inflockreward;
 
+static const int MIN_INFINITYNODE_PAYMENT_PROTO_VERSION = 250003;
+
 class CLockRewardRequest
 {
 public:
@@ -191,10 +193,9 @@ public:
     //process consensus request message
     bool getCkeyForRequest(uint256 nRequest);
     bool CheckLockRewardRequest(CNode* pfrom, CLockRewardRequest& lockRewardRequestRet, CConnman& connman, int nBlockHeight);
-    bool VerifyMyPeerAndSendVerifyRequest(CNode* pfrom, CLockRewardRequest& lockRewardRequestRet, CConnman& connman);
+    bool CheckMyPeerAndSendVerifyRequest(CNode* pfrom, CLockRewardRequest& lockRewardRequestRet, CConnman& connman);
 
     //Verify node at IP
-    bool SendVerifyRequest(const CAddress& addr, COutPoint& myPeerBurnTx, CLockRewardRequest& lockRewardRequestRet, CConnman& connman);
     bool SendVerifyReply(CNode* pnode, CVerifyRequest& vrequest, CConnman& connman);
     bool CheckVerifyReply(CNode* pnode, CVerifyRequest& vrequest, CConnman& connman);
 

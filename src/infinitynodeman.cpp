@@ -634,9 +634,11 @@ std::string CInfinitynodeMan::getLastStatementString() const
 *
 * called in CheckAndRemove
 */
-std::map<int, CInfinitynode> CInfinitynodeMan::calculInfinityNodeRank(int nBlockHeight, int nSinType, bool updateList)
+std::map<int, CInfinitynode> CInfinitynodeMan::calculInfinityNodeRank(int nBlockHeight, int nSinType, bool updateList, bool flagExtCall)
 {
-    AssertLockHeld(cs);
+    if(!flagExtCall)  AssertLockHeld(cs);
+    else LOCK(cs);
+
     std::vector<std::pair<int, CInfinitynode*> > vecCInfinitynodeHeight;
     std::map<int, CInfinitynode> retMapInfinityNodeRank;
 
