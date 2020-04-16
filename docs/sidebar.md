@@ -15,6 +15,9 @@
 - [Infinity Nodes vs Masternodes](infinity_nodes_vs_masternodes)
 - [Inflation the Curse of Traditional Masternodes](inflation_the_curse_of_traditional_masternodes)
 - [Infinity Nodes Groundbreaking Sinovate Evolved Masternodes](infinity_nodes_groundbreaking_sinovate_evolved_masternodes)
+- **Türkçe**
+- [X25X Pow GPU Madenciliği](X25X-PoW-GPU-Mining-TR)
+- [Infinity Node Kurulum Klavuzu](infinity_node_setup_guide_TR)
 - **Archived**
 - [Stuck block 350094](archive/20200214_stuck_block_350094)
 - **Links**
