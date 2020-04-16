@@ -7,8 +7,8 @@
 * [x] Sinovate yerel cüzdanını indirip yükleyin. [Official Github channel](https://github.com/SINOVATEblockchain/SIN-core/releases/latest)
 * [x] Henüz herhangi bir SIN'iniz yoksa, gerekli Yanma ve / veya Teminat tutarını üzerinde listelediğimiz borsalardan birinden satın alın: [TradeOgre](https://tradeogre.com/exchange/BTC-SIN), [Stex.com](https://app.stex.com/en/basic-trade/pair/BTC/SIN/1D), [Crex24](https://crex24.com/exchange/SIN-BTC), [txbit.io](https://txbit.io/Trade/SIN/BTC/?r=c73), [Coinsbit](https://coinsbit.io/trade/SIN_BTC), [Catex](https://www.catex.io/trading/SIN/ETH).
 * [x] Gerekli miktarı yeni kurulan yerel cüzdana gönderin.
-* [x] Infinity Nodes oluşturmak için iki işleme ihtiyacınız olacaktır: ** “YANMA” ** ve ** “Teminat“ **.
-* [x] Yerel cüzdanda `` Settings, Options, Wallet '' menüsünden `` Enable coin control features '' seçeneğini aktif ederek  Coin Control özelliğini etkinleştirin.
+* [x] Infinity Nodes oluşturmak için iki işleme ihtiyacınız olacaktır: **`YANMA`** ve **`Teminat`**.
+* [x] Yerel cüzdanda ` Settings, Options, Wallet ` menüsünden `Enable coin control features` seçeneğini aktif ederek  Coin Control özelliğini etkinleştirin.
 * [x] Infinity Nodes oluşturma sırasında Yedekleme Adresi olarak kullanılacak farklı bir cüzdandan ikincil bir SIN adresi oluşturun.
 
 **Infinity Nodes** üç çeşittir:
@@ -19,13 +19,13 @@
 | SIN-MID | 500,000 SIN | 10,000 SIN |
 | SIN-BIG | 1,000,000 SIN | 10,000 SIN |
 
-** Yanma ** tutarı “yakılacak” ve artık alım satım için kullanılamayacak olan paraların toplamını temsil eder.
+**Yanma** tutarı “yakılacak” ve artık alım satım için kullanılamayacak olan paraların toplamını temsil eder.
 
-** Teminat ** \ (10.000 SIN \) cüzdanınızın içinde kilitli kalacaktır. Bu paraların kilidini açmak ve taşımak düğümü devre dışı bırakır.
+**Teminat** \ (10.000 SIN \) cüzdanınızın içinde kilitli kalacaktır. Bu paraların kilidini açmak ve taşımak düğümü devre dışı bırakır.
 
 ## II. KURULUMU BAŞLATMA
 
-?> Yerel cüzdanı açtığınızda, ** DAİMA ** tamamen senkronize olmasına izin verin. İlk açtığınızda uzun zaman alacaktır, bu yüzden lütfen sabırlı olun.
+?> Yerel cüzdanı açtığınızda, **DAİMA** tamamen senkronize olmasına izin verin. İlk açtığınızda uzun zaman alacaktır, bu yüzden lütfen sabırlı olun.
 
 ### 1. SIN Yedekleme Adresi oluşturma
 
@@ -92,15 +92,15 @@ Sinovate yerel cüzdanınızı açın ve yeni bir alıcı adresi oluşturun:
 
 * Yeni oluşturulan adresi kopyalayın.
 * Cüzdanın `Send` sekmesine gidin ve adresi `Pay to` alanına yapıştırın.
-* `Amount` alanında, Infinity Node oluşturmak istediğiniz ** Yanma ** miktarını girin \(100,000 / 500,000 / 1,000,000\) – aşağıdaki ekran görüntüsüne bakın.
+* `Amount` alanında, Infinity Node oluşturmak istediğiniz **Yanma** miktarını girin \(100,000 / 500,000 / 1,000,000\) – aşağıdaki ekran görüntüsüne bakın.
 * Miktar tam olmalıdır, ne daha fazla, ne daha az olmamalıdır.
 
 ![Image 02](assets/img/infinity_node_setup_guide/img_02.jpg)
 
 :warning:**ÖNEMLİ:** `Subtract fee from amount` yazan küçük onay kutusunu İŞARETLEMEYİN. Olduğu gibi bırakın.
 
-* ** Transactions ** sekmesini tıklayın ve işlemin ** 2 onay ** almasını bekleyin.
-* Onaylar geldikten sonra ** Send ** sekmesine dönün ve ` OPEN COIN CONTROL ` düğmesine tıklayın.
+* **Transactions** sekmesini tıklayın ve işlemin **2 onay** almasını bekleyin.
+* Onaylar geldikten sonra **Send** sekmesine dönün ve ` OPEN COIN CONTROL ` düğmesine tıklayın.
 * Miktarlar içeren bir liste açılmalıdır. Yanma miktarını karşılayacak miktarı seçin \(Örneğimizde bu 1.000.000 SIN olurdu\). Solundaki küçük onay kutusunu işaretleyerek seçin ve onaylamak için Tamam düğmesini tıklayın. Bu, bir sonraki işlem olan yanma işleminin yalnızca bu kaynaktan yapılmasını sağlayacaktır.
 
 ![Image 03](assets/img/infinity_node_setup_guide/img_03.jpg)
@@ -125,29 +125,29 @@ Sinovate yerel cüzdanınızı açın ve yeni bir alıcı adresi oluşturun:
 
 ![Image 05](assets/img/infinity_node_setup_guide/img_05.jpg)
 
-* İşlem sekmesinden, işlemi çift tıklayarak ** Yanma ** işlem bilgilerini alın. **Transaction ID ve Output Index'ini Not Defteri'ne kopyalayın, daha sonra bu bilgilere ihtiyacınız olacaktır.**
+* İşlem sekmesinden, işlemi çift tıklayarak **Yanma** işlem bilgilerini alın. **Transaction ID ve Output Index'ini Not Defteri'ne kopyalayın, daha sonra bu bilgilere ihtiyacınız olacaktır.**
 
 ![Image 06](assets/img/infinity_node_setup_guide/img_06.jpg)
 
 ### 3. Teminat işlemi
 
-Madeni paraları ulaşılamaz hale getiren Yanma işleminden farklı olarak, ** Teminat İşlemi ** yerel cüzdanınızın içinde kilitli kalacak, ancak tamamen kontrolünüz altında kalacak olan 10.000 SIN madeni para içerir. **
+Madeni paraları ulaşılamaz hale getiren Yanma işleminden farklı olarak, **Teminat İşlemi** yerel cüzdanınızın içinde kilitli kalacak, ancak tamamen kontrolünüz altında kalacak olan 10.000 SIN madeni para içerir.
 
 * Sinovate cüzdanınızdaki `Send` sekmesine gidin ve YANMA işlemi için kullandığınız AYNI ADRES'e tam olarak 10.000 SIN gönderin.
-* Transaction sekmesinden, ** Teminat ** işlem bilgisini işleme çift tıklayarak alın. ** Transaction ID ve Output Index'ini Not Defteri'ne kopyalayın, daha sonra bu bilgilere ihtiyacınız olacaktır. **
+* Transaction sekmesinden, **Teminat** işlem bilgisini işleme çift tıklayarak alın. **Transaction ID ve Output Index'ini Not Defteri'ne kopyalayın, daha sonra bu bilgilere ihtiyacınız olacaktır.**
 
 ![Image 07](assets/img/infinity_node_setup_guide/img_07.jpg)
 
 ### 4. Infinity Node PRIVKEY
 
-* Cüzdan üst menüsünde, önce `Help` ve ardından `Debug Window` ve `Console` seçeneklerini tıklayın. Yeni bir masternode privkey oluşturmak için şu komutu yazın: `masternode genkey`. ** Not Defteri'ne bu özel anahtarı kopyalayın, bu bilgiye daha sonra ihtiyacınız olacak. **
+* Cüzdan üst menüsünde, önce `Help` ve ardından `Debug Window` ve `Console` seçeneklerini tıklayın. Yeni bir masternode privkey oluşturmak için şu komutu yazın: `masternode genkey`. **Not Defteri'ne bu özel anahtarı kopyalayın, bu bilgiye daha sonra ihtiyacınız olacak.**
 
 ![Image 08](assets/img/infinity_node_setup_guide/img_08.jpg)
 
 ### 5. infinitynode.conf dosyasını düzenleme
 
 * Cüzdanın üst menüsünde ` Tools` ve `Open Infinitynode Configuration File` ı tıklayın.
-* Yeni bir satıra, sonraki adımlarda gösterildiği gibi infinitynode yapılandırmasının satırını girin, ** daha önce Not Defteri'nde kopyaladığınız tüm gerekli bilgileri elde edin **
+* Yeni bir satıra, sonraki adımlarda gösterildiği gibi infinitynode yapılandırmasının satırını girin, **daha önce Not Defteri'nde kopyaladığınız tüm gerekli bilgileri elde edin**
 
 **Satır şunlardan oluşur:**
 
@@ -165,11 +165,11 @@ Madeni paraları ulaşılamaz hale getiren Yanma işleminden farklı olarak, ** 
 
 ![Image 09](assets/img/infinity_node_setup_guide/img_09.jpg)
 
-* Dosyayı kaydedin, ardından ** Cüzdanı yeniden başlatın. **
+* Dosyayı kaydedin, ardından **Cüzdanı yeniden başlatın.**
 
 ## III. VPS kurulumu
 
-!> :warning: VPS kurulumundan önce lütfen ** Teminat ** ve ** Yanma ** işlemlerinin ** 15 onay ** olduğunu bekleyin.
+!> :warning: VPS kurulumundan önce lütfen **Teminat** ve **Yanma** işlemlerinin **15 onay** almasını bekleyin.
 
 ### A. İlk Aşama
 
@@ -183,9 +183,9 @@ Madeni paraları ulaşılamaz hale getiren Yanma işleminden farklı olarak, ** 
   ./sin_install_vps_noroot.sh
   ```
 
-* Komut dosyası, güvenlik nedeniyle ** yeni bir kullanıcı adı ** girmenizi ister.
-* Yeni bir kullanıcı adı girmezseniz, varsayılan kullanıcı adı ** sinovate ** olacaktır!
-* Yeni kullanıcı adından sonra, ** yeni bir şifre istenecektir ** \(unutmayacağınız güçlü bir şifre seçin\).
+* Komut dosyası, güvenlik nedeniyle **yeni bir kullanıcı adı** girmenizi ister.
+* Yeni bir kullanıcı adı girmezseniz, varsayılan kullanıcı adı **sinovate** olacaktır!
+* Yeni kullanıcı adından sonra, **yeni bir şifre istenecektir** \(unutmayacağınız güçlü bir şifre seçin\).
 * Kurulum birkaç dakika sürecek, lütfen sabırlı olun!
 
 ![Image 10](assets/img/infinity_node_setup_guide/img_10.jpg)
@@ -221,7 +221,7 @@ bash
 
 ![Image 14](assets/img/infinity_node_setup_guide/img_14.jpg)
 
-* Senkronizasyon işlemini gerçek zamanlı olarak görmek için aşağıdaki komutları girin ve ** MASTERNODE\_SYNC\_FINISHED ** durumunu görene kadar bekleyin. Bu işlem 30 dakika kadar sürebilir, lütfen sabırlı olun!
+* Senkronizasyon işlemini gerçek zamanlı olarak görmek için aşağıdaki komutları girin ve **MASTERNODE\_SYNC\_FINISHED** durumunu görene kadar bekleyin. Bu işlem 30 dakika kadar sürebilir, lütfen sabırlı olun!
 
 ```bash
 # CTRL+C to exit
@@ -231,14 +231,14 @@ watch -n 5 '~/sin-cli getblockcount && ~/sin-cli masternode status && ~/sin-cli 
 
 ![Image 15](assets/img/infinity_node_setup_guide/img_15.jpg)
 
-* Infinity Node senkronizasyon durumunuz ** MASTERNODE\_SYNC\_FINISHED ** olduğunda, yerel cüzdanınızı açın.
+* Infinity Node senkronizasyon durumunuz **MASTERNODE\_SYNC\_FINISHED** olduğunda, yerel cüzdanınızı açın.
 * Infinity sekmesinin `Settings, Options, Wallet` 'da etkinleştirildiğinden ve `Show InfinityNodes Tab` kutucuğunun işaretlendiğinden emin olun.
-* Infinitynodes sekmesine gidin, nodunuzu seçin, ardından ** START ALIAS ** düğmesine tıklayın.
+* Infinitynodes sekmesine gidin, nodunuzu seçin, ardından **START ALIAS** düğmesine tıklayın.
 * Infinitiy Node durumu önce **PRE\_ENABLED**, ardından **ENABLED** olarak birkaç dakika sonra değişmelidir. \(genellikle 10-30 dakika\).
 
 ![Image 16](assets/img/infinity_node_setup_guide/img_16.jpg)
 
-* Ancak, tüm masternode soğuk cüzdanları bazen düğümünüzün üzerindeki küçük ** Not ** 'da belirtildiği gibi sizi yeniden başlatmanıza neden olabilecek yanlış durumları gösterebilir\(s\).
+* Ancak, tüm masternode soğuk cüzdanları bazen düğümünüzün üzerindeki küçük **Not** 'da belirtildiği gibi sizi yeniden başlatmanıza neden olabilecek yanlış durumları gösterebilir\(s\).
 * Bu nedenle, VPS'den Infinity Node durumunu da kontrol edebilirsiniz.
 * VPS ekranınıza aşağıdaki komutu girin, bu durumu görmelisiniz: **Masternode successfully started**
 
