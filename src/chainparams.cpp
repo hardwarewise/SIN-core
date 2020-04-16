@@ -528,7 +528,14 @@ public:
         consensus.fPowNoRetargeting = true;
         consensus.nRuleChangeActivationThreshold = 108;
         consensus.nMinerConfirmationWindow = 144;
-        consensus.devAddressPubKey = "841e6bf56b99a59545da932de2efb23ab93b4f44";
+        consensus.devAddressPubKey = "76a914d63bf3a5822bb2f7ac9ced84ae2c1f319c4253e288ac";
+        consensus.devAddress = "n13iidFw2jiVVoz86ouMqv31x7oEe5V4Wm";
+        consensus.cBurnAddressPubKey = "76a9142be2e66836eda517af05e5b628eb9fedefcd669b88ac";
+        consensus.cBurnAddress = "mjX1AbMEHU14PmHjG2wtSvoydnJ6RxYwC2";
+        consensus.cMetadataAddress = "mueP7L3nMXdshqPEMZ3L5wJumKqhq5dFpm";
+        consensus.cNotifyAddress = "mobk9h9A3QLYKsKw9xWSC4bqYSUsqEwnpk";
+        consensus.cGovernanceAddress = "mgmp6o3V4z3kU83QFbNrdtRKGFS6T9yQyB";
+        strSporkPubKey = "0454E1B43ECCAC17E50402370477455BE34593E272CA9AE0DF04F6F3D423D1366D017822C77990A3D8DD980C60D3692C9B6D7DFD75F683F7056C1E97E82BD94DBE";
 
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 0;
@@ -553,9 +560,9 @@ public:
         nDefaultPort = 18444;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1586274218, 3, 0x207fffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1296688602, 3, 0x207fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x488789b09f6cf281a39947ec3b5a7cc9d6e27f93444a2e384969b95e2b324e2b"));
+        assert(consensus.hashGenesisBlock == uint256S("0x1cf45e8c265c41a6c29e40a285cd635924c7658e2334c19829c3722777cd4823"));
         assert(genesis.hashMerkleRoot == uint256S("0x2fa6ca3a7c3115918d274574d4016a660e9d9dec86ea984d8815b68e956bb24a"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.

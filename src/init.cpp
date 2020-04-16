@@ -1989,7 +1989,7 @@ bool AppInitMain()
     // force UpdatedBlockTip to initialize nCachedBlockHeight for DS, MN payments and budgets
     // but don't call it directly to prevent triggering of other listeners like zmq etc.
     // GetMainSignals().UpdatedBlockTip(chainActive.Tip());
-    pdsNotificationInterface->InitializeCurrentBlockTip();
+    //pdsNotificationInterface->InitializeCurrentBlockTip();
 
     // ********************************************************* Step 11d: start dash-ps-<smth> threads
 
