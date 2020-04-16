@@ -918,34 +918,41 @@ bool CInfinitynodeMan::getNodeScoreAtHeight(const COutPoint& outpoint, int nSinT
     return false;
 }
 
-std::string CInfinitynodeMan::getVectorNodeScoreAtHeight(const std::vector<COutPoint>  &vOutpoint, int nSinType, int nBlockHeight)
+std::string CInfinitynodeMan::getVectorNodeRankAtHeight(const std::vector<COutPoint>  &vOutpoint, int nSinType, int nBlockHeight)
 {
     std::string ret="";
 
     LOCK(cs);
 
-    uint256 nBlockHash = uint256();
-    if (!GetBlockHash(nBlockHash, nBlockHeight)) {
-        LogPrintf("CMasternodeMan::%s -- ERROR: GetBlockHash() failed at nBlockHeight %d\n", __func__, nBlockHeight);
-        return ret;
+    std::vector<std::pair<int, CInfinitynode*> > vecCInfinitynodeHeight;
+    std::map<int, CInfinitynode> retMapInfinityNodeRank;
+
+    for (auto& infpair : mapInfinitynodes) {
+        CInfinitynode inf = infpair.second;
+        //put valid node in vector
+        if (inf.getSINType() == nSinType && inf.getExpireHeight() >= nBlockHeight && inf.getHeight() < nBlockHeight)
+        {
+            vecCInfinitynodeHeight.push_back(std::make_pair(inf.getHeight(), &infpair.second));
+        }
     }
 
-    score_pair_vec_t vecScores;
-
-    if (!getScoreVector(nBlockHash, nSinType, nBlockHeight, vecScores))
-        return ret;
+    // Sort them low to high
+    sort(vecCInfinitynodeHeight.begin(), vecCInfinitynodeHeight.end(), CompareIntValue());
+    //update Rank at nBlockHeight
 
     std::ostringstream streamInfo;
     for (const auto &outpoint : vOutpoint)
     {
-        int nRank = 0;
-        for (auto& scorePair : vecScores) {
-            nRank++;
-            if(scorePair.second->vinBurnFund.prevout == outpoint)
+        LogPrintf("CInfinityNodeLockReward::%s -- find rank for %s\n", __func__, outpoint.ToStringShort());
+        int nRank = 1;
+        for (std::pair<int, CInfinitynode*>& s : vecCInfinitynodeHeight){
+            if(s.second->vinBurnFund.prevout == outpoint)
             {
+                LogPrintf("CInfinityNodeLockReward::%s -- rank: %d\n", __func__, nRank);
                 streamInfo << nRank << ";";
                 break;
             }
+            nRank++;
         }
     }
 

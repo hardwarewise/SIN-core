@@ -623,7 +623,7 @@ bool CInfinityNodeLockReward::FindAndSendSignersGroup()
 
     for (int i=0; i <= loop; i++)
     {
-        if(i >=1 && mapSigners.size() >= Params().GetConsensus().nInfinityNodeLockRewardSigners * i && nGroupSigners < i){
+        if(i >=1 && mapSigners[currentLockRequestHash].size() >= Params().GetConsensus().nInfinityNodeLockRewardSigners * i && nGroupSigners < i){
             std::vector<COutPoint> signers;
             for(int j=Params().GetConsensus().nInfinityNodeLockRewardSigners * (i - 1); j < Params().GetConsensus().nInfinityNodeLockRewardSigners * i; j++){
                 signers.push_back(mapSigners[currentLockRequestHash].at(j));
@@ -632,8 +632,9 @@ bool CInfinityNodeLockReward::FindAndSendSignersGroup()
             if(signers.size() == Params().GetConsensus().nInfinityNodeLockRewardSigners){
                 nGroupSigners = i;//track signer group sent
                 int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType;
-                std::string signerIndex = infnodeman.getVectorNodeScoreAtHeight(signers, nSINtypeCanLockReward, mapLockRewardRequest[currentLockRequestHash].nRewardHeight);
-                LogPrintf("CInfinityNodeLockReward::FindAndSendSignersGroup -- send this group: %d, signers: %s\n", nGroupSigners, signerIndex);
+                std::string signerIndex = infnodeman.getVectorNodeRankAtHeight(signers, nSINtypeCanLockReward, mapLockRewardRequest[currentLockRequestHash].nRewardHeight);
+                LogPrintf("CInfinityNodeLockReward::FindAndSendSignersGroup -- send this group: %d, signers: %s for height: %d\n",
+                          nGroupSigners, signerIndex, mapLockRewardRequest[currentLockRequestHash].nRewardHeight);
                 return true;
             }
         }
@@ -681,7 +682,8 @@ bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
             int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType;
 
             std::map<int, CInfinitynode> mapInfinityNodeRank = infnodeman.calculInfinityNodeRank(nRewardHeight, nSINtypeCanLockReward, false, true);
-            LogPrintf("CInfinityNodeLockReward::ProcessBlock -- Try connect to %d TopNode. Map rank: %d\n", Params().GetConsensus().nInfinityNodeLockRewardTop, mapInfinityNodeRank.size());
+            LogPrintf("CInfinityNodeLockReward::ProcessBlock -- Try connect to %d TopNode. Map rank: %d\n",
+                      Params().GetConsensus().nInfinityNodeLockRewardTop, mapInfinityNodeRank.size());
 
             for (std::pair<int, CInfinitynode> s : mapInfinityNodeRank){
                 if(s.first <= Params().GetConsensus().nInfinityNodeLockRewardTop){
