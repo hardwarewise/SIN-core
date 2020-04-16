@@ -39,7 +39,7 @@ Avrupa sunucuları:
 
 [t-rex](https://github.com/trexminer/T-Rex/releases) -a x25x -o stratum+tcp://eupool.sinovate.io:3253 -u <WALLET_ADDRESS>.%COMPUTERNAME% -p c=SIN
 
-Asya stratum:
+Asya sunucuları:
 
 [t-rex](https://github.com/trexminer/T-Rex/releases) -a x25x -o stratum+tcp://asiapool.sinovate.io:3253 -u <WALLET_ADDRESS>.%COMPUTERNAME% -p c=SIN
 
