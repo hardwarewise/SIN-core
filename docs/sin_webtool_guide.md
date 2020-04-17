@@ -1,11 +1,11 @@
-1.  # Features
+# Features
     
 -   Send coin nominative feature
 -   Invoice payment transaction with attached information
 -   Vote E-Governance vote 
 -   New features Coming soon
     
-2.  # Make a Keyfile
+# Make a Keyfile
     
 
 Download the latest version from [https://github.com/SINOVATEblockchain/SINWebTool/releases/](https://github.com/SINOVATEblockchain/SINWebTool/releases/)
@@ -26,7 +26,8 @@ Open your SIN-core wallet to use in Online Mode. Find and copy the address you w
 
 Access the Console tab by following the Help / Debug Window menu.
 If your wallet is encrypted, temporarily disable it by following the steps below.
-  
+
+
 ![](assets/img/sin_webtool_guide/webtool03.png)
 
   
@@ -43,11 +44,13 @@ After these processes, we can proceed to the Key File creation phase.
   
 ![](assets/img/sin_webtool_guide/webtool04.png)
 
+
 **youraddress:** The address we copy and process on the Coin Control window.
 **newpassphrase:** A new password required for operations on SIN WebTool.
 
 
 **Sample:**
+
 
 ![](assets/img/sin_webtool_guide/webtool05.png)
 
@@ -56,6 +59,7 @@ When we run the command, a key file is generated. You can find the key file in t
 
 
 ![](assets/img/sin_webtool_guide/webtool06.png)
+
 
 ![](assets/img/sin_webtool_guide/webtool07.png)
 
@@ -81,27 +85,34 @@ Select the Keyfile file and click on the open button.
 
 When the "Keyfile" is installed successfully, you will receive a message that you have Full Control on SIN WebTool as well as address and balance information on the screen.
 
+
 ![](assets/img/sin_webtool_guide/webtool10.png)
 
   
 
-3.  # Send
+# Send
     
 
 Click the "Send" button on the left menu
+
+
 ![](assets/img/sin_webtool_guide/webtool11.png)
 
   
 
 Select the desired amount from the Coin Control drop-down menu. Or write the amount you want to send to the Amount section and click the "Auto select coins" button. Thus, the amount you want to send will be selected automatically. In the meantime, you should see the message "Coin Control is Updated" at the top right.
 
+
 ![](assets/img/sin_webtool_guide/webtool12.png)
 
   
+
 Then enter the password you provided during the Keyfile creation box in the Passphrase box and click the "Verify Input" button.
 
   
 ![](assets/img/sin_webtool_guide/webtool13.png)
+
+
 
 The "True" message informs us that the transaction was successful.
 
@@ -112,6 +123,7 @@ Now we can enter the address we will send SIN and click the "Create-Sign" button
 ![](assets/img/sin_webtool_guide/webtool14.png)
 
 When the signing is successful, you can complete the sending process with the "Send" button.
+
 
 ![](assets/img/sin_webtool_guide/webtool15.png)
 
@@ -125,12 +137,13 @@ As a result of this process, you will be informed with the message **"Transactio
 
   
 
-4.  # Payment
+# Payment
     
 
 Coming soon...
 
-5.  # R.S.V Vote
+
+# R.S.V Vote
     
 
 With this feature, you can vote on existing voting.
@@ -154,6 +167,7 @@ You will be charged 1 SIN for this voting.
 
   
 
+
 ![](assets/img/sin_webtool_guide/webtool18.png)
 
   
@@ -172,19 +186,26 @@ Enter your password and then click the Create-Sign button.
 
 Once your vote has been submitted successfully, you will be given a Transaction ID.
 
+
+
 ![](assets/img/sin_webtool_guide/webtool21.png)
 
-6.  # Multisig Address
+
+
+# Multisig Address
     
 
 Coming soon...
 
-7.  # Multisign Tx
+
+
+# Multisign Tx
     
 
 Coming soon...
 
-8.  # Proposal
+
+# Proposal
     
 
 Coming soon...
