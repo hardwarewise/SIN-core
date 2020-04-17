@@ -144,7 +144,7 @@ QComboBox { /* Dropdown Menus */
 border-color:#000000;
 border-radius:10px;
 padding: 3px 5px 3px 5px;
-background:#202677;
+background:#00023B;
 min-height:25px;
 color:#ffffff;
 background-color:#00023B;
@@ -176,7 +176,7 @@ border-image: url(':/images/downArrow') 0 0 0 0 stretch stretch;
 QComboBox QListView {
 border:1px solid #000000;
 color:#ffffff;
-background-color:#202677;
+background-color:#00023B;
 padding-right:1px;
 padding-left:1px;
 }
@@ -184,7 +184,7 @@ padding-left:1px;
 QComboBox QAbstractItemView::item { margin:4px; }
 
 QComboBox::item {
-color:#202677;
+color:#00023B;
 }
 
 QComboBox::item:alternate { background:#fff;}
@@ -773,7 +773,7 @@ background-color: #D6DCE5;
 }
 
 QDialog#OptionsDialog QValueComboBox {
-  background-color: #202677;
+  background-color: #00023B;
   min-width:102px;
   font-weight:bold;
   border-color: #000000;
