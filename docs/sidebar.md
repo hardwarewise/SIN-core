@@ -8,6 +8,7 @@
 - [Infinity Node tips](infinity_node_tips)
 - [SUQA Coins Conflict](suqa_conflict)
 - [X25X Pow GPU Mining](X25X-PoW-GPU-Mining)
+- [SIN WebTool](sin_webtool_guide)
 - **Articles**
 - [Decentralized Cloud](decentralized_cloud)
 - [Proof-of-Burn](proof_of_burn)
