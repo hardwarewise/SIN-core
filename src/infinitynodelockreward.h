@@ -152,6 +152,47 @@ public:
     void Relay(CConnman& connman);
 };
 
+class CGroupSigners
+{
+public:
+    CTxIn vin{};//candidate ID
+    uint256 nHashRequest;//LockRewardRequest hash
+    int nGroup;
+    int nonce{};
+    std::string signersId;
+    std::vector<unsigned char> vchSig{};
+
+    CGroupSigners();
+    CGroupSigners(COutPoint myPeerBurnTxIn, uint256 nRequest, int nGroup, std::string signersId);
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(vin);
+        READWRITE(nHashRequest);
+        READWRITE(nGroup);
+        READWRITE(nonce);
+        READWRITE(signersId);
+        READWRITE(vchSig);
+    }
+
+    uint256 GetHash() const
+    {
+        CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
+        ss << vin;
+        ss << nHashRequest;
+        ss << nGroup;
+        ss << nonce;
+        ss << signersId;
+        return ss.GetHash();
+    }
+
+    bool Sign(const CKey& keyInfinitynode, const CPubKey& pubKeyInfinitynode);
+    bool CheckSignature(CPubKey& pubKeyInfinitynode, int &nDos);
+    void Relay(CConnman& connman);
+};
+
 class CInfinityNodeLockReward
 {
 private:
@@ -159,6 +200,7 @@ private:
     mutable CCriticalSection cs;
     std::map<uint256, CLockRewardRequest> mapLockRewardRequest;
     std::map<uint256, CLockRewardCommitment> mapLockRewardCommitment;
+    std::map<uint256, CGroupSigners> mapLockRewardGroupSigners;
 
     std::map<uint256, std::vector<COutPoint>> mapSigners; //list of signers for my request only
     // Keep track of current block height
@@ -207,8 +249,11 @@ public:
 
     //Musig
     void AddMySignersMap(const CLockRewardCommitment& commitment);
-    bool FindAndSendSignersGroup();
+    bool AddGroupSigners(const CGroupSigners& gs);
+    bool FindAndSendSignersGroup(CConnman& connman);
 
+    //Connection
+    void TryConnectToMySigners(int rewardHeight, CConnman& connman);
     //call in UpdatedBlockTip
     bool ProcessBlock(int nBlockHeight, CConnman& connman);
     //call in processing.cpp when node receive INV

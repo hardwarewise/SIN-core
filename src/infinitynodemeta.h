@@ -58,7 +58,7 @@ public:
     int getFlagActiveBackupAddress(){return activeBackupAddress;}
     std::string getMetaID(){return metaID;}
 
-    bool setBackupAddress(int& nActive){activeBackupAddress = nActive;};
+    void setBackupAddress(int& nActive){activeBackupAddress = nActive;};
 };
 
 class CInfinitynodeMeta
