@@ -19,6 +19,7 @@
 - **Türkçe**
 - [X25X Pow GPU Madenciliği](X25X-PoW-GPU-Mining-TR)
 - [Infinity Node Kurulum Klavuzu](infinity_node_setup_guide_TR)
+- [SIN WebTool Klavuzu](sin_webtool_guide_TR)
 - **Archived**
 - [Stuck block 350094](archive/20200214_stuck_block_350094)
 - **Links**
