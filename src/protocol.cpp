@@ -242,7 +242,7 @@ std::string CInv::GetCommand() const
     case MSG_INFCOMMITMENT:            return cmd.append(NetMsgType::INFCOMMITMENT);
     case MSG_INFVERIFY:                return cmd.append(NetMsgType::INFVERIFY);
     case MSG_INFLRMUSIG:               return cmd.append(NetMsgType::INFLRMUSIG);
-    case MSG_INFLRGROUP:               return cmd.append(NetMsgType::INFLRMUSIG);
+    case MSG_INFLRGROUP:               return cmd.append(NetMsgType::INFLRGROUP);
     default:
         throw std::out_of_range(strprintf("CInv::GetCommand(): type=%d unknown type", type));
     }

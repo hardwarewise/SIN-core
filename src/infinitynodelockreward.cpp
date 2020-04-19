@@ -706,12 +706,15 @@ bool CInfinityNodeLockReward::FindAndSendSignersGroup(CConnman& connman)
 
                 if (signerIndex != ""){
                     TryConnectToMySigners(mapLockRewardRequest[currentLockRequestHash].nRewardHeight, connman);
-
                     //step 4.3.1
                     CGroupSigners gSigners(infinitynodePeer.burntx, currentLockRequestHash, nGroupSigners, signerIndex);
-
-                    LogPrintf("CInfinityNodeLockReward::FindAndSendSignersGroup -- relay my GroupSigner: %d, hash: %s\n", nGroupSigners, currentLockRequestHash.ToString());
-                    gSigners.Relay(connman);
+                    if(gSigners.Sign(infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode)) {
+                        if (AddGroupSigners(gSigners)) {
+                            LogPrintf("CInfinityNodeLockReward::FindAndSendSignersGroup -- relay my GroupSigner: %d, hash: %s, LockRequest: %s\n",
+                                      nGroupSigners, gSigners.GetHash().ToString(), currentLockRequestHash.ToString());
+                            gSigners.Relay(connman);
+                        }
+                    }
                 return true;
                 }
             }
@@ -813,22 +816,14 @@ bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
         return false;
     }
 
-    TryConnectToMySigners(nRewardHeight, connman);
-
-    //step 0.3 we know that nRewardHeight >= nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardLoop
+    //step 0.2 we know that nRewardHeight >= nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardLoop
     int loop = (Params().GetConsensus().nInfinityNodeCallLockRewardDeepth / (nRewardHeight - nCachedBlockHeight)) - 1;
     CLockRewardRequest newRequest(nRewardHeight, infRet.getBurntxOutPoint(), infRet.getSINType(), loop);
     if (newRequest.Sign(infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode)) {
         LOCK(cs);
         if (AddLockRewardRequest(newRequest)) {
-
-            //step 0.2 identify all TopNode at nRewardHeight and try make a connection with them ( it is an optimisation )
-            int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType;
-
-            std::map<int, CInfinitynode> mapInfinityNodeRank = infnodeman.calculInfinityNodeRank(nRewardHeight, nSINtypeCanLockReward, false, true);
-            LogPrintf("CInfinityNodeLockReward::ProcessBlock -- Try connect to %d TopNode. Map rank: %d\n",
-                      Params().GetConsensus().nInfinityNodeLockRewardTop, mapInfinityNodeRank.size());
-
+            //step 0.3 identify all TopNode at nRewardHeight and try make a connection with them ( it is an optimisation )
+            TryConnectToMySigners(nRewardHeight, connman);
             //track my last request
             mapSigners.clear();
             currentLockRequestHash = newRequest.GetHash();
@@ -840,7 +835,7 @@ bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
             return true;
         }
     }
-    return true;
+    return false;
 }
 
 void CInfinityNodeLockReward::ProcessDirectMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman)
