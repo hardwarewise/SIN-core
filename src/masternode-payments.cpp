@@ -641,7 +641,7 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransactionRef txNew)
 	}
 	LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- 3 payments in coinbaseTx: %s\n", strPayeesInTx);
 	if ( counterNodePayment == 3 ) {
-		LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- 3 payments are valided\n");
+		LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- 3 payments are validated\n");
 		return true;
 	} else {
 		LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- ERROR: Missing required payment, possible payees: '%s'\n", strPayeesPossible);
