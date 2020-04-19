@@ -605,32 +605,26 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransactionRef txNew)
     if(nMaxSignatures < MNPAYMENTS_SIGNATURES_REQUIRED) return true;
 
 	int counterNodePayment = 0;
-	CScript burnfundScript;
-	burnfundScript << OP_DUP << OP_HASH160 << ParseHex(Params().GetConsensus().cBurnAddressPubKey) << OP_EQUALVERIFY << OP_CHECKSIG;
 
 	int txIndex = 0;
 	for (auto txout : txNew->vout) {
 		txIndex ++;
 		if (3 <= txIndex && txIndex <=5) {
-			if ( txout.scriptPubKey == burnfundScript ) {
-				counterNodePayment ++;
-			} else {
-				for (auto& payee : vecPayees) {
-					CAmount nMasternodePayment = GetMasternodePayment(nBlockHeight, payee.GetSinType());
-					if (payee.GetPayee() == txout.scriptPubKey && (nMasternodePayment == txout.nValue || payee.GetVoteCount() >= (MNPAYMENTS_SIGNATURES_REQUIRED - 1))){
-						LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- Found required payment\n");
-						counterNodePayment ++;
-					}
+			for (auto& payee : vecPayees) {
+				CAmount nMasternodePayment = GetMasternodePayment(nBlockHeight, payee.GetSinType());
+				if (payee.GetPayee() == txout.scriptPubKey && (nMasternodePayment == txout.nValue || payee.GetVoteCount() >= (MNPAYMENTS_SIGNATURES_REQUIRED - 1))){
+					LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- Found required payment\n");
+					counterNodePayment ++;
+				}
 
-					CTxDestination address1;
-					ExtractDestination(payee.GetPayee(), address1);
-					std::string address2 = EncodeDestination(address1);
+				CTxDestination address1;
+				ExtractDestination(payee.GetPayee(), address1);
+				std::string address2 = EncodeDestination(address1);
 
-					if(strPayeesPossible == "") {
-						strPayeesPossible = strprintf("%s(%d)",address2, payee.GetSinType());
-					} else {
-						strPayeesPossible = strprintf("%s,%s(%d)",strPayeesPossible, address2, payee.GetSinType());
-					}
+				if(strPayeesPossible == "") {
+					strPayeesPossible = strprintf("%s(%d)",address2, payee.GetSinType());
+				} else {
+					strPayeesPossible = strprintf("%s,%s(%d)",strPayeesPossible, address2, payee.GetSinType());
 				}
 			}
 			//extraction list 3 payment in Coinbase Tx

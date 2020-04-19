@@ -805,7 +805,7 @@ bool CInfinitynodeMan::deterministicRewardAtHeight(int nBlockHeight, int nSinTyp
         return false;
     }
     if((nBlockHeight < lastStatement) || (rankOfStatement.size() < (nBlockHeight - lastStatement + 1))){
-        LogPrintf("CInfinitynodeMan::deterministicRewardAtHeight -- out of rang at %d\n", lastStatement);
+        LogPrintf("CInfinitynodeMan::deterministicRewardAtHeight -- out of range at %d\n", lastStatement);
         return false;
     }
     infinitynodeRet = rankOfStatement[nBlockHeight - lastStatement + 1];
