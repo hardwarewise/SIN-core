@@ -1,81 +1,6 @@
 # SINOVATE : WHITEPAPER V2 Light Version
 
-Table of Contents
-
-[SINOVATE : WHITEPAPER V2 Light Version  2](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.dninn7gguyrz)
-
-[INTRODUCTION  3](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.ehnoxoxg13fs)
-
-[OUR VIEW  4](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.1gw5q6988g6n)
-
-[2. OUR MISSION  5](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.ii60ef87aptb)
-
-[3. FEATURES  5](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.5mj4rycenidt)
-
-[3.1 NEW X25X ALGORITHM  6](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.7hnllswgtt3e)
-
-[3.2 PROOF OF BURN  7](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.k8ntr86yf3bk)
-
-[3.3 SINOVATE INFINITY NODES  7](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.fe4e7ij0yr5r)
-
-[3.4 INFINITY NODES TIERS & REWARDS DISTRIBUTION  9](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.1sgtiqg0o3cf)
-
-[4. PRODUCTS & SERVICES  10](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.ypza22l2i1lk)
-
-[4.1 IDS PROTOCOL  11](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.chl8bxytxbdr)
-
-[4.1.1 DataStore  11](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.h272aa5plm1y)
-
-[4.1.2 DataSend  11](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.8lafr5jlgwp)
-
-[4.2 PROOF OF INTEGRITY  12](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.jozprbj0inth)
-
-[SINOVATE DOCUMENT VERIFICATION S.D.V](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.5z87pixa6c24).  [12](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.5z87pixa6c24)
-
-[4.3 R.S.V. Revolving Sovereignty Votes  14](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.pr8srsmtcqj7)
-
-[4.4 SIN SYSTEM ECONOMY  15](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.f8lrpz5jz96e)
-
-[4.5 INFINITY NODES SECURITY 17](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.mgvcgh3sm0ri)
-
-[4.5.1 What is FlashSend?  17](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.jvfhj7h1ocws)
-
-[4.5.2 Why is FlashSend necessary?  17](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.a27dj2ibwfc)
-
-[5. DEVELOPMENT PROGRESS  18](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.efqy8hxct9ak)
-
-[5.1 INNOVATION  18](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.59wid2r0z3u2)
-
-[5.2 EXPERIENCE  19](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.vsj9nm4pczed)
-
-[6. SINOVATE USE CASES  19](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.exc9cj6tpdqx)
-
-[7. BUSINESS STRATEGY  20](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.mq65y62qiabi)
-
-[7.1 MARKETING STRATEGY  21](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.v123tjhf0dle)
-
-[7.2 FINANCIAL CLARIFICATION & TRANSPARENCY  21](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.n76wwabu4yqj)
-
-[7.3 MILESTONES  22](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.ox02v3eus8om)
-
-[7.4 SWOT ANALYSIS  23](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.kj6qwuq498cq)
-
-[7.5 ROADMAP  24](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.warhgesm135n)
-
-[7.6 SINOVATE TEAM  30](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.rv4ehft78711)
-
-[7.7 SINOVATE MINING  33](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.5ccaisgz9uxi)
-
-[7.8 MARKETING CHANNELS & PLATFORMS  36](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.2gtrt5r5o2s0)
-
-[7.9 References  37](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.av5vk3x2kwys)
-
-  
-  
-  
-
 Authors: [Christopher P. Thompson](https://twitter.com/CryptoBooksAlt), [Nick Moore](https://www.linkedin.com/in/nick-moore-79097211/?originalSubdomain=uk), [Amit Kaushal](https://www.linkedin.com/in/amit-kaushal-137881166/) and [Tamer Dagli](https://www.linkedin.com/in/tamer-d-288359165/)
-
   
 
 # INTRODUCTION
@@ -656,7 +581,7 @@ Total Supply: Approx.2.5 billion after 20 years
   
   
 
-## [7.8 MARKETING CHANNELS & PLATFORMS](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.ugy0il1xt9q8)
+## [7.8 MARKETING CHANNELS & PLATFORMS]
 
 Brand awareness and community building are the most important aspects of transparency. It opposes any potential uncertainty users may have with the SINOVATE currency & platform.
 
@@ -681,7 +606,7 @@ To build awareness around the brand and to put the project on the radar, the SIN
 
   
 
-## [7.9 References](https://docs.google.com/document/d/1ZKJIDCtcC7tW3D1vv5tn1Y1AE5p4-mG8zWKxFanpu1k/edit#heading=h.av5vk3x2kwys)
+## [7.9 References]
 
 1] [SUQA Medium](https://medium.com/@izlo/suqa-coin-what-you-need-to-know-and-how-you-can-join-suqa-right-now-16eb227c03c0) - [SUQA-Btctalk](https://bitcointalk.org/index.php?topic=5038269.2220)
 
