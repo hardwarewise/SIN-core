@@ -567,17 +567,21 @@ Features enabled and will be enabled:
 
 ## 7.4 SWOT ANALYSIS
 
-### ![](https://lh3.googleusercontent.com/q_eNaEY4kQLsLWPgKKWnFO7EYX8JaE5XH-J16gIi5PGvc68pgfXiinFCHqNDMkDTbj5unszee1ypgnzcvH9oQPSkIHTB22syLb_3fPbES2IVw8so4_AVR1g2rZV8awh2WMfF-hIG)
+![](https://lh3.googleusercontent.com/q_eNaEY4kQLsLWPgKKWnFO7EYX8JaE5XH-J16gIi5PGvc68pgfXiinFCHqNDMkDTbj5unszee1ypgnzcvH9oQPSkIHTB22syLb_3fPbES2IVw8so4_AVR1g2rZV8awh2WMfF-hIG)
 
   
 
-## 7.5 ROADMAP![](https://lh3.googleusercontent.com/EFdRofMECNe7DYvR1UGSkru8QqdTJPLJEGX5KHg0Q78Sv6D0NftVN-Qod0089dUyMVnao_wFN5TS1FDIBo4cc9LHN-v1i46Bp7KRBfH-rgtXCm5Aiq1niMVmWXm5lPsqriBnLS2P)![](https://lh6.googleusercontent.com/YwzgTBwX4S77Xk6G13MLmssg6TBDjUMCRLDguyzJsIfpP0YKJM6NLW7G4xLSKNSudSoqWt2Zh2eIaXoaMKZOvQJypk4hSVRPTbCBooOfzh5yUUvqYunmh79RkA04_JXnyVXTxpY9)![](https://lh4.googleusercontent.com/gjTuQQlqnzIPsj9je-NKqk1lF7389C55sOzXWvsLb6PkgLm_pweC3qFJHxYaH41V_oF6vegS_bBvL9Ub2GL4mg7UfZSb7AkdFzPKpOzk9SjlVgbdsuU-QmhC0h0_CvjpsgY5RlTJ)![](https://lh5.googleusercontent.com/J4RrI8xOEvWoqMllNtvitN7DE7JKq5OtcTKyHh2udNeG8G9CJHjU8dIVBjPi1pT6oMy9AZNtkbnA0PmpX663X2iTIuspL1XzUWhAWwJorbZr85NncscXzdwCyAuqW9uJ3JfZlMGi)![](https://lh5.googleusercontent.com/pT5JhttUzMeaIEoz_K9w1mdPtgnLWUML58Nqqt9dnNokTWdSjA4zndShyht8jUCVHxoB2f0fiOKuHKcyyXTfIC2-wsOIVBNFg26SQF8KAp2_WPs2XlYcbxy9E-eCSExNRkPCvVUU)![](https://lh3.googleusercontent.com/Jn6PitigVpUha1SmIibG8-2R2z196Jy-kmwfxoueVfbXiB_tzQtYOYSgQMdgaCjtBOujY0j-P1Y89_OnqqMIrQPiM5uBbJITzeszfdZyqjva6e5R6QBkGtn11c_jceF9A4nah-Zk)
+## 7.5 ROADMAP
+
+![](https://lh3.googleusercontent.com/EFdRofMECNe7DYvR1UGSkru8QqdTJPLJEGX5KHg0Q78Sv6D0NftVN-Qod0089dUyMVnao_wFN5TS1FDIBo4cc9LHN-v1i46Bp7KRBfH-rgtXCm5Aiq1niMVmWXm5lPsqriBnLS2P)![](https://lh6.googleusercontent.com/YwzgTBwX4S77Xk6G13MLmssg6TBDjUMCRLDguyzJsIfpP0YKJM6NLW7G4xLSKNSudSoqWt2Zh2eIaXoaMKZOvQJypk4hSVRPTbCBooOfzh5yUUvqYunmh79RkA04_JXnyVXTxpY9)![](https://lh4.googleusercontent.com/gjTuQQlqnzIPsj9je-NKqk1lF7389C55sOzXWvsLb6PkgLm_pweC3qFJHxYaH41V_oF6vegS_bBvL9Ub2GL4mg7UfZSb7AkdFzPKpOzk9SjlVgbdsuU-QmhC0h0_CvjpsgY5RlTJ)![](https://lh5.googleusercontent.com/J4RrI8xOEvWoqMllNtvitN7DE7JKq5OtcTKyHh2udNeG8G9CJHjU8dIVBjPi1pT6oMy9AZNtkbnA0PmpX663X2iTIuspL1XzUWhAWwJorbZr85NncscXzdwCyAuqW9uJ3JfZlMGi)![](https://lh5.googleusercontent.com/pT5JhttUzMeaIEoz_K9w1mdPtgnLWUML58Nqqt9dnNokTWdSjA4zndShyht8jUCVHxoB2f0fiOKuHKcyyXTfIC2-wsOIVBNFg26SQF8KAp2_WPs2XlYcbxy9E-eCSExNRkPCvVUU)![](https://lh3.googleusercontent.com/Jn6PitigVpUha1SmIibG8-2R2z196Jy-kmwfxoueVfbXiB_tzQtYOYSgQMdgaCjtBOujY0j-P1Y89_OnqqMIrQPiM5uBbJITzeszfdZyqjva6e5R6QBkGtn11c_jceF9A4nah-Zk)
 
   
 
 Detailed information regarding the Roadmap will be available on Whitepaper v3 XXL and on Roadmap v3, which shows innovations until 2023.
 
-## 7.6 SINOVATE TEAM  [![](https://lh5.googleusercontent.com/88LPtr_BqlR177G-qwosdrRKmhh_1RR2RF_NqC77un7sRZ4tudNknup6SNv8ZvaKS_sPUl2nfaOTiUC3c_iIr2gIbOSUSWpzees9cpJJL5xJimlA9nfjmUCyS1aTZhjy2bHBuoNI)](https://sinovate.io/team/)
+## 7.6 SINOVATE TEAM
+
+[![](https://lh5.googleusercontent.com/88LPtr_BqlR177G-qwosdrRKmhh_1RR2RF_NqC77un7sRZ4tudNknup6SNv8ZvaKS_sPUl2nfaOTiUC3c_iIr2gIbOSUSWpzees9cpJJL5xJimlA9nfjmUCyS1aTZhjy2bHBuoNI)](https://sinovate.io/team/)
 
 [![](https://lh3.googleusercontent.com/R_kMkQFzYh8Bu6aLENEdVPA2SprYGUDoqakh_MYD4e-NJdyo6avn7ah6ZGGh-cLnJ1lP0D3HMYQpMmDGEH1M3ElPtWAHiaEJCqFDV5GQaQwCDPttZE6vhz8QiM-Av2xGGMQXDK3U)](https://sinovate.io/team/)
 
@@ -599,7 +603,7 @@ The efficiency and reduced heat profile of the X25X algorithm aids miners and pr
 
   
 
-7.7.1 Blockchain specifications and Block rewards;
+### 7.7.1 Blockchain specifications and Block rewards;
 
 Block Time: 2 minutes
 
@@ -623,7 +627,7 @@ Total Supply: Approx.2.5 billion after 20 years
   
   
 
-7.7.2 MINERS & POOLS
+### 7.7.2 MINERS & POOLS
 
 -   [Official Pool](https://pool.sinovate.io/)
     
