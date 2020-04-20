@@ -1,7 +1,7 @@
 - **Introduction**
 - [Community contributions](/)
 - **Documentation**
-- [SINOVATE Whitepaper V2 Light](SINOVATE_Whitepaper_ V2_Light)
+- [SINOVATE Whitepaper V2 Light](SINOVATE_Whitepaper_V2_Light)
 - [Infinity Node setup](infinity_node_setup_guide)
 - [Bootstrap](bootstrap)
 - [Wallet](wallet)
