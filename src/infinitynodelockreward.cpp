@@ -803,7 +803,7 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
     unsigned char seckeys[Params().GetConsensus().nInfinityNodeLockRewardSigners][32];
     secp256k1_pubkey pubkeys[Params().GetConsensus().nInfinityNodeLockRewardSigners];
     secp256k1_pubkey combined_pk;
-    unsigned char msg[32] = "this_could_be_the_hash_of_a_msg!";
+    unsigned char msg[32] = "";
     secp256k1_schnorr sig;
 
     /* Create a context for signing and verification */
