@@ -2252,7 +2252,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
 			mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
 			LogPrintf("IsBlockPayeeValid -- disconnect block!\n");
 			if (pindex->nHeight >= enforceHeight) {
-				return state.DoS(0, error("ConnectBlock(DASH): couldn't find masternode or superblock payments"),
+				return state.DoS(0, error("ConnectBlock(SIN): couldn't find masternode or superblock payments"),
 					REJECT_INVALID, "bad-cb-payee");
 			}
    		}

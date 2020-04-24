@@ -804,6 +804,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
     std::string strCommand;
     std::string strFilter = "";
     std::string strOption = "";
+    std::string strError;
 
     if (request.params.size() >= 1) {
         strCommand = request.params[0].get_str();
@@ -860,7 +861,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
         obj.push_back(Pair("PrivateKey", EncodeSecret(secret)));
         obj.push_back(Pair("PublicKey", sBase64));
         obj.push_back(Pair("DecodePublicKey", decodePubKey.GetID().ToString()));
-        obj.push_back(Pair("isComppressed", pubkey.IsCompressed()));
+        obj.push_back(Pair("isCompressed", pubkey.IsCompressed()));
 
 
         return obj;
@@ -870,7 +871,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
     {
         std::string strKey = request.params[1].get_str();
         CKey secret = DecodeSecret(strKey);
-        if (!secret.IsValid()) throw JSONRPCError(RPC_INTERNAL_ERROR, "Secret is KO");
+        if (!secret.IsValid()) throw JSONRPCError(RPC_INTERNAL_ERROR, "Not a valid key");
 
         CPubKey pubkey = secret.GetPubKey();
         assert(secret.VerifyPubKey(pubkey));
@@ -882,7 +883,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
         obj.push_back(Pair("PrivateKey", EncodeSecret(secret)));
         obj.push_back(Pair("PublicKey", sBase64));
         obj.push_back(Pair("DecodePublicKey", decodePubKey.GetID().ToString()));
-        obj.push_back(Pair("isComppressed", pubkey.IsCompressed()));
+        obj.push_back(Pair("isCompressed", pubkey.IsCompressed()));
 
         return obj;
     }
@@ -890,7 +891,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
     if (strCommand == "mypeerinfo")
     {
         if (!fInfinityNode)
-            throw JSONRPCError(RPC_INTERNAL_ERROR, "This is not a Infinitynode");
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "This is not an InfinityNode");
 
         UniValue infObj(UniValue::VOBJ);
         infinitynodePeer.ManageState(*g_connman);
@@ -934,8 +935,10 @@ UniValue infinitynode(const JSONRPCRequest& request)
         int nextHeight = 10;
         nextHeight = atoi(strFilter);
 
-        if ( nextHeight < Params().GetConsensus().nInfinityNodeGenesisStatement)
-            throw JSONRPCError(RPC_INVALID_PARAMETER, "nHeight must superior than Genesis Statement param");
+        if (nextHeight < Params().GetConsensus().nInfinityNodeGenesisStatement) {
+            strError = strprintf("nHeight must be higher than the Genesis Statement height (%s)", Params().GetConsensus().nInfinityNodeGenesisStatement);
+            throw JSONRPCError(RPC_INVALID_PARAMETER, strError);
+        }
 
         CInfinitynode infBIG, infMID, infLIL;
         infnodeman.deterministicRewardAtHeight(nextHeight, 10, infBIG);
@@ -1113,7 +1116,7 @@ static UniValue infinitynodeburnfund(const JSONRPCRequest& request)
             "3. \"NodeOwnerBackupAddress\"  (string, required) The SIN address to send to when you make a notification(new feature soon).\n"
             "\nResult:\n"
             "\"BURNtxid\"                  (string) The Burn transaction id. Need to run infinity node\n"
-            "\"CollateralAddress\"         (string) Address of Collateral. Please send 10000 to this address.\n"
+            "\"CollateralAddress\"         (string) Address of Collateral. Please send 10000 SIN to this address.\n"
             "\nExamples:\n"
             + HelpExampleCli("infinitynodeburnfund", "NodeOwnerAddress 1000000 SINBackupAddress")
         );
@@ -1145,7 +1148,7 @@ static UniValue infinitynodeburnfund(const JSONRPCRequest& request)
         nAmount != Params().GetConsensus().nMasternodeBurnSINNODE_5 * COIN &&
         nAmount != Params().GetConsensus().nMasternodeBurnSINNODE_10 * COIN)
     {
-        throw JSONRPCError(RPC_TYPE_ERROR, "Invalid amount to burn and run Infinitynode");
+        throw JSONRPCError(RPC_TYPE_ERROR, "Invalid amount to burn and run an InfinityNode");
     }
 
     CTxDestination BKaddress = DecodeDestination(request.params[2].get_str());
