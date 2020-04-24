@@ -1073,6 +1073,10 @@ bool static AlreadyHave(const CInv& inv) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
         return inflockreward.AlreadyHave(inv.hash);
     case MSG_LOCKREWARD_INIT:
         return inflockreward.AlreadyHave(inv.hash);
+    case MSG_INFLRGROUP:
+        return inflockreward.AlreadyHave(inv.hash);
+    case MSG_INFLRMUSIG:
+        return inflockreward.AlreadyHave(inv.hash);
     //
     // Dash
     /*
@@ -1405,6 +1409,16 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& chainparams, CConnm
                         ss.reserve(1000);
                         ss << commitment;
                         connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::INFCOMMITMENT, ss));
+                        pushed = true;
+                    }
+                }
+                if (!pushed && inv.type == MSG_INFLRGROUP) {
+                    CGroupSigners gSigners;
+                    if(inflockreward.GetGroupSigners(inv.hash,gSigners)) {
+                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+                        ss.reserve(1000);
+                        ss << gSigners;
+                        connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::INFLRGROUP, ss));
                         pushed = true;
                     }
                 }

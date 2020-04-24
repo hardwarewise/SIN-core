@@ -11,6 +11,10 @@
 #include <netmessagemaker.h>
 #include <utilstrencodings.h>
 
+#include <secp256k1.h>
+#include <secp256k1_schnorr.h>
+#include <secp256k1_musig.h>
+
 #include <boost/lexical_cast.hpp>
 
 /** Object for who's going to get paid on which blocks */
@@ -310,6 +314,14 @@ bool CInfinityNodeLockReward::AddGroupSigners(const CGroupSigners& gs)
     return true;
 }
 
+bool CInfinityNodeLockReward::GetGroupSigners(const uint256& reqHash, CGroupSigners& gSigners)
+{
+    LOCK(cs);
+    std::map<uint256, CGroupSigners>::iterator it = mapLockRewardGroupSigners.find(reqHash);
+    if(it == mapLockRewardGroupSigners.end()) return false;
+    gSigners = it->second;
+    return true;
+}
 /*
  * STEP 1: get a new LockRewardRequest, check it and send verify message
  *
@@ -725,6 +737,98 @@ bool CInfinityNodeLockReward::FindAndSendSignersGroup(CConnman& connman)
 }
 
 /*
+ * STEP 5.0
+ *
+ * check CGroupSigners
+ */
+bool CInfinityNodeLockReward::CheckGroupSigner(CNode* pnode, const CGroupSigners& gsigners)
+{
+    if(fLiteMode || !fInfinityNode) return false;
+
+    AssertLockHeld(cs);
+
+    //step 5.1.0: make sure that it is sent from candidate
+    if(!mapLockRewardRequest.count(gsigners.nHashRequest)) return false;
+
+    if(mapLockRewardRequest[gsigners.nHashRequest].burnTxIn != gsigners.vin) return false;
+
+    //step 5.1.1: get candidate from Height and vin.prevout
+    infinitynode_info_t infoInf;
+    if(!infnodeman.GetInfinitynodeInfo(gsigners.vin.prevout, infoInf)){
+        LogPrintf("CInfinityNodeLockReward::SendVerifyReply -- Cannot find sender from list %s\n");
+        //someone try to send a VerifyRequest to me but not in DIN => so ban it
+        //LOCK(cs_main);
+        //Misbehaving(pnode->GetId(), 20);
+        return false;
+    }
+
+    CMetadata metaSender = infnodemeta.Find(infoInf.metadataID);
+    if (metaSender.getMetadataHeight() == 0){
+        //for some reason, metadata is not updated, do nothing
+        LogPrintf("CInfinityNodeLockReward::SendVerifyReply -- Cannot find sender from list %s\n");
+        return false;
+    }
+
+    std::string metaPublicKey = metaSender.getMetaPublicKey();
+    std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
+    CPubKey pubKey(tx_data.begin(), tx_data.end());
+
+    std::string strError;
+    std::string strMessage = strprintf("%d%s%s%s%s%d", gsigners.nonce, gsigners.nHashRequest.ToString(), gsigners.vin.prevout.ToString(),
+                                       gsigners.signersId, gsigners.nGroup);
+    //step 5.1.2: verify the sign
+    if(!CMessageSigner::VerifyMessage(pubKey, gsigners.vchSig, strMessage, strError)) {
+        //sender is in DIN and metadata is correct but sign is KO => so ban it
+        LogPrintf("CInfinityNodeLockReward::CheckGroupSigner -- VerifyMessage() failed, error: %s, message: \n", strError, strMessage);
+        //LOCK(cs_main);
+        //Misbehaving(pnode->GetId(), 20);
+        return false;
+    }
+
+    return true;
+}
+
+/*
+ * STEP 5.1
+ *
+ * Musig Partial Sign
+ */
+bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners& gsigners)
+{
+    if(fLiteMode || !fInfinityNode) return false;
+
+    AssertLockHeld(cs);
+
+    secp256k1_context* ctx;
+    unsigned char seckeys[Params().GetConsensus().nInfinityNodeLockRewardSigners][32];
+    secp256k1_pubkey pubkeys[Params().GetConsensus().nInfinityNodeLockRewardSigners];
+    secp256k1_pubkey combined_pk;
+    unsigned char msg[32] = "this_could_be_the_hash_of_a_msg!";
+    secp256k1_schnorr sig;
+
+    /* Create a context for signing and verification */
+    ctx = secp256k1_context_create(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY);
+
+    //step 5.1.3: get Rank of reward and find signer from Id
+    int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType;
+    std::map<int, CInfinitynode> mapInfinityNodeRank = infnodeman.calculInfinityNodeRank(mapLockRewardRequest[gsigners.nHashRequest].nRewardHeight, nSINtypeCanLockReward, false, true);
+
+    std::string s;
+    stringstream ss(gsigners.signersId);
+    std::vector<int> signersId;
+    while (getline(ss, s,';')) {
+        signersId.push_back(atoi(s));
+        LogPrintf("CInfinityNodeLockReward::CheckGroupSigner -- signer ID: %d\n", atoi(s));
+    }
+
+    if(signersId.size() != Params().GetConsensus().nInfinityNodeLockRewardSigners){
+        LogPrintf("CInfinityNodeLockReward::CheckGroupSigner -- number of signers: %d is not the same as consensus\n", signersId.size());
+        return false;
+    }
+    return true;
+}
+
+/*
  * Connect to group Signer
  */
 void CInfinityNodeLockReward::TryConnectToMySigners(int rewardHeight, CConnman& connman)
@@ -922,7 +1026,10 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
         uint256 nHash = gSigners.GetHash();
         pfrom->setAskFor.erase(nHash);
         {
-            LogPrintf("CInfinityNodeLockReward::ProcessMessage -- receive group signer %s for lockrequest %s\n", gSigners.signersId, gSigners.nHashRequest.ToString());
+            if(AddGroupSigners(gSigners)){
+                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- receive group signer %s for lockrequest %s\n",
+                          gSigners.signersId, gSigners.nHashRequest.ToString());
+            }
         }
     } else if (strCommand == NetMsgType::INFLRMUSIG) {
     }

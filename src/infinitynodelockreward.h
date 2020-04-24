@@ -244,13 +244,15 @@ public:
     //commitment
     bool AddCommitment(const CLockRewardCommitment& commitment);
     bool SendCommitment(const uint256& reqHash, CConnman& connman);
-    bool VerifyCommitment(const uint256& reqHash, const CLockRewardCommitment& commitment);
     bool GetLockRewardCommitment(const uint256& reqHash, CLockRewardCommitment& commitment);
 
     //Musig
     void AddMySignersMap(const CLockRewardCommitment& commitment);
     bool AddGroupSigners(const CGroupSigners& gs);
+    bool GetGroupSigners(const uint256& reqHash, CGroupSigners& gsigners);
     bool FindAndSendSignersGroup(CConnman& connman);
+    bool CheckGroupSigner(CNode* pnode, const CGroupSigners& gsigners);
+    bool MusigPartialSign(CNode* pnode, const CGroupSigners& gsigners);
 
     //Connection
     void TryConnectToMySigners(int rewardHeight, CConnman& connman);
