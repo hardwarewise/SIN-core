@@ -19,6 +19,7 @@
 #include <policy/rbf.h>
 #include <primitives/transaction.h>
 #include <rpc/rawtransaction.h>
+#include <psbt.h>
 #include <rpc/server.h>
 #include <script/script.h>
 #include <script/script_error.h>

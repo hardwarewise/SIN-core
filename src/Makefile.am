@@ -149,6 +149,7 @@ BITCOIN_CORE_H = \
   policy/rbf.h \
   pow.h \
   protocol.h \
+  psbt.h \
   random.h \
   reverse_iterator.h \
   reverselock.h \
@@ -195,6 +196,7 @@ BITCOIN_CORE_H = \
   wallet/db.h \
   wallet/feebumper.h \
   wallet/fees.h \
+  wallet/psbtwallet.h \
   wallet/rpcwallet.h \
   wallet/wallet.h \
   wallet/walletdb.h \
@@ -258,6 +260,7 @@ libsin_server_a_SOURCES = \
   noui.cpp \
   outputtype.cpp \
   policy/fees.cpp \
+  psbt.cpp \
   policy/policy.cpp \
   policy/rbf.cpp \
   pow.cpp \
@@ -325,6 +328,7 @@ libsin_wallet_a_SOURCES = \
   wallet/feebumper.cpp \
   wallet/fees.cpp \
   wallet/init.cpp \
+  wallet/psbtwallet.cpp \
   wallet/rpcdump.cpp \
   wallet/rpcwallet.cpp \
   wallet/wallet.cpp \
