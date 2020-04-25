@@ -805,6 +805,93 @@ UniValue dumpwallet(const JSONRPCRequest& request)
     return reply;
 }
 
+struct ImportData
+{
+    // Input data
+    std::unique_ptr<CScript> redeemscript; //!< Provided redeemScript; will be moved to `import_scripts` if relevant.
+    std::unique_ptr<CScript> witnessscript; //!< Provided witnessScript; will be moved to `import_scripts` if relevant.
+
+    // Output data
+    std::set<CScript> import_scripts;
+    std::map<CKeyID, bool> used_keys; //!< Import these private keys if available (the value indicates whether if the key is required for solvability)
+    std::map<CKeyID, KeyOriginInfo> key_origins;
+};
+
+enum class ScriptContext
+{
+    TOP, //!< Top-level scriptPubKey
+    P2SH, //!< P2SH redeemScript
+    WITNESS_V0, //!< P2WSH witnessScript
+};
+
+// Analyse the provided scriptPubKey, determining which keys and which redeem scripts from the ImportData struct are needed to spend it, and mark them as used.
+// Returns an error string, or the empty string for success.
+static std::string RecurseImportData(const CScript& script, ImportData& import_data, const ScriptContext script_ctx)
+{
+    // Use Solver to obtain script type and parsed pubkeys or hashes:
+    std::vector<std::vector<unsigned char>> solverdata;
+    txnouttype script_type = Solver(script, solverdata);
+
+    switch (script_type) {
+    case TX_PUBKEY: {
+        CPubKey pubkey(solverdata[0].begin(), solverdata[0].end());
+        import_data.used_keys.emplace(pubkey.GetID(), false);
+        return "";
+    }
+    case TX_PUBKEYHASH: {
+        CKeyID id = CKeyID(uint160(solverdata[0]));
+        import_data.used_keys[id] = true;
+        return "";
+    }
+    case TX_SCRIPTHASH: {
+        if (script_ctx == ScriptContext::P2SH) throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Trying to nest P2SH inside another P2SH");
+        if (script_ctx == ScriptContext::WITNESS_V0) throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Trying to nest P2SH inside a P2WSH");
+        assert(script_ctx == ScriptContext::TOP);
+        CScriptID id = CScriptID(uint160(solverdata[0]));
+        auto subscript = std::move(import_data.redeemscript); // Remove redeemscript from import_data to check for superfluous script later.
+        if (!subscript) return "missing redeemscript";
+        if (CScriptID(*subscript) != id) return "redeemScript does not match the scriptPubKey";
+        import_data.import_scripts.emplace(*subscript);
+        return RecurseImportData(*subscript, import_data, ScriptContext::P2SH);
+    }
+    case TX_MULTISIG: {
+        for (size_t i = 1; i + 1< solverdata.size(); ++i) {
+            CPubKey pubkey(solverdata[i].begin(), solverdata[i].end());
+            import_data.used_keys.emplace(pubkey.GetID(), false);
+        }
+        return "";
+    }
+    case TX_WITNESS_V0_SCRIPTHASH: {
+        if (script_ctx == ScriptContext::WITNESS_V0) throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Trying to nest P2WSH inside another P2WSH");
+        uint256 fullid(solverdata[0]);
+        CScriptID id;
+        CRIPEMD160().Write(fullid.begin(), fullid.size()).Finalize(id.begin());
+        auto subscript = std::move(import_data.witnessscript); // Remove redeemscript from import_data to check for superfluous script later.
+        if (!subscript) return "missing witnessscript";
+        if (CScriptID(*subscript) != id) return "witnessScript does not match the scriptPubKey or redeemScript";
+        if (script_ctx == ScriptContext::TOP) {
+            import_data.import_scripts.emplace(script); // Special rule for IsMine: native P2WSH requires the TOP script imported (see script/ismine.cpp)
+        }
+        import_data.import_scripts.emplace(*subscript);
+        return RecurseImportData(*subscript, import_data, ScriptContext::WITNESS_V0);
+    }
+    case TX_WITNESS_V0_KEYHASH: {
+        if (script_ctx == ScriptContext::WITNESS_V0) throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Trying to nest P2WPKH inside P2WSH");
+        CKeyID id = CKeyID(uint160(solverdata[0]));
+        import_data.used_keys[id] = true;
+        if (script_ctx == ScriptContext::TOP) {
+            import_data.import_scripts.emplace(script); // Special rule for IsMine: native P2WPKH requires the TOP script imported (see script/ismine.cpp)
+        }
+        return "";
+    }
+    case TX_NULL_DATA:
+        return "unspendable script";
+    case TX_NONSTANDARD:
+    case TX_WITNESS_UNKNOWN:
+    default:
+        return "unrecognized script";
+    }
+}
 
 static UniValue ProcessImportLegacy(ImportData& import_data, std::map<CKeyID, CPubKey>& pubkey_map, std::map<CKeyID, CKey>& privkey_map, std::set<CScript>& script_pub_keys, bool& have_solving_data, const UniValue& data, std::vector<CKeyID>& ordered_pubkeys)
 {
