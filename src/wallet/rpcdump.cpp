@@ -8,6 +8,7 @@
 #include <validation.h>
 #include <script/script.h>
 #include <script/standard.h>
+#include <script/descriptor.h>
 #include <sync.h>
 #include <util.h>
 #include <utiltime.h>
