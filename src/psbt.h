@@ -55,7 +55,18 @@ struct PSBTInput
     void FillSignatureData(SignatureData& sigdata) const;
     void FromSignatureData(const SignatureData& sigdata);
     void Merge(const PSBTInput& input);
-    bool IsSane() const;
+    bool IsSane() const
+	{
+		// Cannot have both witness and non-witness utxos
+		if (!witness_utxo.IsNull() && non_witness_utxo) return false;
+
+		// If we have a witness_script or a scriptWitness, we must also have a witness utxo
+		if (!witness_script.empty() && witness_utxo.IsNull()) return false;
+		if (!final_script_witness.IsNull() && witness_utxo.IsNull()) return false;
+
+		return true;
+	}
+
     PSBTInput() {}
 
     template <typename Stream>
@@ -388,7 +399,14 @@ struct PartiallySignedTransaction
     /** Merge psbt into this. The two psbts must have the same underlying CTransaction (i.e. the
       * same actual Bitcoin transaction.) Returns true if the merge succeeded, false otherwise. */
     NODISCARD bool Merge(const PartiallySignedTransaction& psbt);
-    bool IsSane() const;
+    bool IsSane() const
+	{
+		for (PSBTInput input : inputs) {
+		    if (!input.IsSane()) return false;
+		}
+		return true;
+	}
+
     bool AddInput(const CTxIn& txin, PSBTInput& psbtin);
     bool AddOutput(const CTxOut& txout, const PSBTOutput& psbtout);
     PartiallySignedTransaction() {}

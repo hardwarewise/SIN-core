@@ -34,14 +34,6 @@ bool PartiallySignedTransaction::Merge(const PartiallySignedTransaction& psbt)
     return true;
 }
 
-bool PartiallySignedTransaction::IsSane() const
-{
-    for (PSBTInput input : inputs) {
-        if (!input.IsSane()) return false;
-    }
-    return true;
-}
-
 bool PartiallySignedTransaction::AddInput(const CTxIn& txin, PSBTInput& psbtin)
 {
     if (std::find(tx->vin.begin(), tx->vin.end(), txin) != tx->vin.end()) {
@@ -152,18 +144,6 @@ void PSBTInput::Merge(const PSBTInput& input)
     if (witness_script.empty() && !input.witness_script.empty()) witness_script = input.witness_script;
     if (final_script_sig.empty() && !input.final_script_sig.empty()) final_script_sig = input.final_script_sig;
     if (final_script_witness.IsNull() && !input.final_script_witness.IsNull()) final_script_witness = input.final_script_witness;
-}
-
-bool PSBTInput::IsSane() const
-{
-    // Cannot have both witness and non-witness utxos
-    if (!witness_utxo.IsNull() && non_witness_utxo) return false;
-
-    // If we have a witness_script or a scriptWitness, we must also have a witness utxo
-    if (!witness_script.empty() && witness_utxo.IsNull()) return false;
-    if (!final_script_witness.IsNull() && witness_utxo.IsNull()) return false;
-
-    return true;
 }
 
 void PSBTOutput::FillSignatureData(SignatureData& sigdata) const

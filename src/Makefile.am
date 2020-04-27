@@ -469,8 +469,8 @@ libsin_consensus_a_SOURCES = \
   tinyformat.h \
   uint256.cpp \
   uint256.h \
-  utilstrencodings.cpp \
-  utilstrencodings.h \
+  util/strencodings.cpp \
+  util/strencodings.h \
   version.h
 
 # common: shared between sind, and bitcoin-qt and non-server tools
@@ -522,7 +522,7 @@ libsin_util_a_SOURCES = \
   threadinterrupt.cpp \
   util.cpp \
   utilmoneystr.cpp \
-  utilstrencodings.cpp \
+  util/strencodings.cpp \  
   util/bip32.cpp \  
   utiltime.cpp \
   $(BITCOIN_CORE_H)
