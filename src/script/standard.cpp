@@ -233,6 +233,72 @@ bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<std::v
     return false;
 }
 
+// 0.18 version
+txnouttype Solver(const CScript& scriptPubKey, std::vector<std::vector<unsigned char>>& vSolutionsRet)
+{
+    vSolutionsRet.clear();
+
+    // Shortcut for pay-to-script-hash, which are more constrained than the other types:
+    // it is always OP_HASH160 20 [20 byte hash] OP_EQUAL
+    if (scriptPubKey.IsPayToScriptHash())
+    {
+        std::vector<unsigned char> hashBytes(scriptPubKey.begin()+2, scriptPubKey.begin()+22);
+        vSolutionsRet.push_back(hashBytes);
+        return TX_SCRIPTHASH;
+    }
+
+    int witnessversion;
+    std::vector<unsigned char> witnessprogram;
+    if (scriptPubKey.IsWitnessProgram(witnessversion, witnessprogram)) {
+        if (witnessversion == 0 && witnessprogram.size() == WITNESS_V0_KEYHASH_SIZE) {
+            vSolutionsRet.push_back(witnessprogram);
+            return TX_WITNESS_V0_KEYHASH;
+        }
+        if (witnessversion == 0 && witnessprogram.size() == WITNESS_V0_SCRIPTHASH_SIZE) {
+            vSolutionsRet.push_back(witnessprogram);
+            return TX_WITNESS_V0_SCRIPTHASH;
+        }
+        if (witnessversion != 0) {
+            vSolutionsRet.push_back(std::vector<unsigned char>{(unsigned char)witnessversion});
+            vSolutionsRet.push_back(std::move(witnessprogram));
+            return TX_WITNESS_UNKNOWN;
+        }
+        return TX_NONSTANDARD;
+    }
+
+    // Provably prunable, data-carrying output
+    //
+    // So long as script passes the IsUnspendable() test and all but the first
+    // byte passes the IsPushOnly() test we don't care what exactly is in the
+    // script.
+    if (scriptPubKey.size() >= 1 && scriptPubKey[0] == OP_RETURN && scriptPubKey.IsPushOnly(scriptPubKey.begin()+1)) {
+        return TX_NULL_DATA;
+    }
+
+    std::vector<unsigned char> data;
+    if (MatchPayToPubkey(scriptPubKey, data)) {
+        vSolutionsRet.push_back(std::move(data));
+        return TX_PUBKEY;
+    }
+
+    if (MatchPayToPubkeyHash(scriptPubKey, data)) {
+        vSolutionsRet.push_back(std::move(data));
+        return TX_PUBKEYHASH;
+    }
+
+    unsigned int required;
+    std::vector<std::vector<unsigned char>> keys;
+    if (MatchMultisig(scriptPubKey, required, keys)) {
+        vSolutionsRet.push_back({static_cast<unsigned char>(required)}); // safe as required is in range 1..16
+        vSolutionsRet.insert(vSolutionsRet.end(), keys.begin(), keys.end());
+        vSolutionsRet.push_back({static_cast<unsigned char>(keys.size())}); // safe as size is in range 1..16
+        return TX_MULTISIG;
+    }
+
+    vSolutionsRet.clear();
+    return TX_NONSTANDARD;
+}
+
 /**
  * @xtdevcoin
  * extract the destination for transaction type TX_BURN_DATA

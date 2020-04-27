@@ -144,6 +144,9 @@ const char* GetTxnOutputType(txnouttype t);
 bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<std::vector<unsigned char> >& vSolutionsRet);
 bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<std::vector<unsigned char> >& vSolutionsRet, int& CLTVreleaseBlock);
 
+// bitcoin 0.18 version (avoid breaking compatibility with 0.17.1 codebase)
+txnouttype Solver(const CScript& scriptPubKey, std::vector<std::vector<unsigned char>>& vSolutionsRet);
+
 /**
  * Parse a standard scriptPubKey for the destination address. Assigns result to
  * the addressRet parameter and returns true if successful. For multisig
