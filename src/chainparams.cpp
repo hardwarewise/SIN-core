@@ -515,6 +515,9 @@ public:
         consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
         consensus.nInfinityNodeLockRewardSINType=1; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
+        consensus.nMasternodeBurnSINNODE_1 = 100000;
+        consensus.nMasternodeBurnSINNODE_5 = 500000;
+        consensus.nMasternodeBurnSINNODE_10 = 1000000;
 
         consensus.BIP16Exception = uint256();
         consensus.BIP34Height = 100000000;
