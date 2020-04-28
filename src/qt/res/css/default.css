@@ -21,20 +21,20 @@ QStatusBar {
 }
 
 QMenuBar {
-	background-color: #fff;
+	background-color: #00023B;
 }
 QMenuBar::item {
-	background-color: #fff;
-	color: #333;
+	background-color: #00023B;
+	color: #CCCCCC;
 }
 QMenuBar::item:selected {
-	background-color: #f8f6f6;
+	background-color: #00023B;
 }
 QMenu {
-	background-color: #f8f6f6;
+	background-color: #00023B;
 }
 QMenu::item {
-	color: #333;
+	color: #CCCCCC;
 }
 QMenu::item:selected {
 	background-color: #f2f0f0;
@@ -42,32 +42,47 @@ QMenu::item:selected {
 }
 
 QToolBar {
-/*background-color: #00C0F7;*/
 background-color: #00023B;
-border:0px solid #0056B4;
-padding:0;
-margin:0;
-/*border-image:  url(':/images/sinovate_logo_horizontal')*/
-/*border-right: 15px solid transparent;*/
+/*background-color: qlineargradient(y1:0, y2: 1, stop: 0 #02055e, stop: 1 #00023B);*/
+border:none;
+height:100%;
+padding-top:20px
 }
 
 QToolBar > QToolButton {
-/*background-color: #00C0F7;*/
-background-color: transparent;
-border:0px solid #333;
-border-bottom-left-radius: 10px;
-border-bottom-right-radius: 10px;
-min-height:2.5em;
-padding: 0em 1em;
-font-weight:bold;
-color:#fff;
+background-color:transparent;
+font-size:14px;
+color: #938da5;
+min-width:60px;
+/*border: 1px solid #707070;
+border-radius: 3px;
+margin: 3px;*/
+padding-left: 0px;
+padding-right: 0px;
+padding-top:5px;
+width:100%;
+padding-bottom:5px;
+
+
 }
 
 QToolBar > QToolButton:checked {
-background-color: #BC8F3A;
-color:#fff;
-font-weight:bold;
+background-color: #0f0b16;
+font-size:14px;
+color: #BC8F3A;
 }
+
+QToolBar > QToolButton:checked:hover {
+background-color: #0f0b16;
+    color: #BC8F3A;
+}
+
+
+QToolBar > QToolButton:hover {
+background-color: #1A000000;
+    color: #938da5;
+}
+
 
 QMessageBox {
 background-color: #D6DCE5;

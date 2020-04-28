@@ -167,6 +167,8 @@ private:
 ////end Governance and I.D.S. Menu
 
     QAction *showSpecsHelpAction;
+
+    QLabel *mainIcon;
     
     QLabel *m_wallet_selector_label = nullptr;
     QComboBox* m_wallet_selector = nullptr;

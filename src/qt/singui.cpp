@@ -383,14 +383,14 @@ void BitcoinGUI::createActions()
 {
     QActionGroup *tabGroup = new QActionGroup(this);
 
-    overviewAction = new QAction(platformStyle->SingleColorIcon(":/icons/overview1"), tr("&Overview"), this);
+    overviewAction = new QAction(platformStyle->SingleColorIcon(":/icons/overview1"), tr("&HOME\n"), this);
     overviewAction->setStatusTip(tr("Show general overview of wallet"));
     overviewAction->setToolTip(overviewAction->statusTip());
     overviewAction->setCheckable(true);
     overviewAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_1));
     tabGroup->addAction(overviewAction);
 
-    sendCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/send1"), tr("&Send"), this);
+    sendCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/send1"), tr("&SEND\n"), this);
     sendCoinsAction->setStatusTip(tr("Send coins to a SIN address"));
     sendCoinsAction->setToolTip(sendCoinsAction->statusTip());
     sendCoinsAction->setCheckable(true);
@@ -411,7 +411,7 @@ void BitcoinGUI::createActions()
     //depositCoinsMenuAction->setStatusTip(depositCoinsAction->statusTip());
     //depositCoinsMenuAction->setToolTip(depositCoinsMenuAction->statusTip());
 
-    receiveCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/receiving_addresses1"), tr("&Receive"), this);
+    receiveCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/receiving_addresses1"), tr("&RECEIVE\n"), this);
     receiveCoinsAction->setStatusTip(tr("Request payments (generates QR codes and sin: URIs)"));
     receiveCoinsAction->setToolTip(receiveCoinsAction->statusTip());
     receiveCoinsAction->setCheckable(true);
@@ -422,7 +422,7 @@ void BitcoinGUI::createActions()
     receiveCoinsMenuAction->setStatusTip(receiveCoinsAction->statusTip());
     receiveCoinsMenuAction->setToolTip(receiveCoinsMenuAction->statusTip());
 
-    historyAction = new QAction(platformStyle->SingleColorIcon(":/icons/history1"), tr("&Transactions"), this);
+    historyAction = new QAction(platformStyle->SingleColorIcon(":/icons/history1"), tr("&HISTORY\n"), this);
     historyAction->setStatusTip(tr("Browse transaction history"));
     historyAction->setToolTip(historyAction->statusTip());
     historyAction->setCheckable(true);
@@ -433,7 +433,7 @@ void BitcoinGUI::createActions()
     // Dash
     QSettings settings;
     if (settings.value("fShowMasternodesTab").toBool()) {
-        masternodeAction = new QAction(platformStyle->SingleColorIcon(":/icons/masternodes"), tr("&Infinity Nodes"), this);
+        masternodeAction = new QAction(platformStyle->SingleColorIcon(":/icons/masternodes"), tr("&INFINITY\r\nNODES\n"), this);
         masternodeAction->setStatusTip(tr("Browse Infinitynodes"));
         masternodeAction->setToolTip(masternodeAction->statusTip());
         masternodeAction->setCheckable(true);
@@ -450,7 +450,7 @@ void BitcoinGUI::createActions()
 
     // Instaswap
     if (settings.value("fShowInstaSwapTab").toBool()) {
-    instaswapAction = new QAction(platformStyle->SingleColorIcon(":/icons/instaswap1"), tr("&Instaswap"), this);
+    instaswapAction = new QAction(platformStyle->SingleColorIcon(":/icons/instaswap1"), tr("&INSTA\r\nSWAP\n"), this);
     instaswapAction->setStatusTip(tr("Exchange your SIN rapidly"));
     instaswapAction->setToolTip(instaswapAction->statusTip());
     instaswapAction->setCheckable(true);
@@ -783,10 +783,20 @@ void BitcoinGUI::createToolBars()
     if(walletFrame)
     {
         QToolBar *toolbar = addToolBar(tr("Tabs toolbar"));
+        addToolBar(Qt::LeftToolBarArea, toolbar);
         appToolBar = toolbar;
         toolbar->setContextMenuPolicy(Qt::PreventContextMenu);
         toolbar->setMovable(false);
-        toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        toolbar->setOrientation(Qt::Vertical);
+        toolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+        mainIcon = new QLabel (this);
+    	mainIcon->setPixmap(QPixmap(":images/nav-logo-sin"));
+    	mainIcon->setAlignment(Qt::AlignCenter);
+    	mainIcon->show();
+    	mainIcon->setStyleSheet("QLabel { margin-top: 10px; margin-bottom: 10px; }");
+    	toolbar->addWidget(mainIcon);
+
+
         toolbar->addAction(overviewAction);
         toolbar->addAction(sendCoinsAction);
         //toolbar->addAction(depositCoinsAction);
@@ -805,20 +815,18 @@ void BitcoinGUI::createToolBars()
         toolbar->addAction(instaswapAction);
     	}
 
-        //add LOGO
+       QWidget* empty = new QWidget();
+		empty->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+		toolbar->addWidget(empty);
 
-        //QLabel* label = new QLabel();
-        //label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        //toolbar->addWidget(label);
+		 QLabel* labelVersion = new QLabel();
+        labelVersion->setText(QString(tr("v%1")).arg(QString::fromStdString(FormatVersionFriendly())));
+        labelVersion->setStyleSheet("color: white ; margin-top: 10px; margin-bottom: 2px; font-weight : bold;");
+        labelVersion->setAlignment(Qt::AlignCenter);
+        toolbar->addWidget(labelVersion);
+		
 
-        
-        QLabel* labelLogo = new QLabel();
-        labelLogo->setPixmap(QPixmap(":/images/sinovate_logo_horizontal"));
-        //labelLogo->setText(versionText);
-        labelLogo->setStyleSheet("margin-left: 20px");
-        toolbar->addWidget(labelLogo);
 
-        //
         overviewAction->setChecked(true);
 
 #ifdef ENABLE_WALLET
