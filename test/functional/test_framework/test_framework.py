@@ -14,6 +14,7 @@ import shutil
 import sys
 import tempfile
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 from .authproxy import JSONRPCException
 from . import coverage
@@ -23,13 +24,18 @@ from .util import (
     MAX_NODES,
     PortSeed,
     assert_equal,
+    copy_datadir,
     check_json_precision,
     connect_nodes_bi,
+    connect_nodes,
     disconnect_nodes,
     get_datadir_path,
     initialize_datadir,
+    l2_forced_sync,
     p2p_port,
     set_node_times,
+    set_mocktime,
+    get_mocktime,
     sync_blocks,
     sync_mempools,
 )
@@ -43,6 +49,19 @@ TEST_EXIT_PASSED = 0
 TEST_EXIT_FAILED = 1
 TEST_EXIT_SKIPPED = 77
 
+### IN parameters ###
+BIG_COLLATERAL = 1000000
+MID_COLLATERAL = 500000
+LIL_COLLATERAL = 100000
+COLLATERAL = 10000
+
+class InfinityNodeInfo:
+    def __init__(self, in_key, collateral_tx, collateral_vout, burn_tx, burn_vout):
+        self.in_key = in_key
+        self.collateral_tx = collateral_tx
+        self.collateral_vout = collateral_vout
+        self.burn_tx = burn_tx
+        self.burn_vout = burn_vout
 
 class SkipTest(Exception):
     """This exception is raised to skip a test"""
@@ -91,6 +110,7 @@ class SinTestFramework(metaclass=SinTestMetaClass):
         """Sets test framework defaults. Do not override this method. Instead, override the set_test_params() method"""
         self.setup_clean_chain = False
         self.nodes = []
+        self.infinitynodeinfo = []
         self.network_thread = None
         self.mocktime = 0
         self.rpc_timewait = 60  # Wait for up to 60 seconds for the RPC server to respond
@@ -387,6 +407,9 @@ class SinTestFramework(metaclass=SinTestMetaClass):
     def disable_mocktime(self):
         self.mocktime = 0
 
+    def bump_mocktime(self, t):
+        self.mocktime += t
+
     # Private helper methods. These should not be accessed by the subclass test scripts.
 
     def _start_logging(self):
@@ -540,3 +563,228 @@ class SinTestFramework(metaclass=SinTestMetaClass):
         config.read_file(open(self.options.configfile))
 
         return config["components"].getboolean("ENABLE_ZMQ")
+
+    def get_infinitynode_conf_file(self):
+        return os.path.join(self.options.tmpdir, "node0/infinitynode.conf")
+
+    def write_infinitynode_conf_file_family(self):
+        conf = self.get_infinitynode_conf_file()
+        f = open(conf, 'a')
+        for idx in range(0, self.infinitynode_number_family * 3):
+            f.write("in%d 127.0.0.1:%d %s %s %s %s %s\n" % (idx + 1, p2p_port(idx + 1),
+                                                      self.infinitynodeinfo[idx].in_key,
+                                                      self.infinitynodeinfo[idx].collateral_tx,
+                                                      self.infinitynodeinfo[idx].collateral_vout,
+                                                      self.infinitynodeinfo[idx].burn_tx,
+                                                      self.infinitynodeinfo[idx].burn_vout))
+        f.close()
+
+    def setup_infinitynode_params(self, infinitynode_number_family, extra_args=None):
+        self.infinitynode_number_family = infinitynode_number_family
+        if extra_args is None:
+            extra_args = [[]] * (len(self.nodes))
+        assert_equal(len(extra_args), len(self.nodes))
+        self.extra_args = extra_args
+
+    def create_simple_node(self):
+        idx = len(self.nodes)
+        self.add_nodes(1, extra_args=[self.extra_args[idx]])
+        self.start_node(idx)
+        for i in range(0, idx):
+            connect_nodes(self.self.num_nodes[i], idx)
+
+    def create_infinitynode_families(self):
+        self.log.info("Test env running with %d InfinityNode families, preparing..." % self.infinitynode_number_family)
+        # create multiple INs here
+        for idx in range(0, self.infinitynode_number_family):
+            self.create_infinitynode_family(idx)
+
+    def create_infinitynode_family(self, idx):
+        # init basic setup params for a family of tiered nodes
+
+        # get us privkeys
+        privkeyLil = self.nodes[0].masternode('genkey')
+        privkeyMid = self.nodes[0].masternode('genkey')
+        privkeyBig = self.nodes[0].masternode('genkey')
+
+        # get us backup addresses
+        backupaddressLil = self.nodes[0].getnewaddress()
+        backupaddressMid = self.nodes[0].getnewaddress()
+        backupaddressBig = self.nodes[0].getnewaddress()
+        
+        # get us addresses
+        addressLil = self.nodes[0].getnewaddress()
+        addressMid = self.nodes[0].getnewaddress()
+        addressBig = self.nodes[0].getnewaddress()
+
+        ######## burn ###########
+
+        # send proper tiered collaterals first
+        txidLil = self.nodes[0].sendtoaddress(addressLil, LIL_COLLATERAL)
+        txidMid = self.nodes[0].sendtoaddress(addressMid, MID_COLLATERAL)
+        txidBig = self.nodes[0].sendtoaddress(addressBig, BIG_COLLATERAL)
+
+        # get us 2 confirmations
+        self.nodes[0].generate(2)
+
+        # proper burn
+        burnfundLil = self.nodes[0].infinitynodeburnfund(addressLil, '100000', backupaddressLil)
+        burnfundMid = self.nodes[0].infinitynodeburnfund(addressMid, '500000', backupaddressMid)
+        burnfundBig = self.nodes[0].infinitynodeburnfund(addressBig, '1000000', backupaddressBig)
+
+        # grab txid for burn
+        txidLilBurn = burnfundLil[0]['txid']
+        txidMidBurn = burnfundMid[0]['txid']
+        txidBigBurn = burnfundBig[0]['txid']
+
+        # grab vout for burn
+        burn_vout_lil = burnfundLil[0]['vout']
+        burn_vout_mid = burnfundMid[0]['vout']
+        burn_vout_big = burnfundBig[0]['vout']
+
+        # grab txids for collaterals for the whole family
+        txidLockLil = self.nodes[0].sendtoaddress(addressLil, COLLATERAL)
+
+        # get us 6 confirmations
+        self.nodes[0].generate(6)
+
+        rawtxLil = self.nodes[0].getrawtransaction(txidLockLil, True)
+
+        # lil
+        collateral_vout_lil = 0
+        for vout_idx_lil in range(0, len(rawtxLil["vout"])):
+            vout_lil = rawtxLil["vout"][vout_idx_lil]
+            if vout_lil["value"] == COLLATERAL:
+                collateral_vout_lil = vout_idx_lil
+        self.nodes[0].lockunspent(False, [{'txid': txidLockLil, 'vout': collateral_vout_lil}])
+
+        txidLockMid = self.nodes[0].sendtoaddress(addressMid, COLLATERAL)
+
+        # get us 6 confirmations
+        self.nodes[0].generate(6)
+
+        rawtxMid = self.nodes[0].getrawtransaction(txidLockMid, True)
+
+        # mid
+        collateral_vout_mid = 0
+        for vout_idx_mid in range(0, len(rawtxMid["vout"])):
+            vout_mid = rawtxMid["vout"][vout_idx_mid]
+            if vout_mid["value"] == COLLATERAL:
+                collateral_vout_mid = vout_idx_mid
+        self.nodes[0].lockunspent(False, [{'txid': txidLockMid, 'vout': collateral_vout_mid}])
+
+        txidLockBig = self.nodes[0].sendtoaddress(addressBig, COLLATERAL)
+
+        # get us 6 confirmations
+        self.nodes[0].generate(6)
+
+        rawtxBig = self.nodes[0].getrawtransaction(txidLockBig, True)
+
+        # big
+        collateral_vout_big = 0
+        for vout_idx_big in range(0, len(rawtxBig["vout"])):
+            vout_big = rawtxBig["vout"][vout_idx_big]
+            if vout_big["value"] == COLLATERAL:
+                collateral_vout_big = vout_idx_big
+        self.nodes[0].lockunspent(False, [{'txid': txidLockBig, 'vout': collateral_vout_big}])
+
+        # save what we just made
+        self.infinitynodeinfo.append(InfinityNodeInfo(privkeyLil, txidLockLil, collateral_vout_lil, txidLilBurn, burn_vout_lil))
+        self.infinitynodeinfo.append(InfinityNodeInfo(privkeyMid, txidLockMid, collateral_vout_mid, txidMidBurn, burn_vout_mid))
+        self.infinitynodeinfo.append(InfinityNodeInfo(privkeyBig, txidLockBig, collateral_vout_big, txidBigBurn, burn_vout_big))
+
+    def prepare_datadirs(self):
+        # stop controller node so that we can copy the datadir, and start at the end of the datadir
+        self.stop_node(0)
+
+        start_idx = len(self.nodes)
+        for idx in range(0, self.infinitynode_number_family * 3):
+            copy_datadir(0, idx + start_idx, self.options.tmpdir)
+
+        self.start_node(0)
+
+    def start_infinitynode_family(self):
+        self.log.info("Starting %d infinitynodes", self.infinitynode_number_family * 3)
+
+        node_delta = len(self.nodes) - (self.infinitynode_number_family * 3)
+
+        executor = ThreadPoolExecutor(max_workers=20)
+
+        def do_start(idx):
+            args = ['-externalip=127.0.0.1', '-masternode=1',
+                    '-masternodeprivkey=%s' % self.infinitynodeinfo[idx].in_key] + self.extra_args[idx + node_delta]
+            self.stop_node(idx + node_delta)
+            self.start_node(idx + node_delta, extra_args=args)
+            self.infinitynodeinfo[idx].nodeIdx = idx + node_delta
+            self.infinitynodeinfo[idx].node = self.nodes[idx + node_delta]
+            l2_forced_sync(self.infinitynodeinfo[idx].node)
+
+        def do_connect(idx):
+            # Connect to the control node only, masternodes should take care of intra-quorum connections themselves
+            connect_nodes(self.infinitynodeinfo[idx].node, 0)
+
+        jobs = []
+
+        # start up nodes in parallel
+        for idx in range(0, (self.infinitynode_number_family * 3)):
+            jobs.append(executor.submit(do_start, idx))
+
+        # wait for all nodes to start up
+        for job in jobs:
+            job.result()
+        jobs.clear()
+
+        # connect nodes in parallel
+        for idx in range(0, (self.infinitynode_number_family * 3)):
+            jobs.append(executor.submit(do_connect, idx))
+
+        # wait for all nodes to connect
+        for job in jobs:
+            job.result()
+        jobs.clear()
+
+        executor.shutdown()
+
+    def init_sinovate_stuff(self):
+        assert self.infinitynode_number_family > 0
+        assert ((self.infinitynode_number_family) * 3) <= (len(self.nodes))
+        # create masternodes
+        required_balance = ((LIL_COLLATERAL + MID_COLLATERAL + BIG_COLLATERAL) * self.infinitynode_number_family) + (COLLATERAL * 3 * self.infinitynode_number_family) + 1
+        self.log.info("Generating %d coins" % required_balance)
+        while self.nodes[0].getbalance() < required_balance:
+            self.bump_mocktime(1)
+            set_node_times(self.nodes, self.mocktime)
+            self.nodes[0].generate(1)
+        # sync controller node up
+        l2_forced_sync(self.nodes[0])
+        # create IN txes for a family
+        self.create_infinitynode_families()
+        # prepare datadirs
+        self.prepare_datadirs()
+        # write the params to the conf file of the controller node
+        self.write_infinitynode_conf_file_family()
+        # restart controller node so it can load the in conf file we just created
+        self.restart_node(0)
+        # sync it up again
+        l2_forced_sync(self.nodes[0])
+        # start the IN family
+        self.start_infinitynode_family()
+        set_mocktime(self.mocktime + 60)
+        set_node_times(self.nodes, get_mocktime())
+        self.nodes[0].generate(1)
+        #make sure we're all connected to the controller node
+        for i in range(1, len(self.nodes)):
+            connect_nodes(self.nodes[i], 0)
+        # sync nodes
+        self.sync_all()
+        set_mocktime(self.mocktime + 60)
+        set_node_times(self.nodes, get_mocktime())
+        # check local status vs expected status
+        for i in range(1, (self.infinitynode_number_family * 3) + 1):
+            res = self.nodes[0].masternode("start-alias", "in%d" % i)
+            assert (res["result"] == 'successful')
+        # check total number of enabled nodes vs how many nodes we wanted to enable
+        infinitynode_info = self.nodes[0].masternodelist("status")
+        assert (len(infinitynode_info) == (self.infinitynode_number_family * 3))
+        for status in infinitynode_info.values():
+            assert (status == 'ENABLED')
