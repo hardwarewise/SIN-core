@@ -1293,11 +1293,7 @@ CAmount GetMasternodePayment(int nHeight, int sintype)
 	if (sintype == 1) {
 		if (Params().NetworkIDString() == CBaseChainParams::FINALNET && nHeight >=105 && nHeight <  150000) return 8 * COIN;
 		if (Params().NetworkIDString() == CBaseChainParams::TESTNET && nHeight >=105 && nHeight <  150000) return 8 * COIN;
-        if (Params().NetworkIDString() == CBaseChainParams::REGTEST && nHeight >=105 && nHeight <  150000) {
-            return 8 * COIN;
-        } else {
-            return 0 * COIN;
-        }
+        if (Params().NetworkIDString() == CBaseChainParams::REGTEST && nHeight >=105 && nHeight <  150000) return 8 * COIN;
 
 		if (nHeight <  150000) return  0 * COIN;  //testnet
 		if (nHeight <  170100) return  0 * COIN;  //hard fork
@@ -1307,11 +1303,7 @@ CAmount GetMasternodePayment(int nHeight, int sintype)
 	if (sintype == 5) {
 		if (Params().NetworkIDString() == CBaseChainParams::FINALNET && nHeight >=105 && nHeight <  150000) return 41 * COIN;
 		if (Params().NetworkIDString() == CBaseChainParams::TESTNET && nHeight >=105 && nHeight <  150000) return 41 * COIN;
-        if (Params().NetworkIDString() == CBaseChainParams::REGTEST && nHeight >=105 && nHeight <  150000) {
-            return 41 * COIN;
-        } else {
-            return 0 * COIN;
-        }
+        if (Params().NetworkIDString() == CBaseChainParams::REGTEST && nHeight >=105 && nHeight <  150000) return 41 * COIN;
 
 		if (nHeight <  150000) return  0 * COIN;  //testnet
 		if (nHeight <  170100) return  0 * COIN;  //hard fork
@@ -1321,11 +1313,7 @@ CAmount GetMasternodePayment(int nHeight, int sintype)
 	if (sintype == 10) {
 		if (Params().NetworkIDString() == CBaseChainParams::FINALNET && nHeight >=105 && nHeight <  150000) return 85 * COIN;
 		if (Params().NetworkIDString() == CBaseChainParams::TESTNET && nHeight >=105 && nHeight <  150000) return 85 * COIN;
-        if (Params().NetworkIDString() == CBaseChainParams::REGTEST && nHeight >=105 && nHeight <  150000) {
-            return 85 * COIN;
-        } else {
-            return 0 * COIN;
-        }
+        if (Params().NetworkIDString() == CBaseChainParams::REGTEST && nHeight >=105 && nHeight <  150000) return 85 * COIN;
 
 		if (nHeight <  150000) return  0 * COIN;  //testnet
 		if (nHeight <  170100) return  0 * COIN;  //hard fork
