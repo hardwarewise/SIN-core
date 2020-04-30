@@ -41,7 +41,7 @@
 #include <undo.h>
 #include <util.h>
 #include <utilmoneystr.h>
-#include <utilstrencodings.h>
+#include <util/strencodings.h>
 #include <validationinterface.h>
 #include <warnings.h>
 /*SIN*/
@@ -2443,7 +2443,7 @@ void static UpdateTip(const CBlockIndex *pindexNew, const CChainParams& chainPar
     mempool.AddTransactionsUpdated(1);
 
     {
-        WaitableLock lock(g_best_block_mutex);
+        LOCK(g_best_block_mutex);
         g_best_block = pindexNew->GetBlockHash();
         g_best_block_cv.notify_all();
     }

@@ -4,12 +4,14 @@
 innovative blockchain services for individuals, developers, and enterprises. Big Data, decentralized cloud,
 proof-of-integrity, proof-of-inheritance, and inflation are some of the resolutions presented to the crypto space.
 
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/SINOVATEblockchain/SIN-core?label=release&style=flat-square)[![HitCount](http://hits.dwyl.com/SINOVATEblockchain/SIN-core.svg)](http://hits.dwyl.com/SINOVATEblockchain/SIN-core)<a href="https://discord.gg/WnRExsx"><img src="https://discordapp.com/api/guilds/494460434691391509/embed.png" alt="Discord server" /></a> <a href="https://twitter.com/intent/follow?screen_name=SinovateChain"><img src="https://img.shields.io/twitter/follow/SinovateChain.svg?style=social&logo=twitter" alt="follow on Twitter"></a>
+
 
 
 
 # Features and Innovations
 
- - **x25X** GPU Algorithm. Leading-edge, in-house built,custom GPU mining algorithm. More complex,less power-hungry.
+ - **X25X** GPU Algorithm. Leading-edge, in-house built,custom GPU mining algorithm. More complex,less power-hungry.
  - **Infinity Nodes** Explicitly designed to overcome the hyperinflation all cryptocurrency projects face. Infinity nodes burn the collateral with unprecedented network security and stability.
  - **Incorruptible Data Storage** Incorruptible Data Storage. DataSend, DataStore and Blockchain-mail. Proof-of-Integrity. Unlimited private networking of big data storage.
  - **FlashSend** Instanteneous trasnactions in less than 2 seconds.

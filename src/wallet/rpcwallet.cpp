@@ -20,6 +20,7 @@
 #include <policy/fees.h>
 #include <policy/policy.h>
 #include <policy/rbf.h>
+#include <psbt.h>
 #include <rpc/mining.h>
 #include <rpc/rawtransaction.h>
 #include <rpc/server.h>
@@ -29,10 +30,12 @@
 #include <script/standard.h>
 #include <shutdown.h>
 #include <timedata.h>
+#include <util/bip32.h>
 #include <util.h>
 #include <utilmoneystr.h>
 #include <wallet/coincontrol.h>
 #include <wallet/feebumper.h>
+#include <wallet/psbtwallet.h>
 #include <wallet/rpcwallet.h>
 #include <wallet/wallet.h>
 #include <wallet/walletdb.h>
@@ -169,11 +172,11 @@ static UniValue getnewaddress(const JSONRPCRequest& request)
             + HelpExampleRpc("getnewaddress", "")
         );
 
-    if (pwallet->IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS)) {
-        throw JSONRPCError(RPC_WALLET_ERROR, "Error: Private keys are disabled for this wallet");
-    }
-
     LOCK2(cs_main, pwallet->cs_wallet);
+    
+    if (!pwallet->CanGetAddresses()) {
+        throw JSONRPCError(RPC_WALLET_ERROR, "Error: This wallet has no available keys");
+    }
 
     // Parse the label first so we don't generate a key if there's an error
     std::string label;
@@ -1818,8 +1821,8 @@ static UniValue addmultisigaddress(const JSONRPCRequest& request)
     }
 
     // Construct using pay-to-script-hash:
-    CScript inner = CreateMultisigRedeemscript(required, pubkeys);
-    CTxDestination dest = AddAndGetDestinationForScript(*pwallet, inner, output_type);
+    CScript inner;
+    CTxDestination dest = AddAndGetMultisigDestination(required, pubkeys, output_type, *pwallet, inner);
     pwallet->SetAddressBook(dest, label, "send");
 
     UniValue result(UniValue::VOBJ);
@@ -2234,7 +2237,7 @@ static void MaybePushAddress(UniValue & entry, const CTxDestination &dest)
  * @param  ret        The UniValue into which the result is stored.
  * @param  filter     The "is mine" filter bool.
  */
-static void ListTransactions(CWallet* const pwallet, const CWalletTx& wtx, const std::string& strAccount, int nMinDepth, bool fLong, UniValue& ret, const isminefilter& filter)
+static void ListTransactions(CWallet* const pwallet, const CWalletTx& wtx, int nMinDepth, bool fLong, UniValue& ret, const isminefilter& filter, const std::string* filter_label)
 {
     CAmount nFee;
     std::string strSentAccount;
@@ -2243,17 +2246,11 @@ static void ListTransactions(CWallet* const pwallet, const CWalletTx& wtx, const
 
     wtx.GetAmounts(listReceived, listSent, nFee, strSentAccount, filter);
 
-    bool fAllAccounts = (strAccount == std::string("*"));
     bool involvesWatchonly = wtx.IsFromMe(ISMINE_WATCH_ONLY);
 
-    bool list_sent = fAllAccounts;
-
-    if (IsDeprecatedRPCEnabled("accounts")) {
-        list_sent |= strAccount == strSentAccount;
-    }
-
     // Sent
-    if (list_sent) {
+	if (!filter_label)
+	{
         for (const COutputEntry& s : listSent)
         {
             UniValue entry(UniValue::VOBJ);
@@ -2281,42 +2278,39 @@ static void ListTransactions(CWallet* const pwallet, const CWalletTx& wtx, const
     {
         for (const COutputEntry& r : listReceived)
         {
-            std::string account;
+            std::string label;
             if (pwallet->mapAddressBook.count(r.destination)) {
-                account = pwallet->mapAddressBook[r.destination].name;
+                label = pwallet->mapAddressBook[r.destination].name;
             }
-            if (fAllAccounts || (account == strAccount))
+            if (filter_label && label != *filter_label) {
+                continue;
+            }
+            UniValue entry(UniValue::VOBJ);
+            if (involvesWatchonly || (::IsMine(*pwallet, r.destination) & ISMINE_WATCH_ONLY)) {
+                entry.pushKV("involvesWatchonly", true);
+            }
+            MaybePushAddress(entry, r.destination);
+            if (wtx.IsCoinBase())
             {
-                UniValue entry(UniValue::VOBJ);
-                if (involvesWatchonly || (::IsMine(*pwallet, r.destination) & ISMINE_WATCH_ONLY)) {
-                    entry.pushKV("involvesWatchonly", true);
-                }
-                if (IsDeprecatedRPCEnabled("accounts")) entry.pushKV("account", account);
-                MaybePushAddress(entry, r.destination);
-                if (wtx.GetImmatureTermDepositCredit() > 0) {
-                    entry.push_back(Pair("category", "hodl"));
-                } else if (wtx.IsCoinBase())
-                {
-                    if (wtx.GetDepthInMainChain() < 1)
-                        entry.pushKV("category", "orphan");
-                    else if (wtx.GetBlocksToMaturity() > 0)
-                        entry.pushKV("category", "immature");
-                    else
-                        entry.pushKV("category", "generate");
-                }
+                if (wtx.GetDepthInMainChain() < 1)
+                    entry.pushKV("category", "orphan");
+                else if (wtx.GetBlocksToMaturity() > 0)
+                    entry.pushKV("category", "immature");
                 else
-                {
-                    entry.pushKV("category", "receive");
-                }
-                entry.pushKV("amount", ValueFromAmount(r.amount));
-                if (pwallet->mapAddressBook.count(r.destination)) {
-                    entry.pushKV("label", account);
-                }
-                entry.pushKV("vout", r.vout);
-                if (fLong)
-                    WalletTxToJSON(wtx, entry);
-                ret.push_back(entry);
+                    entry.pushKV("category", "generate");
             }
+            else
+            {
+                entry.pushKV("category", "receive");
+            }
+            entry.pushKV("amount", ValueFromAmount(r.amount));
+            if (pwallet->mapAddressBook.count(r.destination)) {
+                entry.pushKV("label", label);
+            }
+            entry.pushKV("vout", r.vout);
+            if (fLong)
+                    WalletTxToJSON(wtx, entry);
+            ret.push_back(entry);
         }
     }
 }
@@ -2459,10 +2453,10 @@ UniValue listtransactions(const JSONRPCRequest& request)
     // the user could have gotten from another RPC command prior to now
     pwallet->BlockUntilSyncedToCurrentChain();
 
-    std::string strAccount = "*";
-    if (!request.params[0].isNull()) {
-        strAccount = request.params[0].get_str();
-        if (!IsDeprecatedRPCEnabled("accounts") && strAccount.empty()) {
+    const std::string* filter_label = nullptr;
+    if (!request.params[0].isNull() && request.params[0].get_str() != "*") {
+        filter_label = &request.params[0].get_str();
+        if (filter_label->empty()) {
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Label argument must be a valid label name or \"*\".");
         }
     }
@@ -2492,14 +2486,8 @@ UniValue listtransactions(const JSONRPCRequest& request)
         // iterate backwards until we have nCount items to return:
         for (CWallet::TxItems::const_reverse_iterator it = txOrdered.rbegin(); it != txOrdered.rend(); ++it)
         {
-            CWalletTx *const pwtx = (*it).second.first;
-            if (pwtx != nullptr)
-                ListTransactions(pwallet, *pwtx, strAccount, 0, true, ret, filter);
-            if (IsDeprecatedRPCEnabled("accounts")) {
-                CAccountingEntry *const pacentry = (*it).second.second;
-                if (pacentry != nullptr) AcentryToJSON(*pacentry, strAccount, ret);
-            }
-
+            CWalletTx *const pwtx = (*it).second;
+            ListTransactions(pwallet, *pwtx, 0, true, ret, filter, filter_label);
             if ((int)ret.size() >= (nCount+nFrom)) break;
         }
     }
@@ -2732,7 +2720,7 @@ static UniValue listsinceblock(const JSONRPCRequest& request)
         CWalletTx tx = pairWtx.second;
 
         if (depth == -1 || tx.GetDepthInMainChain() < depth) {
-            ListTransactions(pwallet, tx, "*", 0, true, transactions, filter);
+            ListTransactions(pwallet, tx, 0, true, transactions, filter, nullptr);
         }
     }
 
@@ -2749,7 +2737,7 @@ static UniValue listsinceblock(const JSONRPCRequest& request)
             if (it != pwallet->mapWallet.end()) {
                 // We want all transactions regardless of confirmation count to appear here,
                 // even negative confirmation ones, hence the big negative.
-                ListTransactions(pwallet, it->second, "*", -100000000, true, removed, filter);
+                ListTransactions(pwallet, it->second, -100000000, true, removed, filter, nullptr);
             }
         }
         paltindex = paltindex->pprev;
@@ -2865,7 +2853,7 @@ static UniValue gettransaction(const JSONRPCRequest& request)
     WalletTxToJSON(wtx, entry);
 
     UniValue details(UniValue::VARR);
-    ListTransactions(pwallet, wtx, "*", 0, false, details, filter);
+    ListTransactions(pwallet, wtx, 0, false, details, filter, nullptr);
     entry.pushKV("details", details);
 
     std::string strHex = EncodeHexTx(*wtx.tx, RPCSerializationFlags());
@@ -4943,159 +4931,17 @@ UniValue sethdseed(const JSONRPCRequest& request)
     return NullUniValue;
 }
 
-bool ParseHDKeypath(std::string keypath_str, std::vector<uint32_t>& keypath)
-{
-    std::stringstream ss(keypath_str);
-    std::string item;
-    bool first = true;
-    while (std::getline(ss, item, '/')) {
-        if (item.compare("m") == 0) {
-            if (first) {
-                first = false;
-                continue;
-            }
-            return false;
-        }
-        // Finds whether it is hardened
-        uint32_t path = 0;
-        size_t pos = item.find("'");
-        if (pos != std::string::npos) {
-            // The hardened tick can only be in the last index of the string
-            if (pos != item.size() - 1) {
-                return false;
-            }
-            path |= 0x80000000;
-            item = item.substr(0, item.size() - 1); // Drop the last character which is the hardened tick
-        }
-
-        // Ensure this is only numbers
-        if (item.find_first_not_of( "0123456789" ) != std::string::npos) {
-            return false;
-        }
-        uint32_t number;
-        if (!ParseUInt32(item, &number)) {
-            return false;
-        }
-        path |= number;
-
-        keypath.push_back(path);
-        first = false;
-    }
-    return true;
-}
-
-void AddKeypathToMap(const CWallet* pwallet, const CKeyID& keyID, std::map<CPubKey, std::vector<uint32_t>>& hd_keypaths)
+void AddKeypathToMap(const CWallet* pwallet, const CKeyID& keyID, std::map<CPubKey, KeyOriginInfo>& hd_keypaths)
 {
     CPubKey vchPubKey;
     if (!pwallet->GetPubKey(keyID, vchPubKey)) {
         return;
     }
-    CKeyMetadata meta;
-    auto it = pwallet->mapKeyMetadata.find(keyID);
-    if (it != pwallet->mapKeyMetadata.end()) {
-        meta = it->second;
+    KeyOriginInfo info;
+    if (!pwallet->GetKeyOrigin(keyID, info)) {
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Internal keypath is broken");
     }
-    std::vector<uint32_t> keypath;
-    if (!meta.hdKeypath.empty()) {
-        if (!ParseHDKeypath(meta.hdKeypath, keypath)) {
-            throw JSONRPCError(RPC_INTERNAL_ERROR, "Internal keypath is broken");
-        }
-        // Get the proper master key id
-        CKey key;
-        pwallet->GetKey(meta.hd_seed_id, key);
-        CExtKey masterKey;
-        masterKey.SetSeed(key.begin(), key.size());
-        // Add to map
-        keypath.insert(keypath.begin(), ReadLE32(masterKey.key.GetPubKey().GetID().begin()));
-    } else { // Single pubkeys get the master fingerprint of themselves
-        keypath.insert(keypath.begin(), ReadLE32(vchPubKey.GetID().begin()));
-    }
-    hd_keypaths.emplace(vchPubKey, keypath);
-}
-
-bool FillPSBT(const CWallet* pwallet, PartiallySignedTransaction& psbtx, int sighash_type, bool sign, bool bip32derivs)
-{
-    LOCK(pwallet->cs_wallet);
-    // Get all of the previous transactions
-    bool complete = true;
-    for (unsigned int i = 0; i < psbtx.tx->vin.size(); ++i) {
-        const CTxIn& txin = psbtx.tx->vin[i];
-        PSBTInput& input = psbtx.inputs.at(i);
-
-        if (PSBTInputSigned(input)) {
-            continue;
-        }
-
-        // Verify input looks sane. This will check that we have at most one uxto, witness or non-witness.
-        if (!input.IsSane()) {
-            throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "PSBT input is not sane.");
-        }
-
-        // If we have no utxo, grab it from the wallet.
-        if (!input.non_witness_utxo && input.witness_utxo.IsNull()) {
-            const uint256& txhash = txin.prevout.hash;
-            const auto it = pwallet->mapWallet.find(txhash);
-            if (it != pwallet->mapWallet.end()) {
-                const CWalletTx& wtx = it->second;
-                // We only need the non_witness_utxo, which is a superset of the witness_utxo.
-                //   The signing code will switch to the smaller witness_utxo if this is ok.
-                input.non_witness_utxo = wtx.tx;
-            }
-        }
-
-        // Get the Sighash type
-        if (sign && input.sighash_type > 0 && input.sighash_type != sighash_type) {
-            throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Specified Sighash and sighash in PSBT do not match.");
-        }
-
-        SignatureData sigdata;
-        if (sign) {
-            complete &= SignPSBTInput(*pwallet, psbtx, sigdata, i, sighash_type);
-        } else {
-            complete &= SignPSBTInput(PublicOnlySigningProvider(pwallet), psbtx, sigdata, i, sighash_type);
-        }
-
-        if (sigdata.witness) {
-            // Convert the non-witness utxo to witness
-            if (input.witness_utxo.IsNull() && input.non_witness_utxo) {
-                input.witness_utxo = input.non_witness_utxo->vout[txin.prevout.n];
-            }
-        }
-
-        // Get public key paths
-        if (bip32derivs) {
-            for (const auto& pubkey_it : sigdata.misc_pubkeys) {
-                AddKeypathToMap(pwallet, pubkey_it.first, input.hd_keypaths);
-            }
-        }
-    }
-
-    // Fill in the bip32 keypaths and redeemscripts for the outputs so that hardware wallets can identify change
-    for (unsigned int i = 0; i < psbtx.tx->vout.size(); ++i) {
-        const CTxOut& out = psbtx.tx->vout.at(i);
-        PSBTOutput& psbt_out = psbtx.outputs.at(i);
-
-        // Dummy tx so we can use ProduceSignature to get stuff out
-        CMutableTransaction dummy_tx;
-        dummy_tx.vin.push_back(CTxIn());
-        dummy_tx.vout.push_back(CTxOut());
-
-        // Fill a SignatureData with output info
-        SignatureData sigdata;
-        psbt_out.FillSignatureData(sigdata);
-
-        MutableTransactionSignatureCreator creator(psbtx.tx.get_ptr(), 0, out.nValue, 1);
-        ProduceSignature(*pwallet, creator, out.scriptPubKey, sigdata);
-        psbt_out.FromSignatureData(sigdata);
-
-        // Get public key paths
-        if (bip32derivs) {
-            for (const auto& pubkey_it : sigdata.misc_pubkeys) {
-                AddKeypathToMap(pwallet, pubkey_it.first, psbt_out.hd_keypaths);
-            }
-        }
-    }
-    return complete;
+    hd_keypaths.emplace(vchPubKey, std::move(info));
 }
 
 UniValue walletprocesspsbt(const JSONRPCRequest& request)
@@ -5142,7 +4988,7 @@ UniValue walletprocesspsbt(const JSONRPCRequest& request)
     // Unserialize the transaction
     PartiallySignedTransaction psbtx;
     std::string error;
-    if (!DecodePSBT(psbtx, request.params[0].get_str(), error)) {
+    if (!DecodeBase64PSBT(psbtx, request.params[0].get_str(), error)) {
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, strprintf("TX decode failed %s", error));
     }
 
@@ -5152,8 +4998,12 @@ UniValue walletprocesspsbt(const JSONRPCRequest& request)
     // Fill transaction with our data and also sign
     bool sign = request.params[1].isNull() ? true : request.params[1].get_bool();
     bool bip32derivs = request.params[3].isNull() ? false : request.params[3].get_bool();
-    bool complete = FillPSBT(pwallet, psbtx, nHashType, sign, bip32derivs);
-
+    bool complete = true;
+    const TransactionError err = FillPSBT(pwallet, psbtx, complete, nHashType, sign, bip32derivs);
+    if (err != TransactionError::OK) {
+        throw JSONRPCTransactionError(err);
+    }
+    
     UniValue result(UniValue::VOBJ);
     CDataStream ssTx(SER_NETWORK, PROTOCOL_VERSION);
     ssTx << psbtx;
@@ -5254,8 +5104,12 @@ UniValue walletcreatefundedpsbt(const JSONRPCRequest& request)
 
     // Fill transaction with out data but don't sign
     bool bip32derivs = request.params[4].isNull() ? false : request.params[4].get_bool();
-    FillPSBT(pwallet, psbtx, 1, false, bip32derivs);
-
+    bool complete = true;
+    const TransactionError err = FillPSBT(pwallet, psbtx, complete, 1, false, bip32derivs);
+    if (err != TransactionError::OK) {
+        throw JSONRPCTransactionError(err);
+    }
+    
     // Serialize the PSBT
     CDataStream ssTx(SER_NETWORK, PROTOCOL_VERSION);
     ssTx << psbtx;

@@ -18,7 +18,7 @@
 #include <rpc/util.h>
 #include <timedata.h>
 #include <util.h>
-#include <utilstrencodings.h>
+#include <util/strencodings.h>
 #ifdef ENABLE_WALLET
 #include <wallet/rpcwallet.h>
 #include <wallet/wallet.h>
@@ -250,9 +250,9 @@ static UniValue createmultisig(const JSONRPCRequest& request)
     }
 
     // Construct using pay-to-script-hash:
-    const CScript inner = CreateMultisigRedeemscript(required, pubkeys);
     CBasicKeyStore keystore;
-    const CTxDestination dest = AddAndGetDestinationForScript(keystore, inner, output_type);
+    CScript inner;
+    const CTxDestination dest = AddAndGetMultisigDestination(required, pubkeys, output_type, keystore, inner);
 
     UniValue result(UniValue::VOBJ);
     result.pushKV("address", EncodeDestination(dest));

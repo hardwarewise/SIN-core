@@ -19,11 +19,14 @@ GetResults(CWallet& wallet, std::map<CAmount, CAccountingEntry>& results)
 
     results.clear();
     BOOST_CHECK(wallet.ReorderTransactions() == DBErrors::LOAD_OK);
+    
+/* deprecated call 
     wallet.ListAccountCreditDebit("", aes);
     for (CAccountingEntry& ae : aes)
     {
         results[ae.nOrderPos] = ae;
     }
+*/
 }
 
 BOOST_AUTO_TEST_CASE(acc_orderupgrade)
