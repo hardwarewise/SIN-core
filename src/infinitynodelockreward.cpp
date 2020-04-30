@@ -14,6 +14,7 @@
 #include <secp256k1.h>
 #include <secp256k1_schnorr.h>
 #include <secp256k1_musig.h>
+#include <base58.h>
 
 #include <boost/lexical_cast.hpp>
 
@@ -880,10 +881,6 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
                 continue;
             }
 
-            commitmenthash[nSigner] = (unsigned char*) malloc(32 * sizeof(unsigned char));
-            secp256k1_pubkey pub = pubkeys[nSigner];
-            secp256k1_pubkey_to_commitment(secp256k1_context_musig, commitmenthash[nSigner], &pub);
-
             if(infinitynodePeer.burntx == infSigner.getBurntxOutPoint() && infinitynodePeer.keyInfinitynode.size()==32 ){
                     myIndex = nSigner;
                     memcpy(myPeerKey, infinitynodePeer.keyInfinitynode.begin(), 32);
@@ -899,6 +896,11 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
                         LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- cannot parse publicKey\n");
                         continue;
                     }
+
+                    commitmenthash[nCommitment] = (unsigned char*) malloc(32 * sizeof(unsigned char));
+                    secp256k1_pubkey pub = commitmentpk[nCommitment];
+                    secp256k1_pubkey_to_commitment(secp256k1_context_musig, commitmenthash[nCommitment], &pub);
+
                     if(infinitynodePeer.burntx == infSigner.getBurntxOutPoint() && pair.second.random.size() == 32){
                         memcpy(myCommitmentPrivkey, pair.second.random.begin(), 32);
                         secp256k1_pubkey pub = commitmentpk[nCommitment];
@@ -923,24 +925,32 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
     unsigned char msg[32] = {'a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a'};
     secp256k1_schnorr sig;
     secp256k1_scratch_space *scratch = NULL;
-    secp256k1_pubkey combined_pk;
+    secp256k1_pubkey combined_pk, nonce;
 
     CKey secret;
     secret.MakeNewKey(true);
     memcpy(session_id, secret.begin(), 32);
 
     secp256k1_musig_session musig_session;
-    //musig_session = (secp256k1_musig_session*) malloc(Params().GetConsensus().nInfinityNodeLockRewardSigners * sizeof(secp256k1_musig_session));
     secp256k1_musig_session_signer_data *signer_data;
     signer_data = (secp256k1_musig_session_signer_data*) malloc(Params().GetConsensus().nInfinityNodeLockRewardSigners * sizeof(secp256k1_musig_session_signer_data));
+    secp256k1_musig_partial_signature partial_sig;
 
     scratch = secp256k1_scratch_space_create(secp256k1_context_musig, 1024 * 1024);
 
+    //combine publicKeys
     if (!secp256k1_musig_pubkey_combine(secp256k1_context_musig, scratch, &combined_pk, pk_hash, pubkeys, N_SIGNERS)) {
         LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- Musig Combine PublicKey FAILED\n");
         return false;
     }
 
+    unsigned char pub[CPubKey::PUBLIC_KEY_SIZE];
+    size_t publen = CPubKey::PUBLIC_KEY_SIZE;
+    secp256k1_ec_pubkey_serialize(secp256k1_context_musig, pub, &publen, &combined_pk, SECP256K1_EC_COMPRESSED);
+    CPubKey combined_pubKey_formated(pub, pub + publen);
+    LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- Combining public keys: %s\n", combined_pubKey_formated.GetID().ToString());
+
+    //i am signer
     if(myIndex > 0){
         if (!secp256k1_musig_session_initialize_sin(secp256k1_context_musig, &musig_session, signer_data, nonce_commitment,
                                             session_id, msg, &combined_pk, pk_hash, N_SIGNERS, myIndex, myPeerKey, myCommitmentPrivkey)) {
@@ -948,17 +958,43 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
             return false;
         }
 
-        LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- nb signers: %d\n",sizeof(signer_data));
-        for(int i = 0; i < 32; i++){
-            LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- myCommitmentHash: %d, nonce_commitment: %d\n",myCommitmentHash[i], nonce_commitment[i]);
+        if (!secp256k1_musig_session_get_public_nonce(secp256k1_context_musig, &musig_session, signer_data, &nonce, commitmenthash, N_SIGNERS, NULL)) {
+            return false;
         }
-	}
-    unsigned char pub[CPubKey::PUBLIC_KEY_SIZE];
-    size_t publen = CPubKey::PUBLIC_KEY_SIZE;
-    secp256k1_ec_pubkey_serialize(secp256k1_context_musig, pub, &publen, &combined_pk, SECP256K1_EC_COMPRESSED);
-    CPubKey combined_pubKey_formated(pub, pub + publen);
-    LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- Combining public keys: %s\n", combined_pubKey_formated.GetID().ToString());
 
+        for (int j = 0; j < N_SIGNERS; j++) {
+            if (!secp256k1_musig_set_nonce(secp256k1_context_musig, &signer_data[j], &commitmentpk[j])) {
+                LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- Musig Set Nonce FAILED\n");
+                return false;
+            }
+        }
+
+        if (!secp256k1_musig_session_combine_nonces(secp256k1_context_musig, &musig_session, signer_data, N_SIGNERS, NULL, NULL)) {
+            LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- Musig Combine Nonce FAILED\n");
+            return false;
+        }
+
+        if (!secp256k1_musig_partial_sign(secp256k1_context_musig, &musig_session, &partial_sig)) {
+            LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- Musig Partial Sign FAILED\n");
+            return false;
+        }
+
+        if (!secp256k1_musig_partial_sig_verify(secp256k1_context_musig, &musig_session, &signer_data[myIndex], &partial_sig, &pubkeys[myIndex])) {
+            LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- Musig Partial Sign Verify FAILED\n");
+            return false;
+        }
+
+        unsigned char buf[32];
+        secp256k1_musig_partial_signature_parse(secp256k1_context_musig, &partial_sig, buf);
+        LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- Musig Partial Sign ");
+        for(int i=0; i<32; i++){
+            LogPrintf(" %d ", buf[i]);
+        }
+        LogPrintf("\n");
+
+        std::string sign58 = EncodeBase58(buf, buf+32);
+        LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- Musig Partial Sign base58: %s\n",sign58);
+    }
     return true;
 }
 
