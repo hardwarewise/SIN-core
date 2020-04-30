@@ -264,4 +264,16 @@ public:
     //call in dsnotificationinterface.cpp when node connect a new block
     void UpdatedBlockTip(const CBlockIndex *pindex, CConnman& connman);
 };
+
+class ECCMusigHandle
+{
+    static int refcount;
+
+public:
+    ECCMusigHandle();
+    ~ECCMusigHandle();
+};
+
+void ECC_MusigStart(void);
+void ECC_MusigStop(void);
 #endif // SIN_INFINITYNODELOCKREWARD_H

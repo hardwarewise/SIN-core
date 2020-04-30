@@ -97,6 +97,22 @@ static void secp256k1_musig_signers_init(secp256k1_musig_session_signer_data *si
     }
 }
 
+int secp256k1_pubkey_to_commitment(const secp256k1_context* ctx, unsigned char *nonce_commitment32, const secp256k1_pubkey *pubkey) {
+    secp256k1_sha256_t sha;
+    unsigned char commit[33];
+    size_t commit_size = sizeof(commit);
+
+    VERIFY_CHECK(ctx != NULL);
+    ARG_CHECK(nonce_commitment32 != NULL);
+    ARG_CHECK(pubkey != NULL);
+
+    secp256k1_sha256_initialize(&sha);
+    secp256k1_ec_pubkey_serialize(ctx, commit, &commit_size, pubkey, SECP256K1_EC_COMPRESSED);
+    secp256k1_sha256_write(&sha, commit, commit_size);
+    secp256k1_sha256_finalize(&sha, nonce_commitment32);
+    return 1;
+}
+
 int secp256k1_musig_pubkey_combine(const secp256k1_context* ctx, secp256k1_scratch_space *scratch, secp256k1_pubkey *combined_pk, unsigned char *pk_hash32, const secp256k1_pubkey *pubkeys, size_t n_pubkeys) {
     secp256k1_musig_pubkey_combine_ecmult_data ecmult_data;
     secp256k1_gej pkj;
@@ -113,9 +129,11 @@ int secp256k1_musig_pubkey_combine(const secp256k1_context* ctx, secp256k1_scrat
     if (!secp256k1_musig_compute_ell(ctx, ecmult_data.ell, pubkeys, n_pubkeys)) {
         return 0;
     }
+
     if (!secp256k1_ecmult_multi_var(&ctx->error_callback, &ctx->ecmult_ctx, scratch, &pkj, NULL, secp256k1_musig_pubkey_combine_callback, (void *) &ecmult_data, n_pubkeys)) {
         return 0;
     }
+
     secp256k1_ge_set_gej(&pkp, &pkj);
     secp256k1_pubkey_save(combined_pk, &pkp);
 
@@ -192,6 +210,82 @@ int secp256k1_musig_session_initialize(const secp256k1_context* ctx, secp256k1_m
         secp256k1_scalar_clear(&secret);
         return 0;
     }
+
+    /* Compute public nonce and commitment */
+    secp256k1_ecmult_gen(&ctx->ecmult_gen_ctx, &rj, &secret);
+    secp256k1_ge_set_gej(&rp, &rj);
+    secp256k1_pubkey_save(&session->nonce, &rp);
+
+    if (nonce_commitment32 != NULL) {
+        unsigned char commit[33];
+        size_t commit_size = sizeof(commit);
+        secp256k1_sha256_initialize(&sha);
+        secp256k1_ec_pubkey_serialize(ctx, commit, &commit_size, &session->nonce, SECP256K1_EC_COMPRESSED);
+        secp256k1_sha256_write(&sha, commit, commit_size);
+        secp256k1_sha256_finalize(&sha, nonce_commitment32);
+    }
+
+    secp256k1_scalar_clear(&secret);
+    return 1;
+}
+
+int secp256k1_musig_session_initialize_sin(const secp256k1_context* ctx, secp256k1_musig_session *session, secp256k1_musig_session_signer_data *signers, unsigned char *nonce_commitment32, const unsigned char *session_id32, const unsigned char *msg32, const secp256k1_pubkey *combined_pk, const unsigned char *pk_hash32, size_t n_signers, size_t my_index, const unsigned char *seckey, const unsigned char *secnonce) {
+    int overflow;
+    secp256k1_scalar secret;
+    secp256k1_scalar mu;
+    secp256k1_sha256_t sha;
+    secp256k1_gej rj;
+    secp256k1_ge rp;
+
+    VERIFY_CHECK(ctx != NULL);
+    ARG_CHECK(secp256k1_ecmult_gen_context_is_built(&ctx->ecmult_gen_ctx));
+    ARG_CHECK(session != NULL);
+    ARG_CHECK(signers != NULL);
+    ARG_CHECK(nonce_commitment32 != NULL);
+    ARG_CHECK(session_id32 != NULL);
+    ARG_CHECK(combined_pk != NULL);
+    ARG_CHECK(pk_hash32 != NULL);
+    ARG_CHECK(seckey != NULL);
+
+    memset(session, 0, sizeof(*session));
+
+    if (msg32 != NULL) {
+        memcpy(session->msg, msg32, 32);
+        session->msg_is_set = 1;
+    } else {
+        session->msg_is_set = 0;
+    }
+    memcpy(&session->combined_pk, combined_pk, sizeof(*combined_pk));
+    memcpy(session->pk_hash, pk_hash32, 32);
+    session->nonce_is_set = 0;
+    session->has_secret_data = 1;
+    if (n_signers == 0 || my_index >= n_signers) {
+        return 0;
+    }
+    if (n_signers > UINT32_MAX) {
+        return 0;
+    }
+    session->n_signers = (uint32_t) n_signers;
+    secp256k1_musig_signers_init(signers, session->n_signers);
+    session->nonce_commitments_hash_is_set = 0;
+
+    /* Compute secret key */
+    secp256k1_scalar_set_b32(&secret, seckey, &overflow);
+    if (overflow) {
+        secp256k1_scalar_clear(&secret);
+        return 0;
+    }
+    secp256k1_musig_coefficient(&mu, pk_hash32, (uint32_t) my_index);
+    secp256k1_scalar_mul(&secret, &secret, &mu);
+    secp256k1_scalar_get_b32(session->seckey, &secret);
+
+    /* Compute secret nonce */
+    secp256k1_scalar_set_b32(&secret, secnonce, &overflow);
+    if (overflow) {
+        secp256k1_scalar_clear(&secret);
+        return 0;
+    }
+    secp256k1_scalar_get_b32(session->secnonce, &secret);
 
     /* Compute public nonce and commitment */
     secp256k1_ecmult_gen(&ctx->ecmult_gen_ctx, &rj, &secret);

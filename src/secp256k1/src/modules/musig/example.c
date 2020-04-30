@@ -37,7 +37,7 @@ int create_key(const secp256k1_context* ctx, unsigned char* seckey, secp256k1_pu
 }
 
 /* Sign a message hash with the given key pairs and store the result in sig */
-int sign(const secp256k1_context* ctx, unsigned char seckeys[][32], const secp256k1_pubkey* pubkeys, const unsigned char* msg32, secp256k1_schnorr *sig) {
+int sign(const secp256k1_context* ctx, secp256k1_scratch_space *scratch, unsigned char seckeys[][32], const secp256k1_pubkey* pubkeys, const unsigned char* msg32, secp256k1_schnorr *sig) {
     secp256k1_musig_session musig_session[N_SIGNERS];
     unsigned char nonce_commitment[N_SIGNERS][32];
     const unsigned char *nonce_commitment_ptr[N_SIGNERS];
@@ -53,7 +53,7 @@ int sign(const secp256k1_context* ctx, unsigned char seckeys[][32], const secp25
         secp256k1_pubkey combined_pk;
 
         /* Create combined pubkey and initialize signer data */
-        if (!secp256k1_musig_pubkey_combine(ctx, NULL, &combined_pk, pk_hash, pubkeys, N_SIGNERS)) {
+        if (!secp256k1_musig_pubkey_combine(ctx, scratch, &combined_pk, pk_hash, pubkeys, N_SIGNERS)) {
             return 0;
         }
         /* Create random session ID. It is absolutely necessary that the session ID
@@ -74,6 +74,7 @@ int sign(const secp256k1_context* ctx, unsigned char seckeys[][32], const secp25
         }
         nonce_commitment_ptr[i] = &nonce_commitment[i][0];
     }
+
     /* Communication round 1: Exchange nonce commitments */
     for (i = 0; i < N_SIGNERS; i++) {
         /* Set nonce commitments in the signer data and get the own public nonce */
@@ -81,6 +82,7 @@ int sign(const secp256k1_context* ctx, unsigned char seckeys[][32], const secp25
             return 0;
         }
     }
+
     /* Communication round 2: Exchange nonces */
     for (i = 0; i < N_SIGNERS; i++) {
         for (j = 0; j < N_SIGNERS; j++) {
@@ -95,11 +97,13 @@ int sign(const secp256k1_context* ctx, unsigned char seckeys[][32], const secp25
             return 0;
         }
     }
+
     for (i = 0; i < N_SIGNERS; i++) {
         if (!secp256k1_musig_partial_sign(ctx, &musig_session[i], &partial_sig[i])) {
             return 0;
         }
     }
+
     /* Communication round 3: Exchange partial signatures */
     for (i = 0; i < N_SIGNERS; i++) {
         for (j = 0; j < N_SIGNERS; j++) {
@@ -119,20 +123,25 @@ int sign(const secp256k1_context* ctx, unsigned char seckeys[][32], const secp25
             }
         }
     }
+
     return secp256k1_musig_partial_sig_combine(ctx, &musig_session[0], sig, partial_sig, N_SIGNERS, NULL);
 }
 
  int main(void) {
     secp256k1_context* ctx;
+    secp256k1_scratch_space *scratch = NULL;
     int i;
     unsigned char seckeys[N_SIGNERS][32];
     secp256k1_pubkey pubkeys[N_SIGNERS];
     secp256k1_pubkey combined_pk;
     unsigned char msg[32] = "this_could_be_the_hash_of_a_msg!";
     secp256k1_schnorr sig;
+    unsigned char pub[33];
+    size_t publen = 33;
 
     /* Create a context for signing and verification */
     ctx = secp256k1_context_create(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY);
+    scratch = secp256k1_scratch_space_create(ctx, 1024 * 1024);
     printf("Creating key pairs......");
     for (i = 0; i < N_SIGNERS; i++) {
         if (!create_key(ctx, seckeys[i], &pubkeys[i])) {
@@ -142,13 +151,16 @@ int sign(const secp256k1_context* ctx, unsigned char seckeys[][32], const secp25
     }
     printf("ok\n");
     printf("Combining public keys...");
-    if (!secp256k1_musig_pubkey_combine(ctx, NULL, &combined_pk, NULL, pubkeys, N_SIGNERS)) {
+    if (!secp256k1_musig_pubkey_combine(ctx, scratch, &combined_pk, NULL, pubkeys, N_SIGNERS)) {
         printf("FAILED\n");
         return 1;
     }
-    printf("ok\n");
+
+    secp256k1_ec_pubkey_serialize(ctx, pub, &publen, &combined_pk, SECP256K1_EC_COMPRESSED);
+    printf("ok %d\n", pub[0]);
+
     printf("Signing message.........");
-    if (!sign(ctx, seckeys, pubkeys, msg, &sig)) {
+    if (!sign(ctx, scratch, seckeys, pubkeys, msg, &sig)) {
         printf("FAILED\n");
         return 1;
     }
