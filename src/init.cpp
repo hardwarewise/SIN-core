@@ -75,6 +75,7 @@
 #include <infinitynodersv.h>
 #include <infinitynodepeer.h>
 #include <infinitynodemeta.h>
+#include <infinitynodelockreward.h>
 //
 
 #ifndef WIN32
@@ -194,6 +195,7 @@ public:
 
 static std::unique_ptr<CCoinsViewErrorCatcher> pcoinscatcher;
 static std::unique_ptr<ECCVerifyHandle> globalVerifyHandle;
+static std::unique_ptr<ECCMusigHandle> globalMusigHandle;
 
 static boost::thread_group threadGroup;
 static CScheduler scheduler;
@@ -343,6 +345,8 @@ void Shutdown()
     g_wallet_init_interface.Close();
     globalVerifyHandle.reset();
     ECC_Stop();
+    globalMusigHandle.reset();
+    //ECC_MusigStop();
     LogPrintf("%s: done\n", __func__);
 }
 
@@ -1260,6 +1264,8 @@ bool AppInitSanityChecks()
     RandomInit();
     ECC_Start();
     globalVerifyHandle.reset(new ECCVerifyHandle());
+    //ECC_MusigStart();
+    globalMusigHandle.reset(new ECCMusigHandle());
 
     // Sanity check
     if (!InitSanityCheck())

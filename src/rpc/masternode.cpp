@@ -25,6 +25,10 @@
 #include <utilmoneystr.h>
 #include <consensus/validation.h>
 
+#include <secp256k1.h>
+#include <secp256k1_schnorr.h>
+#include <secp256k1_musig.h>
+
 #include <fstream>
 #include <iomanip>
 #include <univalue.h>
