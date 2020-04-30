@@ -1293,6 +1293,7 @@ CAmount GetMasternodePayment(int nHeight, int sintype)
 	if (sintype == 1) {
 		if (Params().NetworkIDString() == CBaseChainParams::FINALNET && nHeight >=105 && nHeight <  150000) return 8 * COIN;
 		if (Params().NetworkIDString() == CBaseChainParams::TESTNET && nHeight >=105 && nHeight <  150000) return 8 * COIN;
+        if (Params().NetworkIDString() == CBaseChainParams::REGTEST && nHeight >=105 && nHeight <  150000) return 8 * COIN;
 
 		if (nHeight <  150000) return  0 * COIN;  //testnet
 		if (nHeight <  170100) return  0 * COIN;  //hard fork
@@ -1302,6 +1303,7 @@ CAmount GetMasternodePayment(int nHeight, int sintype)
 	if (sintype == 5) {
 		if (Params().NetworkIDString() == CBaseChainParams::FINALNET && nHeight >=105 && nHeight <  150000) return 41 * COIN;
 		if (Params().NetworkIDString() == CBaseChainParams::TESTNET && nHeight >=105 && nHeight <  150000) return 41 * COIN;
+        if (Params().NetworkIDString() == CBaseChainParams::REGTEST && nHeight >=105 && nHeight <  150000) return 41 * COIN;
 
 		if (nHeight <  150000) return  0 * COIN;  //testnet
 		if (nHeight <  170100) return  0 * COIN;  //hard fork
@@ -1311,6 +1313,7 @@ CAmount GetMasternodePayment(int nHeight, int sintype)
 	if (sintype == 10) {
 		if (Params().NetworkIDString() == CBaseChainParams::FINALNET && nHeight >=105 && nHeight <  150000) return 85 * COIN;
 		if (Params().NetworkIDString() == CBaseChainParams::TESTNET && nHeight >=105 && nHeight <  150000) return 85 * COIN;
+        if (Params().NetworkIDString() == CBaseChainParams::REGTEST && nHeight >=105 && nHeight <  150000) return 85 * COIN;
 
 		if (nHeight <  150000) return  0 * COIN;  //testnet
 		if (nHeight <  170100) return  0 * COIN;  //hard fork
@@ -2252,7 +2255,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
 			mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
 			LogPrintf("IsBlockPayeeValid -- disconnect block!\n");
 			if (pindex->nHeight >= enforceHeight) {
-				return state.DoS(0, error("ConnectBlock(SIN): couldn't find masternode or superblock payments"),
+				return state.DoS(0, error("ConnectBlock(DASH): couldn't find masternode or superblock payments"),
 					REJECT_INVALID, "bad-cb-payee");
 			}
    		}

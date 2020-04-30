@@ -123,6 +123,11 @@ void CInfinitynodePeer::ManageStateInitial(CConnman& connman)
 
     // First try to find whatever local address is specified by externalip option
     bool fFoundLocal = GetLocal(service) && CInfinitynode::IsValidNetAddr(service);
+    if (!fFoundLocal && Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+        if (Lookup("127.0.0.1", service, GetListenPort(), false)) {
+            fFoundLocal = true;
+        }
+    }
     if(!fFoundLocal) {
         bool empty = true;
         // If we have some peers, let's try to find our local address from one of them

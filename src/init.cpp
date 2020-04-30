@@ -459,6 +459,11 @@ void SetupServerArgs()
 #endif
     gArgs.AddArg("-txindex", strprintf("Maintain a full transaction index, used by the getrawtransaction rpc call (default: %u)", DEFAULT_TXINDEX), false, OptionsCategory::OPTIONS);
 
+    gArgs.AddArg("-masternode=<n>", strprintf("Enable the client to act as a masternode (0-1)"), false, OptionsCategory::OPTIONS);
+    gArgs.AddArg("-mnconf=<file>", strprintf("Specify masternode configuration file (default: infinitynode.conf)"), false, OptionsCategory::OPTIONS);
+    gArgs.AddArg("-mnconflock=<n>", strprintf("Lock masternodes from masternode configuration file"), false, OptionsCategory::OPTIONS);
+    gArgs.AddArg("-masternodeprivkey=<n>","Set the masternode private key", false, OptionsCategory::OPTIONS);
+
     gArgs.AddArg("-addnode=<ip>", "Add a node to connect to and attempt to keep the connection open (see the `addnode` RPC command help for more info). This option can be specified multiple times to add multiple nodes.", false, OptionsCategory::CONNECTION);
     gArgs.AddArg("-banscore=<n>", strprintf("Threshold for disconnecting misbehaving peers (default: %u)", DEFAULT_BANSCORE_THRESHOLD), false, OptionsCategory::CONNECTION);
     gArgs.AddArg("-bantime=<n>", strprintf("Number of seconds to keep misbehaving peers from reconnecting (default: %u)", DEFAULT_MISBEHAVING_BANTIME), false, OptionsCategory::CONNECTION);
