@@ -4,7 +4,7 @@
 
 #include <infinitynodersv.h>
 #include <infinitynodeman.h>
-#include <util.h> //fMasterNode variable
+#include <util/system.h> //fMasterNode variable
 #include <flat-database.h>
 
 CInfinitynodersv infnodersv;

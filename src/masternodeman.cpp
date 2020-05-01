@@ -13,7 +13,7 @@
 #include <netfulfilledman.h>
 #include <netmessagemaker.h>
 #include <script/standard.h>
-#include <util.h>
+#include <util/system.h>
 
 /** Masternode manager */
 CMasternodeMan mnodeman;

@@ -186,11 +186,12 @@ BITCOIN_CORE_H = \
   txmempool.h \
   ui_interface.h \
   undo.h \
-  util.h \
-  utilmemory.h \
-  utilmoneystr.h \
-  utiltime.h \
+  util/system.h \
+  util/memory.h \
+  util/moneystr.h \
+  util/time.h \
   util/bip32.h \
+  util/settings.h \
   validation.h \
   validationinterface.h \
   versionbits.h \
@@ -526,11 +527,12 @@ libsin_util_a_SOURCES = \
   support/cleanse.cpp \
   sync.cpp \
   threadinterrupt.cpp \
-  util.cpp \
-  utilmoneystr.cpp \
-  util/strencodings.cpp \  
-  util/bip32.cpp \  
-  utiltime.cpp \
+  util/system.cpp \
+  util/moneystr.cpp \
+  util/strencodings.cpp \
+  util/time.cpp \
+  util/bip32.cpp \
+  util/settings.cpp \
   $(BITCOIN_CORE_H)
 
 if GLIBC_BACK_COMPAT

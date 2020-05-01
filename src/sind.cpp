@@ -15,16 +15,19 @@
 #include <init.h>
 #include <noui.h>
 #include <shutdown.h>
-#include <util.h>
+#include <util/system.h>
 #include <httpserver.h>
 #include <httprpc.h>
-#include <utilstrencodings.h>
+#include <util/strencodings.h>
 #include <walletinitinterface.h>
+#include <ui_interface.h>
 
 // Legacy Dash
 #include "masternodeconfig.h"
 
 #include <stdio.h>
+
+const std::function<std::string(const char*)> G_TRANSLATION_FUN = nullptr;
 
 /* Introduction text for doxygen: */
 
@@ -92,7 +95,7 @@ static bool AppInit(int argc, char* argv[])
 
     try
     {
-        if (!fs::is_directory(GetDataDir(false)))
+        if (!CheckDataDirOption())
         {
             fprintf(stderr, "Error: Specified data directory \"%s\" does not exist.\n", gArgs.GetArg("-datadir", "").c_str());
             return false;
@@ -122,6 +125,11 @@ static bool AppInit(int argc, char* argv[])
                 fprintf(stderr, "Error: Command line contains unexpected token '%s', see sind -h for a list of options.\n", argv[i]);
                 return false;
             }
+        }
+
+        if (!gArgs.ReadSettingsFile()) {
+            InitError(strprintf("Error reading settings file\n"));
+            return false;
         }
 
         // -server defaults to true for sind but not for the GUI so do this here

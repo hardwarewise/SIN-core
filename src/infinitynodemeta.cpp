@@ -4,9 +4,9 @@
 
 #include <infinitynodemeta.h>
 #include <infinitynodeman.h>
-#include <util.h> //fMasterNode variable
+#include <util/system.h> //fMasterNode variable
 #include <flat-database.h>
-#include <utilstrencodings.h>
+#include <util/strencodings.h>
 
 CInfinitynodeMeta infnodemeta;
 

@@ -9,7 +9,7 @@
 #include <messagesigner.h>
 #include <net_processing.h>
 #include <netmessagemaker.h>
-#include <utilstrencodings.h>
+#include <util/strencodings.h>
 
 #include <secp256k1.h>
 #include <secp256k1_schnorr.h>

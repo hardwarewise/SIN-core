@@ -19,6 +19,8 @@
 #include <rpc/register.h>
 #include <script/sigcache.h>
 
+const std::function<std::string(const char*)> G_TRANSLATION_FUN = nullptr;
+
 void CConnmanTest::AddNode(CNode& node)
 {
     LOCK(g_connman->cs_vNodes);

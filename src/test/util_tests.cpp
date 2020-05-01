@@ -2,17 +2,18 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <util.h>
+#include <util/system.h>
 
 #include <clientversion.h>
 #include <primitives/transaction.h>
 #include <sync.h>
-#include <utilstrencodings.h>
-#include <utilmoneystr.h>
+#include <util/strencodings.h>
+#include <util/moneystr.h>
 #include <test/test_sin.h>
 
 #include <stdint.h>
 #include <vector>
+#include <univalue.h>
 #ifndef WIN32
 #include <signal.h>
 #include <sys/types.h>
@@ -182,14 +183,13 @@ BOOST_AUTO_TEST_CASE(util_FormatISO8601Time)
 struct TestArgsManager : public ArgsManager
 {
     TestArgsManager() { m_network_only_args.clear(); }
-    std::map<std::string, std::vector<std::string> >& GetOverrideArgs() { return m_override_args; }
-    std::map<std::string, std::vector<std::string> >& GetConfigArgs() { return m_config_args; }
     void ReadConfigString(const std::string str_config)
     {
         std::istringstream streamConfig(str_config);
         {
             LOCK(cs_args);
             m_config_args.clear();
+            m_settings.ro_config.clear();
         }
         std::string error;
         ReadConfigStream(streamConfig, error);
@@ -202,8 +202,12 @@ struct TestArgsManager : public ArgsManager
     void SetupArgs(int argv, const char* args[])
     {
         for (int i = 0; i < argv; ++i) {
-            AddArg(args[i], "", false, OptionsCategory::OPTIONS);
+            AddArg(args[i], "", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
         }
+    using ArgsManager::ReadConfigStream;
+    using ArgsManager::cs_args;
+    using ArgsManager::m_network;
+    using ArgsManager::m_settings;
     }
 };
 
@@ -213,23 +217,24 @@ BOOST_AUTO_TEST_CASE(util_ParseParameters)
     const char* avail_args[] = {"-a", "-b", "-ccc", "-d"};
     const char *argv_test[] = {"-ignored", "-a", "-b", "-ccc=argument", "-ccc=multiple", "f", "-d=e"};
 
+    LOCK(testArgs.cs_args);
     std::string error;
     testArgs.SetupArgs(4, avail_args);
     testArgs.ParseParameters(0, (char**)argv_test, error);
-    BOOST_CHECK(testArgs.GetOverrideArgs().empty() && testArgs.GetConfigArgs().empty());
+    BOOST_CHECK(testArgs.m_settings.command_line_options.empty() && testArgs.m_settings.ro_config.empty());
 
     testArgs.ParseParameters(1, (char**)argv_test, error);
-    BOOST_CHECK(testArgs.GetOverrideArgs().empty() && testArgs.GetConfigArgs().empty());
+    BOOST_CHECK(testArgs.m_settings.command_line_options.empty() && testArgs.m_settings.ro_config.empty());
 
     testArgs.ParseParameters(7, (char**)argv_test, error);
     // expectation: -ignored is ignored (program name argument),
     // -a, -b and -ccc end up in map, -d ignored because it is after
     // a non-option argument (non-GNU option parsing)
-    BOOST_CHECK(testArgs.GetOverrideArgs().size() == 3 && testArgs.GetConfigArgs().empty());
+    BOOST_CHECK(testArgs.m_settings.command_line_options.size() == 3 && testArgs.m_settings.ro_config.empty());
     BOOST_CHECK(testArgs.IsArgSet("-a") && testArgs.IsArgSet("-b") && testArgs.IsArgSet("-ccc")
                 && !testArgs.IsArgSet("f") && !testArgs.IsArgSet("-d"));
-    BOOST_CHECK(testArgs.GetOverrideArgs().count("-a") && testArgs.GetOverrideArgs().count("-b") && testArgs.GetOverrideArgs().count("-ccc")
-                && !testArgs.GetOverrideArgs().count("f") && !testArgs.GetOverrideArgs().count("-d"));
+    BOOST_CHECK(testArgs.m_settings.command_line_options.count("-a") && testArgs.m_settings.command_line_options.count("-b") && testArgs.m_settings.command_line_options.count("-ccc")
+                && !testArgs.m_settings.command_line_options.count("f") && !testArgs.m_settings.command_line_options.count("-d"));
 
     BOOST_CHECK(testArgs.GetOverrideArgs()["-a"].size() == 1);
     BOOST_CHECK(testArgs.GetOverrideArgs()["-a"].front() == "");
@@ -254,8 +259,8 @@ BOOST_AUTO_TEST_CASE(util_GetBoolArg)
         BOOST_CHECK(testArgs.IsArgSet({'-', opt}) || !opt);
 
     // Nothing else should be in the map
-    BOOST_CHECK(testArgs.GetOverrideArgs().size() == 6 &&
-                testArgs.GetConfigArgs().empty());
+    BOOST_CHECK(testArgs.m_settings.command_line_options.size() == 6 &&
+                testArgs.m_settings.ro_config.empty());
 
     // The -no prefix should get stripped on the way in.
     BOOST_CHECK(!testArgs.IsArgSet("-nob"));
@@ -357,22 +362,22 @@ BOOST_AUTO_TEST_CASE(util_ReadConfigStream)
     // expectation: a, b, ccc, d, fff, ggg, h, i end up in map
     // so do sec1.ccc, sec1.d, sec1.h, sec2.ccc, sec2.iii
 
-    BOOST_CHECK(test_args.GetOverrideArgs().empty());
-    BOOST_CHECK(test_args.GetConfigArgs().size() == 13);
+    BOOST_CHECK(test_args.m_settings.command_line_options.empty());
+    BOOST_CHECK(test_args.m_settings.ro_config.size() == 13);
 
-    BOOST_CHECK(test_args.GetConfigArgs().count("-a")
-                && test_args.GetConfigArgs().count("-b")
-                && test_args.GetConfigArgs().count("-ccc")
-                && test_args.GetConfigArgs().count("-d")
-                && test_args.GetConfigArgs().count("-fff")
-                && test_args.GetConfigArgs().count("-ggg")
-                && test_args.GetConfigArgs().count("-h")
-                && test_args.GetConfigArgs().count("-i")
+    BOOST_CHECK(test_args.m_settings.ro_config.count("-a")
+                && test_args.m_settings.ro_config.count("-b")
+                && test_args.m_settings.ro_config.count("-ccc")
+                && test_args.m_settings.ro_config.count("-d")
+                && test_args.m_settings.ro_config.count("-fff")
+                && test_args.m_settings.ro_config.count("-ggg")
+                && test_args.m_settings.ro_config.count("-h")
+                && test_args.m_settings.ro_config.count("-i")
                );
-    BOOST_CHECK(test_args.GetConfigArgs().count("-sec1.ccc")
-                && test_args.GetConfigArgs().count("-sec1.h")
-                && test_args.GetConfigArgs().count("-sec2.ccc")
-                && test_args.GetConfigArgs().count("-sec2.iii")
+    BOOST_CHECK(test_args.m_settings.ro_config.count("-sec1.ccc")
+                && test_args.m_settings.ro_config.count("-sec1.h")
+                && test_args.m_settings.ro_config.count("-sec2.ccc")
+                && test_args.m_settings.ro_config.count("-sec2.iii")
                );
 
     BOOST_CHECK(test_args.IsArgSet("-a")
@@ -511,7 +516,7 @@ BOOST_AUTO_TEST_CASE(util_ReadConfigStream)
 BOOST_AUTO_TEST_CASE(util_GetArg)
 {
     TestArgsManager testArgs;
-    testArgs.GetOverrideArgs().clear();
+    testArgs.m_settings.command_line_options.clear();
     testArgs.GetOverrideArgs()["strtest1"] = {"string..."};
     // strtest2 undefined on purpose
     testArgs.GetOverrideArgs()["inttest1"] = {"12345"};
@@ -524,11 +529,11 @@ BOOST_AUTO_TEST_CASE(util_GetArg)
 
     // priorities
     testArgs.GetOverrideArgs()["pritest1"] = {"a", "b"};
-    testArgs.GetConfigArgs()["pritest2"] = {"a", "b"};
+    testArgs.m_settings.ro_config["pritest2"] = {"a", "b"};
     testArgs.GetOverrideArgs()["pritest3"] = {"a"};
-    testArgs.GetConfigArgs()["pritest3"] = {"b"};
+    testArgs.m_settings.ro_config["pritest3"] = {"b"};
     testArgs.GetOverrideArgs()["pritest4"] = {"a","b"};
-    testArgs.GetConfigArgs()["pritest4"] = {"c","d"};
+    testArgs.m_settings.ro_config["pritest4"] = {"c","d"};
 
     BOOST_CHECK_EQUAL(testArgs.GetArg("strtest1", "default"), "string...");
     BOOST_CHECK_EQUAL(testArgs.GetArg("strtest2", "default"), "default");

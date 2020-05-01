@@ -26,10 +26,10 @@
 #include <timedata.h>
 #include <txmempool.h>
 #include <util/bip32.h>
-#include <utilmoneystr.h>
+#include <util/moneystr.h>
 #include <wallet/fees.h>
 #include <wallet/walletutil.h>
-#include <utiltime.h>
+#include <util/time.h>
 
 #include <instantx.h>
 #include <keepass.h>

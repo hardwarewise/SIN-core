@@ -6,12 +6,12 @@
 #include <infinitynodersv.h>
 #include <infinitynodemeta.h>
 
-#include <util.h> //fMasterNode variable
+#include <util/system.h> //fMasterNode variable
 #include <chainparams.h>
 #include <key_io.h>
 #include <script/standard.h>
 #include <flat-database.h>
-#include <utilstrencodings.h>
+#include <util/strencodings.h>
 #include <netbase.h>
 
 

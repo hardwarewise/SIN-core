@@ -20,7 +20,7 @@
 #include <interfaces/node.h>
 
 #include <init.h>
-#include <util.h>
+#include <util/system.h>
 #include <shutdown.h>
 #include <instantx.h>
 #include <masternode-sync.h>

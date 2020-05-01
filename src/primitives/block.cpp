@@ -8,7 +8,7 @@
 #include <chainparams.h>
 #include <hash.h>
 #include <tinyformat.h>
-#include <utilstrencodings.h>
+#include <util/strencodings.h>
 #include <crypto/common.h>
 
 const int nSinHeightFinalnet = 5;

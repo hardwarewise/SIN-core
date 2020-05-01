@@ -6,9 +6,9 @@
 #include <infinitynodepeer.h>
 #include <infinitynodeman.h>
 #include <infinitynodemeta.h>
-#include <util.h>
+#include <util/system.h>
 #include <logging.h>
-#include <utilstrencodings.h>
+#include <util/strencodings.h>
 
 // Declaration of global variable infinitynodePeer with initial value
 CInfinitynodePeer infinitynodePeer;
