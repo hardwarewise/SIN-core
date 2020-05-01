@@ -228,6 +228,62 @@ void CGroupSigners::Relay(CConnman& connman)
     CInv inv(MSG_INFLRGROUP, GetHash());
     connman.RelayInv(inv);
 }
+
+/*************************************************************/
+/***** CMusigPartialSignLR   *********************************/
+/*************************************************************/
+CMusigPartialSignLR::CMusigPartialSignLR()
+{}
+
+CMusigPartialSignLR::CMusigPartialSignLR(COutPoint myPeerBurnTxIn, uint256 nGroupSigners, unsigned char *cMusigPartialSign){
+    vin=(CTxIn(myPeerBurnTxIn));
+    nHashGroupSigners = nGroupSigners;
+    vchMusigPartialSign = std::vector<unsigned char>(cMusigPartialSign, cMusigPartialSign + 32);
+    nonce = GetRandInt(999999);
+}
+
+bool CMusigPartialSignLR::Sign(const CKey& keyInfinitynode, const CPubKey& pubKeyInfinitynode)
+{
+    std::string strError;
+    std::string strSignMessage;
+
+    std::string strMessage = boost::lexical_cast<std::string>(nonce) + nHashGroupSigners.ToString() + vin.prevout.ToString()
+                             + EncodeBase58(vchMusigPartialSign);
+
+    if(!CMessageSigner::SignMessage(strMessage, vchSig, keyInfinitynode)) {
+        LogPrintf("CMusigPartialSignLR::Sign -- SignMessage() failed\n");
+        return false;
+    }
+
+    if(!CMessageSigner::VerifyMessage(pubKeyInfinitynode, vchSig, strMessage, strError)) {
+        LogPrintf("CMusigPartialSignLR::Sign -- VerifyMessage() failed, error: %s\n", strError);
+        return false;
+    }
+
+    return true;
+}
+
+bool CMusigPartialSignLR::CheckSignature(CPubKey& pubKeyInfinitynode, int &nDos)
+{
+    std::string strMessage = boost::lexical_cast<std::string>(nonce) + nHashGroupSigners.ToString() + vin.prevout.ToString()
+                             + EncodeBase58(vchMusigPartialSign);
+    std::string strError = "";
+
+    if(!CMessageSigner::VerifyMessage(pubKeyInfinitynode, vchSig, strMessage, strError)) {
+        LogPrintf("CMusigPartialSignLR::CheckSignature -- Got bad Infinitynode CGroupSigners signature, error: %s\n", strError);
+        /*TODO: set ban value befor release*/
+        nDos = 0;
+        return false;
+    }
+    return true;
+}
+
+void CMusigPartialSignLR::Relay(CConnman& connman)
+{
+
+    CInv inv(MSG_INFLRMUSIG, GetHash());
+    connman.RelayInv(inv);
+}
 /*************************************************************/
 /***** CInfinityNodeLockReward *******************************/
 /*************************************************************/
@@ -238,6 +294,7 @@ void CInfinityNodeLockReward::Clear()
     mapLockRewardCommitment.clear();
     mapLockRewardGroupSigners.clear();
     mapSigners.clear();
+    mapPartialSign.clear();
 }
 
 bool CInfinityNodeLockReward::AlreadyHave(const uint256& hash)
@@ -245,7 +302,8 @@ bool CInfinityNodeLockReward::AlreadyHave(const uint256& hash)
     LOCK(cs);
     return mapLockRewardRequest.count(hash) ||
            mapLockRewardCommitment.count(hash) ||
-           mapLockRewardGroupSigners.count(hash)
+           mapLockRewardGroupSigners.count(hash) ||
+           mapPartialSign.count(hash)
            ;
 }
 
@@ -329,6 +387,25 @@ bool CInfinityNodeLockReward::GetGroupSigners(const uint256& reqHash, CGroupSign
     gSigners = it->second;
     return true;
 }
+
+bool CInfinityNodeLockReward::AddMusigPartialSignLR(const CMusigPartialSignLR& ps)
+{
+    AssertLockHeld(cs);
+
+    if(mapPartialSign.count(ps.GetHash())) return false;
+        mapPartialSign.insert(make_pair(ps.GetHash(), ps));
+    return true;
+}
+
+bool CInfinityNodeLockReward::GetMusigPartialSignLR(const uint256& psHash, CMusigPartialSignLR& ps)
+{
+    LOCK(cs);
+    std::map<uint256, CMusigPartialSignLR>::iterator it = mapPartialSign.find(psHash);
+    if(it == mapPartialSign.end()) return false;
+    ps = it->second;
+    return true;
+}
+
 /*
  * STEP 1: get a new LockRewardRequest, check it and send verify message
  *
@@ -770,8 +847,8 @@ bool CInfinityNodeLockReward::CheckGroupSigner(CNode* pnode, const CGroupSigners
     if(!infnodeman.GetInfinitynodeInfo(gsigners.vin.prevout, infoInf)){
         LogPrintf("CInfinityNodeLockReward::CheckGroupSigner -- Cannot find sender from list %s\n");
         //someone try to send a VerifyRequest to me but not in DIN => so ban it
-        //LOCK(cs_main);
-        //Misbehaving(pnode->GetId(), 20);
+        LOCK(cs_main);
+        Misbehaving(pnode->GetId(), 20);
         return false;
     }
 
@@ -793,8 +870,8 @@ bool CInfinityNodeLockReward::CheckGroupSigner(CNode* pnode, const CGroupSigners
     if(!CMessageSigner::VerifyMessage(pubKey, gsigners.vchSig, strMessage, strError)) {
         //sender is in DIN and metadata is correct but sign is KO => so ban it
         LogPrintf("CInfinityNodeLockReward::CheckGroupSigner -- VerifyMessage() failed, error: %s, message: \n", strError, strMessage);
-        //LOCK(cs_main);
-        //Misbehaving(pnode->GetId(), 20);
+        LOCK(cs_main);
+        Misbehaving(pnode->GetId(), 20);
         return false;
     }
 
@@ -807,43 +884,12 @@ bool CInfinityNodeLockReward::CheckGroupSigner(CNode* pnode, const CGroupSigners
  * Musig Partial Sign
  * we know that we use COMPRESSED_PUBLIC_KEY_SIZE format
  */
-bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners& gsigners)
+bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners& gsigners, CConnman& connman)
 {
     if(fLiteMode || !fInfinityNode) return false;
 
     AssertLockHeld(cs);
-/*
-    secp256k1_pubkey pubkeyTest;
-    int ii = secp256k1_ec_pubkey_parse(secp256k1_context_musig, &pubkeyTest, infinitynodePeer.pubKeyInfinitynode.data(), infinitynodePeer.pubKeyInfinitynode.size());
 
-    secp256k1_pubkey pubkeyFromCKey;
-    int jj = secp256k1_ec_pubkey_parse(secp256k1_context_musig, &pubkeyFromCKey, infinitynodePeer.keyInfinitynode.GetPubKey().data(),
-                              infinitynodePeer.keyInfinitynode.GetPubKey().size());
-
-    unsigned char hashPubkeyTest[32];
-    unsigned char hashPrivateTest[32];
-    secp256k1_pubkey_to_commitment(secp256k1_context_musig, hashPubkeyTest, &pubkeyTest);
-    secp256k1_pubkey_to_commitment(secp256k1_context_musig, hashPrivateTest, &pubkeyFromCKey);
-
-    if(infinitynodePeer.pubKeyInfinitynode == infinitynodePeer.keyInfinitynode.GetPubKey()){
-         LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- same %d %d\n", infinitynodePeer.pubKeyInfinitynode.size(), infinitynodePeer.keyInfinitynode.GetPubKey().size());
-    } else {
-         LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- KO\n");
-    }
-
-    unsigned char privateKeyTest[32];
-    memcpy(privateKeyTest, infinitynodePeer.keyInfinitynode.begin(), 32);
-    ShowKey(privateKeyTest, " myPrivate ");
-
-    secp256k1_pubkey pubkeyFromVch;
-    int ret = secp256k1_ec_pubkey_create(secp256k1_context_musig_sign, &pubkeyFromVch, privateKeyTest);
-    unsigned char hashPrivateVch[32];
-    int ll = secp256k1_pubkey_to_commitment(secp256k1_context_musig, hashPrivateVch, &pubkeyFromVch);
-
-    for(int i=0; i< 32; i++){
-        LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- vchPub: %d, vchPriv: %d, Vch: %d\n", hashPubkeyTest[i], hashPrivateTest[i], hashPrivateVch[i]);
-    }
-*/
     secp256k1_pubkey *pubkeys;
     pubkeys = (secp256k1_pubkey*) malloc(Params().GetConsensus().nInfinityNodeLockRewardSigners * sizeof(secp256k1_pubkey));
     secp256k1_pubkey *commitmentpk;
@@ -986,6 +1032,16 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
 
         unsigned char buf[32];
         secp256k1_musig_partial_signature_parse(secp256k1_context_musig, &partial_sig, buf);
+
+        CMusigPartialSignLR partialSign(infinitynodePeer.burntx, gsigners.GetHash(), buf);
+        if(partialSign.Sign(infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode)) {
+            if (AddMusigPartialSignLR(partialSign)) {
+                LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- relay my MusigPartialSign for group: %s, hash: %s, LockRequest: %s\n",
+                                      gsigners.signersId, partialSign.GetHash().ToString(), currentLockRequestHash.ToString());
+                partialSign.Relay(connman);
+            }
+        }
+
         LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- Musig Partial Sign ");
         for(int i=0; i<32; i++){
             LogPrintf(" %d ", buf[i]);
@@ -1203,19 +1259,44 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
         pfrom->setAskFor.erase(nHash);
         {
             LOCK(cs);
+            if(mapLockRewardGroupSigners.count(nHash)){
+                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- I had this group signer. end process\n");
+                return;
+            }
+            if(!CheckGroupSigner(pfrom, gSigners)){
+                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- CheckGroupSigner is false\n");
+                return;
+            }
+            gSigners.Relay(connman);
             if(AddGroupSigners(gSigners)){
                 LogPrintf("CInfinityNodeLockReward::ProcessMessage -- receive group signer %s for lockrequest %s\n",
                           gSigners.signersId, gSigners.nHashRequest.ToString());
             }
-            if(!CheckGroupSigner(pfrom, gSigners)){
-                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- CheckGroupSigner is false\n");
-            }
-            if(!MusigPartialSign(pfrom, gSigners)){
+            if(!MusigPartialSign(pfrom, gSigners, connman)){
                 LogPrintf("CInfinityNodeLockReward::ProcessMessage -- MusigPartialSign is false\n");
             }
             return;
         }
     } else if (strCommand == NetMsgType::INFLRMUSIG) {
+        CMusigPartialSignLR partialSign;
+        vRecv >> partialSign;
+        uint256 nHash = partialSign.GetHash();
+        pfrom->setAskFor.erase(nHash);
+        {
+            LOCK(cs);
+            if(mapPartialSign.count(nHash)){
+                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- I had this partial sign. end process\n");
+                return;
+            }
+            //check befor add
+            //relay
+            if(AddMusigPartialSignLR(partialSign)){
+                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- receive partial sign from %s of group %s\n",
+                          partialSign.vin.prevout.ToStringShort(), partialSign.nHashGroupSigners.ToString());
+            }
+            //do something with it
+            return;
+        }
     }
 }
 

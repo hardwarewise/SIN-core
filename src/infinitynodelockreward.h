@@ -193,6 +193,44 @@ public:
     void Relay(CConnman& connman);
 };
 
+class CMusigPartialSignLR
+{
+public:
+    CTxIn vin{};//Signer ID
+    uint256 nHashGroupSigners;//LockRewardRequest hash
+    int nonce{};
+    std::vector<unsigned char> vchMusigPartialSign{};
+    std::vector<unsigned char> vchSig{};
+
+    CMusigPartialSignLR();
+    CMusigPartialSignLR(COutPoint myPeerBurnTxIn, uint256 nGroupSigners, unsigned char *cMusigPartialSign);
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(vin);
+        READWRITE(nHashGroupSigners);
+        READWRITE(nonce);
+        READWRITE(vchMusigPartialSign);
+        READWRITE(vchSig);
+    }
+
+    uint256 GetHash() const
+    {
+        CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
+        ss << vin;
+        ss << nHashGroupSigners;
+        ss << nonce;
+        ss << vchMusigPartialSign;
+        return ss.GetHash();
+    }
+
+    bool Sign(const CKey& keyInfinitynode, const CPubKey& pubKeyInfinitynode);
+    bool CheckSignature(CPubKey& pubKeyInfinitynode, int &nDos);
+    void Relay(CConnman& connman);
+};
+
 class CInfinityNodeLockReward
 {
 private:
@@ -201,6 +239,7 @@ private:
     std::map<uint256, CLockRewardRequest> mapLockRewardRequest;
     std::map<uint256, CLockRewardCommitment> mapLockRewardCommitment;
     std::map<uint256, CGroupSigners> mapLockRewardGroupSigners;
+    std::map<uint256, CMusigPartialSignLR> mapPartialSign;
 
     std::map<uint256, std::vector<COutPoint>> mapSigners; //list of signers for my request only
     // Keep track of current block height
@@ -252,7 +291,9 @@ public:
     bool GetGroupSigners(const uint256& reqHash, CGroupSigners& gsigners);
     bool FindAndSendSignersGroup(CConnman& connman);
     bool CheckGroupSigner(CNode* pnode, const CGroupSigners& gsigners);
-    bool MusigPartialSign(CNode* pnode, const CGroupSigners& gsigners);
+    bool MusigPartialSign(CNode* pnode, const CGroupSigners& gsigners, CConnman& connman);
+    bool AddMusigPartialSignLR(const CMusigPartialSignLR& ps);
+    bool GetMusigPartialSignLR(const uint256& psHash, CMusigPartialSignLR& ps);
 
     //Connection
     void TryConnectToMySigners(int rewardHeight, CConnman& connman);
