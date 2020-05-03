@@ -546,14 +546,14 @@ int secp256k1_musig_partial_sign(const secp256k1_context* ctx, const secp256k1_m
         secp256k1_scalar_clear(&k);
         return 0;
     }
+
     if (session->nonce_is_negated) {
         secp256k1_scalar_negate(&k, &k);
     }
-
     /* Sign */
     secp256k1_scalar_mul(&e, &e, &sk);
     secp256k1_scalar_add(&e, &e, &k);
-    secp256k1_scalar_get_b32(&partial_sig->data[0], &e);
+    secp256k1_scalar_get_b32(partial_sig->data, &e);
     secp256k1_scalar_clear(&sk);
     secp256k1_scalar_clear(&k);
 

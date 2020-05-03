@@ -241,13 +241,15 @@ private:
     std::map<uint256, CGroupSigners> mapLockRewardGroupSigners;
     std::map<uint256, CMusigPartialSignLR> mapPartialSign;
 
-    std::map<uint256, std::vector<COutPoint>> mapSigners; //list of signers for my request only
+    std::map<uint256, std::vector<COutPoint>> mapSigners; //list of signers for my request only, uint256 = currentLockRequestHash
+    std::map<uint256, std::vector<CMusigPartialSignLR>> mapMyPartialSigns; //list of signers for my request only, uint256 = hashGroupSigners
     // Keep track of current block height
     int nCachedBlockHeight;
     // Keep track my current LockRequestHash and all related informations
     int nFutureRewardHeight;
     uint256 currentLockRequestHash;
     int nGroupSigners; //number of group signer found for currentLockRequest
+    bool fMusigBuilt;
 
 public:
 
@@ -294,6 +296,8 @@ public:
     bool MusigPartialSign(CNode* pnode, const CGroupSigners& gsigners, CConnman& connman);
     bool AddMusigPartialSignLR(const CMusigPartialSignLR& ps);
     bool GetMusigPartialSignLR(const uint256& psHash, CMusigPartialSignLR& ps);
+    void AddMyPartialSignsMap(const CMusigPartialSignLR& ps);
+    bool FindAndBuildMusigLockReward();
 
     //Connection
     void TryConnectToMySigners(int rewardHeight, CConnman& connman);
