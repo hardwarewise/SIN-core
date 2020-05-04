@@ -1,6 +1,6 @@
 /*******   BGcolor #0d1827  Orange #FF8204 */
 WalletFrame {
-background-color: #D6DCE5;
+background-color: #ffffff;
 border-top:0px solid #000;
 margin:0;
 padding:0;
@@ -11,7 +11,7 @@ color: #333;
 
 QStatusBar {
     /*background-color: #00C0F7;*/
-    background-color: #00023B;
+    background-color: #262261;
     color: #ffffff;
     padding-left:4px;
 }
@@ -21,17 +21,17 @@ QStatusBar {
 }
 
 QMenuBar {
-	background-color: #00023B;
+	background-color: #262261;
 }
 QMenuBar::item {
-	background-color: #00023B;
+	background-color: #262261;
 	color: #CCCCCC;
 }
 QMenuBar::item:selected {
-	background-color: #00023B;
+	background-color: #262261;
 }
 QMenu {
-	background-color: #00023B;
+	background-color: #262261;
 }
 QMenu::item {
 	color: #CCCCCC;
@@ -42,7 +42,7 @@ QMenu::item:selected {
 }
 
 QToolBar {
-background-color: #00023B;
+background-color: #262261;
 /*background-color: qlineargradient(y1:0, y2: 1, stop: 0 #02055e, stop: 1 #00023B);*/
 border:none;
 height:100%;
@@ -133,13 +133,12 @@ QPushButton {
 	background-repeat: no-repeat;
     background-size: 1000% 1000%;
  	padding: 0.85em 2em;
-	font-family: "Montserrat";
+	font-family: "OpenSans";
 	letter-spacing: 1px;
 	border: 0;
 	color: #ffffff;
 	font-size: 12px;
 	font-weight: bold;
-	border-radius: 19px;
 	text-transform: uppercase;
 }
 QPushButton:hover {
@@ -1063,20 +1062,6 @@ min-height:35px;
 }
 
 
-QWidget .QFrame#frame .QLabel#labelTotalUSDText { /* Total Balance Label */
-/*qproperty-alignment: 'AlignVCenter | AlignHCenter';*/
-min-width:160px;
-font-size:24px;
-font-weight:bold;
-color:#ffffff;
-border-radius: 10px;
-/*background-color:#00C0F7;*/
-background-color:#00023B;
-margin-right:5px;
-padding-right:5px;
-min-height:35px;
-}
-
 
 
 
@@ -1089,13 +1074,6 @@ margin-left:0px;
 }
 
 
-QWidget .QFrame#frame .QLabel#labelUSDTotal { /* Total Balance */
-qproperty-alignment: 'AlignVCenter | AlignRight';
-font-size:24px;
-font-weight:bold;
-color:#BC8F3A;
-margin-left:0px;
-}
 
 
 
@@ -2074,6 +2052,8 @@ QWidget#InstaSwap .QLabel#receivingAmountLabel {
 color: #BC8F3A;
 font-weight:bold;
 }
+
+
 
 
 

@@ -34,6 +34,7 @@ class HelpMessageDialog;
 class ModalOverlay;
 class MasternodeList;
 class InstaSwap;
+class StatsPage;
 
 namespace interfaces {
 class Handler;
@@ -112,6 +113,11 @@ private:
     // Instaswap
     QAction *instaswapAction = nullptr;
     //
+    
+    // StatsPage
+    QAction *statsPageAction;
+    //
+
     QAction* quitAction = nullptr;
     QAction* sendCoinsAction = nullptr;
     //QAction* depositCoinsAction = nullptr;
@@ -156,15 +162,6 @@ private:
     QAction* ResourcesWebsite10;
 /// end Resources Web Links
 
-////start Governance and I.D.S. Menu
-
-    QAction* GovernanceMenu1;
-    QAction* GovernanceMenu2;
-    
-    QAction* IDSMenu1;
-    QAction* IDSMenu2;
-    QAction* IDSMenu3;
-////end Governance and I.D.S. Menu
 
     QAction *showSpecsHelpAction;
 
@@ -177,6 +174,7 @@ private:
     QMenu* trayIconMenu = nullptr;
     Notificator* notificator = nullptr;
     RPCConsole* rpcConsole = nullptr;
+    StatsPage  *statsWindow;
     //HelpMessageDialog* helpMessageDialog = nullptr;
     HelpMessageDialog *helpMessageDialog;
 
@@ -284,6 +282,11 @@ private Q_SLOTS:
     // Instaswap
     /** Switch to instaswap page */
     void gotoInstaswapPage();
+    //
+
+    //StatsPage
+    /** Switch to Stats Page */
+    void gotoStatsPage(); 
     //
 
     /** Switch to receive coins page */
