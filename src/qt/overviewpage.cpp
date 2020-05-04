@@ -23,6 +23,8 @@
 #include <shutdown.h>
 #include <instantx.h>
 #include <masternode-sync.h>
+#include <infinitynodeman.h>
+
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
@@ -138,6 +140,7 @@ public:
 
 OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) :
     QWidget(parent),
+     timer(nullptr),
     ui(new Ui::OverviewPage),
     clientModel(0),
     walletModel(0),
@@ -153,6 +156,10 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     networkManagerVersion = new QNetworkAccessManager();
     requestVersion = new QNetworkRequest();
     ui->setupUi(this);
+
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(infinityNodeStat()));
+    timer->start(3000);
 
                
    // Set the Latest Version information
@@ -340,6 +347,41 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     //connect(ui->labelTransactionsStatus, SIGNAL(clicked()), this, SLOT(handleOutOfSyncWarningClicks()));
 
 }
+
+
+
+void OverviewPage::infinityNodeStat()
+{
+    std::map<COutPoint, CInfinitynode> mapInfinitynodes = infnodeman.GetFullInfinitynodeMap();
+    std::map<COutPoint, CInfinitynode> mapInfinitynodesNonMatured = infnodeman.GetFullInfinitynodeNonMaturedMap();
+    int total = 0, totalBIG = 0, totalMID = 0, totalLIL = 0, totalUnknown = 0;
+    for (auto& infpair : mapInfinitynodes) {
+        ++total;
+        CInfinitynode inf = infpair.second;
+        int sintype = inf.getSINType();
+        if (sintype == 10) ++totalBIG;
+        else if (sintype == 5) ++totalMID;
+        else if (sintype == 1) ++totalLIL;
+    }
+
+    int totalNonMatured = 0, totalBIGNonMatured = 0, totalMIDNonMatured = 0, totalLILNonMatured = 0, totalUnknownNonMatured = 0;
+    for (auto& infpair : mapInfinitynodesNonMatured) {
+        ++totalNonMatured;
+        CInfinitynode inf = infpair.second;
+        int sintype = inf.getSINType();
+        if (sintype == 10) ++totalBIGNonMatured;
+        else if (sintype == 5) ++totalMIDNonMatured;
+        else if (sintype == 1) ++totalLILNonMatured;
+    }
+
+    QString strTotalNodeText(tr("%1").arg(total + totalNonMatured));
+    QString strLastScanText(tr("%1").arg(infnodeman.getLastScanWithLimit()));
+    
+    ui->labelStatisticTotalNode->setText(strTotalNodeText);
+    ui->labelStatisticLastScan->setText(strLastScanText);
+}
+
+
 
 
 void OverviewPage::handleTransactionClicked(const QModelIndex &index)
