@@ -1422,6 +1422,16 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& chainparams, CConnm
                         pushed = true;
                     }
                 }
+                if (!pushed && inv.type == MSG_INFLRMUSIG) {
+                    CMusigPartialSignLR partialSign;
+                    if(inflockreward.GetMusigPartialSignLR(inv.hash, partialSign)) {
+                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+                        ss.reserve(1000);
+                        ss << partialSign;
+                        connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::INFLRMUSIG, ss));
+                        pushed = true;
+                    }
+                }
                 //
                 if (!pushed && inv.type == MSG_TXLOCK_REQUEST) {
                     CTxLockRequest txLockRequest;
