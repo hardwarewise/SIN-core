@@ -463,7 +463,7 @@ void BitcoinGUI::createActions()
     //
 
     // Instaswap
-    instaswapAction = new QAction(platformStyle->SingleColorIcon(":/icons/instaswap1"), tr("&INSTA\r\nSWAP\n"), this);
+    instaswapAction = new QAction(platformStyle->SingleColorIcon(":/icons/instaswap1"), tr("&Buy SIN"), this);
     instaswapAction->setStatusTip(tr("Exchange your SIN rapidly"));
     instaswapAction->setToolTip(instaswapAction->statusTip());
     instaswapAction->setCheckable(true);
@@ -582,7 +582,7 @@ void BitcoinGUI::createActions()
 
     //
 
-    openRPCConsoleAction = new QAction(platformStyle->TextColorIcon(":/icons/debugwindow"), tr("&Debug window"), this);
+    openRPCConsoleAction = new QAction(platformStyle->TextColorIcon(":/icons/debugwindow"), tr("&Debug window (Console)"), this);
     openRPCConsoleAction->setStatusTip(tr("Open debugging and diagnostic console"));
     // initially disable the debug window menu item
     openRPCConsoleAction->setEnabled(false);
@@ -711,10 +711,43 @@ void BitcoinGUI::createMenuBar()
 
      
 
-    //start Resources Links
+   
+
+   
+     
+
+    QMenu *settings = appMenuBar->addMenu(tr("&Settings"));
+    if(walletFrame)
+    {
+        settings->addAction(encryptWalletAction);
+        settings->addAction(changePassphraseAction);
+
+        // Dash
+        //-//settings->addAction(unlockWalletAction);
+        //-//settings->addAction(lockWalletAction);
+        //
+
+
+
+ // Dash
+    if(walletFrame)
+    {
+        QMenu *tools = settings->addMenu(tr("&Tools"));
+        //-//tools->addAction(openInfoAction);
+        //-//tools->addAction(openRPCConsoleAction);
+        //-//tools->addAction(openGraphAction);
+        //-//tools->addAction(openPeersAction);
+        //-//tools->addAction(openRepairAction);
+        //-//tools->addSeparator();
+        //-//tools->addAction(openConfEditorAction);
+        tools->addAction(openMNConfEditorAction);
+        //-//tools->addAction(showBackupsAction);
+    }
+
+ //start Resources Links
 
     if (walletFrame) {
-        QMenu* hyperlinks3 = appMenuBar->addMenu(tr("&Resources"));
+        QMenu* hyperlinks3 = settings->addMenu(tr("&Resources"));
         hyperlinks3->addAction(ResourcesWebsite10);
         hyperlinks3->addAction(ResourcesWebsite9);
         hyperlinks3->addAction(ResourcesWebsite1);
@@ -732,50 +765,24 @@ void BitcoinGUI::createMenuBar()
 
     //
 
-
-    // Dash
-    if(walletFrame)
-    {
-        QMenu *tools = appMenuBar->addMenu(tr("&Tools"));
-        //-//tools->addAction(openInfoAction);
-        //-//tools->addAction(openRPCConsoleAction);
-        //-//tools->addAction(openGraphAction);
-        //-//tools->addAction(openPeersAction);
-        //-//tools->addAction(openRepairAction);
-        //-//tools->addSeparator();
-        //-//tools->addAction(openConfEditorAction);
-        tools->addAction(openMNConfEditorAction);
-        //-//tools->addAction(showBackupsAction);
-    }
-
-     
-
-    QMenu *settings = appMenuBar->addMenu(tr("&Settings"));
-    if(walletFrame)
-    {
-        settings->addAction(encryptWalletAction);
-        settings->addAction(changePassphraseAction);
-
-        // Dash
-        //-//settings->addAction(unlockWalletAction);
-        //-//settings->addAction(lockWalletAction);
-        //
-
-        settings->addSeparator();
+ 	settings->addAction(instaswapAction);
+    settings->addSeparator();
     }
     settings->addAction(optionsAction);
 
-    QMenu *help = appMenuBar->addMenu(tr("&Help"));
+    settings->addSeparator();
+
+    QMenu *help = settings->addMenu(tr("&Help"));
     if(walletFrame)
     {
-        help->addAction(openRPCConsoleAction);
+    	help->addAction(openRPCConsoleAction);
     }
     help->addAction(showHelpMessageAction);
     //help->addAction(showSpecsHelpAction);
     help->addSeparator();
     help->addAction(aboutAction);
     help->addAction(aboutQtAction);
-    help->addAction(instaswapAction);
+   
 }
 
 void BitcoinGUI::createToolBars()

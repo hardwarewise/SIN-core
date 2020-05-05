@@ -104,6 +104,7 @@ private:
     QProgressDialog* progressDialog = nullptr;
 
     QMenuBar* appMenuBar = nullptr;
+    QMenuBar* subMenu = nullptr;
     QToolBar* appToolBar = nullptr;
     QAction* overviewAction = nullptr;
     QAction* historyAction = nullptr;

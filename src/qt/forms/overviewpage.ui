@@ -573,6 +573,9 @@ color:#BC8F3A;</string>
                  <property name="text">
                   <string>375</string>
                  </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
                 </widget>
                </item>
               </layout>
@@ -588,6 +591,9 @@ color:#000000;</string>
                  <property name="text">
                   <string>Last Scan</string>
                  </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
                 </widget>
                </item>
                <item>
@@ -598,6 +604,9 @@ color:#000000;</string>
                  </property>
                  <property name="text">
                   <string>0</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
                  </property>
                 </widget>
                </item>
@@ -862,7 +871,7 @@ padding-right: 10 px;
              <string notr="true">background-color:black;
 padding:0px;
 border:none;
-margin-bottom: 38px;</string>
+margin-bottom: 35px;</string>
             </property>
             <property name="text">
              <string>TextLabel</string>
