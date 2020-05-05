@@ -455,7 +455,7 @@ color:#BC8F3A;</string>
 color:#000000;</string>
                       </property>
                       <property name="text">
-                       <string>Market Value USD</string>
+                       <string>Value USD</string>
                       </property>
                      </widget>
                     </item>
@@ -497,7 +497,7 @@ color:#000000;</string>
 color:#000000;</string>
                       </property>
                       <property name="text">
-                       <string>Market Value BTC</string>
+                       <string>Value BTC</string>
                       </property>
                      </widget>
                     </item>
@@ -527,92 +527,132 @@ color:#000000;</string>
               <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeType">
-              <enum>QSizePolicy::Expanding</enum>
+              <enum>QSizePolicy::Fixed</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>295</width>
+               <width>40</width>
                <height>20</height>
               </size>
              </property>
             </spacer>
            </item>
            <item>
-            <layout class="QVBoxLayout" name="nodeStatsLayout">
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
              <property name="bottomMargin">
               <number>9</number>
              </property>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout">
-               <item>
-                <widget class="QLabel" name="label_2">
-                 <property name="font">
-                  <font>
-                   <family>Open Sans</family>
-                   <pointsize>-1</pointsize>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">font-size:16px;
-color:#000000;</string>
-                 </property>
-                 <property name="text">
-                  <string>Total Infinity Nodes</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="labelStatisticTotalNode">
-                 <property name="styleSheet">
-                  <string notr="true">font-size:28px;
-font-weight:bold;
-color:#BC8F3A;</string>
-                 </property>
-                 <property name="text">
-                  <string>375</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+              <widget class="QLabel" name="label_3">
+               <property name="minimumSize">
+                <size>
+                 <width>1</width>
+                 <height>100</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>1</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color:black;
+padding:0px;
+border:none;</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_2">
+              <layout class="QVBoxLayout" name="nodeStatsLayout">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="leftMargin">
+                <number>30</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
-                <widget class="QLabel" name="label">
-                 <property name="styleSheet">
-                  <string notr="true">font-size:16px;
+                <layout class="QVBoxLayout" name="verticalLayout">
+                 <item>
+                  <widget class="QLabel" name="label_2">
+                   <property name="font">
+                    <font>
+                     <pointsize>-1</pointsize>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">font-size:16px;
 color:#000000;</string>
-                 </property>
-                 <property name="text">
-                  <string>Last Scan</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
+                   </property>
+                   <property name="text">
+                    <string>Total Infinity Nodes</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="labelStatisticTotalNode">
+                   <property name="styleSheet">
+                    <string notr="true">font-size:28px;
+font-weight:bold;
+color:#BC8F3A;</string>
+                   </property>
+                   <property name="text">
+                    <string>375</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
                <item>
-                <widget class="QLabel" name="labelStatisticLastScan">
-                 <property name="styleSheet">
-                  <string notr="true">font-size:18px;
+                <layout class="QVBoxLayout" name="verticalLayout_2">
+                 <item>
+                  <widget class="QLabel" name="label">
+                   <property name="styleSheet">
+                    <string notr="true">font-size:16px;
 color:#000000;</string>
-                 </property>
-                 <property name="text">
-                  <string>0</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
+                   </property>
+                   <property name="text">
+                    <string>Last Scan</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="labelStatisticLastScan">
+                   <property name="styleSheet">
+                    <string notr="true">font-size:18px;
+color:#000000;</string>
+                   </property>
+                   <property name="text">
+                    <string>0</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
               </layout>
              </item>
             </layout>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
