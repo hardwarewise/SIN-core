@@ -89,12 +89,7 @@ void OptionsModel::Init(bool resetSettings)
     if (!settings.contains("fShowMasternodesTab"))
         settings.setValue("fShowMasternodesTab", masternodeConfig.getCount());
 
-    //InstaSwap
-
-    if (!settings.contains("fShowInstaSwapTab"))
-        settings.setValue("fShowInstaSwapTab", false);
-    //fShowInstaSwapTab = settings.value("fShowInstaSwapTab", false);
-
+    
 
     if (!settings.contains("fLowKeysWarning"))
         settings.setValue("fLowKeysWarning", true);
@@ -305,8 +300,7 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return settings.value("bSpendZeroConfChange");
         case ShowMasternodesTab:
             return settings.value("fShowMasternodesTab");
-        case ShowInstaSwapTab:
-            return settings.value("fShowInstaSwapTab");
+        
 #endif
         case DisplayUnit:
             return nDisplayUnit;
@@ -430,13 +424,7 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             }
             break;
 
-        // InstaSwap
-        case ShowInstaSwapTab:
-            if (settings.value("fShowInstaSwapTab") != value) {
-                settings.setValue("fShowInstaSwapTab", value);
-                setRestartRequired(true);
-            }
-            break;
+        
 #endif
         case DisplayUnit:
             setDisplayUnit(value);
