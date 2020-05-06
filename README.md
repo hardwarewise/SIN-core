@@ -1,4 +1,4 @@
-# ![SINOVATE Logo](https://sinovate.io/wp-content/uploads/2019/07/logo.png)
+# ![SINOVATE Logo](https://sinovate.io/wp-content/uploads/2019/03/log1.png)
 
 **SINOVATE (SIN)** is an open-source state of the art digital cryptocurrency. We create and build
 innovative blockchain services for individuals, developers, and enterprises. Big Data, decentralized cloud,
