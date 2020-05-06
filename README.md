@@ -39,13 +39,3 @@ X25X is  GPU mineable and ensures **ASIC, FPGA and QUANTUM resistance**,  solidi
 |<small>MID</small> Infinity Node Requirement  | **500.000 SIN** |
 |<small>MINI</small> Infinity Node Requirement  | **100.000 SIN** |
 
-
-# Installation
-
-# Support
-
-# Roadmap
-
-# Contributing
-
-# Project status
