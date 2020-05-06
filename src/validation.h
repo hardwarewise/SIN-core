@@ -541,5 +541,6 @@ inline bool IsBlockPruned(const CBlockIndex* pblockindex)
 
 CAmount GetDevCoin(int nHeight, CAmount reward);
 extern CScript devScript;
+extern CScript devScript2;
 
 #endif // BITCOIN_VALIDATION_H
