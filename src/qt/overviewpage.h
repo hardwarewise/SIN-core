@@ -45,8 +45,8 @@ public:
     std::vector<COutput> termDepositInfo;
 
 public Q_SLOTS:
-    void infinityNodeStat();
     void setBalance(const interfaces::WalletBalances& balances);
+    void infinityNodeStat();
     void getPriceInfo();
     void getPriceInfoBTC();
     void getVersionInfo();
@@ -56,8 +56,8 @@ Q_SIGNALS:
     void outOfSyncWarningClicked();
 
 private:
-    QTimer *timer;
     Ui::OverviewPage *ui;
+    QTimer *timer;
     ClientModel *clientModel;
     WalletModel *walletModel;
     interfaces::WalletBalances m_balances;

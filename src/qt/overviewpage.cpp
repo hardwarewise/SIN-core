@@ -18,13 +18,13 @@
 #include <wallet/wallet.h>
 #include <validation.h>
 #include <interfaces/node.h>
-
 #include <init.h>
 #include <util.h>
 #include <shutdown.h>
 #include <instantx.h>
 #include <masternode-sync.h>
 #include <infinitynodeman.h>
+
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
@@ -37,8 +37,8 @@
 
 
 #define ICON_OFFSET 16
-#define DECORATION_SIZE 54
-#define NUM_ITEMS 3
+#define DECORATION_SIZE 38
+#define NUM_ITEMS 10
 #define NUM_ITEMS_ADV 7
 
 Q_DECLARE_METATYPE(interfaces::WalletBalances)
@@ -62,7 +62,7 @@ public:
         QIcon icon = qvariant_cast<QIcon>(index.data(TransactionTableModel::RawDecorationRole));
         QRect mainRect = option.rect;
         mainRect.moveLeft(ICON_OFFSET);
-        QRect decorationRect(mainRect.topLeft(), QSize(DECORATION_SIZE, DECORATION_SIZE));
+        QRect decorationRect(mainRect.topLeft(), QSize(DECORATION_SIZE - 6, DECORATION_SIZE - 6));
         int xspace = DECORATION_SIZE + 8;
         int ypad = 6;
         int halfheight = (mainRect.height() - 2*ypad)/2;
@@ -104,9 +104,13 @@ public:
         }
         else
         {
-            foreground = option.palette.color(QPalette::Text);
+            
+            foreground = QColor(61, 113, 193);
         }
+
+
         painter->setPen(foreground);
+
 
         QString amountText = BitcoinUnits::formatWithUnit(unit, amount, true, BitcoinUnits::separatorAlways);
         if(!confirmed)
@@ -116,8 +120,10 @@ public:
         painter->drawText(amountRect, Qt::AlignRight|Qt::AlignVCenter, amountText);
 
         painter->setPen(option.palette.color(QPalette::Text));
+        foreground = QColor(205, 220, 234);
         painter->drawText(amountRect, Qt::AlignLeft|Qt::AlignVCenter, GUIUtil::dateTimeStr(date));
 
+        
         painter->restore();
     }
 
@@ -134,7 +140,7 @@ public:
 
 OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) :
     QWidget(parent),
-    timer(nullptr),
+     timer(nullptr),
     ui(new Ui::OverviewPage),
     clientModel(0),
     walletModel(0),
@@ -150,21 +156,27 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     networkManagerVersion = new QNetworkAccessManager();
     requestVersion = new QNetworkRequest();
     ui->setupUi(this);
-           
+
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(infinityNodeStat()));
+    timer->start(3000);
+
+               
    // Set the Latest Version information
  // Network request code 
         QObject::connect(networkManagerVersion, &QNetworkAccessManager::finished,
                          this, [=](QNetworkReply *replyVersion) {  
                          
                     if (replyVersion->error()) {
-                        ui->labelLatestVersion->setText("");
+                        // to do
+                        //ui->labelLatestVersion->setText("");
                         qDebug() << replyVersion->errorString();
                         return;
                     }
                     // Get the data from the network request
                     QString answerVersion = replyVersion->readAll();                                
-                    
-                    ui->labelLatestVersion->setText("<a style=\"color:#000000;\" href=\"https://github.com/SINOVATEblockchain/SIN-core/releases\">"+ answerVersion +"</a>");
+                    //to do 
+                    //ui->labelLatestVersion->setText("<a style=\"color:#000000;\" href=\"https://github.com/SINOVATEblockchain/SIN-core/releases\">"+ answerVersion +"</a>");
                 }
                 );
    // End Latest Version information
@@ -197,7 +209,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                     // List the found values
                     QStringList list = rx.capturedTexts();
 
-                    QString currentPriceStyleSheet = ".QLabel{color: %1;}";
+                    QString currentPriceStyleSheet = ".QLabel{color: %1; font-size:18px;}";
                     // Evaluate the current and next numbers and assign a color (green for positive, red for negative)
                     bool ok;
                     if (!list.isEmpty()) {
@@ -258,7 +270,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                     // List the found values
                     QStringList listBTC = rx.capturedTexts();
 
-                    QString currentPriceStyleSheet = ".QLabel{color: %1;}";
+                    QString currentPriceStyleSheet = ".QLabel{color: %1; font-size:18px;}";
                     // Evaluate the current and next numbers and assign a color (green for positive, red for negative)
                     bool ok;
                     if (!listBTC.isEmpty()) {
@@ -308,8 +320,9 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
 
     // use a SingleColorIcon for the "out of sync warning" icon
     QIcon icon = platformStyle->SingleColorIcon(":/icons/warning");
-    icon.addPixmap(icon.pixmap(QSize(64,64), QIcon::Normal), QIcon::Disabled); // also set the disabled icon because we are using a disabled QPushButton to work around missing HiDPI support of QLabel (https://bugreports.qt.io/browse/QTBUG-42503)
-    ui->labelTransactionsStatus->setIcon(icon);
+    icon.addPixmap(icon.pixmap(QSize(24,24), QIcon::Normal), QIcon::Disabled); // also set the disabled icon because we are using a disabled QPushButton to work around missing HiDPI support of QLabel (https://bugreports.qt.io/browse/QTBUG-42503)
+    //to do
+    //ui->labelTransactionsStatus->setIcon(icon);
     ui->labelWalletStatus->setIcon(icon);
 
     // Recent transactions
@@ -317,40 +330,25 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     ui->listTransactions->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
     ui->listTransactions->setMinimumHeight(NUM_ITEMS * (DECORATION_SIZE + 2));
     ui->listTransactions->setAttribute(Qt::WA_MacShowFocusRect, false);
-
+      
+       
     connect(ui->listTransactions, SIGNAL(clicked(QModelIndex)), this, SLOT(handleTransactionClicked(QModelIndex)));
 
     // init "out of sync" warning labels
-    ui->labelWalletStatus->setText( tr("Out of Sync!"));
-    ui->labelTransactionsStatus->setText(tr("Out of Sync!"));
+    ui->labelWalletStatus->setText( tr("Please wait until the wallet is fully synced to see your correct balance"));
+    // to do
+    //ui->labelTransactionsStatus->setText(tr("Out of Sync!"));
 
 
     // start with displaying the "out of sync" warnings
     showOutOfSyncWarning(true);
     connect(ui->labelWalletStatus, SIGNAL(clicked()), this, SLOT(handleOutOfSyncWarningClicks()));
-    connect(ui->labelTransactionsStatus, SIGNAL(clicked()), this, SLOT(handleOutOfSyncWarningClicks()));
+    // to do
+    //connect(ui->labelTransactionsStatus, SIGNAL(clicked()), this, SLOT(handleOutOfSyncWarningClicks()));
 
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(infinityNodeStat()));
-    timer->start(3000);
 }
 
-void OverviewPage::handleTransactionClicked(const QModelIndex &index)
-{
-    if(filter)
-        Q_EMIT transactionClicked(filter->mapToSource(index));
-}
 
-void OverviewPage::handleOutOfSyncWarningClicks()
-{
-    Q_EMIT outOfSyncWarningClicked();
-}
-
-OverviewPage::~OverviewPage()
-{
-    if(timer) disconnect(timer, SIGNAL(timeout()), this, SLOT(privateSendStatus()));
-    delete ui;
-}
 
 void OverviewPage::infinityNodeStat()
 {
@@ -376,46 +374,33 @@ void OverviewPage::infinityNodeStat()
         else if (sintype == 1) ++totalLILNonMatured;
     }
 
-    
-    //QString strTotalNodeText(tr("Total: %1 nodes (Last Scan: %2)").arg(total + totalNonMatured).arg(infnodeman.getLastScanWithLimit()));
-    QString strTotalNodeText(tr("%1").arg(total + totalNonMatured));
+    QString strTotalNodeText(tr("%1 Nodes").arg(total + totalNonMatured));
     QString strLastScanText(tr("%1").arg(infnodeman.getLastScanWithLimit()));
-    QString strBIGNodeText(tr("%1").arg(totalBIG));
-    QString strMIDNodeText(tr("%1").arg(totalMID));
-    QString strLILNodeText(tr("%1").arg(totalLIL));
-
-    QString strBIGNodeQueuedText(tr("Starting %1").arg(totalBIGNonMatured));
-    QString strMIDNodeQueuedText(tr("Starting %1").arg(totalMIDNonMatured));
-    QString strLILNodeQueuedText(tr("Starting %1").arg(totalLILNonMatured));
-
+    
     ui->labelStatisticTotalNode->setText(strTotalNodeText);
     ui->labelStatisticLastScan->setText(strLastScanText);
-    ui->labelBIGNode->setText(strBIGNodeText);
-    ui->labelMIDNode->setText(strMIDNodeText);
-    ui->labelLILNode->setText(strLILNodeText);
-
-    ui->labelBIGNodeQueued->setText(strBIGNodeQueuedText);
-    ui->labelMIDNodeQueued->setText(strMIDNodeQueuedText);
-    ui->labelLILNodeQueued->setText(strLILNodeQueuedText);
-
-    //QString strBIGNodeROIText(tr("ROI %1 days").arg(infnodeman.getRoi(10, totalBIG)));
-    //QString strMIDNodeROIText(tr("ROI %1 days").arg(infnodeman.getRoi(5, totalMID)));
-    //QString strLILNodeROIText(tr("ROI %1 days").arg(infnodeman.getRoi(1, totalLIL)));
-
-    //ui->labelBIGNodeRoi->setText(strBIGNodeROIText);
-    //ui->labelMIDNodeRoi->setText(strMIDNodeROIText);
-    //ui->labelLILNodeRoi->setText(strLILNodeROIText);
-
-    QString strBIGNodeSTMText(tr("Payment Round\n%1").arg(infnodeman.getLastStatement(10)));
-    QString strMIDNodeSTMText(tr("Payment Round\n%1").arg(infnodeman.getLastStatement(5)));
-    QString strLILNodeSTMText(tr("Payment Round\n%1").arg(infnodeman.getLastStatement(1)));
-
-    ui->labelBIGNodeSTM->setText(strBIGNodeSTMText);
-    ui->labelMIDNodeSTM->setText(strMIDNodeSTMText);
-    ui->labelLILNodeSTM->setText(strLILNodeSTMText);
-
-
 }
+
+
+
+
+void OverviewPage::handleTransactionClicked(const QModelIndex &index)
+{
+    if(filter)
+        Q_EMIT transactionClicked(filter->mapToSource(index));
+}
+
+void OverviewPage::handleOutOfSyncWarningClicks()
+{
+    Q_EMIT outOfSyncWarningClicked();
+}
+
+OverviewPage::~OverviewPage()
+{
+    
+    delete ui;
+}
+
 
 void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
 {
@@ -425,7 +410,8 @@ void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
     ui->labelBalance->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.balance, false, BitcoinUnits::separatorAlways));
     ui->labelUnconfirmed->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.unconfirmed_balance, false, BitcoinUnits::separatorAlways));
     ui->labelImmature->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.immature_balance, false, BitcoinUnits::separatorAlways));
-    ui->labelTotal->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.balance + balances.unconfirmed_balance + balances.immature_balance, false, BitcoinUnits::separatorAlways));
+    //to do
+    //ui->labelTotal->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.balance + balances.unconfirmed_balance + balances.immature_balance, false, BitcoinUnits::separatorAlways));
     ui->labelWatchAvailable->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.watch_only_balance, false, BitcoinUnits::separatorAlways));
     ui->labelWatchPending->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.unconfirmed_watch_only_balance, false, BitcoinUnits::separatorAlways));
     ui->labelWatchImmature->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.immature_watch_only_balance, false, BitcoinUnits::separatorAlways));
@@ -443,8 +429,12 @@ void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
     bool showWatchOnlyImmature = balances.immature_watch_only_balance != 0;
 
     // for symmetry reasons also show immature label when the watch-only one is shown
-    ui->labelImmature->setVisible(showImmature || showWatchOnlyImmature);
-    ui->labelImmatureText->setVisible(showImmature || showWatchOnlyImmature);
+    //ui->labelImmature->setVisible(showImmature || showWatchOnlyImmature);
+    //ui->labelImmatureText->setVisible(showImmature || showWatchOnlyImmature);
+    // For visual reasons, the Immature label will be constantly shown.
+    ui->labelImmature;
+    ui->labelImmatureText;
+    //
     ui->labelWatchImmature->setVisible(showWatchOnlyImmature); // show watch-only immature balance
 
     static int cachedTxLocks = 0;
@@ -458,21 +448,24 @@ void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
 // show/hide watch-only labels
 void OverviewPage::updateWatchOnlyLabels(bool showWatchOnly)
 {
-    ui->labelSpendable->setVisible(showWatchOnly);      // show spendable label (only when watch-only is active)
+    //ui->labelSpendable->setVisible(showWatchOnly);      // show spendable label (only when watch-only is active)
     ui->labelWatchonly->setVisible(showWatchOnly);      // show watch-only label
-    ui->lineWatchBalance->setVisible(showWatchOnly);    // show watch-only balance separator line
+    //ui->lineWatchBalance->setVisible(showWatchOnly);    // show watch-only balance separator line
     ui->labelWatchAvailable->setVisible(showWatchOnly); // show watch-only available balance
     ui->labelWatchPending->setVisible(showWatchOnly);   // show watch-only pending balance
     ui->labelWatchTotal->setVisible(showWatchOnly);     // show watch-only total balance
-
+    ui->watchOnlyFrame->setVisible(showWatchOnly);
+    
     if (!showWatchOnly){
         ui->labelWatchImmature->hide();
+
     }
     else{
         ui->labelBalance->setIndent(20);
         ui->labelUnconfirmed->setIndent(20);
         ui->labelImmature->setIndent(20);
-        ui->labelTotal->setIndent(20);
+        //to do
+        //ui->labelTotal->setIndent(20);
     }
 }
 
@@ -545,7 +538,9 @@ void OverviewPage::updateAlerts(const QString &warnings)
 void OverviewPage::showOutOfSyncWarning(bool fShow)
 {
     ui->labelWalletStatus->setVisible(fShow);
-    ui->labelTransactionsStatus->setVisible(fShow);
+    ui->layoutWarning->setVisible(fShow);
+    // to do
+    //ui->labelTransactionsStatus->setVisible(fShow);
 }
 
 void OverviewPage::SetupTransactionList(int nNumItems) {
