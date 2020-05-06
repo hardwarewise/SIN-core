@@ -155,15 +155,6 @@ void WalletFrame::gotoInstaswapPage()
 }
 //
 
-// StatsPage
-void WalletFrame::gotoStatsPage()
-{
-    QMap<QString, WalletView*>::const_iterator i;
-    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
-        i.value()->gotoStatsPage();
-}
-//
-
 void WalletFrame::gotoReceiveCoinsPage()
 {
     QMap<QString, WalletView*>::const_iterator i;

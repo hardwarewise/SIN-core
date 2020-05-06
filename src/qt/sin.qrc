@@ -99,7 +99,6 @@
         <file alias="qbtc">res/icons/qbtc.png</file>
         <file alias="instaswap">res/icons/instaswap.png</file>
         <file alias="instaswap1">res/icons/instaswap1.png</file>
-        <file alias="stats">res/icons/stats.png</file>
 
     </qresource>
     <qresource prefix="/movies">
@@ -159,10 +158,6 @@
      <file alias="about">res/images/about.png</file>
      <file alias="radio_unchecked">res/images/unchecked_radio.png</file>
      <file alias="radio_checked">res/images/checked_radio.png</file>
-     <file alias="nav-logo-sin">res/images/nav-logo-sin.png</file>
-     <file alias="qr_test_image">res/images/qr_test.png</file>
-     <file alias="qr_down_arrow">res/images/qr_down_arrow.png</file>     
-
      </qresource>
    <qresource prefix="/fonts">
        <file alias="Hind-Bold">res/fonts/Hind-Bold.ttf</file>
@@ -171,16 +166,5 @@
        <file alias="Hind-Regular">res/fonts/Hind-Regular.ttf</file>
        <file alias="Hind-SemiBold">res/fonts/Hind-SemiBold.ttf</file>
        <file alias="Montserrat-Bold">res/fonts/Montserrat-Bold.ttf</file>
-       <file alias="OpenSans-Bold">res/fonts/OpenSans-Bold.ttf</file>
-       <file alias="OpenSans-BoldItalic">res/fonts/OpenSans-BoldItalic.ttf</file>
-       <file alias="OpenSans-ExtraBold">res/fonts/OpenSans-ExtraBold.ttf</file>
-       <file alias="OpenSans-ExtraBoldItalic">res/fonts/OpenSans-ExtraBoldItalic.ttf</file>
-       <file alias="OpenSans-Italic">res/fonts/OpenSans-Italic.ttf</file>
-       <file alias="OpenSans-Light">res/fonts/OpenSans-Light.ttf</file>
-       <file alias="OpenSans-LightItalic">res/fonts/OpenSans-LightItalic.ttf</file>
-       <file alias="OpenSans-Regular">res/fonts/OpenSans-Regular.ttf</file>
-       <file alias="OpenSans-SemiBold">res/fonts/OpenSans-SemiBold.ttf</file>
-       <file alias="OpenSans-SemiBoldItalic">res/fonts/OpenSans-SemiBoldItalic.ttf</file>
-
    </qresource>
 </RCC>

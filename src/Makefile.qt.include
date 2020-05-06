@@ -112,7 +112,6 @@ QT_FORMS_UI = \
   qt/forms/depositcoinsdialog.ui \
   qt/forms/sendcoinsentry.ui \
   qt/forms/signverifymessagedialog.ui \
-  qt/forms/statspage.ui \
   qt/forms/transactiondescdialog.ui
 
 # Dash
@@ -171,7 +170,6 @@ QT_MOC_CPP = \
   qt/moc_transactionview.cpp \
   qt/moc_utilitydialog.cpp \
   qt/moc_walletframe.cpp \
-  qt/moc_statspage.cpp \
   qt/moc_walletmodel.cpp \
   qt/moc_walletview.cpp
 
@@ -211,7 +209,6 @@ BITCOIN_QT_H = \
   qt/addresstablemodel.h \
   qt/askpassphrasedialog.h \
   qt/bantablemodel.h \
-  qt/statspage.h \
   qt/sinaddressvalidator.h \
   qt/sinamountfield.h \
   qt/singui.h \
@@ -394,7 +391,6 @@ BITCOIN_QT_WALLET_CPP = \
   qt/transactionview.cpp \
   qt/walletframe.cpp \
   qt/walletmodel.cpp \
-  qt/statspage.cpp \
   qt/walletmodeltransaction.cpp \
   qt/walletview.cpp
 
@@ -417,9 +413,6 @@ BITCOIN_QT_CPP += $(BITCOIN_QT_WALLET_CPP)
 endif
 
 RES_IMAGES =
-
-RES_CSS = \
-  qt/res/css/default.css
 
 RES_MOVIES = $(wildcard $(srcdir)/qt/res/movies/spinner-*.png)
 

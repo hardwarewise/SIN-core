@@ -15,12 +15,6 @@
 #include <qt/instaswap.h>
 //
 
-
-// StatsPage
-#include <qt/statspage.h>
-//
-
-
 #include <QStackedWidget>
 
 class BitcoinGUI;
@@ -34,8 +28,6 @@ class SendCoinsRecipient;
 class TransactionView;
 class WalletModel;
 class AddressBookPage;
-class StatsPage;
-
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -93,10 +85,6 @@ private:
     InstaSwap *instaswapListPage;
     //
 
-    // StatsPage
-    StatsPage *statsWindow;
-    //
-
     TransactionView *transactionView;
 
     QProgressDialog *progressDialog;
@@ -117,11 +105,6 @@ public Q_SLOTS:
     // Instaswap
     /** Switch to instaswap page */
     void gotoInstaswapPage();
-    //
-
-    // Stats
-    /** Switch to stats page */
-    void gotoStatsPage();
     //
 
     /** Switch to receive coins page */
