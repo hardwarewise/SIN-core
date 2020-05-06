@@ -1,4 +1,4 @@
-# ![SINOVATE Logo](https://sinovate.io/wp-content/uploads/2019/03/log1.png)
+# ![SINOVATE Logo](https://sinovate.io/wp-content/uploads/2020/05/SINOVATE_LogoBlack-1.png)
 
 **SINOVATE (SIN)** is an open-source state of the art digital cryptocurrency. We create and build
 innovative blockchain services for individuals, developers, and enterprises. Big Data, decentralized cloud,
@@ -31,7 +31,7 @@ X25X is  GPU mineable and ensures **ASIC, FPGA and QUANTUM resistance**,  solidi
 |Block Fee  | **10%** |
 |Difficulty Retargeting Algo | LWMA | 
 |Max Transactions Per Second  | **533 tx/s** |
-|Total Supply  | **Always Less than 700 million SIN infinitely** |
+|Total Supply  | **Always Less than 800 million SIN infinitely** |
 |Max Block Size  | **16 MB** |
 |SINOVATE legacy address start with  | **S** |
 |Infinity Node Port  | **20970** |
