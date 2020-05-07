@@ -375,7 +375,7 @@ void OverviewPage::infinityNodeStat()
     }
 
     QString strTotalNodeText(tr("%1 Nodes").arg(total + totalNonMatured));
-    QString strLastScanText(tr("%1").arg(infnodeman.getLastScanWithLimit()));
+    QString strLastScanText(tr("Last Scan %1").arg(infnodeman.getLastScanWithLimit()));
     
     ui->labelStatisticTotalNode->setText(strTotalNodeText);
     ui->labelStatisticLastScan->setText(strLastScanText);
