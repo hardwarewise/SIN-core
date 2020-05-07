@@ -263,6 +263,7 @@ public:
         consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
         consensus.nInfinityNodeLockRewardSINType=1; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
+        consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
         consensus.nBudgetPaymentsCycleBlocks = 10958; // weekly
@@ -286,6 +287,8 @@ public:
         consensus.nMinerConfirmationWindow = 2016;
         consensus.devAddressPubKey = "841e6bf56b99a59545da932de2efb23ab93b4f44";
         consensus.devAddress = "SZLafuDjnjqh2tAfTrG9ZAGzbP8HkzNXvB";
+        consensus.devAddress2PubKey = "413395a3a8fedfc2a06f645ad40151412d414544";
+        consensus.devAddress2 = "STEkkU29v5rjb6CMUdGciF1e4STZ6jx7aq";
         consensus.cBurnAddress = "SinBurnAddress123456789SuqaXbx3AMC";
         consensus.cBurnAddressPubKey = "ebaf5ec74cb2e2342dfda0229111738ff4dc742d";
         consensus.cMetadataAddress = "SinBurnAddressForMetadataXXXXEU2mj";
@@ -392,6 +395,7 @@ public:
         consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
         consensus.nInfinityNodeLockRewardSINType=1; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
+        consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
         consensus.nBudgetPaymentsCycleBlocks = 10958; // weekly
@@ -415,6 +419,8 @@ public:
         consensus.nMinerConfirmationWindow = 2016;
         consensus.devAddressPubKey = "841e6bf56b99a59545da932de2efb23ab93b4f44";
         consensus.devAddress = "SZLafuDjnjqh2tAfTrG9ZAGzbP8HkzNXvB";
+        consensus.devAddress2PubKey = "413395a3a8fedfc2a06f645ad40151412d414544";
+        consensus.devAddress2 = "STEkkU29v5rjb6CMUdGciF1e4STZ6jx7aq";
         consensus.cBurnAddress = "SinBurnAddress123456789SuqaXbx3AMC";
         consensus.cBurnAddressPubKey = "ebaf5ec74cb2e2342dfda0229111738ff4dc742d";
         consensus.cMetadataAddress = "SinBurnAddressForMetadataXXXXEU2mj";
@@ -515,6 +521,7 @@ public:
         consensus.nMasternodeBurnSINNODE_5 = 500000;
         consensus.nMasternodeBurnSINNODE_10 = 1000000;
         consensus.nMasternodeCollateralMinimum = 10000;
+        consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
 
         consensus.BIP16Exception = uint256();
         consensus.BIP34Height = 100000000;
@@ -528,7 +535,9 @@ public:
         consensus.fPowNoRetargeting = true;
         consensus.nRuleChangeActivationThreshold = 108;
         consensus.nMinerConfirmationWindow = 144;
-        consensus.devAddressPubKey = "76a914d63bf3a5822bb2f7ac9ced84ae2c1f319c4253e288ac";
+        consensus.devAddress2PubKey = "d63bf3a5822bb2f7ac9ced84ae2c1f319c4253e2";
+        consensus.devAddress2 = "n13iidFw2jiVVoz86ouMqv31x7oEe5V4Wm";
+        consensus.devAddressPubKey = "d63bf3a5822bb2f7ac9ced84ae2c1f319c4253e2";
         consensus.devAddress = "n13iidFw2jiVVoz86ouMqv31x7oEe5V4Wm";
         consensus.cBurnAddressPubKey = "76a9142be2e66836eda517af05e5b628eb9fedefcd669b88ac";
         consensus.cBurnAddress = "mjX1AbMEHU14PmHjG2wtSvoydnJ6RxYwC2";
