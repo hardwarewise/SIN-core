@@ -14,6 +14,7 @@ class PlatformStyle;
 class SendCoinsRecipient;
 class WalletModel;
 class WalletView;
+class StatsPage;
 
 QT_BEGIN_NAMESPACE
 class QStackedWidget;
@@ -76,6 +77,11 @@ public Q_SLOTS:
     // Instaswap
     /** Switch to instaswap page */
     void gotoInstaswapPage();
+    //
+
+    // StatsPage
+    /** Switch to stats page */
+    void gotoStatsPage();
     //
 
     /** Switch to receive coins page */

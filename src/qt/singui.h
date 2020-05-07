@@ -34,6 +34,7 @@ class HelpMessageDialog;
 class ModalOverlay;
 class MasternodeList;
 class InstaSwap;
+class StatsPage;
 
 namespace interfaces {
 class Handler;
@@ -103,6 +104,7 @@ private:
     QProgressDialog* progressDialog = nullptr;
 
     QMenuBar* appMenuBar = nullptr;
+    QMenuBar* subMenu = nullptr;
     QToolBar* appToolBar = nullptr;
     QAction* overviewAction = nullptr;
     QAction* historyAction = nullptr;
@@ -112,6 +114,11 @@ private:
     // Instaswap
     QAction *instaswapAction = nullptr;
     //
+    
+    // StatsPage
+    QAction *statsPageAction;
+    //
+
     QAction* quitAction = nullptr;
     QAction* sendCoinsAction = nullptr;
     //QAction* depositCoinsAction = nullptr;
@@ -156,17 +163,10 @@ private:
     QAction* ResourcesWebsite10;
 /// end Resources Web Links
 
-////start Governance and I.D.S. Menu
-
-    QAction* GovernanceMenu1;
-    QAction* GovernanceMenu2;
-    
-    QAction* IDSMenu1;
-    QAction* IDSMenu2;
-    QAction* IDSMenu3;
-////end Governance and I.D.S. Menu
 
     QAction *showSpecsHelpAction;
+
+    QLabel *mainIcon;
     
     QLabel *m_wallet_selector_label = nullptr;
     QComboBox* m_wallet_selector = nullptr;
@@ -175,6 +175,7 @@ private:
     QMenu* trayIconMenu = nullptr;
     Notificator* notificator = nullptr;
     RPCConsole* rpcConsole = nullptr;
+    StatsPage  *statsWindow;
     //HelpMessageDialog* helpMessageDialog = nullptr;
     HelpMessageDialog *helpMessageDialog;
 
@@ -190,6 +191,7 @@ private:
     void createActions();
     /** Create the menu bar and sub-menus. */
     void createMenuBar();
+    
     /** Create the toolbars */
     void createToolBars();
     /** Create system tray icon and notification */
@@ -282,6 +284,11 @@ private Q_SLOTS:
     // Instaswap
     /** Switch to instaswap page */
     void gotoInstaswapPage();
+    //
+
+    //StatsPage
+    /** Switch to Stats Page */
+    void gotoStatsPage(); 
     //
 
     /** Switch to receive coins page */
