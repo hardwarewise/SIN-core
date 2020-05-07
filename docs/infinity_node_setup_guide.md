@@ -115,7 +115,7 @@ Open your Sinovate local wallet and create a new receiving address:
 * In the screenshot below we have an example for the SIN-BIG Infinity Node, so the command in that case is
 
   ```
-  infinitynodeburnfund 1000000 yourSINbackupaddress
+  infinitynodeburnfund yourSINaddress 1000000 yourSINbackupaddress
   ```
 
 ![Image 04](assets/img/infinity_node_setup_guide/img_04.jpg)
