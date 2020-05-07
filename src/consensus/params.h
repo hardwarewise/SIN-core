@@ -78,6 +78,7 @@ struct Params {
     int nInfinityNodeLockRewardSigners; //in number
     int nInfinityNodeLockRewardSINType; //in number
     int nSchnorrActivationHeight; // block height (int)
+    int nNewDevfeeAddress; // block height (int)
 
     int nInstantSendKeepLock; // in blocks
 
@@ -104,6 +105,8 @@ struct Params {
     int BIP66Height;
     const char *devAddressPubKey;
     const char *devAddress;
+    const char *devAddress2PubKey;
+    const char *devAddress2;
     const char *cBurnAddress;
     const char *cBurnAddressPubKey;
     const char *cMetadataAddress;

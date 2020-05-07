@@ -63,6 +63,7 @@
 #define MILLI 0.001
 
 CScript devScript;
+CScript devScript2;
 
 /**
  * Global state
@@ -2240,8 +2241,13 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
                                REJECT_INVALID, "bad-cb-amount");
 
     // verify devfund addr and amount are correct
-    if (block.vtx[0]->vout[1].scriptPubKey != devScript)
-        return state.DoS(100, error("ConnectBlock(): coinbase does not pay to the dev fund address."), REJECT_INVALID, "bad-cb-dev-fee");
+    if (pindex->nHeight <= chainparams.GetConsensus().nNewDevfeeAddress) {
+        if (block.vtx[0]->vout[1].scriptPubKey != devScript)
+            return state.DoS(100, error("ConnectBlock(): coinbase does not pay to the old dev fund address."), REJECT_INVALID, "bad-cb-old-dev-fee");
+    } else {
+        if (block.vtx[0]->vout[1].scriptPubKey != devScript2)
+            return state.DoS(100, error("ConnectBlock(): coinbase does not pay to the dev fund address."), REJECT_INVALID, "bad-cb-dev-fee");
+    }
 	LogPrintf("Miner -- Dev fee paid: %d, Calcul dev fee %d\n", block.vtx[0]->vout[1].nValue, GetDevCoin(pindex->nHeight, blockReward));
     if (block.vtx[0]->vout[1].nValue < GetDevCoin(pindex->nHeight, blockReward))
         return state.DoS(100, error("ConnectBlock(): coinbase does not pay enough to the dev fund address."), REJECT_INVALID, "bad-cb-dev-fee");
@@ -4610,6 +4616,7 @@ void UnloadBlockIndex()
 bool LoadBlockIndex(const CChainParams& chainparams)
 {
     devScript << OP_DUP << OP_HASH160 << ParseHex(chainparams.GetConsensus().devAddressPubKey) << OP_EQUALVERIFY << OP_CHECKSIG;
+    devScript2 << OP_DUP << OP_HASH160 << ParseHex(chainparams.GetConsensus().devAddress2PubKey) << OP_EQUALVERIFY << OP_CHECKSIG;
 
     // Load block index from databases
     bool needs_init = fReindex;
