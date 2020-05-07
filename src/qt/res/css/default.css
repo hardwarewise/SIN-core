@@ -11,7 +11,7 @@ color: #333;
 
 QStatusBar {
     /*background-color: #00C0F7;*/
-    background-color: #262261;
+    background-color: #2E3191;
     color: #ffffff;
     padding-left:4px;
 }
@@ -21,17 +21,17 @@ QStatusBar {
 }
 
 QMenuBar {
-	background-color: #262261;
+	background-color: #2E3191;
 }
 QMenuBar::item {
-	background-color: #262261;
+	background-color: #2E3191;
 	color: #CCCCCC;
 }
 QMenuBar::item:selected {
-	background-color: #262261;
+	background-color: #2E3191;
 }
 QMenu {
-	background-color: #262261;
+	background-color: #2E3191;
 }
 QMenu::item {
 	color: #CCCCCC;
@@ -42,7 +42,7 @@ QMenu::item:selected {
 }
 
 QToolBar {
-background-color: #262261;
+background-color: #2E3191;
 /*background-color: qlineargradient(y1:0, y2: 1, stop: 0 #02055e, stop: 1 #00023B);*/
 border:none;
 height:100%;
