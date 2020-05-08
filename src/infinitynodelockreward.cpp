@@ -800,10 +800,14 @@ bool CInfinityNodeLockReward::FindAndSendSignersGroup(CConnman& connman)
 
     int loop = Params().GetConsensus().nInfinityNodeLockRewardTop / Params().GetConsensus().nInfinityNodeLockRewardSigners;
 
+    if(mapSigners[currentLockRequestHash].size() >= Params().GetConsensus().nInfinityNodeLockRewardSigners){
+        TryConnectToMySigners(mapLockRewardRequest[currentLockRequestHash].nRewardHeight, connman);
+    }
+
     for (int i=0; i <= loop; i++)
     {
+        std::vector<COutPoint> signers;
         if(i >=1 && mapSigners[currentLockRequestHash].size() >= Params().GetConsensus().nInfinityNodeLockRewardSigners * i && nGroupSigners < i){
-            std::vector<COutPoint> signers;
             for(int j=Params().GetConsensus().nInfinityNodeLockRewardSigners * (i - 1); j < Params().GetConsensus().nInfinityNodeLockRewardSigners * i; j++){
                 signers.push_back(mapSigners[currentLockRequestHash].at(j));
             }
@@ -816,7 +820,6 @@ bool CInfinityNodeLockReward::FindAndSendSignersGroup(CConnman& connman)
                           nGroupSigners, signerIndex, mapLockRewardRequest[currentLockRequestHash].nRewardHeight);
 
                 if (signerIndex != ""){
-                    TryConnectToMySigners(mapLockRewardRequest[currentLockRequestHash].nRewardHeight, connman);
                     //step 4.3.1
                     CGroupSigners gSigners(infinitynodePeer.burntx, currentLockRequestHash, mapLockRewardRequest[currentLockRequestHash].nRewardHeight, nGroupSigners, signerIndex);
                     if(gSigners.Sign(infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode)) {
@@ -828,6 +831,7 @@ bool CInfinityNodeLockReward::FindAndSendSignersGroup(CConnman& connman)
                     }
                 }
             }
+            signers.clear();
         }
     }
 
@@ -1116,22 +1120,27 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
 
     AssertLockHeld(cs);
 
-    std::map<uint256, std::vector<CMusigPartialSignLR>>::iterator it = mapMyPartialSigns.begin();
+    for (auto& pair : mapMyPartialSigns) {
+        uint256 nHashGroupSigner = pair.first;
+        LogPrintf("CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Group Signer: %s, GroupSigner exist: %d, size: %d\n",
+                       nHashGroupSigner.ToString(), mapLockRewardGroupSigners.count(nHashGroupSigner), pair.second.size());
 
-    while(it != mapMyPartialSigns.end()) {
-        std::vector<CMusigPartialSignLR>* vSign = &(it->second);
-        int nSign = (int)vSign->size();
-        uint256 nHashGroupSigner = it->first;
-        LogPrintf("CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Group Signer: %s, GroupSigner: %d\n",
-                       nHashGroupSigner.ToString(), mapLockRewardGroupSigners.count(nHashGroupSigner));
-
-        if(it->second.size() == Params().GetConsensus().nInfinityNodeLockRewardSigners && mapLockRewardGroupSigners.count(nHashGroupSigner) == 1) {
+        if(pair.second.size() == Params().GetConsensus().nInfinityNodeLockRewardSigners && mapLockRewardGroupSigners.count(nHashGroupSigner) == 1) {
 
             uint256 nHashLockRequest = mapLockRewardGroupSigners[nHashGroupSigner].nHashRequest;
 
             if(!mapLockRewardRequest.count(nHashLockRequest)) continue;
-            LogPrintf("CInfinityNodeLockReward::FindAndBuildMusigLockReward -- LockRequest: %s, GroupSigner: %d\n",
-                       nHashGroupSigner.ToString(), mapLockRewardGroupSigners.count(nHashGroupSigner));
+            LogPrintf("CInfinityNodeLockReward::FindAndBuildMusigLockReward -- LockRequest: %s; member: %s\n",
+                       nHashLockRequest.ToString(), mapLockRewardGroupSigners[nHashGroupSigner].signersId);
+            for(int k=0; k < Params().GetConsensus().nInfinityNodeLockRewardSigners; k++){
+                LogPrintf("CInfinityNodeLockReward::FindAndBuildMusigLockReward -- signerId %d, signer: %s, partial sign:%s,\n",
+                          k, pair.second.at(k).vin.prevout.ToStringShort() ,pair.second.at(k).GetHash().ToString());
+            }
+            if(mapSigned.count(mapLockRewardRequest[nHashLockRequest].nRewardHeight)){
+                LogPrintf("CInfinityNodeLockReward::FindAndBuildMusigLockReward -- !!! Musig for :%d was built by group signers :%s, members: %s\n",
+                          mapLockRewardRequest[nHashLockRequest].nRewardHeight, nHashGroupSigner.ToString(), mapLockRewardGroupSigners[nHashGroupSigner].signersId);
+                continue;
+            }
 
             int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType;
             std::map<int, CInfinitynode> mapInfinityNodeRank = infnodeman.calculInfinityNodeRank(mapLockRewardRequest[nHashLockRequest].nRewardHeight, nSINtypeCanLockReward, false, true);
@@ -1244,7 +1253,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
             secp256k1_musig_partial_signature *partial_sig;
             partial_sig = (secp256k1_musig_partial_signature*) malloc(Params().GetConsensus().nInfinityNodeLockRewardSigners * sizeof(secp256k1_musig_partial_signature));
             for(int i=0; i<N_SIGNERS; i++) {
-                  std::vector<unsigned char> sig = (it->second).at(i).vchMusigPartialSign;
+                std::vector<unsigned char> sig = pair.second.at(i).vchMusigPartialSign;
                 LogPrintf("CInfinityNodeLockReward::FindAndBuildMusigLockReward -- sign %d:", i);
                 for(int j=0; j<32;j++){
                     LogPrintf(" %d ", sig.at(j));
@@ -1264,10 +1273,11 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                 LogPrintf("CInfinityNodeLockReward::MusigPartialSign -- Musig Final Sign FAILED\n");
                 return false;
             }
-            LogPrintf("CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Musig Final Sign built!!!\n");
+            LogPrintf("CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Musig Final Sign built for Reward Height: %d with group signer %s!!!\n",
+                       mapLockRewardRequest[nHashLockRequest].nRewardHeight, mapLockRewardGroupSigners[nHashGroupSigner].signersId);
+            mapSigned[mapLockRewardRequest[nHashLockRequest].nRewardHeight] = nHashGroupSigner;
 
         }//end number signature check
-        ++it;
     }//end loop in mapMyPartialSigns
 
     return false;
@@ -1381,10 +1391,13 @@ bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
             TryConnectToMySigners(nRewardHeight, connman);
             //track my last request
             mapSigners.clear();
-            mapMyPartialSigns.clear();
             currentLockRequestHash = newRequest.GetHash();
             nFutureRewardHeight = newRequest.nRewardHeight;
             nGroupSigners = 0;
+            //
+            if(loop ==0){
+                mapMyPartialSigns.clear();
+            }
             //relay it
             LogPrintf("CInfinityNodeLockReward::ProcessBlock -- relay my LockRequest loop: %d, hash: %s\n", loop, newRequest.GetHash().ToString());
             newRequest.Relay(connman);
@@ -1436,7 +1449,10 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
         pfrom->setAskFor.erase(nHash);
         {
             LOCK(cs);
-            if(mapLockRewardRequest.count(nHash)) return;
+            if(mapLockRewardRequest.count(nHash)){
+                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- I had this LockRequest %s. End process\n", nHash.ToString());
+                return;
+            }
             if(!CheckLockRewardRequest(pfrom, lockReq, connman, nCachedBlockHeight)){
                 return;
             }
@@ -1458,7 +1474,7 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
         {
             LOCK(cs);
             if(mapLockRewardCommitment.count(nHash)){
-                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- I had it. end process\n");
+                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- I had this commitment %s. End process\n", nHash.ToString());
                 return;
             }
             //TODO: check commitment before add
@@ -1481,7 +1497,7 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
         {
             LOCK(cs);
             if(mapLockRewardGroupSigners.count(nHash)){
-                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- I had this group signer. end process\n");
+                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- I had this group signer: %s. End process\n", nHash.ToString());
                 return;
             }
             if(!CheckGroupSigner(pfrom, gSigners)){
@@ -1506,7 +1522,7 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
         {
             LOCK(cs);
             if(mapPartialSign.count(nHash)){
-                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- I had this Partial Sign. end process\n");
+                LogPrintf("CInfinityNodeLockReward::ProcessMessage -- I had this Partial Sign %s. End process\n", nHash.ToString());
                 return;
             }
             //check

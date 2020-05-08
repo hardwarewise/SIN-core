@@ -236,6 +236,7 @@ private:
 
     std::map<uint256, std::vector<COutPoint>> mapSigners; //list of signers for my request only, uint256 = currentLockRequestHash
     std::map<uint256, std::vector<CMusigPartialSignLR>> mapMyPartialSigns; //list of signers for my request only, uint256 = hashGroupSigners
+    std::map<int, uint256> mapSigned; // signed Musig for nRewardHeight and hashGroupSigners
     // Keep track of current block height
     int nCachedBlockHeight;
     // Keep track my current LockRequestHash and all related informations
