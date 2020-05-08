@@ -26,21 +26,21 @@ void CInfinitynodeMeta::Clear()
 bool CInfinitynodeMeta::Add(CMetadata &meta)
 {
     LOCK(cs);
-    LogPrintf("CInfinitynodeMeta::new Metadata from %s %d\n", meta.getMetaID(), meta.getMetadataHeight());
+    LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::new Metadata from %s %d\n", meta.getMetaID(), meta.getMetadataHeight());
     auto it = mapNodeMetadata.find(meta.getMetaID());
     if(it == mapNodeMetadata.end()){
-        LogPrintf("CInfinitynodeMeta::1st metadata from %s\n", meta.getMetaID());
+        LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::1st metadata from %s\n", meta.getMetaID());
         mapNodeMetadata[meta.getMetaID()] = meta;
         return true;
     } else {
         CMetadata m = it->second;
         if(m.getMetaID() == meta.getMetaID() && meta.getMetadataHeight() >  m.getMetadataHeight()){
-            LogPrintf("CInfinitynodeMeta::new metadata from higher height %s\n", meta.getMetaID());
+            LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::new metadata from higher height %s\n", meta.getMetaID());
             mapNodeMetadata.erase(meta.getMetaID());
             mapNodeMetadata[meta.getMetaID()] = meta;
             return true;
         }else{
-            LogPrintf("CInfinitynodeMeta::nHeight is lower than current height %d\n", m.getMetadataHeight());
+            LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::nHeight is lower than current height %d\n", m.getMetadataHeight());
             return false;
         }
     }
@@ -78,7 +78,7 @@ bool CInfinitynodeMeta::Get(std::string  nodePublicKey, CMetadata& meta)
 bool CInfinitynodeMeta::metaScan(int nBlockHeight)
 {
     Clear();
-    LogPrintf("CInfinitynodeMeta::metaScan -- Cleared map. Size is %d\n", (int)mapNodeMetadata.size());
+    LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::metaScan -- Cleared map. Size is %d\n", (int)mapNodeMetadata.size());
     if (nBlockHeight <= Params().GetConsensus().nInfinityNodeGenesisStatement) return false;
     uint256 blockHash;
     if(!GetBlockHash(blockHash, nBlockHeight)) {
@@ -125,12 +125,12 @@ bool CInfinitynodeMeta::metaScan(int nBlockHeight)
                                         if (i==0) {
                                             publicKeyString = s;
                                             std::vector<unsigned char> tx_data = DecodeBase64(publicKeyString.c_str());
-                                            LogPrintf("CInfinitynodeMeta::metaScan -- publicKey: %s\n", publicKeyString);
+                                            LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::metaScan -- publicKey: %s\n", publicKeyString);
                                             CPubKey decodePubKey(tx_data.begin(), tx_data.end());
                                             if (decodePubKey.IsValid()) {
                                                 check++;
                                             }else{
-                                                LogPrintf("CInfinitynodeMeta::metaScan -- ERROR: publicKey is not valid: %s\n", publicKeyString);
+                                                LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::metaScan -- ERROR: publicKey is not valid: %s\n", publicKeyString);
                                             }
                                         }
                                         //2nd position: Node IP
@@ -151,20 +151,20 @@ bool CInfinitynodeMeta::metaScan(int nBlockHeight)
                                             CTransactionRef prevtx;
                                             uint256 hashblock;
                                             if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false)) {
-                                                LogPrintf("CInfinitynodeMeta::metaScan -- PrevBurnFund tx is not in block.\n");
+                                                LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::metaScan -- PrevBurnFund tx is not in block.\n");
                                                 return false;
                                             }
 
                                             CTxDestination addressBurnFund;
                                             if(!ExtractDestination(prevtx->vout[index].scriptPubKey, addressBurnFund)){
-                                                LogPrintf("CInfinitynodeMeta::metaScan -- False when extract payee from BurnFund tx.\n");
+                                                LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::metaScan -- False when extract payee from BurnFund tx.\n");
                                                 return false;
                                             }
 
                                             std::ostringstream streamInfo;
                                             streamInfo << EncodeDestination(addressBurnFund) << "-" << burnTxID;
 
-                                            LogPrintf("CInfinitynodeMeta:: meta update: %s, %s, %s, %d\n", 
+                                            LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta:: meta update: %s, %s, %s, %d\n", 
                                                          streamInfo.str(), publicKeyString, service.ToString(), prevBlockIndex->nHeight);
                                             int avtiveBK = 0;
                                             int nHeight = prevBlockIndex->nHeight;
