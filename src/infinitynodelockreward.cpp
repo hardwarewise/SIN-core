@@ -135,7 +135,7 @@ bool CLockRewardCommitment::Sign(const CKey& keyInfinitynode, const CPubKey& pub
     std::string strError;
     std::string strSignMessage;
 
-    std::string strMessage = boost::lexical_cast<std::string>(nRewardHeight) + nHashRequest.ToString();
+    std::string strMessage = boost::lexical_cast<std::string>(nRewardHeight) + nHashRequest.ToString() + vin.prevout.ToString();
 
     if(!CMessageSigner::SignMessage(strMessage, vchSig, keyInfinitynode)) {
         LogPrint(BCLog::INFINITYLOCK,"CLockRewardCommitment::Sign -- SignMessage() failed\n");
@@ -152,7 +152,7 @@ bool CLockRewardCommitment::Sign(const CKey& keyInfinitynode, const CPubKey& pub
 
 bool CLockRewardCommitment::CheckSignature(CPubKey& pubKeyInfinitynode, int &nDos)
 {
-    std::string strMessage = boost::lexical_cast<std::string>(nRewardHeight) + nHashRequest.ToString();
+    std::string strMessage = boost::lexical_cast<std::string>(nRewardHeight) + nHashRequest.ToString() + vin.prevout.ToString();
     std::string strError = "";
 
     if(!CMessageSigner::VerifyMessage(pubKeyInfinitynode, vchSig, strMessage, strError)) {
@@ -309,9 +309,6 @@ bool CInfinityNodeLockReward::AlreadyHave(const uint256& hash)
 bool CInfinityNodeLockReward::AddLockRewardRequest(const CLockRewardRequest& lockRewardRequest)
 {
     AssertLockHeld(cs);
-    //LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::AddLockRewardRequest -- lockRewardRequest from %s, SIN type: %d, loop: %d\n",
-    //           lockRewardRequest.burnTxIn.prevout.ToStringShort(), lockRewardRequest.nSINtype, lockRewardRequest.nLoop);
-
     //if we hash this request => don't add it
     if(mapLockRewardRequest.count(lockRewardRequest.GetHash())) return false;
     if(lockRewardRequest.nLoop == 0){
@@ -587,6 +584,14 @@ bool CInfinityNodeLockReward::SendVerifyReply(CNode* pnode, CVerifyRequest& vreq
     AssertLockHeld(cs);
 
     //step 2.0 get publicKey of sender and check signature
+    //not too far in future and not inferior than current Height
+    if(vrequest.nBlockHeight > nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardDeepth + 2
+        || vrequest.nBlockHeight < nCachedBlockHeight){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::SendVerifyReply -- VerifyRequest for invalid height: %d, current height: %d\n",
+            vrequest.nBlockHeight, nCachedBlockHeight);
+        return false;
+    }
+
     infinitynode_info_t infoInf;
     if(!infnodeman.GetInfinitynodeInfo(vrequest.vin1.prevout, infoInf)){
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::SendVerifyReply -- Cannot find sender from list %s\n");
@@ -602,7 +607,6 @@ bool CInfinityNodeLockReward::SendVerifyReply(CNode* pnode, CVerifyRequest& vreq
         Misbehaving(pnode->GetId(), 10);
         return false;
     }
-
 
     CMetadata metaSender = infnodemeta.Find(infoInf.metadataID);
     if (metaSender.getMetadataHeight() == 0){
@@ -677,9 +681,11 @@ bool CInfinityNodeLockReward::CheckVerifyReply(CNode* pnode, CVerifyRequest& vre
 
     AssertLockHeld(cs);
 
-    //step 3.0 LockReward height > currentHeight
-    if(vrequest.nBlockHeight <= nCachedBlockHeight){
-        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckVerifyReply -- nHeight of request %d is inferior than current height %d\n", vrequest.nBlockHeight, nCachedBlockHeight);
+    //not too far in future and not inferior than current Height
+    if(vrequest.nBlockHeight > nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardDeepth + 2
+        || vrequest.nBlockHeight < nCachedBlockHeight){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckVerifyReply -- VerifyRequest for invalid height: %d, current height: %d\n",
+            vrequest.nBlockHeight, nCachedBlockHeight);
         return false;
     }
 
@@ -728,7 +734,7 @@ bool CInfinityNodeLockReward::CheckVerifyReply(CNode* pnode, CVerifyRequest& vre
 }
 
 /*
- * STEP 4: Create, Relay, Update the commitments
+ * STEP 4: Commitment
  *
  * STEP 4.1 create/send/relay commitment
  * control if i am candidate and how many commitment receive to decide MuSig workers
@@ -752,6 +758,89 @@ bool CInfinityNodeLockReward::SendCommitment(const uint256& reqHash, int nReward
         }
     }
     return false;
+}
+
+/*
+ * STEP 4: Commitment
+ *
+ * STEP 4.2 check commitment
+ * check:
+ *   - from Topnode, for good rewardHeight, signer from DIN
+ */
+bool CInfinityNodeLockReward::CheckCommitment(CNode* pnode, const CLockRewardCommitment& commitment)
+{
+    if(fLiteMode || !fInfinityNode) return false;
+
+    AssertLockHeld(cs);
+
+    //not too far in future and not inferior than current Height
+    if(commitment.nRewardHeight > nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardDeepth + 2
+        || commitment.nRewardHeight < nCachedBlockHeight){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckCommitment -- commitment invalid for height: %d, current height: %d\n",
+            commitment.nRewardHeight, nCachedBlockHeight);
+        return false;
+    }
+
+
+    infinitynode_info_t infoInf;
+    if(!infnodeman.GetInfinitynodeInfo(commitment.vin.prevout, infoInf)){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckCommitment -- Cannot find sender from list %s\n");
+        //someone try to send a VerifyRequest to me but not in DIN => so ban it
+        LOCK(cs_main);
+        Misbehaving(pnode->GetId(), 20);
+        return false;
+    }
+
+    if(infoInf.nExpireHeight < nCachedBlockHeight){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckCommitment -- VerifyRequest was sent from expired node. Ban it!\n", commitment.vin.prevout.ToStringShort());
+        LOCK(cs_main);
+        Misbehaving(pnode->GetId(), 10);
+        return false;
+    }
+
+    CMetadata metaSender = infnodemeta.Find(infoInf.metadataID);
+    if (metaSender.getMetadataHeight() == 0){
+        //for some reason, metadata is not updated, do nothing
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckCommitment -- Cannot find sender from list %s\n");
+        return false;
+    }
+
+    std::string metaPublicKey = metaSender.getMetaPublicKey();
+    std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
+    CPubKey pubKey(tx_data.begin(), tx_data.end());
+
+    std::string strError;
+    std::string strMessage = strprintf("%d%s%s", commitment.nRewardHeight, commitment.nHashRequest.ToString(),
+                                       commitment.vin.prevout.ToString());
+    if(!CMessageSigner::VerifyMessage(pubKey, commitment.vchSig, strMessage, strError)) {
+        //sender is in DIN and metadata is correct but sign is KO => so ban it
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckCommitment -- VerifyMessage() failed, error: %s, message: \n", strError, strMessage);
+        LOCK(cs_main);
+        Misbehaving(pnode->GetId(), 20);
+        return false;
+    }
+
+    //step 2.1 check if sender in Top and SINtype = nInfinityNodeLockRewardSINType (skip this step for now)
+    int nScore;
+    int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType; //mypeer must be this SINtype, if not, score is NULL
+
+    if(!infnodeman.getNodeScoreAtHeight(commitment.vin.prevout, nSINtypeCanLockReward, commitment.nRewardHeight - 101, nScore)) {
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckCommitment -- Can't calculate score for Infinitynode %s\n",
+                    infinitynodePeer.burntx.ToStringShort());
+        return false;
+    }
+
+    //sender in TopNode => he is not expired at Height
+    if(nScore <= Params().GetConsensus().nInfinityNodeLockRewardTop) {
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckCommitment -- Someone in TopNode send me a Commitment. Processing commitment...\n");
+    } else {
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckCommitment -- Someone NOT in TopNode send me a Commitment. Banned!\n");
+        LOCK(cs_main);
+        Misbehaving(pnode->GetId(), 10);
+        return false;
+    }
+
+    return true;
 }
 
 void CInfinityNodeLockReward::AddMySignersMap(const CLockRewardCommitment& commitment)
@@ -860,7 +949,15 @@ bool CInfinityNodeLockReward::CheckGroupSigner(CNode* pnode, const CGroupSigners
         return false;
     }
 
-    //step 5.1.1: get candidate from Height and vin.prevout
+    //step 5.1.1: not too far in future and not inferior than current Height
+    if(gsigners.nRewardHeight > nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardDeepth + 2
+        || gsigners.nRewardHeight < nCachedBlockHeight){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckCommitment -- GroupSigner invalid for height: %d, current height: %d\n",
+            gsigners.nRewardHeight, nCachedBlockHeight);
+        return false;
+    }
+
+    //step 5.1.2: get candidate from vin.prevout
     infinitynode_info_t infoInf;
     if(!infnodeman.GetInfinitynodeInfo(gsigners.vin.prevout, infoInf)){
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckGroupSigner -- Cannot find sender from list %s\n");
@@ -884,7 +981,7 @@ bool CInfinityNodeLockReward::CheckGroupSigner(CNode* pnode, const CGroupSigners
     std::string strError="";
     std::string strMessage = strprintf("%d%s%s%s%d", gsigners.nRewardHeight, gsigners.nHashRequest.ToString(), gsigners.vin.prevout.ToString(), gsigners.signersId, gsigners.nGroup);
     LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckGroupSigner -- publicKey:%s, message: %s\n", pubKey.GetID().ToString(), strMessage);
-    //step 5.1.2: verify the sign
+    //step 5.1.3: verify the sign
     if(!CMessageSigner::VerifyMessage(pubKey, gsigners.vchSig, strMessage, strError)) {
         //sender is in DIN and metadata is correct but sign is KO => so ban it
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckGroupSigner -- VerifyMessage() failed, error: %s, message: \n", strError, strMessage);
@@ -1066,6 +1163,88 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
         }
     }
     return false;
+}
+
+/*
+ * STEP 5.1
+ *
+ * Check Partial Sign
+ */
+
+bool CInfinityNodeLockReward::CheckMusigPartialSignLR(CNode* pnode, const CMusigPartialSignLR& ps)
+{
+    if(fLiteMode || !fInfinityNode) return false;
+
+    AssertLockHeld(cs);
+
+    //not too far in future and not inferior than current Height
+    if(ps.nRewardHeight > nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardDeepth + 2
+        || ps.nRewardHeight < nCachedBlockHeight){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMusigPartialSignLR -- Partial Sign invalid for height: %d, current height: %d\n",
+            ps.nRewardHeight, nCachedBlockHeight);
+        return false;
+    }
+
+
+    infinitynode_info_t infoInf;
+    if(!infnodeman.GetInfinitynodeInfo(ps.vin.prevout, infoInf)){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMusigPartialSignLR -- Cannot find sender from list %s\n");
+        //someone try to send a VerifyRequest to me but not in DIN => so ban it
+        LOCK(cs_main);
+        Misbehaving(pnode->GetId(), 20);
+        return false;
+    }
+
+    if(infoInf.nExpireHeight < nCachedBlockHeight){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMusigPartialSignLR -- VerifyRequest was sent from expired node. Ban it!\n", ps.vin.prevout.ToStringShort());
+        LOCK(cs_main);
+        Misbehaving(pnode->GetId(), 10);
+        return false;
+    }
+
+    CMetadata metaSender = infnodemeta.Find(infoInf.metadataID);
+    if (metaSender.getMetadataHeight() == 0){
+        //for some reason, metadata is not updated, do nothing
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMusigPartialSignLR -- Cannot find sender from list %s\n");
+        return false;
+    }
+
+    std::string metaPublicKey = metaSender.getMetaPublicKey();
+    std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
+    CPubKey pubKey(tx_data.begin(), tx_data.end());
+
+    std::string strError;
+    std::string strMessage = strprintf("%d%s%s%s", ps.nRewardHeight, ps.nHashGroupSigners.ToString(),
+                                       ps.vin.prevout.ToString(), EncodeBase58(ps.vchMusigPartialSign));
+    if(!CMessageSigner::VerifyMessage(pubKey, ps.vchSig, strMessage, strError)) {
+        //sender is in DIN and metadata is correct but sign is KO => so ban it
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMusigPartialSignLR -- VerifyMessage() failed, error: %s, message: \n", strError, strMessage);
+        LOCK(cs_main);
+        Misbehaving(pnode->GetId(), 20);
+        return false;
+    }
+
+    //step 2.1 check if sender in Top and SINtype = nInfinityNodeLockRewardSINType (skip this step for now)
+    int nScore;
+    int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType; //mypeer must be this SINtype, if not, score is NULL
+
+    if(!infnodeman.getNodeScoreAtHeight(ps.vin.prevout, nSINtypeCanLockReward, ps.nRewardHeight - 101, nScore)) {
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMusigPartialSignLR -- Can't calculate score for Infinitynode %s\n",
+                    infinitynodePeer.burntx.ToStringShort());
+        return false;
+    }
+
+    //sender in TopNode => he is not expired at Height
+    if(nScore <= Params().GetConsensus().nInfinityNodeLockRewardTop) {
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMusigPartialSignLR -- Someone in TopNode send me a Partial Sign. Processing signature...\n");
+    } else {
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMusigPartialSignLR -- Someone NOT in TopNode send me a Partial Sign. Banned!\n");
+        LOCK(cs_main);
+        Misbehaving(pnode->GetId(), 10);
+        return false;
+    }
+
+    return true;
 }
 
 /*
@@ -1478,7 +1657,10 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessMessage -- I had this commitment %s. End process\n", nHash.ToString());
                 return;
             }
-            //TODO: check commitment before add
+            if(!CheckCommitment(pfrom, commitment)){
+                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessMessage -- Commitment is false\n");
+                return;
+            }
             if(AddCommitment(commitment)){
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessMessage -- relay Commitment for LockRequest %s. Remind nFutureRewardHeight: %d, LockRequest: %s\n",
                            commitment.nHashRequest.ToString(), nFutureRewardHeight, currentLockRequestHash.ToString());
@@ -1526,12 +1708,13 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessMessage -- I had this Partial Sign %s. End process\n", nHash.ToString());
                 return;
             }
-            //check
-            //add
+            if(!CheckMusigPartialSignLR(pfrom, partialSign)){
+                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessMessage -- CheckMusigPartialSignLR is false\n");
+                return;
+            }
             if(AddMusigPartialSignLR(partialSign)){
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessMessage -- receive Partial Sign from %s of group %s, hash: %s\n",
                           partialSign.vin.prevout.ToStringShort(), partialSign.nHashGroupSigners.ToString(), partialSign.GetHash().ToString());
-                //relay
                 partialSign.Relay(connman);
                 AddMyPartialSignsMap(partialSign);
                 FindAndBuildMusigLockReward();

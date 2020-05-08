@@ -278,17 +278,21 @@ public:
     //commitment
     bool AddCommitment(const CLockRewardCommitment& commitment);
     bool SendCommitment(const uint256& reqHash, int nRewardHeight, CConnman& connman);
+    bool CheckCommitment(CNode* pnode, const CLockRewardCommitment& commitment);
     bool GetLockRewardCommitment(const uint256& reqHash, CLockRewardCommitment& commitment);
 
-    //Musig
+    //group signer
     void AddMySignersMap(const CLockRewardCommitment& commitment);
     bool AddGroupSigners(const CGroupSigners& gs);
     bool GetGroupSigners(const uint256& reqHash, CGroupSigners& gsigners);
     bool FindAndSendSignersGroup(CConnman& connman);
     bool CheckGroupSigner(CNode* pnode, const CGroupSigners& gsigners);
+
+    //Schnorr Musig
     bool MusigPartialSign(CNode* pnode, const CGroupSigners& gsigners, CConnman& connman);
     bool AddMusigPartialSignLR(const CMusigPartialSignLR& ps);
     bool GetMusigPartialSignLR(const uint256& psHash, CMusigPartialSignLR& ps);
+    bool CheckMusigPartialSignLR(CNode* pnode, const CMusigPartialSignLR& ps);
     void AddMyPartialSignsMap(const CMusigPartialSignLR& ps);
     bool FindAndBuildMusigLockReward();
 
