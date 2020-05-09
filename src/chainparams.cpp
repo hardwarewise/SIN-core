@@ -156,6 +156,7 @@ public:
         consensus.cBurnAddress = "SinBurnAddress123456789SuqaXbx3AMC";
         consensus.cMetadataAddress = "SinBurnAddressForMetadataXXXXEU2mj";
         consensus.cNotifyAddress = "SinBurnAddressForNotifyXXXXXc42TcT";
+        consensus.cLockRewardAddress = "SinBurnAddressForLockRewardXTbeffB";
         consensus.cGovernanceAddress = "SinBurnAddressGovernanceVoteba5vkQ";
         strSporkPubKey = "0449434681D96595AC04470E5613475D259489CAA79C260814D22D4F29F7361D84A85F1F535F7B11F51B87F4E7B8E168AA68747A6E7465DCF34ABDD25570430573";
 

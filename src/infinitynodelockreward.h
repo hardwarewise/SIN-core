@@ -296,6 +296,11 @@ public:
     void AddMyPartialSignsMap(const CMusigPartialSignLR& ps);
     bool FindAndBuildMusigLockReward();
 
+    //register LockReward by send tx
+    bool AutoResigterLockReward(std::string sLR, std::string& strErrorRet);
+
+    //remove unused data to avoid memory issue
+
     //Connection
     void TryConnectToMySigners(int rewardHeight, CConnman& connman);
     //call in UpdatedBlockTip

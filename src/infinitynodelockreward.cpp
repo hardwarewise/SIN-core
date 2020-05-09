@@ -16,6 +16,10 @@
 #include <secp256k1_musig.h>
 #include <base58.h>
 
+#include <consensus/validation.h>
+#include <wallet/coincontrol.h>
+#include <utilmoneystr.h>
+
 #include <boost/lexical_cast.hpp>
 
 /** Object for who's going to get paid on which blocks */
@@ -1454,13 +1458,113 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- Musig Final Sign FAILED\n");
                 return false;
             }
+
             LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Musig Final Sign built for Reward Height: %d with group signer %s!!!\n",
                        mapLockRewardRequest[nHashLockRequest].nRewardHeight, mapLockRewardGroupSigners[nHashGroupSigner].signersId);
             mapSigned[mapLockRewardRequest[nHashLockRequest].nRewardHeight] = nHashGroupSigner;
+
+            std::string sLockRewardMusig = strprintf("%d%s%s", mapLockRewardRequest[nHashLockRequest].nRewardHeight,
+                                      EncodeBase58(final_sig.data, final_sig.data+64),
+                                      mapLockRewardGroupSigners[nHashGroupSigner].signersId);
+
+            LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward --  register info: %s\n",
+                                          sLockRewardMusig);
+
+            std::string sErrorRegister = "";
+            if(!AutoResigterLockReward(sLockRewardMusig, sErrorRegister)){
+                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward --  Register LockReward error: %s\n",
+                         sErrorRegister);
+            } else {
+                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward --  Register LockReward broadcasted!!!\n");
+            }
         }//end number signature check
     }//end loop in mapMyPartialSigns
 
-    return false;
+    return true;
+}
+
+/*
+ * STEP 6 : register LockReward
+ */
+bool CInfinityNodeLockReward::AutoResigterLockReward(std::string sLockReward, std::string& strErrorRet)
+{
+    std::vector<std::shared_ptr<CWallet>> wallets = GetWallets();
+    CWallet * const pwallet = (wallets.size() > 0) ? wallets[0].get() : nullptr;
+
+    if(!pwallet || pwallet->IsLocked()) return false;
+
+    std::string strError;
+    std::vector<COutput> vPossibleCoins;
+    pwallet->AvailableCoins(vPossibleCoins, true, NULL, false, ALL_COINS);
+
+    CTransactionRef tx_New;
+    CCoinControl coin_control;
+
+    CAmount nFeeRet = 0;
+    mapValue_t mapValue;
+    bool fSubtractFeeFromAmount = true;
+    bool fUseInstantSend=false;
+    int nChangePosRet = -1;
+    CReserveKey reservekey(pwallet);
+    CAmount nFeeRequired;
+    CAmount curBalance = pwallet->GetBalance();
+
+    CAmount nAmountRegister = 0.001 * COIN;
+    CAmount nAmountToSelect = 0.05 * COIN;
+
+    //select coin
+    CAmount selected = 0;
+    for (COutput& out : vPossibleCoins) {
+        if(selected >= nAmountToSelect) break;
+        if(out.nDepth >= 2 && selected < nAmountToSelect){
+            coin_control.Select(COutPoint(out.tx->GetHash(), out.i));
+            selected += out.tx->tx->vout[out.i].nValue;
+        }
+    }
+
+    if(selected < nAmountToSelect){
+        strErrorRet = strprintf("Balance of Infinitynode is not enough.");
+        return false;
+    }
+
+    //chang address
+    coin_control.destChange = GetDestinationForKey(infinitynodePeer.pubKeyInfinitynode, DEFAULT_ADDRESS_TYPE);
+
+    //CRecipient
+    std::string strFail = "";
+    std::vector<CRecipient> vecSend;
+
+    CTxDestination dest = DecodeDestination(Params().GetConsensus().cLockRewardAddress);
+    CScript scriptPubKeyBurnAddress = GetScriptForDestination(dest);
+    std::vector<std::vector<unsigned char> > vSolutions;
+    txnouttype whichType;
+    if (!Solver(scriptPubKeyBurnAddress, whichType, vSolutions)){
+        strErrorRet = strprintf("Intenal Fatal Error!");
+        return false;
+    }
+    CKeyID keyid = CKeyID(uint160(vSolutions[0]));
+    CScript script;
+    script = GetScriptForBurn(keyid, sLockReward);
+
+    CRecipient recipient = {script, nAmountRegister, fSubtractFeeFromAmount};
+    vecSend.push_back(recipient);
+
+    //Transaction
+    CTransactionRef tx;
+    if (!pwallet->CreateTransaction(vecSend, tx, reservekey, nFeeRequired, nChangePosRet, strError, coin_control, true, ALL_COINS, fUseInstantSend)) {
+        if (!fSubtractFeeFromAmount && nAmountRegister + nFeeRequired > curBalance)
+            strErrorRet = strprintf("Error: This transaction requires a transaction fee of at least %s", FormatMoney(nFeeRequired));
+        else strErrorRet = strError;
+        return false;
+    }
+
+    CValidationState state;
+    if (!pwallet->CommitTransaction(tx, std::move(mapValue), {} /* orderForm */, {}/*fromAccount*/, reservekey, g_connman.get(),
+           state, fUseInstantSend ? NetMsgType::TXLOCKREQUEST : NetMsgType::TX)) {
+        strErrorRet = strprintf("Error: The transaction was rejected! Reason given: %s", FormatStateMessage(state));
+        return false;
+    }
+    return true;
 }
 /*
  * Connect to group Signer
