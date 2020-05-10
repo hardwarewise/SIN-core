@@ -17,185 +17,556 @@
    <string notr="true">font: 75 11pt &quot;MS Shell Dlg 2&quot;;</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="0">
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="3" column="2">
-      <widget class="QLabel" name="labelLILNodeQueued">
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
+   <item row="1" column="0">
+    <layout class="QVBoxLayout" name="networkLayout">
+     <item>
+      <layout class="QVBoxLayout" name="networkHeaderLayout">
+       <item>
+        <widget class="QLabel" name="networkHeaderLabel">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>MS Shell Dlg 2</family>
+           <pointsize>11</pointsize>
+           <weight>75</weight>
+           <italic>false</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: bold;
+color: #ffffff;
+border: 1px solid;
+border-radius: 10px;
+background-color: #00023b;</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+         <property name="text">
+          <string>Network</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::AutoText</enum>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="labelBIGNode">
-       <property name="text">
-        <string>375</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="hashrateLayout">
+       <item>
+        <widget class="QLabel" name="hashrateLabel">
+         <property name="styleSheet">
+          <string notr="true">margin-left: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Hashrate:</string>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="hashrateValueLabel">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="labelMIDNode">
-       <property name="text">
-        <string>375</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="difficultyLayout">
+       <item>
+        <widget class="QLabel" name="difficultyLabel">
+         <property name="styleSheet">
+          <string notr="true">margin-left: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Difficulty:</string>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="difficultyValueLabel">
+         <property name="text">
+          <string>0.0</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="4" column="2">
-      <widget class="QLabel" name="labelLILNodeSTM">
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="lastPriceLayout">
+       <item>
+        <widget class="QLabel" name="lastPriceLabel">
+         <property name="styleSheet">
+          <string notr="true">margin-left: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Last Prize:</string>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="lastPriceValueLabel">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="labelStatisticTotalNodeText">
-       <property name="text">
-        <string>Total Burnt Infinitynodes :</string>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="heightLayout">
+       <item>
+        <widget class="QLabel" name="heightLabel">
+         <property name="styleSheet">
+          <string notr="true">margin-left: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Height:</string>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="heightValueLabel">
+         <property name="text">
+          <string>0/0/0</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>BURNT</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
+    </layout>
+   </item>
+   <item row="3" column="0">
+    <layout class="QVBoxLayout" name="addressesStatLayout">
+     <item>
+      <layout class="QVBoxLayout" name="addressesStatHeaderLayout">
+       <item>
+        <widget class="QLabel" name="addressesStatHeaderLabel">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: bold;
+color: #ffffff;
+border: 1px solid;
+border-radius: 10px;
+background-color: #00023b;</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="text">
+          <string>Addresses Stats</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="4" column="1">
-      <widget class="QLabel" name="labelMIDNodeSTM">
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="addressesLayout">
+       <item>
+        <widget class="QLabel" name="addressesLabel">
+         <property name="styleSheet">
+          <string notr="true">margin-left: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Addresses:</string>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="addressesValueLabel">
+         <property name="text">
+          <string>00000</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="labelStatisticLastScanText">
-       <property name="text">
-        <string>Last Scan :</string>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="activeLayout">
+       <item>
+        <widget class="QLabel" name="activeLabel">
+         <property name="styleSheet">
+          <string notr="true">margin-left: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Active:</string>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="activeValueLabel">
+         <property name="text">
+          <string>00000</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="5" column="1" colspan="2">
-      <widget class="QLabel" name="labelStatisticTotalNode">
-       <property name="text">
-        <string>1125</string>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="top10Layout">
+       <item>
+        <widget class="QLabel" name="top10Label">
+         <property name="styleSheet">
+          <string notr="true">margin-left: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Top 10:</string>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="top10ValueLabel">
+         <property name="text">
+          <string>00000000</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="1" column="2">
-      <widget class="QLabel" name="label_9">
-       <property name="text">
-        <string>BURNT</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="top50Layout">
+       <item>
+        <widget class="QLabel" name="top50Label">
+         <property name="styleSheet">
+          <string notr="true">margin-left: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Top 50:</string>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="top50ValueLabel">
+         <property name="text">
+          <string>00000000</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="3" column="1">
-      <widget class="QLabel" name="labelMIDNodeQueued">
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
+    </layout>
+   </item>
+   <item row="1" column="1">
+    <layout class="QVBoxLayout" name="burntCoinStatLayout">
+     <item>
+      <layout class="QVBoxLayout" name="burntCoinStatHeaderLayout">
+       <item>
+        <widget class="QLabel" name="burntCoinStatHeaderLabel">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>MS Shell Dlg 2</family>
+           <pointsize>11</pointsize>
+           <weight>75</weight>
+           <italic>false</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: bold;
+color: #ffffff;
+border: 1px solid;
+border-radius: 10px;
+background-color: #00023b;</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="text">
+          <string>Burnt Coin Stats</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::PlainText</enum>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="6" column="1" colspan="2">
-      <widget class="QLabel" name="labelStatisticLastScan">
-       <property name="text">
-        <string>0</string>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="feeLayout">
+       <item>
+        <widget class="QLabel" name="feeLabel">
+         <property name="styleSheet">
+          <string notr="true">margin-left: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Burnt Fees:</string>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="feeValueLabel">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>BURNT</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="nodesLayout">
+       <item>
+        <widget class="QLabel" name="nodesLabel">
+         <property name="styleSheet">
+          <string notr="true">margin-left: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Burnt Nodes:</string>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="nodesValueLabel">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="labelBIGNodeSTM">
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="totalBurntLayout">
+       <item>
+        <widget class="QLabel" name="totalBurntLabel">
+         <property name="styleSheet">
+          <string notr="true">margin-left: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Total Nodes:</string>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="totalBurntValueLabel">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="labelBIGNodeQueued">
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="totalSupplyLayout">
+       <item>
+        <widget class="QLabel" name="totalSupplyLabel">
+         <property name="styleSheet">
+          <string notr="true">margin-left: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Total Supply:</string>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="totalSupplyValueLabel">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="2" column="2">
-      <widget class="QLabel" name="labelLILNode">
-       <property name="text">
-        <string>375</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
+    </layout>
+   </item>
+   <item row="3" column="1">
+    <layout class="QVBoxLayout" name="infinityNodeStatLayout">
+     <item>
+      <layout class="QVBoxLayout" name="infinityNodeStatHeaderLayout">
+       <item>
+        <widget class="QLabel" name="infinityNodeStatHeaderLabel">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: bold;
+color: #ffffff;
+border: 1px solid;
+border-radius: 10px;
+background-color: #00023b;</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="text">
+          <string>Infinity Node Stats</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="labelBIGNodeText">
-       <property name="text">
-        <string>BIG</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="bigLayout">
+       <item>
+        <widget class="QLabel" name="bigLabel">
+         <property name="styleSheet">
+          <string notr="true">margin-left: 15px;</string>
+         </property>
+         <property name="text">
+          <string>BIG:</string>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="bigValueLabel">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="label_18">
-       <property name="text">
-        <string>MID</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="midLayout">
+       <item>
+        <widget class="QLabel" name="midLabel">
+         <property name="styleSheet">
+          <string notr="true">margin-left: 15px;</string>
+         </property>
+         <property name="text">
+          <string>MID:</string>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="midValueLabel">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="labelMIDNodeText">
-       <property name="text">
-        <string>MINI</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="lilLayout">
+       <item>
+        <widget class="QLabel" name="lilLabel">
+         <property name="styleSheet">
+          <string notr="true">margin-left: 15px;</string>
+         </property>
+         <property name="text">
+          <string>LIL:</string>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="lilValueLabel">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="totalLayout">
+       <item>
+        <widget class="QLabel" name="totalLabel">
+         <property name="styleSheet">
+          <string notr="true">margin-left: 15px;</string>
+         </property>
+         <property name="text">
+          <string>Total:</string>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="totalValueLabel">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>
