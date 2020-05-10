@@ -162,7 +162,7 @@ QPushButton {
 	background-repeat: no-repeat;
     background-size: 1000% 1000%;
  	padding: 0.85em 2em;
-	font-family: "Montserrat";
+	/*font-family: "Montserrat";*/
 	letter-spacing: 1px;
 	border: 0;
 	color: #ffffff;
@@ -568,7 +568,7 @@ QDialog#OpenURIDialog QPushButton#selectFileButton { /* ... Button */
 	background-repeat: no-repeat;
     background-size: 1000% 1000%;
  	padding: 0.85em 2em;
-	font-family: "Montserrat";
+	/*font-family: "Montserrat";*/
 	letter-spacing: 1px;
 	border: 0;
 	color: #ffffff;
@@ -1721,3 +1721,13 @@ QTableView::item:hover:selected {
     background-color:#2E3191CC;
 }
 
+QPushButton#exportButton {
+	background-color: #fff;
+	background-repeat: no-repeat;
+    background-size: 1000% 1000%;
+ 	padding: 5px 5px;
+	letter-spacing: 1px;
+	border: 1px solid #bababa;
+	color: #2E3191;
+	font-size: 14px;
+}	
