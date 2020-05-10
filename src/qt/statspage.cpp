@@ -5,97 +5,123 @@
 #include <infinitynodeman.h>
 
 #include <QTimer>
+#include <QUrl>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
-
-
-
-StatsPage::StatsPage(const PlatformStyle *_platformStyle, QWidget *parent) :
+StatsPage::StatsPage(const PlatformStyle* platformStyle, QWidget *parent) :
     QWidget(parent),
-     timer(nullptr),
-    ui(new Ui::StatsPage),
-    //walletModel(0),
-    platformStyle(_platformStyle)
+    m_timer(nullptr),
+    m_ui(new Ui::StatsPage),
+    m_networkManager(new QNetworkAccessManager(this)),
+    m_platformStyle(platformStyle)
 {
-    ui->setupUi(this);
+    m_ui->setupUi(this);
 
-
- 	timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(infinityNodeStat()));
-    timer->start(3000);
-
-
+ 	m_timer = new QTimer(this);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(getStatistics()));
+    m_timer->start(30000);
+    connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onResult(QNetworkReply*)));
+    getStatistics();
 }
-
 
 StatsPage::~StatsPage()
 {
-    if(timer) disconnect(timer, SIGNAL(timeout()), this, SLOT(privateSendStatus()));
-    delete ui;
+    if(m_timer) disconnect(m_timer, SIGNAL(timeout()), this, SLOT(privateSendStatus()));
+    delete m_ui;
+    delete m_networkManager;
 }
 
-
-
-void StatsPage::infinityNodeStat()
+void StatsPage::getStatistics()
 {
-    std::map<COutPoint, CInfinitynode> mapInfinitynodes = infnodeman.GetFullInfinitynodeMap();
-    std::map<COutPoint, CInfinitynode> mapInfinitynodesNonMatured = infnodeman.GetFullInfinitynodeNonMaturedMap();
-    int total = 0, totalBIG = 0, totalMID = 0, totalLIL = 0, totalUnknown = 0;
-    for (auto& infpair : mapInfinitynodes) {
-        ++total;
-        CInfinitynode inf = infpair.second;
-        int sintype = inf.getSINType();
-        if (sintype == 10) ++totalBIG;
-        else if (sintype == 5) ++totalMID;
-        else if (sintype == 1) ++totalLIL;
-    }
-
-    int totalNonMatured = 0, totalBIGNonMatured = 0, totalMIDNonMatured = 0, totalLILNonMatured = 0, totalUnknownNonMatured = 0;
-    for (auto& infpair : mapInfinitynodesNonMatured) {
-        ++totalNonMatured;
-        CInfinitynode inf = infpair.second;
-        int sintype = inf.getSINType();
-        if (sintype == 10) ++totalBIGNonMatured;
-        else if (sintype == 5) ++totalMIDNonMatured;
-        else if (sintype == 1) ++totalLILNonMatured;
-    }
-
-     //QString strTotalNodeText(tr("Total: %1 nodes (Last Scan: %2)").arg(total + totalNonMatured).arg(infnodeman.getLastScanWithLimit()));
-    QString strTotalNodeText(tr("%1").arg(total + totalNonMatured));
-    QString strLastScanText(tr("%1").arg(infnodeman.getLastScanWithLimit()));
-    QString strBIGNodeText(tr("%1").arg(totalBIG));
-    QString strMIDNodeText(tr("%1").arg(totalMID));
-    QString strLILNodeText(tr("%1").arg(totalLIL));
-
-    QString strBIGNodeQueuedText(tr("Starting %1").arg(totalBIGNonMatured));
-    QString strMIDNodeQueuedText(tr("Starting %1").arg(totalMIDNonMatured));
-    QString strLILNodeQueuedText(tr("Starting %1").arg(totalLILNonMatured));
-
-    ui->labelStatisticTotalNode->setText(strTotalNodeText);
-    ui->labelStatisticLastScan->setText(strLastScanText);
-    ui->labelBIGNode->setText(strBIGNodeText);
-    ui->labelMIDNode->setText(strMIDNodeText);
-    ui->labelLILNode->setText(strLILNodeText);
-
-    ui->labelBIGNodeQueued->setText(strBIGNodeQueuedText);
-    ui->labelMIDNodeQueued->setText(strMIDNodeQueuedText);
-    ui->labelLILNodeQueued->setText(strLILNodeQueuedText);
-
-    //QString strBIGNodeROIText(tr("ROI %1 days").arg(infnodeman.getRoi(10, totalBIG)));
-    //QString strMIDNodeROIText(tr("ROI %1 days").arg(infnodeman.getRoi(5, totalMID)));
-    //QString strLILNodeROIText(tr("ROI %1 days").arg(infnodeman.getRoi(1, totalLIL)));
-
-    //ui->labelBIGNodeRoi->setText(strBIGNodeROIText);
-    //ui->labelMIDNodeRoi->setText(strMIDNodeROIText);
-    //ui->labelLILNodeRoi->setText(strLILNodeROIText);
-
-    QString strBIGNodeSTMText(tr("Payment Round\n%1").arg(infnodeman.getLastStatement(10)));
-    QString strMIDNodeSTMText(tr("Payment Round\n%1").arg(infnodeman.getLastStatement(5)));
-    QString strLILNodeSTMText(tr("Payment Round\n%1").arg(infnodeman.getLastStatement(1)));
-
-    ui->labelBIGNodeSTM->setText(strBIGNodeSTMText);
-    ui->labelMIDNodeSTM->setText(strMIDNodeSTMText);
-    ui->labelLILNodeSTM->setText(strLILNodeSTMText);
-
+    QUrl summaryUrl("https://explorer.sinovate.io/ext/summary");
+    QNetworkRequest request;
+    request.setUrl(summaryUrl);
+    m_networkManager->get(request);
 }
 
+void StatsPage::onResult(QNetworkReply* reply)
+{
+    QVariant statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
 
+    if( statusCode == 200)
+    {
+        QString replyString = (QString) reply->readAll();
+
+        QJsonDocument jsonResponse = QJsonDocument::fromJson(replyString.toUtf8());
+        QJsonObject jsonObject = jsonResponse.object();
+
+        QJsonObject dataObject = jsonObject.value("data").toArray()[0].toObject();
+
+        QLocale l = QLocale(QLocale::English);
+        // Set NETWORK strings
+        QString heightValue(tr("[E] %1 / [D] %2 / \n\t [P] %3").arg(dataObject.value("explorerHeight").toVariant().toString(), dataObject.value("blockcount").toVariant().toString(), dataObject.value("poolHeight").toVariant().toString()));
+        QString knownHashrateString = QString::number(dataObject.value("known_hashrate").toDouble()/1000000000, 'f', 2);
+        QString hashrateString = knownHashrateString + "/" + dataObject.value("hashrate").toVariant().toString();
+        m_ui->hashrateValueLabel->setText(hashrateString);
+        m_ui->difficultyValueLabel->setText(dataObject.value("difficulty").toVariant().toString());
+        m_ui->lastPriceValueLabel->setText(QString::number(dataObject.value("lastPrice").toDouble(), 'f', 8));
+        m_ui->heightValueLabel->setText(heightValue);
+
+        // Set ADDRESS STATS strings
+        int top10 = dataObject.value("explorerTop10").toDouble();
+        int top50 = dataObject.value("explorerTop50").toDouble();
+        m_ui->addressesValueLabel->setText(dataObject.value("explorerAddresses").toVariant().toString());
+        m_ui->activeValueLabel->setText(dataObject.value("explorerActiveAddresses").toVariant().toString());
+        m_ui->top10ValueLabel->setText(l.toString(top10));
+        m_ui->top50ValueLabel->setText(l.toString(top50));
+
+        // Set BURNT COIN STATS strings
+        int supplyNumber = dataObject.value("supply").toDouble() - dataObject.value("burnFee").toDouble();
+        int feeNumber = dataObject.value("burnFee").toDouble() - dataObject.value("burnNode").toDouble();
+        int burntNumber = dataObject.value("burnFee").toDouble();
+
+        m_ui->feeValueLabel->setText(l.toString(feeNumber));
+        m_ui->nodesValueLabel->setText(l.toString(dataObject.value("burnNode").toInt()));
+        m_ui->totalBurntValueLabel->setText(l.toString(burntNumber));
+        m_ui->totalSupplyValueLabel->setText(l.toString(supplyNumber));
+
+        // Set INFINITY NODE STATS strings
+        int bigRoiDays = 1000000/((720/dataObject.value("inf_online_big").toDouble())*1752);
+        int midRoiDays = 500000/((720/dataObject.value("inf_online_mid").toDouble())*838);
+        int lilRoiDays = 100000/((720/dataObject.value("inf_online_lil").toDouble())*160);
+
+        QString bigROIString = "ROI: " + QString::number(bigRoiDays) + " days" ;
+        QString midROIString = "ROI: " + QString::number(midRoiDays) + " days";
+        QString lilROIString = "ROI: " + QString::number(lilRoiDays) + " days";
+        QString totalNodesString = QString::number(dataObject.value("inf_online_big").toInt() + dataObject.value("inf_online_mid").toInt() + dataObject.value("inf_online_lil").toInt()) + " nodes";
+    
+        QString bigString = dataObject.value("inf_burnt_big").toVariant().toString() + "/" + dataObject.value("inf_online_big").toVariant().toString() + "/" + bigROIString;
+        QString midString = dataObject.value("inf_burnt_mid").toVariant().toString() + "/" + dataObject.value("inf_online_mid").toVariant().toString() + "/" + midROIString;
+        QString lilString = dataObject.value("inf_burnt_lil").toVariant().toString() + "/" + dataObject.value("inf_online_lil").toVariant().toString() + "/"  + lilROIString;
+        m_ui->bigValueLabel->setText(bigString);
+        m_ui->midValueLabel->setText(midString);
+        m_ui->lilValueLabel->setText(lilString);
+        m_ui->totalValueLabel->setText(totalNodesString);
+    }
+    else
+    {
+        const QString noValue = "NaN";
+        m_ui->hashrateValueLabel->setText(noValue);
+        m_ui->difficultyValueLabel->setText(noValue);
+        m_ui->lastPriceValueLabel->setText(noValue);
+        m_ui->heightValueLabel->setText(noValue);
+
+        m_ui->addressesValueLabel->setText(noValue);
+        m_ui->activeValueLabel->setText(noValue);
+        m_ui->top10ValueLabel->setText(noValue);
+        m_ui->top50ValueLabel->setText(noValue);
+
+        m_ui->feeValueLabel->setText(noValue);
+        m_ui->nodesValueLabel->setText(noValue);
+        m_ui->totalBurntValueLabel->setText(noValue);
+        m_ui->totalSupplyValueLabel->setText(noValue);
+
+        m_ui->bigValueLabel->setText(noValue);
+        m_ui->midValueLabel->setText(noValue);
+        m_ui->lilValueLabel->setText(noValue);
+        m_ui->totalValueLabel->setText(noValue);
+    }
+    reply->deleteLater();
+}
