@@ -140,7 +140,7 @@ color:#00B4B8;</string>
                    <string notr="true">margin-left: 15px;</string>
                   </property>
                   <property name="text">
-                   <string>Last Prize:</string>
+                   <string>Last Price:</string>
                   </property>
                   <property name="margin">
                    <number>0</number>
