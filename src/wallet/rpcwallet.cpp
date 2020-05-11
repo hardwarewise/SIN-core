@@ -512,7 +512,7 @@ static CTransactionRef SendMoney(CWallet * const pwallet, const CTxDestination &
     }
     CValidationState state;
     if (!pwallet->CommitTransaction(tx, std::move(mapValue), {} /* orderForm */, std::move(fromAccount), reservekey, g_connman.get(), 
-					state, fUseInstantSend ? NetMsgType::TXLOCKREQUEST : NetMsgType::TX)) {
+             state, fUseInstantSend ? NetMsgType::TXLOCKREQUEST : NetMsgType::TX)) {
         strError = strprintf("Error: The transaction was rejected! Reason given: %s", FormatStateMessage(state));
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
     }
@@ -809,8 +809,8 @@ static UniValue deposittoaddress(const JSONRPCRequest& request)
     int termDepositLength;
     termDepositLength = request.params[3].get_int();
     LogPrintf("termdep: %d\n", termDepositLength);
-    if (termDepositLength < 730)
-       throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid termDeposit amount");
+    if (termDepositLength <= Params().MaxReorganizationDepth() + 1)
+       throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid lock time (inf 55 blocks)");
 
     // Wallet comments
     mapValue_t mapValue;

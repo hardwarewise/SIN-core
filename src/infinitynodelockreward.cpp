@@ -1461,21 +1461,22 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
 
             LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Musig Final Sign built for Reward Height: %d with group signer %s!!!\n",
                        mapLockRewardRequest[nHashLockRequest].nRewardHeight, mapLockRewardGroupSigners[nHashGroupSigner].signersId);
-            mapSigned[mapLockRewardRequest[nHashLockRequest].nRewardHeight] = nHashGroupSigner;
 
-            std::string sLockRewardMusig = strprintf("%d%s%s", mapLockRewardRequest[nHashLockRequest].nRewardHeight,
+            std::string sLockRewardMusig = strprintf("%d;%s;%s", mapLockRewardRequest[nHashLockRequest].nRewardHeight,
                                       EncodeBase58(final_sig.data, final_sig.data+64),
                                       mapLockRewardGroupSigners[nHashGroupSigner].signersId);
 
-            LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward --  register info: %s\n",
+            LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Register info: %s\n",
                                           sLockRewardMusig);
 
             std::string sErrorRegister = "";
             if(!AutoResigterLockReward(sLockRewardMusig, sErrorRegister)){
-                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward --  Register LockReward error: %s\n",
+                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Register LockReward error: %s\n",
                          sErrorRegister);
             } else {
-                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward --  Register LockReward broadcasted!!!\n");
+                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Register LockReward broadcasted!!!\n");
+                //memory the musig in map. No build for this anymore
+                mapSigned[mapLockRewardRequest[nHashLockRequest].nRewardHeight] = nHashGroupSigner;
             }
         }//end number signature check
     }//end loop in mapMyPartialSigns
