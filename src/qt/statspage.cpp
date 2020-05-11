@@ -10,6 +10,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+
 StatsPage::StatsPage(const PlatformStyle* platformStyle, QWidget *parent) :
     QWidget(parent),
     m_timer(nullptr),
@@ -56,7 +57,7 @@ void StatsPage::onResult(QNetworkReply* reply)
 
         QLocale l = QLocale(QLocale::English);
         // Set NETWORK strings
-        QString heightValue(tr("[E] %1 / [D] %2 / \n\t [P] %3").arg(dataObject.value("explorerHeight").toVariant().toString(), dataObject.value("blockcount").toVariant().toString(), dataObject.value("poolHeight").toVariant().toString()));
+        QString heightValue(tr("[E] %1 / [D] %2 / [P] %3").arg(dataObject.value("explorerHeight").toVariant().toString(), dataObject.value("blockcount").toVariant().toString(), dataObject.value("poolHeight").toVariant().toString()));
         QString knownHashrateString = QString::number(dataObject.value("known_hashrate").toDouble()/1000000000, 'f', 2);
         QString hashrateString = knownHashrateString + "/" + dataObject.value("hashrate").toVariant().toString();
         m_ui->hashrateValueLabel->setText(hashrateString);
@@ -64,6 +65,7 @@ void StatsPage::onResult(QNetworkReply* reply)
         m_ui->lastPriceValueLabel->setText(QString::number(dataObject.value("lastPrice").toDouble(), 'f', 8));
         m_ui->heightValueLabel->setText(heightValue);
 
+          
         // Set ADDRESS STATS strings
         int top10 = dataObject.value("explorerTop10").toDouble();
         int top50 = dataObject.value("explorerTop50").toDouble();
