@@ -290,6 +290,7 @@ QComboBox { /* Dropdown Menus */
 
 font-size: 18px;
 border-color:#bababa;
+border: 1px solid #2E3191;
 border-radius:0px;
 padding: 3px 5px 3px 5px;
 background:#ffffff;
@@ -1310,43 +1311,51 @@ QDialog#CoinControlDialog .CoinControlTreeWidget#treeWidget::indicator { /* Coin
 
 QWidget#ReceiveCoinsDialog .QFrame#frame2 .QLabel#label_2 { /* Label Label */
   min-width:160px;
-  font-size:14px;
-  font-weight:bold;
-  color:#ffffff;
-  border-radius: 10px;
-  background-color:#00023B;
+  font-size:16px;
+  color:#2E3191;
+  border-radius: 0px;
+  background-color:transparent;
   margin-right:5px;
   padding-right:5px;
 }
 
 QWidget#ReceiveCoinsDialog .QFrame#frame2 .QLabel#label { /* Amount Label */
-  min-width:160px;
-  font-size:14px;
-  font-weight:bold;
-  color:#ffffff;
-  border-radius: 10px;
-  background-color:#00023B;
+   min-width:160px;
+  font-size:16px;
+  color:#2E3191;
+  border-radius: 0px;
+  background-color:transparent;
   margin-right:5px;
   padding-right:5px;
 }
 
 QWidget#ReceiveCoinsDialog .QFrame#frame2 .QLabel#label_3 { /* Message Label  */
-  min-width:160px;
-  font-size:14px;
-  font-weight:bold;
-  color:#ffffff;
-  border-radius: 10px;
-  background-color:#00023B;
+   min-width:160px;
+  font-size:16px;
+  color:#2E3191;
+  border-radius: 0px;
+  background-color:transparent;
   margin-right:5px;
   padding-right:5px;
 }
 
 
 QWidget#ReceiveCoinsDialog .QFrame#frame .QLabel#label_6 { /* Requested Payments History Label */
-color:#364860;
-font-weight:bold;
-font-size:14px;
+color:#2E3191;
+font-size:16px;
 }
+
+QWidget#ReceiveCoinsDialog .QFrame#frame2 .QLabel#label_4 { /* Receive Title Label */
+color:#2E3191;
+font-size:18px;
+}
+
+QWidget#ReceiveCoinsDialog .QFrame#frame2 .QLabel#label_5 { /* Receive description Label */
+color:#707070;
+font-size:16px;
+}
+
+
 
 /**************************** RECEIVE COINS DIALOG **************************************/
 QDialog#ReceiveRequestDialog {
