@@ -238,14 +238,14 @@ image:url(':/images/downArrow_small');
 
 QHeaderView { /* Table Header */
 background-color:transparent;
+font-weight: bold;
 }
 
 QHeaderView::section { /* Table Header Sections */
 background-color: transparent;
-color: #333;
+color: #2E3191;
 min-height:30px;
-font-weight: bold;
-font-size: 14px;
+font-size: 16px;
 border: 0;
 padding-left: 5px;
 padding-right: 5px;
@@ -269,6 +269,7 @@ border:0px;
 	border: none;
 	alternate-background-color:transparent ;
 	padding-right: 12px;
+	font-size: 16px;
 }
 
 QTableView::item {   /* Table Item */
@@ -279,7 +280,7 @@ QTableView::item {   /* Table Item */
  }
 
 QTableView::item:selected { /* Table Item Selected */
-	background: #D6D7D8;
+	background: #DAEBF6;
 	color: #000000;
 }
 
@@ -497,7 +498,7 @@ QDialog .QTabWidget::pane {
 
 QDialog .QTabWidget QTabBar::tab {
 color:#333333;
-font-size: 14px;
+font-size: 16px;
 /*font-weight: bold;*/
 padding-left:10px;
 padding-right:10px;
@@ -1363,9 +1364,7 @@ border:1px solid #d7d7d7;
 TransactionView QLineEdit { /* Filters */
 	background-color:transparent;
 	border-color:#FF8204;
-	border-radius:10px;
-	font-size:14px;
-	font-weight:bold;
+	font-size:16px;
 	color:#000;
 	min-height:25px;
 	margin-right:5px;
@@ -1375,9 +1374,7 @@ TransactionView QLineEdit { /* Filters */
 TransactionView QLineEdit#addressWidget { /* Address Filter */
 	background-color:transparent;
 	border-color:#333;
-	border-radius:10px;
-	font-size:14px;
-	font-weight:bold;
+	font-size:16px;
 	color:#000;
 	margin-bottom:2px;
 	margin-right:1px;
@@ -1388,9 +1385,7 @@ TransactionView QLineEdit#addressWidget { /* Address Filter */
 TransactionView QLineEdit#amountWidget { /* Amount Filter */
 	background-color:transparent;
 	border-color:#333;
-	border-radius:10px;
-	font-size:14px;
-	font-weight:bold;
+	font-size:16px;
 	color:#000;
 	margin-bottom:2px;
 	margin-right:1px;
@@ -1404,12 +1399,13 @@ margin-right:1px;
 }
 
 QLabel#transactionSumLabel { /* Example of setObjectName for widgets without name */
-color:#333333;
-font-weight:bold;
+color:#2E3191;
+font-size: 16px;
 }
 
 QLabel#transactionSum { /* Example of setObjectName for widgets without name */
 color:#333333;
+font-size: 16px;
 }
 
 /* TRANSACTION DETAIL DIALOG */
@@ -1421,42 +1417,7 @@ border:1px solid #d7d7d7;
 color: #333;
 }
 
-QPushButton#pushButton_Website {
-background-color:transparent;
- background-image: 0 !important;
-}
-QPushButton#pushButton_Discord {
-background-color:transparent;
- background-image: 0 !important;
-}
-QPushButton#pushButton_Telegram {
-background-color:transparent;
- background-image: 0 !important;
-}
-QPushButton#pushButton_Twitter {
-background-color:transparent;
- background-image: 0 !important;
-}
-QPushButton#pushButton_Explorer {
-background-color:transparent;
- background-image: 0 !important;
-}
-QPushButton#pushButton_Btctalk {
-background-color:transparent;
- background-image: 0 !important;
-}
-QPushButton#pushButton_Reddit {
-background-color:transparent;
- background-image: 0 !important;
-}
-QPushButton#pushButton_Youtube {
-background-color:transparent;
- background-image: 0 !important;
-}
-QPushButton#pushButton_Facebook {
-background-color:transparent;
- background-image: 0 !important;
-}
+
 
 QPushButton#useAvailableBalanceButton { /* Use Available Button */
 margin-left:40px;
@@ -1583,6 +1544,28 @@ QWidget#tabAllMasternodes {
   background-color: transparent;
   }
 
+ QLabel#label_count {
+ 	font-size: 16px;
+ 	color: #2E3191 ;
+ }
+
+QLabel#label_filter {
+	font-size: 16px;
+ 	color: #2E3191 ;
+}
+
+QLabel#autoupdate_label {
+	font-size: 16px;
+ 	color: #2E3191 ;
+}
+
+
+QLabel#secondsLabel {
+	font-size: 16px;
+ 	color: red ;
+}
+
+
 .QRadioButton {
 color: #333333;
 font-weight: bold;
@@ -1690,35 +1673,6 @@ padding-right: 5px;
 QWidget#InstaSwap .QLabel#receivingAmountLabel {
 color: #BC8F3A;
 font-weight:bold;
-}
-
-
-
-
-/**************************************/
- QTableView::item:hover {
-    border:none;
-    border-bottom: 1px solid #bababa;
-    border-radius:0px;
-    color: #707070;
-    background-color:#26bababa;
-}
-
-QTableView::item:selected {
-    border:none;
-    border-bottom: 1px solid #bababa;
-    border-radius:0px;
-    color: #707070;
-    background-color:#2E3191CC;
-}
-
-
-QTableView::item:hover:selected {
-    border:none;
-    border-bottom: 1px solid #bababa;
-    border-radius:0px;
-    color: #707070;
-    background-color:#2E3191CC;
 }
 
 QPushButton#exportButton {

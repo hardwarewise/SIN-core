@@ -394,152 +394,152 @@ void MasternodeList::on_startAllButton_clicked()
     StartAll();
 }
 
-void MasternodeList::on_startAutoSINButton_clicked()
-{
-    std::vector<std::shared_ptr<CWallet>> wallets = GetWallets();
-    CWallet * const pwallet = (wallets.size() > 0) ? wallets[0].get() : nullptr;
-    LOCK2(cs_main, pwallet->cs_wallet);
-    bool ok;
-    setStyleSheet( "QDialog{ background-color: #0d1827; }");
-    QString vpsip = QInputDialog::getText(this, tr("SINnode"), tr("Enter VPS address:"), QLineEdit::Normal, "", &ok);
+//void MasternodeList::on_startAutoSINButton_clicked()
+//{
+    //std::vector<std::shared_ptr<CWallet>> wallets = GetWallets();
+    //CWallet * const pwallet = (wallets.size() > 0) ? wallets[0].get() : nullptr;
+    //LOCK2(cs_main, pwallet->cs_wallet);
+    //bool ok;
+    //setStyleSheet( "QDialog{ background-color: #0d1827; }");
+    //QString vpsip = QInputDialog::getText(this, tr("SINnode"), tr("Enter VPS address:"), QLineEdit::Normal, "", &ok);
 
-    if (!ok)
-       return;
+    //if (!ok)
+       //return;
 
     //Write in file
-    boost::filesystem::path pathMasternodeConfigFile = GetMasternodeConfigFile();
-    boost::filesystem::ifstream streamConfig(pathMasternodeConfigFile);
-    FILE* configFile = fopen(pathMasternodeConfigFile.string().c_str(), "w");
-    std::string strHeader = "# infinitynode config file\n"
-                            "# Format: alias IP:port infinitynodeprivkey collateral_output_txid collateral_output_index burnfund_output_txid burnfund_output_index\n"
-                            "# infinitynode1 127.0.0.1:20980 7RVuQhi45vfazyVtskTRLBgNuSrYGecS5zj2xERaooFVnWKKjhS b7ed8c1396cf57ac78d756186b6022d3023fd2f1c338b7fbae42d342fdd7070a 0 563d9434e816b3e8ffc5347c6b8db07509de6068f6759f21a16be5d92b7e3111 1\n";
-    fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
+    //boost::filesystem::path pathMasternodeConfigFile = GetMasternodeConfigFile();
+    //boost::filesystem::ifstream streamConfig(pathMasternodeConfigFile);
+    //FILE* configFile = fopen(pathMasternodeConfigFile.string().c_str(), "w");
+    //std::string strHeader = "# infinitynode config file\n"
+                            //"# Format: alias IP:port infinitynodeprivkey collateral_output_txid collateral_output_index burnfund_output_txid burnfund_output_index\n"
+                            //"# infinitynode1 127.0.0.1:20980 7RVuQhi45vfazyVtskTRLBgNuSrYGecS5zj2xERaooFVnWKKjhS b7ed8c1396cf57ac78d756186b6022d3023fd2f1c338b7fbae42d342fdd7070a 0 563d9434e816b3e8ffc5347c6b8db07509de6068f6759f21a16be5d92b7e3111 1\n";
+    //fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
 
-    LogPrintf("MasternodeList::AutoSIN -- location of configFile is %s\n",pathMasternodeConfigFile.string());
+    //LogPrintf("MasternodeList::AutoSIN -- location of configFile is %s\n",pathMasternodeConfigFile.string());
     // quick input parsing
-    int vpsiplen = strlen(vpsip.toUtf8().constData());
-    if (vpsiplen < 7 || vpsiplen > 16) {
-       strHeader = "#IP format is not valid\n";
-       fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
-       fclose(configFile);
-       return;
-    }
+    //int vpsiplen = strlen(vpsip.toUtf8().constData());
+    //if (vpsiplen < 7 || vpsiplen > 16) {
+       //strHeader = "#IP format is not valid\n";
+       //fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
+       //fclose(configFile);
+       //return;
+    //}
     // char type parsing
-    for (int i=0; i<vpsiplen; i++) {
-       if ((vpsip[i] < 46 || vpsip[i] > 57) || vpsip[i] == 47) {
-           strHeader = "#IP format is not valid\n";
-           fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
-           fclose(configFile);
-           return;
-       }
-    }
+    //for (int i=0; i<vpsiplen; i++) {
+       //if ((vpsip[i] < 46 || vpsip[i] > 57) || vpsip[i] == 47) {
+           //strHeader = "#IP format is not valid\n";
+           //fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
+           //fclose(configFile);
+           //return;
+       //}
+    //}
 
     // generate masternode key
-    CKey secret;
-    std::vector<infinitynode_conf_t> listNode;
-    std::set<uint256> trackCollateralTx;
+    //CKey secret;
+    //std::vector<infinitynode_conf_t> listNode;
+    //std::set<uint256> trackCollateralTx;
 
-    secret.MakeNewKey(false);
+    //secret.MakeNewKey(false);
 
-    bool foundCollat = false;
-    CTxDestination collateralAddress = CTxDestination();
+    //bool foundCollat = false;
+    //CTxDestination collateralAddress = CTxDestination();
 
     // find suitable burntx
-    bool foundBurn = false;
-    int counter = 0;
-    listNode.clear();
+    //bool foundBurn = false;
+    //int counter = 0;
+    //listNode.clear();
 
-    for (map<uint256, CWalletTx>::const_iterator it = pwallet->mapWallet.begin(); it != pwallet->mapWallet.end(); ++it) {
-      const uint256* txid = &(*it).first;
-      const CWalletTx* pcoin = &(*it).second;
-      for (unsigned int i = 0; i < pcoin->tx->vout.size(); i++) {
-          CTxDestination address;
-          bool fValidAddress = ExtractDestination(pcoin->tx->vout[i].scriptPubKey, address);
-          CTxDestination BurnAddress = DecodeDestination(Params().GetConsensus().cBurnAddress);
-          if (
-                (address == BurnAddress) &&
-                (
-                    ((Params().GetConsensus().nMasternodeBurnSINNODE_1 - 1) * COIN < pcoin->tx->vout[i].nValue && pcoin->tx->vout[i].nValue <= Params().GetConsensus().nMasternodeBurnSINNODE_1 * COIN) ||
-                    ((Params().GetConsensus().nMasternodeBurnSINNODE_5 - 1) * COIN < pcoin->tx->vout[i].nValue && pcoin->tx->vout[i].nValue <= Params().GetConsensus().nMasternodeBurnSINNODE_5 * COIN) ||
-                    ((Params().GetConsensus().nMasternodeBurnSINNODE_10 - 1) * COIN < pcoin->tx->vout[i].nValue && pcoin->tx->vout[i].nValue <= Params().GetConsensus().nMasternodeBurnSINNODE_10 * COIN)
-                )
-          ) {
+    //for (map<uint256, CWalletTx>::const_iterator it = pwallet->mapWallet.begin(); it != pwallet->mapWallet.end(); ++it) {
+      //const uint256* txid = &(*it).first;
+      //const CWalletTx* pcoin = &(*it).second;
+      //for (unsigned int i = 0; i < pcoin->tx->vout.size(); i++) {
+          //CTxDestination address;
+          //bool fValidAddress = ExtractDestination(pcoin->tx->vout[i].scriptPubKey, address);
+          //CTxDestination BurnAddress = DecodeDestination(Params().GetConsensus().cBurnAddress);
+          //if (
+                //(address == BurnAddress) &&
+                //(
+                    //((Params().GetConsensus().nMasternodeBurnSINNODE_1 - 1) * COIN < pcoin->tx->vout[i].nValue && pcoin->tx->vout[i].nValue <= Params().GetConsensus().nMasternodeBurnSINNODE_1 * COIN) ||
+                    //((Params().GetConsensus().nMasternodeBurnSINNODE_5 - 1) * COIN < pcoin->tx->vout[i].nValue && pcoin->tx->vout[i].nValue <= Params().GetConsensus().nMasternodeBurnSINNODE_5 * COIN) ||
+                    //((Params().GetConsensus().nMasternodeBurnSINNODE_10 - 1) * COIN < pcoin->tx->vout[i].nValue && pcoin->tx->vout[i].nValue <= Params().GetConsensus().nMasternodeBurnSINNODE_10 * COIN)
+                //)
+          //) {
                     //add dummy
-                    listNode.push_back(infinitynode_conf_t());
-                    foundBurn = true;
+                    //listNode.push_back(infinitynode_conf_t());
+                    //foundBurn = true;
 
                     //add to list
-                    listNode[counter].burnFundHash = txid->ToString();
-                    listNode[counter].burnFundIndex = i;
-                    const CTxIn txin = pcoin->tx->vin[0]; //BurnFund Input is only one address. So we can take the first without problem
-                    CTxDestination sendAddress;
-                    ExtractDestination(pwallet->mapWallet.at(txin.prevout.hash).tx->vout[txin.prevout.n].scriptPubKey, sendAddress);
-                    LogPrintf("MasternodeList::AutoSIN -- find BurnFund tx: %s, index: %d\n",listNode[counter].burnFundHash, listNode[counter].burnFundIndex);
-                    LogPrintf("MasternodeList::AutoSIN -- Sender's address:%s\n", EncodeDestination(sendAddress));
-                    listNode[counter].collateralAddress = sendAddress;
-                    secret.MakeNewKey(false);
-                    listNode[counter].infinitynodePrivateKey = EncodeSecret(secret);
-                    listNode[counter].IPaddress = vpsip.toUtf8().constData();
-                    listNode[counter].port = Params().GetDefaultPort();
-                    counter++;
-            }
-        }
-    }
+                    //listNode[counter].burnFundHash = txid->ToString();
+                    //listNode[counter].burnFundIndex = i;
+                    //const CTxIn txin = pcoin->tx->vin[0]; //BurnFund Input is only one address. So we can take the first without problem
+                    //CTxDestination sendAddress;
+                    //ExtractDestination(pwallet->mapWallet.at(txin.prevout.hash).tx->vout[txin.prevout.n].scriptPubKey, sendAddress);
+                    //LogPrintf("MasternodeList::AutoSIN -- find BurnFund tx: %s, index: %d\n",listNode[counter].burnFundHash, listNode[counter].burnFundIndex);
+                    //LogPrintf("MasternodeList::AutoSIN -- Sender's address:%s\n", EncodeDestination(sendAddress));
+                    //listNode[counter].collateralAddress = sendAddress;
+                    //secret.MakeNewKey(false);
+                    //listNode[counter].infinitynodePrivateKey = EncodeSecret(secret);
+                    //listNode[counter].IPaddress = vpsip.toUtf8().constData();
+                    //listNode[counter].port = Params().GetDefaultPort();
+                    //counter++;
+            //}
+        //}
+    //}
 
     // find suitable collateral outputs
-    std::vector<COutput> vPossibleCoins;
-    pwallet->AvailableCoins(vPossibleCoins, true, NULL, false, ONLY_MASTERNODE_COLLATERAL);
+    //std::vector<COutput> vPossibleCoins;
+    //pwallet->AvailableCoins(vPossibleCoins, true, NULL, false, ONLY_MASTERNODE_COLLATERAL);
 
-    for (COutput& out : vPossibleCoins) {
-      CTxDestination address;
-        const CScript& scriptPubKey = out.tx->tx->vout[out.i].scriptPubKey;
-        bool fValidAddress = ExtractDestination(scriptPubKey, address);
-        for (unsigned int i = 0; i < listNode.size(); i++) {
-            if (address == listNode[i].collateralAddress && trackCollateralTx.count(out.tx->GetHash()) != 1) {
-                listNode[i].collateralHash = out.tx->GetHash().ToString();
-                listNode[i].collateralIndex = out.i;
-                trackCollateralTx.insert(out.tx->GetHash());
-                foundCollat = true;
-            }
-        }
-    }
+    //for (COutput& out : vPossibleCoins) {
+      //CTxDestination address;
+        //const CScript& scriptPubKey = out.tx->tx->vout[out.i].scriptPubKey;
+        //bool fValidAddress = ExtractDestination(scriptPubKey, address);
+        //for (unsigned int i = 0; i < listNode.size(); i++) {
+            //if (address == listNode[i].collateralAddress && trackCollateralTx.count(out.tx->GetHash()) != 1) {
+                //listNode[i].collateralHash = out.tx->GetHash().ToString();
+                //listNode[i].collateralIndex = out.i;
+                //trackCollateralTx.insert(out.tx->GetHash());
+                //foundCollat = true;
+            //}
+        //}
+    //}
 
-    if (!foundBurn) {
-        LogPrintf("MasternodeList::AutoSIN -- burnTx not found\n");
-        strHeader = "#BurnFund tx was not found\n";
-        fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
-    } else {
-        strHeader = "#BurnFund tx was found\n";
-        fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
-    }
+    //if (!foundBurn) {
+        //LogPrintf("MasternodeList::AutoSIN -- burnTx not found\n");
+        //strHeader = "#BurnFund tx was not found\n";
+        //fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
+    //} else {
+        //strHeader = "#BurnFund tx was found\n";
+        //fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
+    //}
 
-    if (!foundCollat) {
-        LogPrintf("MasternodeList::AutoSIN -- collateral not found\n");
-        strHeader = "#Collateral tx was not found\n";
-        fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
-    } else {
-        strHeader = "#Collateral tx was found\n";
-        fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
-    }
+    //if (!foundCollat) {
+        //LogPrintf("MasternodeList::AutoSIN -- collateral not found\n");
+        //strHeader = "#Collateral tx was not found\n";
+        //fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
+    //} else {
+        //strHeader = "#Collateral tx was found\n";
+        //fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
+    //}
 
-    if (foundBurn) {
-       for (unsigned int i = 0; i < listNode.size(); i++) {
-           char inconfigline[300];
-           memset(inconfigline,'\0',300);
-           sprintf(inconfigline,"infinitynode%d %s:%d %s %s %d %s %d %s\n",i, listNode[i].IPaddress.c_str(), listNode[i].port, listNode[i].infinitynodePrivateKey.c_str(), listNode[i].collateralHash.c_str(), listNode[i].collateralIndex, listNode[i].burnFundHash.c_str(), listNode[i].burnFundIndex, EncodeDestination(listNode[i].collateralAddress).c_str());
-           fwrite(inconfigline, strlen(inconfigline), 1, configFile);
-       }
-    }
+    //if (foundBurn) {
+       //for (unsigned int i = 0; i < listNode.size(); i++) {
+           //char inconfigline[300];
+           //memset(inconfigline,'\0',300);
+           //sprintf(inconfigline,"infinitynode%d %s:%d %s %s %d %s %d %s\n",i, listNode[i].IPaddress.c_str(), listNode[i].port, listNode[i].infinitynodePrivateKey.c_str(), listNode[i].collateralHash.c_str(), listNode[i].collateralIndex, listNode[i].burnFundHash.c_str(), listNode[i].burnFundIndex, EncodeDestination(listNode[i].collateralAddress).c_str());
+           //fwrite(inconfigline, strlen(inconfigline), 1, configFile);
+       //}
+    //}
 
     ////////////////////////////////////////////////////////////////////////////////
-    QMessageBox messageBox;
-    messageBox.setWindowTitle("Alert");
-    messageBox.setText(QString::fromStdString("Please open config file in:\n"+pathMasternodeConfigFile.string()));
-    messageBox.exec();
+    //QMessageBox messageBox;
+    //messageBox.setWindowTitle("Alert");
+    //messageBox.setText(QString::fromStdString("Please open config file in:\n"+pathMasternodeConfigFile.string()));
+    //messageBox.exec();
     ////////////////////////////////////////////////////////////////////////////////
 
-    fclose(configFile);
-}
+    //fclose(configFile);
+//}
 
 void MasternodeList::on_tableWidgetMyMasternodes_itemSelectionChanged()
 {

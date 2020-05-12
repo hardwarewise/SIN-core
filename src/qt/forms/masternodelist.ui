@@ -161,13 +161,6 @@ width: 150px;
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="startAutoSINButton">
-               <property name="text">
-                <string>AutoSIN</string>
-               </property>
-              </widget>
-             </item>
-             <item>
               <widget class="QPushButton" name="UpdateButton">
                <property name="text">
                 <string>&amp;Update status</string>
