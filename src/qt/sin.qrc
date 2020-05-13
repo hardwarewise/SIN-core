@@ -160,9 +160,11 @@
      <file alias="radio_unchecked">res/images/unchecked_radio.png</file>
      <file alias="radio_checked">res/images/checked_radio.png</file>
      <file alias="nav-logo-sin">res/images/nav-logo-sin.png</file>
-     
+     <file alias="indeterminate">res/images/indeterminate.png</file>
+     <file alias="close">res/images/close.png</file>
 
      </qresource>
+     
    <qresource prefix="/fonts">
        <file alias="Hind-Bold">res/fonts/Hind-Bold.ttf</file>
        <file alias="Hind-Light">res/fonts/Hind-Light.ttf</file>
