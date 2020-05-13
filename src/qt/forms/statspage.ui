@@ -47,7 +47,7 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_8">
         <item>
-         <spacer name="verticalSpacer_2">
+         <spacer name="verticalSpacer_3">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
@@ -57,7 +57,67 @@
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>100</height>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_8">
+            <property name="styleSheet">
+             <string notr="true">color:#2E3191;
+font-size: 22px;</string>
+            </property>
+            <property name="text">
+             <string>SINOVATE Infinity Nodes (SIN) Blackchain Stats</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Expanding</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>0</height>
            </size>
           </property>
          </spacer>
@@ -866,7 +926,7 @@ padding-left:10px;</string>
                    </size>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">color: red;
+                   <string notr="true">color: #2E3191;
 font-weight:bold;</string>
                   </property>
                   <property name="text">
@@ -1063,7 +1123,7 @@ color:#BC8F3A;</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">margin-left: 15px;
-color: red;</string>
+color: #2E3191;</string>
                   </property>
                   <property name="text">
                    <string>MINI:</string>
@@ -1087,12 +1147,12 @@ color: red;</string>
            <enum>Qt::Vertical</enum>
           </property>
           <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
+           <enum>QSizePolicy::Expanding</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>100</height>
+            <height>0</height>
            </size>
           </property>
          </spacer>
