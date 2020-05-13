@@ -29,7 +29,7 @@ X25X is  GPU mineable and ensures **ASIC, FPGA and QUANTUM resistance**,  solidi
 |--|--|
 |Block Reward  | **3052.5 SIN** |
 |Block Time  | **2 Minutes** |
-|Block Fee  | **10%** |
+|Block Dev Fee  | **10%** |
 |Difficulty Retargeting Algo | LWMA | 
 |Max Transactions Per Second  | **533 tx/s** |
 |Total Supply  | **Always Less than 800 million SIN infinitely** |
