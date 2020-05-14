@@ -80,11 +80,15 @@
           <item>
            <widget class="QLabel" name="label_8">
             <property name="styleSheet">
-             <string notr="true">color:#2E3191;
-font-size: 22px;</string>
+             <string notr="true">background-color: #00B4B8;
+color: white;
+font-size: 28px;
+border: 1px  solid #2E3191;
+border-radius: 10px;
+</string>
             </property>
             <property name="text">
-             <string>SINOVATE Infinity Nodes (SIN) Blackchain Stats</string>
+             <string>SINOVATE Infinity Nodes (SIN) Blockchain Stats</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
