@@ -762,12 +762,12 @@ static UniValue deposittoaddress(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
         return NullUniValue;
     }
-/*
+
     if (IsInitialBlockDownload())
         throw std::runtime_error(
             "Please wait until block synchronization has completed.\n"
     );
-*/
+
     if (request.fHelp || request.params.size() < 4 || request.params.size() > 7)
         throw std::runtime_error(
             "deposittoaddress \"fromaccount\" \"SINaddress\" amount termdepositlength ( \"comment\" \"comment-to\" subtractfeefromamount )\n"

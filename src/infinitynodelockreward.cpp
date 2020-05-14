@@ -1303,6 +1303,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
 
     AssertLockHeld(cs);
 
+    std::vector<COutPoint> signOrder;
     for (auto& pair : mapMyPartialSigns) {
         uint256 nHashGroupSigner = pair.first;
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Group Signer: %s, GroupSigner exist: %d, size: %d\n",
@@ -1338,6 +1339,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
             //find commiment
             std::string s;
             stringstream ss(mapLockRewardGroupSigners[nHashGroupSigner].signersId);
+
             int nSigner=0, nCommitment=0;
             while (getline(ss, s,';')) {
                 int Id = atoi(s);
@@ -1353,13 +1355,15 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                     std::string metaPublicKey = metaSigner.getMetaPublicKey();
                     std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
                     CPubKey pubKey(tx_data.begin(), tx_data.end());
-                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- Metadata pubkeyId: %s\n", pubKey.GetID().ToString());
+                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- Metadata of signer %d, Index: %d pubkeyId: %s\n",nSigner; Id, pubKey.GetID().ToString());
 
                     if (!secp256k1_ec_pubkey_parse(secp256k1_context_musig, &pubkeys[nSigner], pubKey.data(), pubKey.size())) {
                         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- cannot parse publicKey\n");
                         continue;
                     }
 
+                    //memrory sign order
+                    signOrder.push_back(infSigner.getBurntxOutPoint());
                     //next signer
                     nSigner++;
 
@@ -1437,7 +1441,13 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
             secp256k1_musig_partial_signature *partial_sig;
             partial_sig = (secp256k1_musig_partial_signature*) malloc(Params().GetConsensus().nInfinityNodeLockRewardSigners * sizeof(secp256k1_musig_partial_signature));
             for(int i=0; i<N_SIGNERS; i++) {
-                std::vector<unsigned char> sig = pair.second.at(i).vchMusigPartialSign;
+                std::vector<unsigned char> sig;
+                for(int j; j < pair.second.size(); j++){
+                    if(signOrder.at(i) == pair.second.at(j).vin.prevout){
+                        sig = pair.second.at(j).vchMusigPartialSign;
+                    }
+                }
+
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- sign %d:", i);
 
                 for(int j=0; j<32;j++){
@@ -1445,6 +1455,8 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                     partial_sig[i].data[j] = sig.at(j);
                 }
                 LogPrint(BCLog::INFINITYLOCK,"\n");
+                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- from: %s\n", signOrder.at(i).ToStringShort());
+
 
                 if (!secp256k1_musig_partial_sig_verify(secp256k1_context_musig, &verifier_session, &verifier_signer_data[i], &partial_sig[i], &pubkeys[i])) {
                     LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- Musig Partial Sign %d Verify FAILED\n", i);
