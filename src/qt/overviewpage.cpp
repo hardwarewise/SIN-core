@@ -23,8 +23,6 @@
 #include <shutdown.h>
 #include <instantx.h>
 #include <masternode-sync.h>
-#include <infinitynodeman.h>
-
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
@@ -34,6 +32,9 @@
 #include <QUrl>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 
 #define ICON_OFFSET 16
@@ -140,8 +141,11 @@ public:
 
 OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) :
     QWidget(parent),
-     timer(nullptr),
+    // ++ Explorer Stats
+    m_timer(nullptr),
+    // --
     ui(new Ui::OverviewPage),
+    m_networkManager(new QNetworkAccessManager(this)),
     clientModel(0),
     walletModel(0),
     txdelegate(new TxViewDelegate(platformStyle, this))
@@ -157,10 +161,14 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     requestVersion = new QNetworkRequest();
     ui->setupUi(this);
 
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(infinityNodeStat()));
-    timer->start(3000);
-
+    // ++ Explorer Stats
+    m_timer = new QTimer(this);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(getStatistics()));
+    m_timer->start(30000);
+    connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onResult(QNetworkReply*)));
+    getStatistics();
+    // --
+    
                
    // Set the Latest Version information
  // Network request code 
@@ -348,42 +356,6 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
 
 }
 
-
-
-void OverviewPage::infinityNodeStat()
-{
-    std::map<COutPoint, CInfinitynode> mapInfinitynodes = infnodeman.GetFullInfinitynodeMap();
-    std::map<COutPoint, CInfinitynode> mapInfinitynodesNonMatured = infnodeman.GetFullInfinitynodeNonMaturedMap();
-    int total = 0, totalBIG = 0, totalMID = 0, totalLIL = 0, totalUnknown = 0;
-    for (auto& infpair : mapInfinitynodes) {
-        ++total;
-        CInfinitynode inf = infpair.second;
-        int sintype = inf.getSINType();
-        if (sintype == 10) ++totalBIG;
-        else if (sintype == 5) ++totalMID;
-        else if (sintype == 1) ++totalLIL;
-    }
-
-    int totalNonMatured = 0, totalBIGNonMatured = 0, totalMIDNonMatured = 0, totalLILNonMatured = 0, totalUnknownNonMatured = 0;
-    for (auto& infpair : mapInfinitynodesNonMatured) {
-        ++totalNonMatured;
-        CInfinitynode inf = infpair.second;
-        int sintype = inf.getSINType();
-        if (sintype == 10) ++totalBIGNonMatured;
-        else if (sintype == 5) ++totalMIDNonMatured;
-        else if (sintype == 1) ++totalLILNonMatured;
-    }
-
-    QString strTotalNodeText(tr("%1 Nodes").arg(total + totalNonMatured));
-    QString strLastScanText(tr("Last Scan %1").arg(infnodeman.getLastScanWithLimit()));
-    
-    ui->labelStatisticTotalNode->setText(strTotalNodeText);
-    ui->labelStatisticLastScan->setText(strLastScanText);
-}
-
-
-
-
 void OverviewPage::handleTransactionClicked(const QModelIndex &index)
 {
     if(filter)
@@ -397,10 +369,24 @@ void OverviewPage::handleOutOfSyncWarningClicks()
 
 OverviewPage::~OverviewPage()
 {
-    
+    // ++ Explorer Stats
+    if(m_timer) disconnect(m_timer, SIGNAL(timeout()), this, SLOT(privateSendStatus()));
+    delete m_networkManager;
+    // --
+
     delete ui;
 }
 
+
+// ++ Explorer Stats
+void OverviewPage::getStatistics()
+{
+    QUrl summaryUrl("https://explorer.sinovate.io/ext/summary");
+    QNetworkRequest request;
+    request.setUrl(summaryUrl);
+    m_networkManager->get(request);
+}
+// --
 
 void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
 {
@@ -582,3 +568,51 @@ void OverviewPage::getVersionInfo()
     
     networkManagerVersion->get(*requestVersion);
 }
+
+// ++ Explorer Stats
+void OverviewPage::onResult(QNetworkReply* replystats)
+{
+    QVariant statusCode = replystats->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+
+    if( statusCode == 200)
+    {
+        QString replyString = (QString) replystats->readAll();
+
+        QJsonDocument jsonResponse = QJsonDocument::fromJson(replyString.toUtf8());
+        QJsonObject jsonObject = jsonResponse.object();
+
+        QJsonObject dataObject = jsonObject.value("data").toArray()[0].toObject();
+
+        QLocale l = QLocale(QLocale::English);
+        
+
+        // Set INFINITY NODE STATS strings
+        int bigRoiDays = 1000000/((720/dataObject.value("inf_online_big").toDouble())*1752);
+        int midRoiDays = 500000/((720/dataObject.value("inf_online_mid").toDouble())*838);
+        int lilRoiDays = 100000/((720/dataObject.value("inf_online_lil").toDouble())*160);
+
+        QString bigROIString = "ROI: " + QString::number(bigRoiDays) + " days" ;
+        QString midROIString = "ROI: " + QString::number(midRoiDays) + " days";
+        QString lilROIString = "ROI: " + QString::number(lilRoiDays) + " days";
+        QString totalNodesString = QString::number(dataObject.value("inf_online_big").toInt() + dataObject.value("inf_online_mid").toInt() + dataObject.value("inf_online_lil").toInt()) + " nodes";
+    
+        QString bigString = dataObject.value("inf_burnt_big").toVariant().toString() + "/" + dataObject.value("inf_online_big").toVariant().toString() + "/" + bigROIString;
+        QString midString = dataObject.value("inf_burnt_mid").toVariant().toString() + "/" + dataObject.value("inf_online_mid").toVariant().toString() + "/" + midROIString;
+        QString lilString = dataObject.value("inf_burnt_lil").toVariant().toString() + "/" + dataObject.value("inf_online_lil").toVariant().toString() + "/"  + lilROIString;
+        ui->bigValueLabel->setText(bigString);
+        ui->midValueLabel->setText(midString);
+        ui->lilValueLabel->setText(lilString);
+        ui->totalValueLabel->setText(totalNodesString);
+    }
+    else
+    {
+        const QString noValue = "NaN";
+       
+        ui->bigValueLabel->setText(noValue);
+        ui->midValueLabel->setText(noValue);
+        ui->lilValueLabel->setText(noValue);
+        ui->totalValueLabel->setText(noValue);
+    }
+    replystats->deleteLater();
+}
+// --

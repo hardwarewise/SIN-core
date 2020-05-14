@@ -1,8 +1,6 @@
 #include "statspage.h"
 #include "forms/ui_statspage.h"
 #include <qt/platformstyle.h>
-#include "walletmodel.h"
-#include <infinitynodeman.h>
 
 #include <QTimer>
 #include <QUrl>

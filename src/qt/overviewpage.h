@@ -11,6 +11,9 @@
 
 #include <QWidget>
 #include <memory>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 class ClientModel;
 class TransactionFilterProxy;
@@ -46,7 +49,6 @@ public:
 
 public Q_SLOTS:
     void setBalance(const interfaces::WalletBalances& balances);
-    void infinityNodeStat();
     void getPriceInfo();
     void getPriceInfoBTC();
     void getVersionInfo();
@@ -57,9 +59,10 @@ Q_SIGNALS:
 
 private:
     Ui::OverviewPage *ui;
-    QTimer *timer;
     ClientModel *clientModel;
     WalletModel *walletModel;
+    QTimer* m_timer;
+    QNetworkAccessManager* m_networkManager;
     interfaces::WalletBalances m_balances;
     QTimer *pricingTimer;
     QTimer *pricingTimerBTC;
@@ -71,7 +74,7 @@ private:
     QNetworkRequest* requestBTC;
     QNetworkRequest* requestVersion;
     qint64 totalBalance;
-    int nDisplayUnit;
+    int nDisplayUnit;    
 
     TxViewDelegate *txdelegate;
     std::unique_ptr<TransactionFilterProxy> filter;
@@ -84,6 +87,9 @@ private Q_SLOTS:
     void updateAlerts(const QString &warnings);
     void updateWatchOnlyLabels(bool showWatchOnly);
     void handleOutOfSyncWarningClicks();
+    void onResult(QNetworkReply* replystats);
+    void getStatistics();
+
     
     
 

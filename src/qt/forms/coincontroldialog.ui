@@ -282,7 +282,7 @@ font-size:22px;
 padding-left:30px;</string>
           </property>
           <property name="text">
-           <string>Select SIN Denominations to Spend</string>
+           <string>Select SIN Coins to Send</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -585,7 +585,7 @@ background-color:#FFFFFF;
     border-radius: 2px;</string>
              </property>
              <property name="text">
-              <string>Toggle lock state</string>
+              <string>Lock-Unlock All</string>
              </property>
              <property name="checkable">
               <bool>true</bool>
