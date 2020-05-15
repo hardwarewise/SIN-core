@@ -18,6 +18,7 @@
 #include <rpc/util.h>
 #include <timedata.h>
 #include <util/system.h>
+#include <util/check.h>
 #include <util/strencodings.h>
 #ifdef ENABLE_WALLET
 #include <wallet/rpcwallet.h>
@@ -555,9 +556,12 @@ static UniValue echo(const JSONRPCRequest& request)
         throw std::runtime_error(
             "echo|echojson \"message\" ...\n"
             "\nSimply echo back the input arguments. This command is for testing.\n"
+            "\nIt will return an internal bug report when exactly 100 arguments are passed.\n"
             "\nThe difference between echo and echojson is that echojson has argument conversion enabled in the client-side table in"
             "sin-cli and the GUI. There is no server-side difference."
         );
+    
+    CHECK_NONFATAL(request.params.size() != 100);
 
     return request.params;
 }
