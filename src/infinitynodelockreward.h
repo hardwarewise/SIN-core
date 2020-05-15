@@ -197,7 +197,7 @@ public:
     std::vector<unsigned char> vchSig{};
 
     CMusigPartialSignLR();
-    CMusigPartialSignLR(COutPoint myPeerBurnTxIn, uint256 nGroupSigners, int nRewardHeight, unsigned char *cMusigPartialSign);
+    CMusigPartialSignLR(COutPoint myPeerBurnTxIn, uint256 nGroupSigners, int inHeight, unsigned char *cMusigPartialSign);
 
     ADD_SERIALIZE_METHODS;
 

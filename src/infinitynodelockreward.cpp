@@ -126,12 +126,12 @@ void CLockRewardRequest::Relay(CConnman& connman)
 CLockRewardCommitment::CLockRewardCommitment()
 {}
 
-CLockRewardCommitment::CLockRewardCommitment(uint256 nRequest, int nRewardHeight, COutPoint myPeerBurnTxIn, CKey key){
+CLockRewardCommitment::CLockRewardCommitment(uint256 nRequest, int inHeight, COutPoint myPeerBurnTxIn, CKey key){
     vin=(CTxIn(myPeerBurnTxIn));
     random = key;
     pubkeyR = key.GetPubKey();
     nHashRequest = nRequest;
-    nRewardHeight = nRewardHeight;
+    nRewardHeight = inHeight;
 }
 
 bool CLockRewardCommitment::Sign(const CKey& keyInfinitynode, const CPubKey& pubKeyInfinitynode)
@@ -181,12 +181,12 @@ void CLockRewardCommitment::Relay(CConnman& connman)
 CGroupSigners::CGroupSigners()
 {}
 
-CGroupSigners::CGroupSigners(COutPoint myPeerBurnTxIn, uint256 nRequest, int group, int nRewardHeight, std::string signers){
+CGroupSigners::CGroupSigners(COutPoint myPeerBurnTxIn, uint256 nRequest, int group, int inHeight, std::string signers){
     vin=(CTxIn(myPeerBurnTxIn));
     nHashRequest = nRequest;
     nGroup = group;
     signersId = signers;
-    nRewardHeight = nRewardHeight;
+    nRewardHeight = inHeight;
 }
 
 bool CGroupSigners::Sign(const CKey& keyInfinitynode, const CPubKey& pubKeyInfinitynode)
@@ -238,11 +238,11 @@ void CGroupSigners::Relay(CConnman& connman)
 CMusigPartialSignLR::CMusigPartialSignLR()
 {}
 
-CMusigPartialSignLR::CMusigPartialSignLR(COutPoint myPeerBurnTxIn, uint256 nGroupSigners, int nRewardHeight, unsigned char *cMusigPartialSign){
+CMusigPartialSignLR::CMusigPartialSignLR(COutPoint myPeerBurnTxIn, uint256 nGroupSigners, int inHeight, unsigned char *cMusigPartialSign){
     vin=(CTxIn(myPeerBurnTxIn));
     nHashGroupSigners = nGroupSigners;
     vchMusigPartialSign = std::vector<unsigned char>(cMusigPartialSign, cMusigPartialSign + 32);
-    nRewardHeight = nRewardHeight;
+    nRewardHeight = inHeight;
 }
 
 bool CMusigPartialSignLR::Sign(const CKey& keyInfinitynode, const CPubKey& pubKeyInfinitynode)
@@ -728,8 +728,9 @@ bool CInfinityNodeLockReward::CheckVerifyReply(CNode* pnode, CVerifyRequest& vre
         return false;
     }
 
+    int nRewardHeight = vrequest.nBlockHeight;
     //step 3.3 send commitment
-    if(!SendCommitment(vrequest.nHashRequest, vrequest.nBlockHeight, connman)){
+    if(!SendCommitment(vrequest.nHashRequest, nRewardHeight, connman)){
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckVerifyReply -- Cannot send commitment\n", strError);
         return false;
     }
@@ -755,8 +756,8 @@ bool CInfinityNodeLockReward::SendCommitment(const uint256& reqHash, int nReward
     CLockRewardCommitment commitment(reqHash, nRewardHeight, infinitynodePeer.burntx, secret);
     if(commitment.Sign(infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode)) {
         if(AddCommitment(commitment)){
-            LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::SendCommitment -- Send my commitment %s for LockRequest %s\n",
-                      commitment.GetHash().ToString(), reqHash.ToString());
+            LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::SendCommitment -- Send my commitment %s for height %d, LockRequest %s\n",
+                      commitment.GetHash().ToString(), commitment.nRewardHeight, reqHash.ToString());
             commitment.Relay(connman);
             return true;
         }
@@ -914,7 +915,7 @@ bool CInfinityNodeLockReward::FindAndSendSignersGroup(CConnman& connman)
 
                 if (signerIndex != ""){
                     //step 4.3.1
-                    CGroupSigners gSigners(infinitynodePeer.burntx, currentLockRequestHash, mapLockRewardRequest[currentLockRequestHash].nRewardHeight, nGroupSigners, signerIndex);
+                    CGroupSigners gSigners(infinitynodePeer.burntx, currentLockRequestHash, nGroupSigners, mapLockRewardRequest[currentLockRequestHash].nRewardHeight, signerIndex);
                     if(gSigners.Sign(infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode)) {
                         if (AddGroupSigners(gSigners)) {
                             LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndSendSignersGroup -- relay my GroupSigner: %d, hash: %s, LockRequest: %s\n",
@@ -956,7 +957,7 @@ bool CInfinityNodeLockReward::CheckGroupSigner(CNode* pnode, const CGroupSigners
     //step 5.1.1: not too far in future and not inferior than current Height
     if(gsigners.nRewardHeight > nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardDeepth + 2
         || gsigners.nRewardHeight < nCachedBlockHeight){
-        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckCommitment -- GroupSigner invalid for height: %d, current height: %d\n",
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckGroupSigner -- GroupSigner invalid for height: %d, current height: %d\n",
             gsigners.nRewardHeight, nCachedBlockHeight);
         return false;
     }
@@ -1355,7 +1356,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                     std::string metaPublicKey = metaSigner.getMetaPublicKey();
                     std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
                     CPubKey pubKey(tx_data.begin(), tx_data.end());
-                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- Metadata of signer %d, Index: %d pubkeyId: %s\n",nSigner; Id, pubKey.GetID().ToString());
+                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- Metadata of signer %d, Index: %d pubkeyId: %s\n",nSigner, Id, pubKey.GetID().ToString());
 
                     if (!secp256k1_ec_pubkey_parse(secp256k1_context_musig, &pubkeys[nSigner], pubKey.data(), pubKey.size())) {
                         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- cannot parse publicKey\n");
@@ -1442,7 +1443,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
             partial_sig = (secp256k1_musig_partial_signature*) malloc(Params().GetConsensus().nInfinityNodeLockRewardSigners * sizeof(secp256k1_musig_partial_signature));
             for(int i=0; i<N_SIGNERS; i++) {
                 std::vector<unsigned char> sig;
-                for(int j; j < pair.second.size(); j++){
+                for(int j=0; j < pair.second.size(); j++){
                     if(signOrder.at(i) == pair.second.at(j).vin.prevout){
                         sig = pair.second.at(j).vchMusigPartialSign;
                     }
@@ -1615,7 +1616,7 @@ void CInfinityNodeLockReward::TryConnectToMySigners(int rewardHeight, CConnman& 
                 {
                     if (pnode->addr.ToStringIP() == add.ToStringIP()){
                         fconnected = true;
-                        connectionType = "connection exist";
+                        connectionType = strprintf("connection exist(%d)", pnode->GetId());
                         continue;
                     }
                 }
@@ -1775,7 +1776,7 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
                 return;
             }
             if(!CheckCommitment(pfrom, commitment)){
-                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessMessage -- Commitment is false\n");
+                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessMessage -- Commitment is false from: %d\n",pfrom->GetId());
                 return;
             }
             if(AddCommitment(commitment)){
