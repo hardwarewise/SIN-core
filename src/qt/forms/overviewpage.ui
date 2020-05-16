@@ -573,6 +573,9 @@ color:#000000;</string>
                      <property name="text">
                       <string>Total Infinity Nodes</string>
                      </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
                     </widget>
                    </item>
                    <item>
@@ -584,6 +587,9 @@ color:#00B4B8;</string>
                      </property>
                      <property name="text">
                       <string>0</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
                      </property>
                     </widget>
                    </item>
@@ -603,6 +609,9 @@ color:#000000;</string>
                      <property name="text">
                       <string>Total Circulating Supply</string>
                      </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
                     </widget>
                    </item>
                    <item>
@@ -614,6 +623,9 @@ color:#00B4B8;</string>
                      </property>
                      <property name="text">
                       <string>0</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
                      </property>
                     </widget>
                    </item>
