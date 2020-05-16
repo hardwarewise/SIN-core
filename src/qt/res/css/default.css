@@ -158,30 +158,32 @@ background-color: #FFFFFF;
 /***** BUTTONS *****/
 
 QPushButton {
-	/* Global Button Style */
-	background-color: #2E3191;
-	background-repeat: no-repeat;
-    background-size: 1000% 1000%;
- 	padding: 0.85em 2em;
-	/*font-family: "Montserrat";*/
-	letter-spacing: 1px;
-	border: 0;
-	color: #ffffff;
-	font-size: 14px;
-	/*font-weight: bold;*/
+	/* Secondary Button Style */
+	border:  1px solid #332E3191;
+    background-color:#FFFFFF;
+    font-size:18px;
+    padding:4px 6px;
+    color: #2E3191;
+    border-radius: 2px;
 	
 }
 QPushButton:hover {
-	background-color: #191c8a;
-	
+	border:  1px solid #2E3191;
+    background-color:#FFFFFF;
+    font-size:18px;
+    padding:4px 6px;
+    color: #5c4b7d;
+    border-radius: 2px;	
 	
 }
-QPushButton:focus {
-	border: none;
-	outline: none;
-}
+
 QPushButton:pressed {
-	border: 1px solid #333;
+	border:  1px solid #2E3191;
+    background-color:#707070;
+    font-size:18px;
+    padding:4px 6px;
+    color: #2E3191;
+    border-radius: 2px;
 }
 
 
@@ -1326,7 +1328,7 @@ color: #333;
 
 
 QPushButton#useAvailableBalanceButton { /* Use Available Button */
-margin-left:40px;
+margin-left:10 px;
 }
 
 QLabel#labelFeeHeadline {
