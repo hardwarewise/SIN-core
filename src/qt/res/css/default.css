@@ -291,14 +291,14 @@ QTableView::item:selected { /* Table Item Selected */
 
 QComboBox { /* Dropdown Menus */
 
-font-size: 18px;
+font-size: 16px;
 border-color:#bababa;
 border: 1px solid #2E3191;
 border-radius:0px;
 padding: 3px 5px 3px 5px;
 background:#ffffff;
 min-height:25px;
-color:#bababa;
+color:#333333;
 background-color:#ffffff;
 
 
@@ -327,7 +327,7 @@ border-image: url(':/images/downArrow') 0 0 0 0 stretch stretch;
 
 QComboBox QListView {
 border:1px solid #bababa;
-color:#bababa;
+color:#333333;
 background-color:#ffffff;
 padding-right:1px;
 padding-left:1px;
@@ -1101,9 +1101,34 @@ background:transparent;
 }
 
 QDialog#SendCoinsDialog .QPushButton#sendButton { /* Send Button */
-padding-left:10px;
-padding-right:10px;
+border:  1px solid #2E3191;
+    background-color:#2E3191;
+    font-size:18px;
+    padding:4px 6px;
+    color: #FFFFFF;
+    border-radius: 2px;
 }
+
+
+QDialog#SendCoinsDialog .QPushButton#sendButton:hover { /* Send Button hover */
+border:  1px solid #2E3191;
+    background-color:#0e1163;
+    font-size:18px;
+    padding:4px 6px;
+    color: #FFFFFF;
+    border-radius: 2px;
+}
+
+QDialog#SendCoinsDialog .QPushButton#sendButton:pressed { /* Send Button pressed */
+border:  1px solid #0e1163;
+    background-color:#0e1163;
+    font-size:18px;
+    padding:4px 6px;
+    color: #00B4B8;
+    border-radius: 2px;
+}
+
+
 
 QDialog#SendCoinsDialog .QPushButton#clearButton {
 	/* Clear Button */
@@ -1172,6 +1197,7 @@ outline: 0;
 }
 
 
+
 QStackedWidget#SendCoinsEntry .QToolButton#addressBookButton { /* Address Book Button */
 padding-left:10px;
 }
@@ -1192,6 +1218,163 @@ font-size:14px;
 font-weight:bold;
 color:#000000;
 }
+
+
+/* DEPOSIT COINS (EARN) PAGE */
+
+QDialog#DepositCoinsDialog .QFrame#frameCoinControl { /* Coin Control Section */
+color: #333333;
+}
+
+QDialog#DepositCoinsDialog .QFrame#frameCoinControl > .QLabel { /* Default Font Color and  Size */
+font-weight:normal;
+color: #333333;
+}
+
+QDialog#DepositCoinsDialog .QFrame#frameCoinControl .QPushButton#pushButtonCoinControl { /* Coin Control Inputs Button */
+padding-left:10px;
+padding-right:10px;
+min-height:25px;
+}
+
+QDialog#DepositCoinsDialog .QFrame#frameCoinControl .QLabel#labelCoinControlFeatures { /* Coin Control Header */
+color:#333333;
+font-weight:bold;
+font-size:14px;
+}
+
+QDialog#DepositCoinsDialog .QFrame#frameCoinControl .QWidget#widgetCoinControl { /* Coin Control Inputs */
+}
+
+QDialog#DepositCoinsDialog .QFrame#frameCoinControl .QWidget#widgetCoinControl > .QLabel { /* Coin Control Inputs Labels */
+padding:2px;
+color: #707070;
+}
+
+QDialog#DepositCoinsDialog .QFrame#frameCoinControl  { /* Custom Change Label */
+color: #707070;
+}
+
+
+QDialog#DepositCoinsDialog .QLabel#labelFeeHeadline{
+font-size: 14px;
+color: #2E3191;
+}
+
+QDialog#DepositCoinsDialog .QLabel#labelCoinControlAutomaticallySelected{
+color: #2E3191;
+font-size: 14px;
+}
+
+QDialog#DepositCoinsDialog .QLabel#labelMinFeeWarning{
+color: #2E3191;
+font-size: 14px;
+}
+
+QDialog#DepositCoinsDialog .QLabel#labelFeeMinimized{
+color: #707070;
+font-size: 14px;
+}
+
+QDialog#DepositCoinsDialog .QLabel#labelCustomPerKilobyte{
+color: #2E3191;
+font-size: 14px;
+}
+
+QDialog#DepositCoinsDialog .QLabel#labelSmartFee3{
+color: #2E3191;
+font-size: 14px;
+}
+
+QDialog#DepositCoinsDialog .QLabel#labelSmartFee2{
+color: #707070;
+font-size: 14px;
+}
+
+QDialog#DepositCoinsDialog .QLabel#labelSmartFee{
+color: #707070;
+font-size: 14px;
+}
+
+QDialog#DepositCoinsDialog .QLabel#labelFeeEstimation{
+color: #707070;
+font-size: 14px;
+}
+
+
+
+QDialog#DepositCoinsDialog .QFrame#frameCoinControl .QValidatedLineEdit#lineEditCoinControlChange { /* Custom Change Address */
+background-color: transparent;
+border-color: #45515D;
+color: #000000;
+font-size: 14px;
+font-weight: bold;
+}
+
+QDialog#DepositCoinsDialog .QFrame#frameCoinControl .QLabel#labelCoinControlChangeLabel { /* Custom Change Address Validation Label */
+font-weight:normal;
+qproperty-margin:-6;
+margin-right:112px;
+}
+
+QDialog#DepositCoinsDialog .QScrollArea#scrollArea .QWidget#scrollAreaWidgetContents { /* Send To Widget */
+background:transparent;
+}
+
+QDialog#DepositCoinsDialog .QPushButton#sendButton { /* Send Button */
+border:  1px solid #2E3191;
+    background-color:#2E3191;
+    font-size:18px;
+    padding:4px 6px;
+    color: #FFFFFF;
+    border-radius: 2px;
+}
+
+
+QDialog#DepositCoinsDialog .QPushButton#sendButton:hover { /* Send Button hover */
+border:  1px solid #2E3191;
+    background-color:#0e1163;
+    font-size:18px;
+    padding:4px 6px;
+    color: #FFFFFF;
+    border-radius: 2px;
+}
+
+QDialog#DepositCoinsDialog .QPushButton#sendButton:pressed { /* Send Button pressed */
+border:  1px solid #0e1163;
+    background-color:#0e1163;
+    font-size:18px;
+    padding:4px 6px;
+    color: #00B4B8;
+    border-radius: 2px;
+}
+
+
+
+QDialog#DepositCoinsDialog .QPushButton#clearButton {
+	/* Clear Button */
+
+}
+
+/* This QLabel uses name = "label" which conflicts with Address Book -> New Address */
+/* To maximize backwards compatibility this formatting has been removed */
+
+QDialog#DepositCoinsDialog QLabel#label {
+color:#000000;
+font-size: 16px;
+font-weight:bold;
+min-height:27px;
+}
+
+QDialog#DepositCoinsDialog QLabel#labelBalance {
+margin-left:0px;
+padding-left:0px;
+font-size:18px;
+font-weight:bold;
+color:#00B4B8;
+min-height:27px;
+}
+
 
 
 /* RECEIVE COINS */
@@ -1241,6 +1424,37 @@ QWidget#ReceiveCoinsDialog .QFrame#frame2 .QLabel#label_5 { /* Receive descripti
 color:#707070;
 font-size:16px;
 }
+
+
+QWidget#ReceiveCoinsDialog .QPushButton#receiveButton { /* receive Button */
+border:  1px solid #2E3191;
+    background-color:#2E3191;
+    font-size:18px;
+    padding:4px 6px;
+    color: #FFFFFF;
+    border-radius: 2px;
+}
+
+
+QWidget#ReceiveCoinsDialog .QPushButton#receiveButton:hover { /* receive Button hover */
+border:  1px solid #2E3191;
+    background-color:#0e1163;
+    font-size:18px;
+    padding:4px 6px;
+    color: #FFFFFF;
+    border-radius: 2px;
+}
+
+QWidget#ReceiveCoinsDialog .QPushButton#receiveButton:pressed { /* receive Button pressed */
+border:  1px solid #0e1163;
+    background-color:#0e1163;
+    font-size:18px;
+    padding:4px 6px;
+    color: #00B4B8;
+    border-radius: 2px;
+}
+
+
 
 
 
@@ -1598,13 +1812,3 @@ color: #BC8F3A;
 font-weight:bold;
 }
 
-QPushButton#exportButton {
-	background-color: #fff;
-	background-repeat: no-repeat;
-    background-size: 1000% 1000%;
- 	padding: 5px 5px;
-	letter-spacing: 1px;
-	border: 1px solid #bababa;
-	color: #2E3191;
-	font-size: 14px;
-}	
