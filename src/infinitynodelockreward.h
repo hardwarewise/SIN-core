@@ -299,6 +299,9 @@ public:
     //register LockReward by send tx
     bool AutoResigterLockReward(std::string sLR, std::string& strErrorRet);
 
+    //Check CheckLockRewardRegisterInfo
+    bool CheckLockRewardRegisterInfo(std::string sLR, std::string& strErrorRet);
+
     //remove unused data to avoid memory issue
 
     //Connection

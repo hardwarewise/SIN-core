@@ -1104,6 +1104,13 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
 
     scratch = secp256k1_scratch_space_create(secp256k1_context_musig, 1024 * 1024);
 
+    //message Musig
+    CHashWriter ssmsg(SER_GETHASH, PROTOCOL_VERSION);
+        ssmsg << gsigners.vin;
+        ssmsg << gsigners.nRewardHeight;
+    uint256 messageHash = ssmsg.GetHash();
+    memcpy(msg, messageHash.begin(), 32);
+
     //combine publicKeys
     if (!secp256k1_musig_pubkey_combine(secp256k1_context_musig, scratch, &combined_pk, pk_hash, pubkeys, N_SIGNERS)) {
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- Musig Combine PublicKey FAILED\n");
@@ -1418,6 +1425,13 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
 
             unsigned char msg[32] = {'a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a'};
 
+            //message Musig
+            CHashWriter ssmsg(SER_GETHASH, PROTOCOL_VERSION);
+            ssmsg << mapLockRewardGroupSigners[nHashGroupSigner].vin;
+            ssmsg << mapLockRewardGroupSigners[nHashGroupSigner].nRewardHeight;
+            uint256 messageHash = ssmsg.GetHash();
+            memcpy(msg, messageHash.begin(), 32);
+
             //initialize verifier session
             if (!secp256k1_musig_session_initialize_verifier(secp256k1_context_musig, &verifier_session, verifier_signer_data, msg,
                                             &combined_pk, pk_hash, commitmenthash, N_SIGNERS)) {
@@ -1475,7 +1489,8 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
             LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Musig Final Sign built for Reward Height: %d with group signer %s!!!\n",
                        mapLockRewardRequest[nHashLockRequest].nRewardHeight, mapLockRewardGroupSigners[nHashGroupSigner].signersId);
 
-            std::string sLockRewardMusig = strprintf("%d;%s;%s", mapLockRewardRequest[nHashLockRequest].nRewardHeight,
+            std::string sLockRewardMusig = strprintf("%d;%d;%s;%s", mapLockRewardRequest[nHashLockRequest].nRewardHeight,
+                                      mapLockRewardRequest[nHashLockRequest].nSINtype,
                                       EncodeBase58(final_sig.data, final_sig.data+64),
                                       mapLockRewardGroupSigners[nHashGroupSigner].signersId);
 
@@ -1483,9 +1498,11 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                                           sLockRewardMusig);
 
             std::string sErrorRegister = "";
-            if(!AutoResigterLockReward(sLockRewardMusig, sErrorRegister)){
-                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Register LockReward error: %s\n",
-                         sErrorRegister);
+            std::string sErrorCheck = "";
+
+            if(!CheckLockRewardRegisterInfo(sLockRewardMusig, sErrorCheck) && !AutoResigterLockReward(sLockRewardMusig, sErrorRegister)){
+                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Check error: %s, Register LockReward error: %s\n",
+                         sErrorCheck, sErrorRegister);
             } else {
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Register LockReward broadcasted!!!\n");
                 //memory the musig in map. No build for this anymore
@@ -1578,6 +1595,97 @@ bool CInfinityNodeLockReward::AutoResigterLockReward(std::string sLockReward, st
         strErrorRet = strprintf("Error: The transaction was rejected! Reason given: %s", FormatStateMessage(state));
         return false;
     }
+    return true;
+}
+/**
+ * STEP 7 : Check LockReward Musig - use in ConnectBlock
+ */
+bool CInfinityNodeLockReward::CheckLockRewardRegisterInfo(std::string sLockReward, std::string& strErrorRet)
+{
+    std::string s;
+    stringstream ss(sLockReward);
+
+    int i=0;
+    int nRewardHeight = 0;
+    int nSINtype = 0;
+    std::string signature = "";
+    int *signerIndexes;
+    size_t N_SIGNERS = (size_t)Params().GetConsensus().nInfinityNodeLockRewardSigners;
+    signerIndexes = (int*) malloc(Params().GetConsensus().nInfinityNodeLockRewardSigners * sizeof(int));
+
+    while (getline(ss, s,';')) {
+        if(i==0){nRewardHeight = atoi(s);}
+        if(i==1){nSINtype = atoi(s);}
+        if(i==2){signature = s;}
+        if(i>=3 && i < (Params().GetConsensus().nInfinityNodeLockRewardSigners + 2)){
+            signerIndexes[i-2] = atoi(s);
+        }
+        i++;
+    }
+
+    if(i > (Params().GetConsensus().nInfinityNodeLockRewardSigners + 2)){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Cannot read %d necessary informations from registerInfo\n",
+            (Params().GetConsensus().nInfinityNodeLockRewardSigners + 2));
+        return false;
+    }
+    std::vector<unsigned char> signdecode;
+    DecodeBase58(signature, signdecode);
+    if(signdecode.size() != 64){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Size of signature is incorrect.\n",
+            (Params().GetConsensus().nInfinityNodeLockRewardSigners + 2));
+        return false;
+    }
+
+    if(nRewardHeight <= Params().GetConsensus().nInfinityNodeGenesisStatement){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- reward height is incorrect.\n",
+            (Params().GetConsensus().nInfinityNodeLockRewardSigners + 2));
+        return false;
+    }
+
+    //step 7.1 identify candidate
+    CInfinitynode candidate;
+    if(!infnodeman.deterministicRewardAtHeight(nRewardHeight, nSINtype, candidate)){
+        strErrorRet = strprintf("Cannot find candidate for Height of LockRequest: %d and SINtype: %d\n", nRewardHeight, nSINtype);
+        return false;
+    }
+
+    //step 7.2 identify Topnode and signer publicKey
+    secp256k1_pubkey *pubkeys;
+    pubkeys = (secp256k1_pubkey*) malloc(Params().GetConsensus().nInfinityNodeLockRewardSigners * sizeof(secp256k1_pubkey));
+    int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType;
+
+    std::map<int, CInfinitynode> mapInfinityNodeRank = infnodeman.calculInfinityNodeRank(nRewardHeight, nSINtypeCanLockReward, false, true);
+    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Try connect to %d TopNode. Map rank: %d\n",
+              Params().GetConsensus().nInfinityNodeLockRewardTop, mapInfinityNodeRank.size());
+
+    for (std::pair<int, CInfinitynode> s : mapInfinityNodeRank){
+        if(s.first <= Params().GetConsensus().nInfinityNodeLockRewardTop){
+            CMetadata metaTopNode = infnodemeta.Find(s.second.getMetaID());
+            std::string connectionType = "";
+
+            if(metaTopNode.getMetadataHeight() == 0){
+                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Cannot find metadata of TopNode rank: %d, id: %s\n",
+                                 s.first, s.second.getBurntxOutPoint().ToStringShort());
+                continue;
+            }
+
+            for(int i=0; i < N_SIGNERS; i++){
+                if(s.first == signerIndexes[i]){
+                    std::string metaPublicKey = metaTopNode.getMetaPublicKey();
+                    std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
+                    CPubKey pubKey(tx_data.begin(), tx_data.end());
+                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Metadata of signer %d, Index: %d pubkeyId: %s\n",
+                                                 i , signerIndexes[i], pubKey.GetID().ToString());
+
+                    if (!secp256k1_ec_pubkey_parse(secp256k1_context_musig, &pubkeys[i], pubKey.data(), pubKey.size())) {
+                        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- cannot parse publicKey\n");
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+    //step 7.3 check signature
     return true;
 }
 /*
