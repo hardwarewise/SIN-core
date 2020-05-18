@@ -369,6 +369,11 @@ void OverviewPage::handleOutOfSyncWarningClicks()
 
 OverviewPage::~OverviewPage()
 {
+    // ++ Explorer Stats
+    if(m_timer) disconnect(m_timer, SIGNAL(timeout()), this, SLOT(privateSendStatus()));
+    delete m_networkManager;
+    // --
+
     delete ui;
 }
 

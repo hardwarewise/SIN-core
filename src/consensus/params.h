@@ -113,8 +113,6 @@ struct Params {
     const char *cMetadataAddressPubKey;
     const char *cNotifyAddress;
     const char *cNotifyAddressPubKey;
-    const char *cLockRewardAddress;
-    const char *cLockRewardAddressPubKey;
     const char *cGovernanceAddress;
     /**
      * Minimum blocks including miner confirmation of the total of 2016 blocks in a retargeting period,

@@ -1326,10 +1326,6 @@ void ThreadCheckInfinityNode(CConnman& connman)
                 mnodeman.CheckAndRemove(connman);
                 mnpayments.CheckAndRemove();
                 instantsend.CheckAndRemove();
-                if(fInfinityNode && infinitynodePeer.nState != INFINITYNODE_PEER_STARTED)
-                {
-                    infinitynodePeer.ManageState(connman);
-                }
             }
             if(fMasterNode && (nTick % (60 * 5) == 0)) {
                 mnodeman.DoFullVerificationStep(connman);
