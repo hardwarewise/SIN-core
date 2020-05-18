@@ -3147,6 +3147,7 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend, CTransac
     FeeCalculation feeCalc;
     CAmount nFeeNeeded;
     int nBytes;
+    bool fTimeLock = false;
     {
         std::set<CInputCoin> setCoins;
         LOCK2(cs_main, cs_wallet);
@@ -3258,6 +3259,17 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend, CTransac
                         return false;
                     }
                     txNew.vout.push_back(txout);
+
+                    //Tx has TimeLock
+                    if(!fTimeLock){
+                        std::vector<std::vector<unsigned char>> vSolutions;
+                        txnouttype whichType;
+                        const CScript& prevScript = recipient.scriptPubKey;
+                        Solver(prevScript, whichType, vSolutions);
+                        if(whichType == TX_CHECKLOCKTIMEVERIFY){
+                            fTimeLock = true;
+                        }
+                    }
                 }
 
                 // Choose coins to use
@@ -3475,7 +3487,7 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend, CTransac
                 nFeeRet = nFeeNeeded;
                 coin_selection_params.use_bnb = false;
                 continue;
-            }
+            }//end loop to select input
         }
 
         if (nChangePosInOut == -1) reservekey.ReturnKey(); // Return any reserved key if we don't have change
@@ -3493,7 +3505,18 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend, CTransac
         // to avoid conflicting with other possible uses of nSequence,
         // and in the spirit of "smallest possible change from prior
         // behavior."
-        const uint32_t nSequence = coin_control.m_signal_bip125_rbf.get_value_or(m_signal_rbf) ? MAX_BIP125_RBF_SEQUENCE : (CTxIn::SEQUENCE_FINAL - 1);
+
+        if(fTimeLock && coin_control.m_signal_bip125_rbf.get_value_or(m_signal_rbf))
+        {
+            strFailReason = _("TimeLock is not compatible with RBF");
+            return false;
+        }
+
+        uint32_t nSequence = coin_control.m_signal_bip125_rbf.get_value_or(m_signal_rbf) ? MAX_BIP125_RBF_SEQUENCE : (CTxIn::SEQUENCE_FINAL - 1);
+
+        //if Tx has TimeLock, force nSequence to NON FINAL
+        if(fTimeLock) nSequence = (uint32_t) (CTxIn::SEQUENCE_FINAL - 2);
+
         for (const auto& coin : selected_coins) {
             txNew.vin.push_back(CTxIn(coin.outpoint, CScript(), nSequence));
         }
