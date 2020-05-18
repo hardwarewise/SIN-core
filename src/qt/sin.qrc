@@ -162,6 +162,10 @@
      <file alias="nav-logo-sin">res/images/nav-logo-sin.png</file>
      <file alias="indeterminate">res/images/indeterminate.png</file>
      <file alias="close">res/images/close.png</file>
+     <file alias="stats-nodes-header">res/images/stats-nodes-header.png</file>
+     <file alias="stats-burncoins-header">res/images/stats-burncoins-header.png</file>
+     <file alias="stats-address-header">res/images/stats-address-header.png</file>
+     <file alias="stats-network-header">res/images/stats-network-header.png</file>
 
      </qresource>
      
