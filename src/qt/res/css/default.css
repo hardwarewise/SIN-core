@@ -34,6 +34,7 @@ QMenuBar {
 QMenuBar::item {
 	background-color: #2E3191;
 	color: #CCCCCC;
+	
 }
 QMenuBar::item:selected {
 	background-color: #2E3191;
@@ -1001,6 +1002,11 @@ padding-right:5px;
 
 /* SEND DIALOG */
 
+QDialog#SendCoinsDialog .QLabel#label_3 { /* Send Title Label */
+color:#2E3191;
+font-size:18px;
+}
+
 QDialog#SendCoinsDialog .QFrame#frameCoinControl { /* Coin Control Section */
 color: #333333;
 }
@@ -1221,6 +1227,12 @@ color:#000000;
 
 
 /* DEPOSIT COINS (EARN) PAGE */
+
+QDialog#DepositCoinsDialog .QLabel#label_3 { /* Deposit Title Label */
+color:#2E3191;
+font-size:18px;
+}
+
 
 QDialog#DepositCoinsDialog .QFrame#frameCoinControl { /* Coin Control Section */
 color: #333333;

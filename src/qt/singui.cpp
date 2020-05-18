@@ -623,7 +623,7 @@ void BitcoinGUI::createActions()
     connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
     connect(toggleHideAction, SIGNAL(triggered()), this, SLOT(toggleHidden()));
     connect(showHelpMessageAction, SIGNAL(triggered()), this, SLOT(showHelpMessageClicked()));
-    connect(openRPCConsoleAction, SIGNAL(triggered()), this, SLOT(showDebugWindow()));
+    connect(openRPCConsoleAction, SIGNAL(triggered()), this, SLOT(showDebugWindowActivateConsole()));
     connect(showSpecsHelpAction, SIGNAL(triggered()), this, SLOT(showSpecsHelpClicked()));
 
     // prevents an open debug window from becoming stuck/unusable on client shutdown
@@ -709,6 +709,7 @@ void BitcoinGUI::createMenuBar()
     QMenu *settings = appMenuBar->addMenu(tr("&Settings"));
     if(walletFrame)
     {
+        settings->addAction(openRPCConsoleAction);
         settings->addAction(encryptWalletAction);
         settings->addAction(changePassphraseAction);
 

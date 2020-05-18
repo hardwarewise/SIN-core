@@ -85,6 +85,7 @@ color: white;
 font-size: 28px;
 border: 1px  solid #2E3191;
 border-radius: 10px;
+padding: 5px 15px;
 </string>
             </property>
             <property name="text">
