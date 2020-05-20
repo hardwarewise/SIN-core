@@ -470,7 +470,7 @@ static UniValue getaddressesbyaccount(const JSONRPCRequest& request)
     return ret;
 }
 
-static CTransactionRef SendMoney(CWallet * const pwallet, const CTxDestination &address, CAmount nValue, bool fSubtractFeeFromAmount, const CCoinControl& coin_control, mapValue_t mapValue, std::string fromAccount, int termDepositLength, bool fUseInstantSend=false)
+static CTransactionRef SendMoney(CWallet * const pwallet, const CTxDestination &address, CAmount nValue, bool fSubtractFeeFromAmount, const CCoinControl& coin_control, mapValue_t mapValue, std::string fromAccount, int nBlockLocked, bool fUseInstantSend=false)
 {
     CAmount curBalance = pwallet->GetBalance();
 
@@ -478,9 +478,9 @@ static CTransactionRef SendMoney(CWallet * const pwallet, const CTxDestination &
     if (nValue <= 0)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid amount");
 
-    // Check termDepositLength, 0 means no term deposit
-    if (termDepositLength < 0)
-       throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid termDepositLength");
+    // Check nBlockLocked, 0 means no term deposit
+    if (nBlockLocked < 0)
+       throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid nBlockLocked");
 
     if (nValue > curBalance)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Insufficient funds");
@@ -490,16 +490,23 @@ static CTransactionRef SendMoney(CWallet * const pwallet, const CTxDestination &
     }
 
     // Parse Bitcoin address
+    std::string strError;
     CScript scriptPubKey;
-    if (termDepositLength == 0)
+    if (nBlockLocked == 0)
       scriptPubKey = GetScriptForDestination(address);
-    else
-      scriptPubKey = GetTimeLockScriptForDestination(address, chainActive.Height()+1+termDepositLength);
+    else{
+        CTxDestination destination = address;
+        const CKeyID *keyID = boost::get<CKeyID>(&destination);
+        if (!keyID) {
+            throw JSONRPCError(RPC_TYPE_ERROR, "Address does not refer to key");
+        }
+        scriptPubKey = GetTimeLockScriptForDestination(address, chainActive.Height()+1+nBlockLocked);
+    }
 
     // Create and send the transaction
     CReserveKey reservekey(pwallet);
     CAmount nFeeRequired;
-    std::string strError;
+
     std::vector<CRecipient> vecSend;
     int nChangePosRet = -1;
     CRecipient recipient = {scriptPubKey, nValue, fSubtractFeeFromAmount};
@@ -754,7 +761,7 @@ static UniValue sendtoaddress(const JSONRPCRequest& request)
     return tx->GetHash().GetHex();
 }
 
-static UniValue deposittoaddress(const JSONRPCRequest& request)
+static UniValue sendwithlockedtoaddress(const JSONRPCRequest& request)
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     CWallet* const pwallet = wallet.get();
@@ -770,7 +777,7 @@ static UniValue deposittoaddress(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 4 || request.params.size() > 7)
         throw std::runtime_error(
-            "deposittoaddress \"fromaccount\" \"SINaddress\" amount termdepositlength ( \"comment\" \"comment-to\" subtractfeefromamount )\n"
+            "sendwithlockedtoaddress \"fromaccount\" \"SINaddress\" amount nBlockLocked ( \"comment\" \"comment-to\" subtractfeefromamount )\n"
             "\nDeposit an amount to a given address for term length (blocks). The amount is a real and is rounded to the nearest 0.00000001\n"
             "\nBy default it will deposit coins from the default account.\n"
             + HelpRequiringPassphrase(pwallet) + "\n"
@@ -778,7 +785,7 @@ static UniValue deposittoaddress(const JSONRPCRequest& request)
             "1. \"fromaccount\"       (string, required) The name of the account to send funds from. May be the default account using \"\".\n"
             "2. \"SINaddress\"  (string, required) The SIN address to send to.\n"
             "3. \"amount\"      (numeric, required) The amount in HOdl to send. eg 0.1\n"
-            "4. \"termdepositlength\" (numeric, required) The number of blocks to lock the coins.\n"
+            "4. \"nBlockLocked\" (numeric, required) The number of blocks to lock the coins.\n"
             "5. \"comment\"     (string, optional) A comment used to store what the transaction is for. \n"
             "                             This is not part of the transaction, just kept in your wallet.\n"
             "6. \"comment-to\"  (string, optional) A comment to store the name of the person or organization \n"
@@ -789,10 +796,10 @@ static UniValue deposittoaddress(const JSONRPCRequest& request)
             "\nResult:\n"
             "\"transactionid\"  (string) The transaction id.\n"
             "\nExamples:\n"
-            + HelpExampleCli("deposittoaddress", " \"\" \"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 10848")
-            + HelpExampleCli("deposittoaddress", " \"\" \"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 10848 \"donation\" \"seans outpost\"")
-            + HelpExampleCli("deposittoaddress", " \"\" \"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 264000 \"\" \"\" true")
-            + HelpExampleRpc("deposittoaddress", " \"\" \"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\", 0.1, 264000 , \"donation\", \"seans outpost\"")
+            + HelpExampleCli("sendwithlockedtoaddress", " \"\" \"SV74ZZ937YqRGQjYR5WaAYyyDXqjakFMfA\" 0.1 10848")
+            + HelpExampleCli("sendwithlockedtoaddress", " \"\" \"SV74ZZ937YqRGQjYR5WaAYyyDXqjakFMfA\" 0.1 10848 \"donation\" \"seans outpost\"")
+            + HelpExampleCli("sendwithlockedtoaddress", " \"\" \"SV74ZZ937YqRGQjYR5WaAYyyDXqjakFMfA\" 0.1 264000 \"\" \"\" true")
+            + HelpExampleRpc("sendwithlockedtoaddress", " \"\" \"SV74ZZ937YqRGQjYR5WaAYyyDXqjakFMfA\", 0.1, 264000 , \"donation\", \"seans outpost\"")
         );
 
     LOCK2(cs_main, pwallet->cs_wallet);
@@ -806,10 +813,10 @@ static UniValue deposittoaddress(const JSONRPCRequest& request)
     CAmount nAmount = AmountFromValue(request.params[2]);
 
     // Term Deposit
-    int termDepositLength;
-    termDepositLength = request.params[3].get_int();
-    LogPrintf("termdep: %d\n", termDepositLength);
-    if (termDepositLength <= Params().MaxReorganizationDepth() + 1)
+    int nBlockLocked;
+    nBlockLocked = atoi(request.params[3].get_str());
+
+    if (nBlockLocked <= Params().MaxReorganizationDepth() + 1)
        throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid lock time (inf 55 blocks)");
 
     // Wallet comments
@@ -821,8 +828,9 @@ static UniValue deposittoaddress(const JSONRPCRequest& request)
 
     EnsureWalletIsUnlocked(pwallet);
 
-    CCoinControl no_coin_control; // This is a deprecated API
-    CTransactionRef tx = SendMoney(pwallet, address, nAmount, false, no_coin_control, std::move(mapValue), std::move(strAccount), termDepositLength);
+    CCoinControl coin_control; // This is a deprecated API
+    coin_control.m_feerate = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE * 2);//make sure that fee is valid for tx
+    CTransactionRef tx = SendMoney(pwallet, address, nAmount, false, coin_control, std::move(mapValue), std::move(strAccount), nBlockLocked);
     return tx->GetHash().GetHex();
 }
 
@@ -865,7 +873,7 @@ static UniValue listnotification(const JSONRPCRequest& request)
     return ret;
 }
 
-static UniValue listtermdeposits(const JSONRPCRequest& request)
+static UniValue listlockedcoins(const JSONRPCRequest& request)
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     CWallet* const pwallet = wallet.get();
@@ -881,15 +889,15 @@ static UniValue listtermdeposits(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
-            "listtermdeposits \"fromaccount\" \n"
+            "listlockedcoins \"fromaccount\" \n"
             + HelpRequiringPassphrase(pwallet) + "\n"
             "\nArguments:\n"
             "1. \"fromaccount\"       (string, required) The name of the account to list term deposits from. May be the default account using \"\" use \"*\" for all.\n"
             "Result:\n"
             "\"term deposits \"  (string array)\n"
             "\nExamples:\n"
-            + HelpExampleCli("listtermdeposits", " \"*\"")
-            + HelpExampleRpc("listtermdeposits", " \"gary\"")
+            + HelpExampleCli("listlockedcoins", " \"*\"")
+            + HelpExampleRpc("listlockedcoins", " \"gary\"")
         );
 
     LOCK2(cs_main, pwallet->cs_wallet);
@@ -5437,7 +5445,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "listlockunspent",                  &listlockunspent,               {} },
     { "wallet",             "listreceivedbyaddress",            &listreceivedbyaddress,         {"minconf","include_empty","include_watchonly","address_filter"} },
     { "wallet",             "listsinceblock",                   &listsinceblock,                {"blockhash","target_confirmations","include_watchonly","include_removed"} },
-    { "wallet",             "listtermdeposits",                 &listtermdeposits,              {} },
+    { "wallet",             "listlockedcoins",                  &listlockedcoins,               {} },
     { "wallet",             "listtransactions",                 &listtransactions,              {"account|label|dummy","count","skip","include_watchonly"} },
     { "wallet",             "listunspent",                      &listunspent,                   {"minconf","maxconf","addresses","include_unsafe","query_options"} },
     { "wallet",             "listwallets",                      &listwallets,                   {} },
@@ -5445,7 +5453,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "lockunspent",                      &lockunspent,                   {"unlock","transactions"} },
     { "wallet",             "sendmany",                         &sendmany,                      {"fromaccount|dummy","amounts","minconf","comment","subtractfeefrom","replaceable","conf_target","estimate_mode"} },
     { "wallet",             "sendtoaddress",                    &sendtoaddress,                 {"address","amount","comment","comment_to","subtractfeefromamount","replaceable","conf_target","estimate_mode"} },
-    { "wallet",             "deposittoaddress",                 &deposittoaddress,              {"fromaccount|dummy","address","amount","termdepositlength","comment","comment_to","subtractfeefrom"} },
+    { "wallet",             "sendwithlockedtoaddress",          &sendwithlockedtoaddress,       {"fromaccount|dummy","address","amount","nBlockLocked","comment","comment_to","subtractfeefrom"} },
     { "wallet",             "settxfee",                         &settxfee,                      {"amount"} },
     { "wallet",             "signmessage",                      &signmessage,                   {"address","message"} },
     { "wallet",             "signrawtransactionwithwallet",     &signrawtransactionwithwallet,  {"hexstring","prevtxs","sighashtype"} },
