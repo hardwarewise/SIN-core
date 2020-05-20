@@ -28,10 +28,13 @@
         <item>
          <widget class="QLabel" name="label_3">
           <property name="text">
-           <string>SINANCE</string>
+           <string>LOCK YOUR SIN COINS TO EARN PASSIVE INCOME</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
           <property name="indent">
-           <number>5</number>
+           <number>-1</number>
           </property>
          </widget>
         </item>

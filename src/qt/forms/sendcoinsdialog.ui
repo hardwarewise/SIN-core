@@ -26,6 +26,16 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Send SIN Coins</string>
+          </property>
+          <property name="indent">
+           <number>20</number>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QScrollArea" name="scrollArea">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
@@ -48,7 +58,7 @@
              <x>0</x>
              <y>0</y>
              <width>498</width>
-             <height>460</height>
+             <height>440</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0">

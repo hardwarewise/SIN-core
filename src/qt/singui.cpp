@@ -72,6 +72,8 @@
 #include <QToolBar>
 #include <QVBoxLayout>
 #include <QFontDatabase>
+#include <QPushButton>
+#include <QToolTip>
 
 
 #if QT_VERSION < 0x050000
@@ -168,6 +170,62 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
 
     // Create status bar
     statusBar();
+
+    
+    //// Set widget topBar on the top right corner ////
+    
+    QWidget *topBar = new QWidget;
+    QPushButton *topConsoleButton = new QPushButton();
+    QPushButton *topOptionButton = new QPushButton();
+    QPushButton *topAddressButton = new QPushButton();
+    QPushButton *topFaqButton = new QPushButton();
+    
+
+    QHBoxLayout *topBarLayout = new QHBoxLayout;
+    
+    topBarLayout->addWidget(topConsoleButton);
+    topBarLayout->addWidget(topOptionButton);
+    topBarLayout->addWidget(topAddressButton);
+    topBarLayout->addWidget(topFaqButton);
+    
+
+    topConsoleButton->setIcon(QIcon(":/icons/debugwindow"));
+    topConsoleButton->setIconSize(QSize(20, 20));
+    topConsoleButton->setToolTip( "Open Console"  );
+    topConsoleButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
+
+
+
+    topOptionButton->setIcon(QIcon(":/icons/options"));
+    topOptionButton->setIconSize(QSize(20, 20));
+    topOptionButton->setToolTip( "Open Options Window"  );
+    topOptionButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
+
+    topAddressButton->setIcon(QIcon(":/icons/address-book"));
+    topAddressButton->setIconSize(QSize(20, 20));
+    topAddressButton->setToolTip( "Open Address Book"  );
+    topAddressButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
+
+    topFaqButton->setIcon(QIcon(":/icons/faq"));
+    topFaqButton->setIconSize(QSize(20, 20));
+    topFaqButton->setToolTip( "Open FAQ Window"  );
+    topFaqButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
+
+    topBar->setLayout(topBarLayout);
+    appMenuBar->setCornerWidget(topBar, Qt::TopRightCorner);
+
+
+    connect(topConsoleButton, SIGNAL (released()), this, SLOT (showDebugWindowActivateConsole()));
+    connect(topOptionButton, SIGNAL(released()), this, SLOT(optionsClicked()));
+    connect(topAddressButton, SIGNAL(released()), walletFrame, SLOT(usedSendingAddresses()));
+
+
+    //// topBar end ////
+
+    
+
+    
+
 
  // Social Media icons
     QFrame* frameSocial = new QFrame();
