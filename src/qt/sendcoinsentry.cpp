@@ -112,6 +112,8 @@ void SendCoinsEntry::clear()
         ui->lockperiod->hide();
         ui->locklength->hide();
     } else {
+    	ui->useAvailableBalanceButton->hide();
+        ui->checkboxSubtractFeeFromAmount->hide();
         ui->payToLabel->setText("Deposit Address:");
     }
 
