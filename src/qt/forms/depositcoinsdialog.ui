@@ -28,7 +28,7 @@
         <item>
          <widget class="QLabel" name="label_3">
           <property name="text">
-           <string>LOCK YOUR SIN COINS TO EARN PASSIVE INCOME</string>
+           <string>HCO-Hodl Coin Offering. Lock SIN to EARN.</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -163,7 +163,7 @@
              <string>Clear &amp;All</string>
             </property>
             <property name="icon">
-             <iconset resource="../sin.qrc">
+             <iconset>
               <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
             </property>
             <property name="autoDefault">
@@ -180,7 +180,7 @@
              <string>Add &amp;Recipient</string>
             </property>
             <property name="icon">
-             <iconset resource="../sin.qrc">
+             <iconset>
               <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
             </property>
             <property name="autoDefault">
