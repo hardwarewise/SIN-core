@@ -38,6 +38,9 @@ DepositCoinsDialog::DepositCoinsDialog(const PlatformStyle *_platformStyle, QWid
 {
     ui->setupUi(this);
 
+    ui->addButton->hide();
+    ui->clearButton->hide();
+
     if (!_platformStyle->getImagesOnButtons()) {
         ui->sendButton->setIcon(QIcon());
     } else {
