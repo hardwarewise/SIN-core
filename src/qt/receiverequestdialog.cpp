@@ -139,7 +139,7 @@ void ReceiveRequestDialog::update()
     html += "<html><font face='verdana, arial, helvetica, sans-serif'>";
     html += "<h1 style='font-weight:normal; text-align:center;user-select:none;-webkit-user-select: none;'>" + tr("Payment information") + "</h1><br>";
     html += "<b>"+tr("URI")+"</b>: ";
-    html += "<a style=\"color:#FF8204;\" href=\"" + uri + "\">" + GUIUtil::HtmlEscape(uri) + "</a><br><br>";
+    html += "<a style=\"color:#2E3191;\" href=\"" + uri + "\">" + GUIUtil::HtmlEscape(uri) + "</a><br><br>";
     html += "<b>"+tr("Address")+"</b>: " + GUIUtil::HtmlEscape(info.address) + "<br>";
     if(info.amount)
         html += "<b>"+tr("Amount")+"</b>: " + BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), info.amount) + "<br>";
@@ -152,6 +152,7 @@ void ReceiveRequestDialog::update()
     }
     html += "<b>"+tr("InstantSend")+"</b>: " + (info.fUseInstantSend ? tr("Yes") : tr("No")) + "<br>";
     ui->outUri->setText(html);
+    
 
 #ifdef USE_QRCODE
     ui->lblQRCode->setText("");

@@ -112,6 +112,23 @@ typedef struct {
     unsigned char data[32];
 } secp256k1_musig_partial_signature;
 
+/**
+ * Computes nonce_commitment from public key
+ *
+ * Return: 1 if nonce_commitment were successfully
+ * Args:          ctx: pointer to a context object initialized for verification
+ *                    (cannot be NULL)
+ * Out:
+ * nonce_commitment32: filled with a 32-byte commitment to the generated nonce
+ *                     (cannot be NULL)
+ *  In:        pubkey: the combined public key of all signers (cannot be NULL)
+ */
+SECP256K1_API int secp256k1_pubkey_to_commitment(
+    const secp256k1_context* ctx,
+    unsigned char *nonce_commitment32,
+    const secp256k1_pubkey *pubkey
+) SECP256K1_ARG_NONNULL(1) SECP256K1_ARG_NONNULL(3);
+
 /** Computes a combined public key and the hash of the given public keys
  *
  *  Returns: 1 if the public keys were successfully combined, 0 otherwise
@@ -175,6 +192,48 @@ SECP256K1_API int secp256k1_musig_session_initialize(
     size_t my_index,
     const unsigned char *seckey
 ) SECP256K1_ARG_NONNULL(1) SECP256K1_ARG_NONNULL(2) SECP256K1_ARG_NONNULL(3) SECP256K1_ARG_NONNULL(4) SECP256K1_ARG_NONNULL(5) SECP256K1_ARG_NONNULL(7) SECP256K1_ARG_NONNULL(8) SECP256K1_ARG_NONNULL(11);
+
+/** Initializes a signing session for a signer use in SINOVATE network
+ *
+ *  Returns: 1: session is successfully initialized
+ *           0: session could not be initialized: secret key or secret nonce overflow
+ *  Args:         ctx: pointer to a context object, initialized for signing (cannot
+ *                     be NULL)
+ *  Out:      session: the session structure to initialize (cannot be NULL)
+ *            signers: an array of signers' data to be initialized. Array length must
+ *                     equal to `n_signers` (cannot be NULL)
+ * nonce_commitment32: filled with a 32-byte commitment to the generated nonce
+ *                     (cannot be NULL)
+ *  In:  session_id32: a *unique* 32-byte ID to assign to this session (cannot be
+ *                     NULL). If a non-unique session_id32 was given then a partial
+ *                     signature will LEAK THE SECRET KEY.
+ *              msg32: the 32-byte message to be signed. Shouldn't be NULL unless you
+ *                     require sharing nonce commitments before the message is known
+ *                     because it reduces nonce misuse resistance. If NULL, must be
+ *                     set with `musig_session_get_public_nonce`.
+ *        combined_pk: the combined public key of all signers (cannot be NULL)
+ *          pk_hash32: the 32-byte hash of the signers' individual keys (cannot be
+ *                     NULL)
+ *          n_signers: length of signers array. Number of signers participating in
+ *                     the MuSig. Must be greater than 0 and at most 2^32 - 1.
+ *           my_index: index of this signer in the signers array
+ *             seckey: the signer's 32-byte secret key (cannot be NULL)
+ *           secnonce: the signer's 32-byte secret key (cannot be NULL)
+ */
+SECP256K1_API int secp256k1_musig_session_initialize_sin(
+    const secp256k1_context* ctx,
+    secp256k1_musig_session *session,
+    secp256k1_musig_session_signer_data *signers,
+    unsigned char *nonce_commitment32,
+    const unsigned char *session_id32,
+    const unsigned char *msg32,
+    const secp256k1_pubkey *combined_pk,
+    const unsigned char *pk_hash32,
+    size_t n_signers,
+    size_t my_index,
+    const unsigned char *seckey,
+    const unsigned char *secnonce
+) SECP256K1_ARG_NONNULL(1) SECP256K1_ARG_NONNULL(2) SECP256K1_ARG_NONNULL(3) SECP256K1_ARG_NONNULL(4) SECP256K1_ARG_NONNULL(5) SECP256K1_ARG_NONNULL(7) SECP256K1_ARG_NONNULL(8) SECP256K1_ARG_NONNULL(11) SECP256K1_ARG_NONNULL(12);
 
 /** Gets the signer's public nonce given a list of all signers' data with commitments
  *

@@ -39,10 +39,12 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     /* Main elements init */
     ui->databaseCache->setMinimum(nMinDbCache);
     ui->databaseCache->setMaximum(nMaxDbCache);
+    ui->databaseCache->setSuffix(" MB");
     static const uint64_t GiB = 1024 * 1024 * 1024;
     static const uint64_t nMinDiskSpace = MIN_DISK_SPACE_FOR_BLOCK_FILES / GiB +
                           (MIN_DISK_SPACE_FOR_BLOCK_FILES % GiB) ? 1 : 0;
     ui->pruneSize->setMinimum(nMinDiskSpace);
+    ui->pruneSize->setSuffix(" GB");
     ui->threadsScriptVerif->setMinimum(-GetNumCores());
     ui->threadsScriptVerif->setMaximum(MAX_SCRIPTCHECK_THREADS);
     ui->pruneWarning->setVisible(false);
@@ -170,9 +172,7 @@ void OptionsDialog::setModel(OptionsModel *_model)
     // Dash
     connect(ui->showMasternodesTab, SIGNAL(clicked(bool)), this, SLOT(showRestartWarning()));
     //
-    // InstaSwap
-    connect(ui->showInstaSwapTab, SIGNAL(clicked(bool)), this, SLOT(showRestartWarning()));
-    //
+    
     connect(ui->spendZeroConfChange, SIGNAL(clicked(bool)), this, SLOT(showRestartWarning()));
     /* Network */
     connect(ui->allowIncoming, SIGNAL(clicked(bool)), this, SLOT(showRestartWarning()));
@@ -197,9 +197,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->coinControlFeatures, OptionsModel::CoinControlFeatures);
     // Dash
     mapper->addMapping(ui->showMasternodesTab, OptionsModel::ShowMasternodesTab);
-    //mapper->addMapping(ui->spendZeroConfChange, OptionsModel::SpendZeroConfChange);
-    // InstaSwap
-    mapper->addMapping(ui->showInstaSwapTab, OptionsModel::ShowInstaSwapTab);
+    
     mapper->addMapping(ui->spendZeroConfChange, OptionsModel::SpendZeroConfChange);
 
 

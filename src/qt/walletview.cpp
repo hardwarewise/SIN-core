@@ -22,6 +22,7 @@
 #include <qt/transactiontablemodel.h>
 #include <qt/transactionview.h>
 #include <qt/walletmodel.h>
+#include "statspage.h"
 
 #include <interfaces/node.h>
 #include <ui_interface.h>
@@ -51,6 +52,7 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     transactionView = new TransactionView(platformStyle, this);
     vbox->addWidget(transactionView);
     QPushButton *exportButton = new QPushButton(tr("&Export"), this);
+    exportButton->setObjectName("exportButton"); // Label ID as CSS-reference
     exportButton->setToolTip(tr("Export the data in the current tab to a file"));
     if (platformStyle->getImagesOnButtons()) {
         exportButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
@@ -70,7 +72,7 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     transactionSum->setTextInteractionFlags(Qt::TextSelectableByMouse);
     hbox_buttons->addWidget(transactionSum);
 
-
+    
     hbox_buttons->addWidget(exportButton);
     vbox->addLayout(hbox_buttons);
     transactionsPage->setLayout(vbox);
@@ -88,6 +90,7 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     addWidget(sendCoinsPage);
     addWidget(depositCoinsPage);
 
+
     // Dash
     QSettings settings;
     if (settings.value("fShowMasternodesTab").toBool()) {
@@ -99,6 +102,11 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     // Instaswap
     instaswapListPage = new InstaSwap(platformStyle);
     addWidget(instaswapListPage);
+    //
+
+    //StatsPage
+    statsWindow = new StatsPage(platformStyle);
+    addWidget(statsWindow);
     //
 
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
@@ -186,6 +194,7 @@ void WalletView::setWalletModel(WalletModel *_walletModel)
     instaswapListPage->setWalletModel(walletModel);
     //
 
+     
     receiveCoinsPage->setModel(_walletModel);
     sendCoinsPage->setModel(_walletModel);
     depositCoinsPage->setModel(_walletModel);
@@ -261,6 +270,14 @@ void WalletView::gotoMasternodePage()
 void WalletView::gotoInstaswapPage()
 {
     setCurrentWidget(instaswapListPage);
+}
+//
+
+
+// StatsPage
+void WalletView::gotoStatsPage()
+{
+    setCurrentWidget(statsWindow);
 }
 //
 

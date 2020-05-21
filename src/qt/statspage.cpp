@@ -1,0 +1,127 @@
+#include "statspage.h"
+#include "forms/ui_statspage.h"
+#include <qt/platformstyle.h>
+
+#include <QTimer>
+#include <QUrl>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+
+
+StatsPage::StatsPage(const PlatformStyle* platformStyle, QWidget *parent) :
+    QWidget(parent),
+    m_timer(nullptr),
+    m_ui(new Ui::StatsPage),
+    m_networkManager(new QNetworkAccessManager(this)),
+    m_platformStyle(platformStyle)
+{
+    m_ui->setupUi(this);
+
+ 	m_timer = new QTimer(this);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(getStatistics()));
+    m_timer->start(30000);
+    connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onResult(QNetworkReply*)));
+    getStatistics();
+}
+
+StatsPage::~StatsPage()
+{
+    if(m_timer) disconnect(m_timer, SIGNAL(timeout()), this, SLOT(privateSendStatus()));
+    delete m_ui;
+    delete m_networkManager;
+}
+
+void StatsPage::getStatistics()
+{
+    QUrl summaryUrl("https://explorer.sinovate.io/ext/summary");
+    QNetworkRequest request;
+    request.setUrl(summaryUrl);
+    m_networkManager->get(request);
+}
+
+void StatsPage::onResult(QNetworkReply* reply)
+{
+    QVariant statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+
+    if( statusCode == 200)
+    {
+        QString replyString = (QString) reply->readAll();
+
+        QJsonDocument jsonResponse = QJsonDocument::fromJson(replyString.toUtf8());
+        QJsonObject jsonObject = jsonResponse.object();
+
+        QJsonObject dataObject = jsonObject.value("data").toArray()[0].toObject();
+
+        QLocale l = QLocale(QLocale::English);
+        // Set NETWORK strings
+        QString heightValue(tr("[E] %1 / [D] %2 / [P] %3").arg(dataObject.value("explorerHeight").toVariant().toString(), dataObject.value("blockcount").toVariant().toString(), dataObject.value("poolHeight").toVariant().toString()));
+        QString knownHashrateString = QString::number(dataObject.value("known_hashrate").toDouble()/1000000000, 'f', 2);
+        QString hashrateString = knownHashrateString + "/" + dataObject.value("hashrate").toVariant().toString();
+        m_ui->hashrateValueLabel->setText(hashrateString);
+        m_ui->difficultyValueLabel->setText(dataObject.value("difficulty").toVariant().toString());
+        m_ui->lastPriceValueLabel->setText(QString::number(dataObject.value("lastPrice").toDouble(), 'f', 8));
+        m_ui->heightValueLabel->setText(heightValue);
+
+          
+        // Set ADDRESS STATS strings
+        int top10 = dataObject.value("explorerTop10").toDouble();
+        int top50 = dataObject.value("explorerTop50").toDouble();
+        m_ui->addressesValueLabel->setText(dataObject.value("explorerAddresses").toVariant().toString());
+        m_ui->activeValueLabel->setText(dataObject.value("explorerActiveAddresses").toVariant().toString());
+        m_ui->top10ValueLabel->setText(l.toString(top10));
+        m_ui->top50ValueLabel->setText(l.toString(top50));
+
+        // Set BURNT COIN STATS strings
+        int supplyNumber = dataObject.value("supply").toDouble() - dataObject.value("burnFee").toDouble();
+        int feeNumber = dataObject.value("burnFee").toDouble() - dataObject.value("burnNode").toDouble();
+        int burntNumber = dataObject.value("burnFee").toDouble();
+
+        m_ui->feeValueLabel->setText(l.toString(feeNumber));
+        m_ui->nodesValueLabel->setText(l.toString(dataObject.value("burnNode").toInt()));
+        m_ui->totalBurntValueLabel->setText(l.toString(burntNumber));
+        m_ui->totalSupplyValueLabel->setText(l.toString(supplyNumber));
+
+        // Set INFINITY NODE STATS strings
+        int bigRoiDays = 1000000/((720/dataObject.value("inf_online_big").toDouble())*1752);
+        int midRoiDays = 500000/((720/dataObject.value("inf_online_mid").toDouble())*838);
+        int lilRoiDays = 100000/((720/dataObject.value("inf_online_lil").toDouble())*160);
+
+        QString bigROIString = "ROI: " + QString::number(bigRoiDays) + " days" ;
+        QString midROIString = "ROI: " + QString::number(midRoiDays) + " days";
+        QString lilROIString = "ROI: " + QString::number(lilRoiDays) + " days";
+        QString totalNodesString = QString::number(dataObject.value("inf_online_big").toInt() + dataObject.value("inf_online_mid").toInt() + dataObject.value("inf_online_lil").toInt()) + " nodes";
+    
+        QString bigString = dataObject.value("inf_burnt_big").toVariant().toString() + "/" + dataObject.value("inf_online_big").toVariant().toString() + "/" + bigROIString;
+        QString midString = dataObject.value("inf_burnt_mid").toVariant().toString() + "/" + dataObject.value("inf_online_mid").toVariant().toString() + "/" + midROIString;
+        QString lilString = dataObject.value("inf_burnt_lil").toVariant().toString() + "/" + dataObject.value("inf_online_lil").toVariant().toString() + "/"  + lilROIString;
+        m_ui->bigValueLabel->setText(bigString);
+        m_ui->midValueLabel->setText(midString);
+        m_ui->lilValueLabel->setText(lilString);
+        m_ui->totalValueLabel->setText(totalNodesString);
+    }
+    else
+    {
+        const QString noValue = "NaN";
+        m_ui->hashrateValueLabel->setText(noValue);
+        m_ui->difficultyValueLabel->setText(noValue);
+        m_ui->lastPriceValueLabel->setText(noValue);
+        m_ui->heightValueLabel->setText(noValue);
+
+        m_ui->addressesValueLabel->setText(noValue);
+        m_ui->activeValueLabel->setText(noValue);
+        m_ui->top10ValueLabel->setText(noValue);
+        m_ui->top50ValueLabel->setText(noValue);
+
+        m_ui->feeValueLabel->setText(noValue);
+        m_ui->nodesValueLabel->setText(noValue);
+        m_ui->totalBurntValueLabel->setText(noValue);
+        m_ui->totalSupplyValueLabel->setText(noValue);
+
+        m_ui->bigValueLabel->setText(noValue);
+        m_ui->midValueLabel->setText(noValue);
+        m_ui->lilValueLabel->setText(noValue);
+        m_ui->totalValueLabel->setText(noValue);
+    }
+    reply->deleteLater();
+}

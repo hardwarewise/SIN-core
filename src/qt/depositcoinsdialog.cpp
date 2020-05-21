@@ -67,7 +67,7 @@ DepositCoinsDialog::DepositCoinsDialog(const PlatformStyle *_platformStyle, QWid
     } else {
         ui->addButton->setIcon(_platformStyle->SingleColorIcon(":/icons/add"));
         ui->clearButton->setIcon(_platformStyle->SingleColorIcon(":/icons/remove"));
-        ui->sendButton->setIcon(_platformStyle->SingleColorIcon(":/icons/send"));
+        ui->sendButton->setIcon(_platformStyle->SingleColorIcon(":/icons/deposit"));
     }
 
     GUIUtil::setupAddressWidget(ui->lineEditCoinControlChange, this);

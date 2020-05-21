@@ -397,7 +397,7 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
         return QString::fromStdString(wtx->address) + watchAddress;
     case TransactionRecord::SendToSelf:
     default:
-        return tr("(n/a)") + watchAddress;
+        return tr("(Payment to yourself)") + watchAddress;
     }
 }
 

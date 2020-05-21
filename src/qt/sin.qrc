@@ -2,7 +2,7 @@
     <qresource prefix="/icons">
         <file alias="sin">res/icons/sin.png</file>
 		<file alias="masternodes">res/icons/masternodes.png</file>
-        <file alias="address-book">res/icons/address-book.png</file>
+        <file alias="address-book">res/icons/address-book.svg</file>
         <file alias="quit">res/icons/quit.png</file>
         <file alias="send">res/icons/send.png</file>
 		<file alias="send1">res/icons/send1.png</file>
@@ -24,7 +24,7 @@
         <file alias="eye">res/icons/eye.png</file>
         <file alias="eye_minus">res/icons/eye_minus.png</file>
         <file alias="eye_plus">res/icons/eye_plus.png</file>
-        <file alias="options">res/icons/configure.png</file>
+        <file alias="options">res/icons/configure.svg</file>
         <file alias="receiving_addresses">res/icons/receive.png</file>
 		<file alias="receiving_addresses1">res/icons/receive1.png</file>
         <file alias="editpaste">res/icons/editpaste.png</file>
@@ -51,7 +51,7 @@
         <file alias="lock_open1">res/icons/lock_open1.png</file>
         <file alias="key">res/icons/key.png</file>
         <file alias="filesave">res/icons/filesave.png</file>
-        <file alias="debugwindow">res/icons/debugwindow.png</file>
+        <file alias="debugwindow">res/icons/debugwindow.svg</file>
         <file alias="open">res/icons/open.png</file>
         <file alias="info">res/icons/info.png</file>
         <file alias="about_qt">res/icons/about_qt.png</file>
@@ -99,6 +99,8 @@
         <file alias="qbtc">res/icons/qbtc.png</file>
         <file alias="instaswap">res/icons/instaswap.png</file>
         <file alias="instaswap1">res/icons/instaswap1.png</file>
+        <file alias="stats">res/icons/stats.png</file>
+        <file alias="faq">res/icons/faq.svg</file>
 
     </qresource>
     <qresource prefix="/movies">
@@ -158,7 +160,17 @@
      <file alias="about">res/images/about.png</file>
      <file alias="radio_unchecked">res/images/unchecked_radio.png</file>
      <file alias="radio_checked">res/images/checked_radio.png</file>
+     <file alias="nav-logo-sin">res/images/nav-logo-sin.png</file>
+     <file alias="indeterminate">res/images/indeterminate.png</file>
+     <file alias="close">res/images/close.png</file>
+     <file alias="stats-nodes-header">res/images/stats-nodes-header.svg</file>
+     <file alias="stats-burncoins-header">res/images/stats-burncoins-header.svg</file>
+     <file alias="stats-address-header">res/images/stats-address-header.svg</file>
+     <file alias="stats-network-header">res/images/stats-network-header.svg</file>
+     <file alias="stats-top-header">res/images/stats-top-header.svg</file>
+
      </qresource>
+     
    <qresource prefix="/fonts">
        <file alias="Hind-Bold">res/fonts/Hind-Bold.ttf</file>
        <file alias="Hind-Light">res/fonts/Hind-Light.ttf</file>
@@ -166,5 +178,6 @@
        <file alias="Hind-Regular">res/fonts/Hind-Regular.ttf</file>
        <file alias="Hind-SemiBold">res/fonts/Hind-SemiBold.ttf</file>
        <file alias="Montserrat-Bold">res/fonts/Montserrat-Bold.ttf</file>
+       
    </qresource>
 </RCC>

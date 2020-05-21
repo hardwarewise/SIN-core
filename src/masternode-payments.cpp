@@ -55,18 +55,18 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
             // NOTE: make sure SPORK_13_OLD_SUPERBLOCK_FLAG is disabled when 12.1 starts to go live
             if(masternodeSync.IsSynced() && !sporkManager.IsSporkActive(SPORK_13_OLD_SUPERBLOCK_FLAG)) {
                 // no budget blocks should be accepted here, if SPORK_13_OLD_SUPERBLOCK_FLAG is disabled
-                LogPrint(BCLog::GOBJECT, "IsBlockValueValid -- Client synced but budget spork is disabled, checking block value against block reward\n");
+                LogPrintf("IsBlockValueValid -- Client synced but budget spork is disabled, checking block value against block reward\n");
                 if(!isBlockRewardValueMet) {
                     strErrorRet = strprintf("coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded block reward, budgets are disabled",
                                             nBlockHeight, block.vtx[0]->GetValueOut(), blockReward);
                 }
                 return isBlockRewardValueMet;
             }
-            LogPrint(BCLog::GOBJECT, "IsBlockValueValid -- WARNING: Skipping budget block value checks, accepting block\n");
+            LogPrintf("IsBlockValueValid -- WARNING: Skipping budget block value checks, accepting block\n");
             // TODO: reprocess blocks to make sure they are legit?
             return true;
         }
-        // LogPrint(BCLog::GOBJECT, "IsBlockValueValid -- Block is not in budget cycle window, checking block value against block reward\n");
+        // LogPrintf("IsBlockValueValid -- Block is not in budget cycle window, checking block value against block reward\n");
         if(!isBlockRewardValueMet) {
             strErrorRet = strprintf("coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded block reward, block is not in budget cycle window",
                                     nBlockHeight, block.vtx[0]->GetValueOut(), blockReward);
@@ -106,11 +106,11 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
             nOffset < consensusParams.nBudgetPaymentsWindowBlocks) {
             if(!sporkManager.IsSporkActive(SPORK_13_OLD_SUPERBLOCK_FLAG)) {
                 // no budget blocks should be accepted here, if SPORK_13_OLD_SUPERBLOCK_FLAG is disabled
-                LogPrint(BCLog::GOBJECT, "IsBlockPayeeValid -- ERROR: Client synced but budget spork is disabled and masternode payment is invalid\n");
+                LogPrintf("IsBlockPayeeValid -- ERROR: Client synced but budget spork is disabled and masternode payment is invalid\n");
                 return false;
             }
             // NOTE: this should never happen in real, SPORK_13_OLD_SUPERBLOCK_FLAG MUST be disabled when 12.1 starts to go live
-            LogPrint(BCLog::GOBJECT, "IsBlockPayeeValid -- WARNING: Probably valid budget block, have no data, accepting\n");
+            LogPrintf("IsBlockPayeeValid -- WARNING: Probably valid budget block, have no data, accepting\n");
             // TODO: reprocess blocks to make sure they are legit?
             return true;
         }
@@ -605,26 +605,32 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransactionRef txNew)
     if(nMaxSignatures < MNPAYMENTS_SIGNATURES_REQUIRED) return true;
 
 	int counterNodePayment = 0;
+	CScript burnfundScript;
+	burnfundScript << OP_DUP << OP_HASH160 << ParseHex(Params().GetConsensus().cBurnAddressPubKey) << OP_EQUALVERIFY << OP_CHECKSIG;
 
 	int txIndex = 0;
 	for (auto txout : txNew->vout) {
 		txIndex ++;
 		if (3 <= txIndex && txIndex <=5) {
-			for (auto& payee : vecPayees) {
-				CAmount nMasternodePayment = GetMasternodePayment(nBlockHeight, payee.GetSinType());
-				if (payee.GetPayee() == txout.scriptPubKey && (nMasternodePayment == txout.nValue || payee.GetVoteCount() >= (MNPAYMENTS_SIGNATURES_REQUIRED - 1))){
-					LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- Found required payment\n");
-					counterNodePayment ++;
-				}
+			if ( txout.scriptPubKey == burnfundScript ) {
+				counterNodePayment ++;
+			} else {
+				for (auto& payee : vecPayees) {
+					CAmount nMasternodePayment = GetMasternodePayment(nBlockHeight, payee.GetSinType());
+					if (payee.GetPayee() == txout.scriptPubKey && (nMasternodePayment == txout.nValue || payee.GetVoteCount() >= (MNPAYMENTS_SIGNATURES_REQUIRED - 1))){
+						LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- Found required payment\n");
+						counterNodePayment ++;
+					}
 
-				CTxDestination address1;
-				ExtractDestination(payee.GetPayee(), address1);
-				std::string address2 = EncodeDestination(address1);
+					CTxDestination address1;
+					ExtractDestination(payee.GetPayee(), address1);
+					std::string address2 = EncodeDestination(address1);
 
-				if(strPayeesPossible == "") {
-					strPayeesPossible = strprintf("%s(%d)",address2, payee.GetSinType());
-				} else {
-					strPayeesPossible = strprintf("%s,%s(%d)",strPayeesPossible, address2, payee.GetSinType());
+					if(strPayeesPossible == "") {
+						strPayeesPossible = strprintf("%s(%d)",address2, payee.GetSinType());
+					} else {
+						strPayeesPossible = strprintf("%s,%s(%d)",strPayeesPossible, address2, payee.GetSinType());
+					}
 				}
 			}
 			//extraction list 3 payment in Coinbase Tx

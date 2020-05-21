@@ -25,6 +25,10 @@
 #include <utilmoneystr.h>
 #include <consensus/validation.h>
 
+#include <secp256k1.h>
+#include <secp256k1_schnorr.h>
+#include <secp256k1_musig.h>
+
 #include <fstream>
 #include <iomanip>
 #include <univalue.h>
@@ -1234,7 +1238,7 @@ static UniValue infinitynodeburnfund(const JSONRPCRequest& request)
             coin_control.destChange = NodeOwnerAddress;//fund go back to NodeOwnerAddress
 
             CScript script;
-            script = GetScriptForBurn(keyid, request.params[1].get_str());
+            script = GetScriptForBurn(keyid, request.params[2].get_str());
 
             CReserveKey reservekey(pwallet);
             CAmount nFeeRequired;
