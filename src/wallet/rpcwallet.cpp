@@ -519,7 +519,7 @@ static CTransactionRef SendMoney(CWallet * const pwallet, const CTxDestination &
     }
     CValidationState state;
     if (!pwallet->CommitTransaction(tx, std::move(mapValue), {} /* orderForm */, std::move(fromAccount), reservekey, g_connman.get(), 
-					state, fUseInstantSend ? NetMsgType::TXLOCKREQUEST : NetMsgType::TX)) {
+             state, fUseInstantSend ? NetMsgType::TXLOCKREQUEST : NetMsgType::TX)) {
         strError = strprintf("Error: The transaction was rejected! Reason given: %s", FormatStateMessage(state));
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
     }
@@ -769,12 +769,12 @@ static UniValue sendwithlockedtoaddress(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
         return NullUniValue;
     }
-/*
+
     if (IsInitialBlockDownload())
         throw std::runtime_error(
             "Please wait until block synchronization has completed.\n"
     );
-*/
+
     if (request.fHelp || request.params.size() < 4 || request.params.size() > 7)
         throw std::runtime_error(
             "sendwithlockedtoaddress \"fromaccount\" \"SINaddress\" amount nBlockLocked ( \"comment\" \"comment-to\" subtractfeefromamount )\n"
