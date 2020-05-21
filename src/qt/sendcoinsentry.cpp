@@ -137,13 +137,9 @@ int SendCoinsEntry::getTermDepositLength()
     QString theSt = ui->lockperiod->text();
     int theLength = theSt.toInt();
 
-    if (thePeriod==2) {
+    if (thePeriod==0) {
         return theLength;
-    }else if(thePeriod==1) {
-        return theLength*720;
-    }else if(thePeriod==0) {
-        return theLength*720*7;
-    }
+     }
     return 0;
 }
 

@@ -200,9 +200,15 @@
           </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
+            <horstretch>80</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="maximumSize">
            <size>
@@ -214,7 +220,7 @@
            <enum>Qt::LeftToRight</enum>
           </property>
           <property name="text">
-           <string>4</string>
+           <string/>
           </property>
           <property name="maxLength">
            <number>6</number>
@@ -229,16 +235,6 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <item>
-           <property name="text">
-            <string>Weeks</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Days</string>
-           </property>
-          </item>
           <item>
            <property name="text">
             <string>Blocks</string>
@@ -746,7 +742,7 @@
         </color>
        </brush>
       </colorrole>
-      
+     
      </disabled>
     </palette>
    </property>
