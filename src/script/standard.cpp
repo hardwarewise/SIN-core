@@ -349,7 +349,7 @@ public:
     }
 
     bool operator()(const CKeyID &keyID) const {
-        script->clear();
+        //script->clear();
         *script << OP_DUP << OP_HASH160 << ToByteVector(keyID) << OP_EQUALVERIFY << OP_CHECKSIG;
         return true;
     }
@@ -395,8 +395,15 @@ CScript GetTimeLockScriptForDestination(const CTxDestination& dest, const int64_
 {
     CScript script;
     script.clear();
-    script << CScriptNum(smallInt) << OP_CHECKLOCKTIMEVERIFY << OP_DROP;
-    boost::apply_visitor(CScriptVisitor(&script), dest);
+
+    CTxDestination destination = dest;
+    const CKeyID *keyID = boost::get<CKeyID>(&destination);
+    if (!keyID) {
+        return script;
+    }
+
+    script << CScriptNum(smallInt) << OP_CHECKLOCKTIMEVERIFY << OP_DROP << OP_DUP << OP_HASH160 << ToByteVector(*keyID) << OP_EQUALVERIFY << OP_CHECKSIG;
+    //boost::apply_visitor(CScriptVisitor(&script), dest);
     return script;
 }
 

@@ -1256,7 +1256,222 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
         ++it;
     }//end loop in mapMyPartialSigns
 
-    return false;
+    return true;
+}
+
+/*
+ * STEP 6 : register LockReward
+ */
+bool CInfinityNodeLockReward::AutoResigterLockReward(std::string sLockReward, std::string& strErrorRet)
+{
+    std::vector<std::shared_ptr<CWallet>> wallets = GetWallets();
+    CWallet * const pwallet = (wallets.size() > 0) ? wallets[0].get() : nullptr;
+
+    if(!pwallet || pwallet->IsLocked()) return false;
+
+    std::string strError;
+    std::vector<COutput> vPossibleCoins;
+    pwallet->AvailableCoins(vPossibleCoins, true, NULL, false, ALL_COINS);
+
+    CTransactionRef tx_New;
+    CCoinControl coin_control;
+
+    CAmount nFeeRet = 0;
+    mapValue_t mapValue;
+    bool fSubtractFeeFromAmount = true;
+    bool fUseInstantSend=false;
+    int nChangePosRet = -1;
+    CReserveKey reservekey(pwallet);
+    CAmount nFeeRequired;
+    CAmount curBalance = pwallet->GetBalance();
+
+    CAmount nAmountRegister = 0.001 * COIN;
+    CAmount nAmountToSelect = 0.05 * COIN;
+
+    //select coin
+    CAmount selected = 0;
+    for (COutput& out : vPossibleCoins) {
+        if(selected >= nAmountToSelect) break;
+        if(out.nDepth >= 2 && selected < nAmountToSelect){
+            coin_control.Select(COutPoint(out.tx->GetHash(), out.i));
+            selected += out.tx->tx->vout[out.i].nValue;
+        }
+    }
+
+    if(selected < nAmountToSelect){
+        strErrorRet = strprintf("Balance of Infinitynode is not enough.");
+        return false;
+    }
+
+    //chang address
+    coin_control.destChange = GetDestinationForKey(infinitynodePeer.pubKeyInfinitynode, DEFAULT_ADDRESS_TYPE);
+
+    //CRecipient
+    std::string strFail = "";
+    std::vector<CRecipient> vecSend;
+
+    CTxDestination dest = DecodeDestination(Params().GetConsensus().cLockRewardAddress);
+    CScript scriptPubKeyBurnAddress = GetScriptForDestination(dest);
+    std::vector<std::vector<unsigned char> > vSolutions;
+    txnouttype whichType;
+    if (!Solver(scriptPubKeyBurnAddress, whichType, vSolutions)){
+        strErrorRet = strprintf("Intenal Fatal Error!");
+        return false;
+    }
+    CKeyID keyid = CKeyID(uint160(vSolutions[0]));
+    CScript script;
+    script = GetScriptForBurn(keyid, sLockReward);
+
+    CRecipient recipient = {script, nAmountRegister, fSubtractFeeFromAmount};
+    vecSend.push_back(recipient);
+
+    //Transaction
+    CTransactionRef tx;
+    if (!pwallet->CreateTransaction(vecSend, tx, reservekey, nFeeRequired, nChangePosRet, strError, coin_control, true, ALL_COINS, fUseInstantSend)) {
+        if (!fSubtractFeeFromAmount && nAmountRegister + nFeeRequired > curBalance)
+            strErrorRet = strprintf("Error: This transaction requires a transaction fee of at least %s", FormatMoney(nFeeRequired));
+        else strErrorRet = strError;
+        return false;
+    }
+
+    CValidationState state;
+    if (!pwallet->CommitTransaction(tx, std::move(mapValue), {} /* orderForm */, {}/*fromAccount*/, reservekey, g_connman.get(),
+           state, fUseInstantSend ? NetMsgType::TXLOCKREQUEST : NetMsgType::TX)) {
+        strErrorRet = strprintf("Error: The transaction was rejected! Reason given: %s", FormatStateMessage(state));
+        return false;
+    }
+    return true;
+}
+/**
+ * STEP 7 : Check LockReward Musig - use in ConnectBlock
+ */
+bool CInfinityNodeLockReward::CheckLockRewardRegisterInfo(std::string sLockReward, std::string& strErrorRet)
+{
+    std::string s;
+    stringstream ss(sLockReward);
+
+    int i=0;
+    int nRewardHeight = 0;
+    int nSINtype = 0;
+    std::string signature = "";
+    int *signerIndexes;
+    size_t N_SIGNERS = (size_t)Params().GetConsensus().nInfinityNodeLockRewardSigners;
+    int registerNbInfos = Params().GetConsensus().nInfinityNodeLockRewardSigners + 3;
+    signerIndexes = (int*) malloc(Params().GetConsensus().nInfinityNodeLockRewardSigners * sizeof(int));
+
+    while (getline(ss, s,';')) {
+        if(i==0){nRewardHeight = atoi(s);}
+        if(i==1){nSINtype = atoi(s);}
+        if(i==2){signature = s;}
+        if(i>=3 && i < registerNbInfos){
+            signerIndexes[i-3] = atoi(s);
+        }
+        i++;
+    }
+
+    if(i > registerNbInfos){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Cannot read %d necessary informations from registerInfo\n",
+            registerNbInfos);
+        return false;
+    }
+    std::vector<unsigned char> signdecode;
+    DecodeBase58(signature, signdecode);
+    secp256k1_schnorr final_sig;
+    if(signdecode.size() != 64){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Size of signature is incorrect.\n",
+            registerNbInfos);
+        return false;
+    }
+    for(int j=0; j<64; j++){
+        final_sig.data[j] = signdecode.at(j);
+    }
+
+    if(nRewardHeight <= Params().GetConsensus().nInfinityNodeGenesisStatement){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- reward height is incorrect.\n",
+            registerNbInfos);
+        return false;
+    }
+
+    if(nSINtype != 1 && nSINtype != 5 && nSINtype != 10){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- not Known SINtype detected.\n");
+        return false;
+    }
+
+    //step 7.1 identify candidate
+    CInfinitynode candidate;
+    if(!infnodeman.deterministicRewardAtHeight(nRewardHeight, nSINtype, candidate)){
+        strErrorRet = strprintf("Cannot find candidate for Height of LockRequest: %d and SINtype: %d\n", nRewardHeight, nSINtype);
+        return false;
+    }
+
+    //step 7.2 identify Topnode and signer publicKey
+    secp256k1_pubkey *pubkeys;
+    pubkeys = (secp256k1_pubkey*) malloc(Params().GetConsensus().nInfinityNodeLockRewardSigners * sizeof(secp256k1_pubkey));
+    int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType;
+
+    std::map<int, CInfinitynode> mapInfinityNodeRank = infnodeman.calculInfinityNodeRank(nRewardHeight, nSINtypeCanLockReward, false, true);
+    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Identify %d TopNode from register info. Map rank: %d\n",
+              Params().GetConsensus().nInfinityNodeLockRewardTop, mapInfinityNodeRank.size());
+
+    int nSignerFound = 0;
+    for (std::pair<int, CInfinitynode> s : mapInfinityNodeRank){
+        if(s.first <= Params().GetConsensus().nInfinityNodeLockRewardTop){
+            CMetadata metaTopNode = infnodemeta.Find(s.second.getMetaID());
+            std::string connectionType = "";
+
+            if(metaTopNode.getMetadataHeight() == 0){
+                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Cannot find metadata of TopNode rank: %d, id: %s\n",
+                                 s.first, s.second.getBurntxOutPoint().ToStringShort());
+                continue;
+            }
+
+            for(int i=0; i < N_SIGNERS; i++){
+                if(s.first == signerIndexes[i]){
+                    std::string metaPublicKey = metaTopNode.getMetaPublicKey();
+                    std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
+                    CPubKey pubKey(tx_data.begin(), tx_data.end());
+                    if (!secp256k1_ec_pubkey_parse(secp256k1_context_musig, &pubkeys[i], pubKey.data(), pubKey.size())) {
+                        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- cannot parse publicKey\n");
+                        continue;
+                    }
+                    nSignerFound++;
+                }
+            }
+        }
+    }
+
+    if(nSignerFound != N_SIGNERS){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Find %d signers. Consensus is %d signers.\n", nSignerFound, N_SIGNERS);
+        return false;
+    }
+
+    //step 7.3 build message
+    unsigned char msg[32] = {'a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a'};
+
+    //message Musig
+    CHashWriter ssmsg(SER_GETHASH, PROTOCOL_VERSION);
+    ssmsg << candidate.vinBurnFund;
+    ssmsg << nRewardHeight;
+    uint256 messageHash = ssmsg.GetHash();
+    memcpy(msg, messageHash.begin(), 32);
+
+    //shared pk
+    secp256k1_pubkey combined_pk;
+    unsigned char pk_hash[32];
+    secp256k1_scratch_space *scratch = NULL;
+
+    scratch = secp256k1_scratch_space_create(secp256k1_context_musig, 1024 * 1024);
+    if (!secp256k1_musig_pubkey_combine(secp256k1_context_musig, scratch, &combined_pk, pk_hash, pubkeys, N_SIGNERS)) {
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Musig Combine PublicKey FAILED\n");
+        return false;
+    }
+
+    if(!secp256k1_schnorr_verify(secp256k1_context_musig, &final_sig, msg, &combined_pk)){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Check register info FAILED\n");
+        return false;
+    }
+
+    return true;
 }
 /*
  * Connect to group Signer
