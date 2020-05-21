@@ -810,7 +810,7 @@ static UniValue sendwithlockedtoaddress(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid SIN address");
 
     // Amount
-    CAmount nAmount = AmountFromValue(request.params[2]);
+    CAmount nAmount = AmountFromValue(atoi(request.params[2].get_str()));
 
     // Term Deposit
     int nBlockLocked;
