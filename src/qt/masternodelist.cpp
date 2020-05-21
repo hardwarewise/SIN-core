@@ -83,6 +83,9 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     fFilterUpdated = false;
     nTimeFilterUpdated = GetTime();
     updateNodeList();
+
+    // node setup
+    nodeSetupInitialize();
 }
 
 MasternodeList::~MasternodeList()
@@ -551,4 +554,102 @@ void MasternodeList::on_tableWidgetMyMasternodes_itemSelectionChanged()
 void MasternodeList::on_UpdateButton_clicked()
 {
     updateMyNodeList(true);
+}
+
+void MasternodeList::on_btnCheck_clicked()
+{
+    nodeSetupCleanProgress();
+    if ( !nodeSetupCheckFunds() )   {
+        return;
+    }
+
+    // TODO continue
+
+    ui->btnSetup->setEnabled(true);
+    return;
+}
+
+void MasternodeList::on_btnSetup_clicked()
+{
+
+}
+
+void MasternodeList::nodeSetupInitialize()   {
+    labelPic[0] = ui->labelPic_1;
+    labelTxt[0] = ui->labelTxt_1;
+    labelPic[1] = ui->labelPic_2;
+    labelTxt[1] = ui->labelTxt_2;
+    labelPic[2] = ui->labelPic_3;
+    labelTxt[2] = ui->labelTxt_3;
+    labelPic[3] = ui->labelPic_4;
+    labelTxt[3] = ui->labelTxt_4;
+    labelPic[4] = ui->labelPic_5;
+    labelTxt[4] = ui->labelTxt_5;
+    labelPic[5] = ui->labelPic_6;
+    labelTxt[5] = ui->labelTxt_6;
+    labelPic[6] = ui->labelPic_7;
+    labelTxt[6] = ui->labelTxt_7;
+    labelPic[7] = ui->labelPic_8;
+    labelTxt[7] = ui->labelTxt_8;
+
+    ui->btnSetup->setEnabled(false);
+    nodeSetupCleanProgress();
+}
+
+bool MasternodeList::nodeSetupCheckFunds()   {
+
+    bool bRet = false;
+    int nMasternodeCollateral = Params().GetConsensus().nMasternodeCollateralMinimum;
+    int nMasternodeBurn = 0;
+
+    if ( ui->radioLILNode->isChecked() )    nMasternodeBurn = 10; //Params().GetConsensus().nMasternodeBurnSINNODE_1;
+    if ( ui->radioMIDNode->isChecked() )    nMasternodeBurn = Params().GetConsensus().nMasternodeBurnSINNODE_5;
+    if ( ui->radioBIGNode->isChecked() )    nMasternodeBurn = Params().GetConsensus().nMasternodeBurnSINNODE_10;
+
+    std::string strChecking = "Checking funds";
+    nodeSetupStep( "setupWait", strChecking );
+
+    std::vector<std::shared_ptr<CWallet>> wallets = GetWallets();
+    CWallet * const pwallet = (wallets.size() > 0) ? wallets[0].get() : nullptr;
+    CAmount curBalance = pwallet->GetBalance();
+
+    if ( curBalance > (nMasternodeBurn + nMasternodeCollateral) * COIN )  {
+        nodeSetupStep( "setupOk", strChecking + " : " + "funds available.");
+        bRet = true;
+    }
+    else    {
+        if ( curBalance > nMasternodeBurn * COIN )  {
+            nodeSetupStep( "setupKo", strChecking + " : " + "not enough collateral.");
+        }
+        else    {
+            std::ostringstream stringStream;
+              stringStream << strChecking << " : not enough funds to burn. " << curBalance << " , " << nMasternodeBurn;
+              std::string copyOfStr = stringStream.str();
+            //nodeSetupStep( "setupKo", strChecking + " : " + "not enough funds to burn. "+QString::number(curBalance) + " , " +  QString::number(nMasternodeBurn) );
+              nodeSetupStep( "setupKo", copyOfStr);
+        }
+    }
+
+    currentStep++;
+    return bRet;
+}
+
+void MasternodeList::nodeSetupStep( std::string icon , std::string text )   {
+
+    std::string strIcon = ":/icons/" + icon;
+
+    labelPic[currentStep]->setVisible(true);
+    labelTxt[currentStep]->setVisible(true);
+    QPixmap labelIcon ( QString::fromStdString( icon ) );
+    labelPic[currentStep]->setPixmap(labelIcon);
+    labelTxt[currentStep]->setText( QString::fromStdString( text ) );
+}
+
+void MasternodeList::nodeSetupCleanProgress()   {
+
+    for(int idx=0;idx<8;idx++) {
+        labelPic[idx]->setVisible(false);
+        labelTxt[idx]->setVisible(false);
+    }
+    currentStep = 0;
 }

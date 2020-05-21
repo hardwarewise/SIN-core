@@ -13,6 +13,7 @@
 #include <util.h>
 #include <wallet/wallet.h>
 #include <QMenu>
+#include <QLabel>
 #include <QTimer>
 #include <QWidget>
 
@@ -62,10 +63,19 @@ private:
     int64_t nTimeFilterUpdated;
     bool fFilterUpdated;
 
+    QLabel* labelPic[8];
+    QLabel* labelTxt[8];
+    int currentStep = 0;
+
 public Q_SLOTS:
     void updateMyMasternodeInfo(QString strAlias, QString strAddr, const COutPoint& outpoint);
     void updateMyNodeList(bool fForce = false);
     void updateNodeList();
+
+    void nodeSetupInitialize();
+    void nodeSetupCleanProgress();
+    bool nodeSetupCheckFunds();
+    void nodeSetupStep( std::string icon , std::string text );
 
 Q_SIGNALS:
 
@@ -91,6 +101,10 @@ private Q_SLOTS:
     //void on_startAutoSINButton_clicked();
     void on_tableWidgetMyMasternodes_itemSelectionChanged();
     void on_UpdateButton_clicked();
+
+    // node setup
+    void on_btnSetup_clicked();
+    void on_btnCheck_clicked();
 };
 
 #endif // FXTC_QT_MASTERNODELIST_H
