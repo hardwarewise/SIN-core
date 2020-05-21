@@ -29,26 +29,6 @@
 #include <QSettings>
 #include <QTextDocument>
 
-static const std::array<int, 9> confTargets = { {2, 4, 6, 12, 24, 48, 144, 504, 1008} };
-
-int getDepositConfTargetForIndex(int index) {
-    if (index+1 > static_cast<int>(confTargets.size())) {
-        return confTargets.back();
-    }
-    if (index < 0) {
-        return confTargets[0];
-    }
-    return confTargets[index];
-}
-int getDepositIndexForConfTarget(int target) {
-    for (unsigned int i = 0; i < confTargets.size(); i++) {
-        if (confTargets[i] >= target) {
-            return i;
-        }
-    }
-    return confTargets.size() - 1;
-}
-
 DepositCoinsDialog::DepositCoinsDialog(const PlatformStyle *_platformStyle, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DepositCoinsDialog),
@@ -104,8 +84,6 @@ void DepositCoinsDialog::setModel(WalletModel *_model)
 
 DepositCoinsDialog::~DepositCoinsDialog()
 {
-    QSettings settings;
-
     delete ui;
 }
 
@@ -113,7 +91,7 @@ void DepositCoinsDialog::on_sendButton_clicked()
 {
     if(!model || !model->getOptionsModel())
         return;
-printf("I am here 1\n");
+
     QList<SendCoinsRecipient> recipients;
     bool valid = true;
 
@@ -127,8 +105,14 @@ printf("I am here 1\n");
             {
                 recipients.append(entry->getValue());
                 termDepositBlocks = entry->getTermDepositLength();
-                if (termDepositBlocks >= 720 && termDepositBlocks < 730)
-                   termDepositBlocks = 730;
+                if (termDepositBlocks < Params().MaxReorganizationDepth() + 1){
+                    QString questionString = QString::fromStdString("Number of block is false.");
+                    QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Timelocked Error"),
+                        questionString,
+                        QMessageBox::Yes | QMessageBox::Cancel,
+                    QMessageBox::Cancel);
+                    return;
+                }
             }
             else
             {
@@ -136,26 +120,26 @@ printf("I am here 1\n");
             }
         }
     }
-printf("I am here 2\n");
+
     if(!valid || recipients.isEmpty())
     {
         return;
     }
-printf("I am here 3\n");
+
     WalletModel::UnlockContext ctx(model->requestUnlock());
     if(!ctx.isValid())
     {
         return;
     }
-printf("I am here 4\n");
 
-printf("I am here 5\n");
     // prepare transaction for getting txFee earlier
     WalletModelTransaction currentTransaction(recipients);
     WalletModel::SendCoinsReturn prepareStatus;
     std::string termDepositConfirmQuestion = "";
+    CCoinControl coinControl;
+    coinControl.m_feerate = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE * 2);
 
-    prepareStatus = model->prepareTransaction(currentTransaction, termDepositConfirmQuestion, termDepositBlocks);
+    prepareStatus = model->prepareTransaction(currentTransaction, termDepositConfirmQuestion, termDepositBlocks, &coinControl);
 
     // process prepareStatus and on error generate message shown to user
     processSendCoinsReturn(prepareStatus,
@@ -164,7 +148,7 @@ printf("I am here 5\n");
     if(prepareStatus.status != WalletModel::OK) {
         return;
     }
-printf("I am here 6\n");
+
     if(termDepositConfirmQuestion!=""){
         QString questionString = QString::fromStdString(termDepositConfirmQuestion);
         QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm Term Deposit"),
@@ -177,14 +161,13 @@ printf("I am here 6\n");
         }
     }else{
         QString questionString = QString::fromStdString("Something went wrong! No term deposit instruction was detected. Instruction will be cancelled.");
-        /*
         QMessageBox::StandardButton retval = QMessageBox::question(this, tr("No Term Deposit Detected"),
             questionString,
             QMessageBox::Yes | QMessageBox::Cancel,
-            QMessageBox::Cancel); */
+            QMessageBox::Cancel);
         return;
     }
-printf("I am here 7\n");
+
     CAmount txFee = currentTransaction.getTransactionFee();
 
     // Format confirmation message
@@ -232,7 +215,7 @@ printf("I am here 7\n");
     questionString.append("<br /><span style='font-size:10pt;'>");
     questionString.append(tr("Please, review your transaction."));
     questionString.append("</span><br />%1");
-printf("I am here 8\n");
+
     if(txFee > 0)
     {
         // append fee string if a fee is required
@@ -287,7 +270,6 @@ printf("I am here 8\n");
         accept();
         Q_EMIT coinsSent(currentTransaction.getWtx()->get().GetHash());
     }
-printf("I am here 9\n");
 }
 
 void DepositCoinsDialog::clear()
@@ -320,9 +302,8 @@ SendCoinsEntry *DepositCoinsDialog::addEntry()
     ui->entries->addWidget(entry);
     connect(entry, SIGNAL(removeEntry(SendCoinsEntry*)), this, SLOT(removeEntry(SendCoinsEntry*)));
     connect(entry, SIGNAL(useAvailableBalance(SendCoinsEntry*)), this, SLOT(useAvailableBalance(SendCoinsEntry*)));
-    connect(entry, SIGNAL(subtractFeeFromAmountChanged()), this, SLOT(coinControlUpdateLabels()));
 
-    // Focus the field, so that entry can start immediately
+	// Focus the field, so that entry can start immediately
     entry->clear();
     entry->setFocus();
     ui->scrollAreaWidgetContents->resize(ui->scrollAreaWidgetContents->sizeHint());
