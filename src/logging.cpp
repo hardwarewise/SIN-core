@@ -162,16 +162,14 @@ const CLogCategoryDesc LogCategories[] =
     // dash log categories //
     {BCLog::INSTANTSEND, "instantsend"},
     {BCLog::MASTERNODE, "masternode"},
+    {BCLog::SPORK, "spork"},
     {BCLog::KEEPASS, "keepass"},
     {BCLog::MNPAYMENTS, "mnpayments"},
+    {BCLog::GOBJECT, "gobject"},
     //
     // SIN
     {BCLog::INFINITYNODE, "infinitynode"},
     {BCLog::INFINITYMAN, "infinityman"},
-    {BCLog::INFINITYLOCK, "infinitylock"},
-    {BCLog::INFINITYPEER, "infinitypeer"},
-    {BCLog::INFINITYMETA, "infinitymeta"},
-    {BCLog::INFINITYRSV, "infinityrsv"},
     //
 };
 

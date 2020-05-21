@@ -58,22 +58,19 @@ namespace BCLog {
         LEVELDB     = (1 << 20),
         ALL         = ~(uint32_t)0,
 
-// TODO: give these categories new flags as most MN code won't be here soon enough
-        // Dash/sin mixed flags
-        // SIN MN->IN log flag replacers 
+        // Dash
+        // dash log flags //
+        INSTANTSEND = (1 << 24),
+        MASTERNODE  = (1 << 25),
+        MNPAYMENTS  = (1 << 26),
+        MNSYNC      = (1 << 27),
+        SPORK       = (1 << 28),
+        KEEPASS     = (1 << 29),
+        GOBJECT     = (1 << 30),
+        //
+        //SIN
         INFINITYNODE    = (1 << 21),
         INFINITYMAN     = (1 << 22),
-        INFINITYLOCK    = (1 << 23),
-        // legacy dash log flags //
-        INSTANTSEND     = (1 << 24),
-        MASTERNODE      = (1 << 25),
-        MNPAYMENTS      = (1 << 26),
-        // New SIN flags
-        INFINITYPEER    = (1 << 27),
-        INFINITYMETA    = (1 << 28),
-        INFINITYRSV     = (1 << 29),
-        // Keepass crypter flags
-        KEEPASS         = (1 << 30),
         //
     };
 
