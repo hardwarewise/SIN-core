@@ -15,7 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_4">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0,0">
+    <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0">
      <item>
       <widget class="QFrame" name="frame">
        <property name="frameShape">
@@ -163,7 +163,7 @@
              <string>Clear &amp;All</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../sin.qrc">
               <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
             </property>
             <property name="autoDefault">
@@ -180,7 +180,7 @@
              <string>Add &amp;Recipient</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../sin.qrc">
               <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
             </property>
             <property name="autoDefault">
@@ -243,26 +243,126 @@
      </item>
     </layout>
    </item>
+   <item>
+    <widget class="QFrame" name="frame_2">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>500</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QTableWidget" name="hodlTable">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+          <attribute name="horizontalHeaderDefaultSectionSize">
+           <number>100</number>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>Status</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignLeading|AlignVCenter</set>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Principal</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignLeading|AlignVCenter</set>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Accrued Interest</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignLeading|AlignVCenter</set>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Accrued Value</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignLeading|AlignVCenter</set>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>On Maturation</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignLeading|AlignVCenter</set>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Term (Days)</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignLeading|AlignVCenter</set>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Deposit Block</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignLeading|AlignVCenter</set>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Maturation Block</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignLeading|AlignVCenter</set>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Estimated Date</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignLeading|AlignVCenter</set>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QValidatedLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>qt/qvalidatedlineedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>SINAmountField</class>
-   <extends>QLineEdit</extends>
-   <header>qt/sinamountfield.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="../sin.qrc"/>
  </resources>
  <connections/>
- <buttongroups>
-  <buttongroup name="groupFee"/>
- </buttongroups>
 </ui>
