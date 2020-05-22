@@ -13,6 +13,7 @@
 
 #include <QApplication>
 #include <QClipboard>
+#include <QStyleFactory>
 
 SendCoinsEntry::SendCoinsEntry(const PlatformStyle *_platformStyle, QWidget *parent) :
     QStackedWidget(parent),
@@ -22,6 +23,12 @@ SendCoinsEntry::SendCoinsEntry(const PlatformStyle *_platformStyle, QWidget *par
 {
     isTermDeposit = false;
     ui->setupUi(this);
+
+    #if defined(Q_OS_WIN)
+    #else
+        ui->locklength->setStyle(QStyleFactory::create("Windows"));
+        ui->payAmount->setStyle(QStyleFactory::create("Windows"));
+    #endif
 
     ui->addressBookButton->setIcon(platformStyle->SingleColorIcon(":/icons/address-book"));
     ui->pasteButton->setIcon(platformStyle->SingleColorIcon(":/icons/editpaste"));

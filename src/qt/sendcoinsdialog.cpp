@@ -27,6 +27,7 @@
 #include <QScrollBar>
 #include <QSettings>
 #include <QTextDocument>
+#include <QStyleFactory>
 
 static const std::array<int, 9> confTargets = { {2, 4, 6, 12, 24, 48, 144, 504, 1008} };
 int getConfTargetForIndex(int index) {
@@ -57,6 +58,13 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *_platformStyle, QWidget *p
     platformStyle(_platformStyle)
 {
     ui->setupUi(this);
+
+    #if defined(Q_OS_WIN)
+
+    #else
+        ui->confTargetSelector->setStyle(QStyleFactory::create("Windows"));
+        ui->customFee->setStyle(QStyleFactory::create("Windows"));
+    #endif
 
     if (!_platformStyle->getImagesOnButtons()) {
         ui->addButton->setIcon(QIcon());
