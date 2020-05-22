@@ -186,21 +186,12 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
             CTxDestination address = DecodeDestination(rcp.address.toStdString());
             if(termDepositLength>0) {
                 std::ostringstream ss;
-                if(termDepositLength < 720*1) {
-                    ss << "!!!!!WARNING: There is no interest rate advantage of using a Term Deposit for a period of less than 1 day. It is recommended that you cancel this transaction. ";
-                }
-                if(termDepositLength > 720*30){
-                    ss << "!!!!!WARNING: There is no interest rate advantage of using a Term Deposit for a period of more than 1 month. It is recommended that you cancel this transaction. ";
-                }
                 ss << "Term Deposit Instruction Detected: " << std::fixed;
                 ss.precision(8);
                 ss << "This will send the amount of " << (0.0+rcp.amount)/COIN <<" SIN ";
                 ss << "to be locked for " << termDepositLength << " blocks. ";
                 ss.precision(2);
                 ss << "This is approximately " << (0.0+termDepositLength)/(720) << " days. ";
-                CAmount withInterest=GetInterest(rcp.amount, chainActive.Height()+1, chainActive.Height()+1+termDepositLength, chainActive.Height()+1+termDepositLength);
-                ss.precision(8);
-                ss << "Upon maturation, it will be worth " << (0.0+withInterest)/COIN << " SIN. ";
                 termdepositquestion = ss.str();
                 scriptPubKey = GetTimeLockScriptForDestination(address,chainActive.Height()+1+termDepositLength);
             }else{
@@ -225,7 +216,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
         return AmountExceedsBalance;
     }
 
-    if(recipients[0].fUseInstantSend && total > sporkManager.GetSporkValue(SPORK_5_INSTANTSEND_MAX_VALUE)*COIN) {
+    if(coinControl->fUseInstantSend == true && total > sporkManager.GetSporkValue(SPORK_5_INSTANTSEND_MAX_VALUE)*COIN) {
         Q_EMIT message(tr("Send Coins"), tr("InstantSend doesn't support sending values %1 that high yet. Transactions are currently limited to %2 SIN.").arg(total/COIN).arg(sporkManager.GetSporkValue(SPORK_5_INSTANTSEND_MAX_VALUE)), CClientUIInterface::MSG_ERROR);
         return TransactionCreationFailed;
     }
@@ -238,13 +229,13 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
         auto& newTx = transaction.getWtx();
 
         // Dash
-        newTx = m_wallet->createTransaction(vecSend, *coinControl, true , nChangePosRet, nFeeRequired, strFailReason, recipients[0].inputType, recipients[0].fUseInstantSend);
+        newTx = m_wallet->createTransaction(vecSend, *coinControl, true , nChangePosRet, nFeeRequired, strFailReason, recipients[0].inputType, coinControl->fUseInstantSend);
         //
         transaction.setTransactionFee(nFeeRequired);
         if (fSubtractFeeFromAmount && newTx)
             transaction.reassignAmounts(nChangePosRet);
 
-        if(recipients[0].fUseInstantSend && newTx) {
+        if(coinControl->fUseInstantSend == true && newTx) {
             std::vector<CTxOut> vout = newTx->get().vout;
             CAmount nValueOut = 0;
             for (const auto& tx_out : vout) {

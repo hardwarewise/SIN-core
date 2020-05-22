@@ -166,6 +166,7 @@ void WalletView::setClientModel(ClientModel *_clientModel)
 
     overviewPage->setClientModel(_clientModel);
     sendCoinsPage->setClientModel(_clientModel);
+    depositCoinsPage->setClientModel(_clientModel);
 
     // Dash
     QSettings settings;
