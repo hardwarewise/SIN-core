@@ -31,6 +31,9 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *_platformStyle, QWid
     platformStyle(_platformStyle)
 {
     ui->setupUi(this);
+    //Hide FlashSend checkbox
+    ui->checkUseInstantSend->hide();
+
     #if defined(Q_OS_WIN)
 
     #else
