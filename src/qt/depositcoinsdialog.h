@@ -68,7 +68,6 @@ private:
 private Q_SLOTS:
     void on_sendButton_clicked();
     void updateDisplayUnit();
-    void setMinimumFee();
     void removeEntry(SendCoinsEntry* entry);
 Q_SIGNALS:
     // Fired when a message should be reported to the user

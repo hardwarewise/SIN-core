@@ -48,7 +48,7 @@
           </property>
           <property name="minimumSize">
            <size>
-            <width>500</width>
+            <width>420</width>
             <height>0</height>
            </size>
           </property>
@@ -60,7 +60,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>498</width>
+             <width>378</width>
              <height>466</height>
             </rect>
            </property>
@@ -253,7 +253,7 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>500</width>
+       <width>620</width>
        <height>0</height>
       </size>
      </property>
@@ -290,7 +290,7 @@
           </column>
           <column>
            <property name="text">
-            <string>Principal</string>
+            <string>Amount</string>
            </property>
            <property name="textAlignment">
             <set>AlignLeading|AlignVCenter</set>
@@ -298,7 +298,7 @@
           </column>
           <column>
            <property name="text">
-            <string>Accrued Interest</string>
+            <string>Lock height</string>
            </property>
            <property name="textAlignment">
             <set>AlignLeading|AlignVCenter</set>
@@ -306,7 +306,7 @@
           </column>
           <column>
            <property name="text">
-            <string>Accrued Value</string>
+            <string>Maturation</string>
            </property>
            <property name="textAlignment">
             <set>AlignLeading|AlignVCenter</set>
@@ -314,31 +314,7 @@
           </column>
           <column>
            <property name="text">
-            <string>On Maturation</string>
-           </property>
-           <property name="textAlignment">
-            <set>AlignLeading|AlignVCenter</set>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Term (Days)</string>
-           </property>
-           <property name="textAlignment">
-            <set>AlignLeading|AlignVCenter</set>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Deposit Block</string>
-           </property>
-           <property name="textAlignment">
-            <set>AlignLeading|AlignVCenter</set>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Maturation Block</string>
+            <string>Lock times</string>
            </property>
            <property name="textAlignment">
             <set>AlignLeading|AlignVCenter</set>

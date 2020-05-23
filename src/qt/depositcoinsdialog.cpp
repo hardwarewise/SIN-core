@@ -57,7 +57,7 @@ void DepositCoinsDialog::setClientModel(ClientModel *_clientModel)
     this->clientModel = _clientModel;
 
     if (_clientModel) {
-        connect(_clientModel, SIGNAL(numBlocksChanged(int,QDateTime,double,bool)), this, SLOT(updateSmartFeeLabel()));
+        //connect(_clientModel, SIGNAL(numBlocksChanged(int,QDateTime,double,bool)), this, SLOT(updateDisplayUnit()));
     }
 }
 
@@ -141,6 +141,7 @@ void DepositCoinsDialog::on_sendButton_clicked()
     std::string termDepositConfirmQuestion = "";
     CCoinControl coinControl;
     coinControl.m_feerate = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE * 2);
+    coinControl.fUseInstantSend = false;
 
     prepareStatus = model->prepareTransaction(currentTransaction, termDepositConfirmQuestion, termDepositBlocks, &coinControl);
 
@@ -306,7 +307,6 @@ SendCoinsEntry *DepositCoinsDialog::addEntry()
     connect(entry, SIGNAL(removeEntry(SendCoinsEntry*)), this, SLOT(removeEntry(SendCoinsEntry*)));
     connect(entry, SIGNAL(useAvailableBalance(SendCoinsEntry*)), this, SLOT(useAvailableBalance(SendCoinsEntry*)));
 
-	// Focus the field, so that entry can start immediately
     entry->clear();
     entry->setFocus();
     ui->scrollAreaWidgetContents->resize(ui->scrollAreaWidgetContents->sizeHint());
@@ -405,6 +405,51 @@ void DepositCoinsDialog::setBalance(const interfaces::WalletBalances& balances)
     if(model && model->getOptionsModel())
     {
         ui->labelBalance->setText(BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), balances.balance));
+        std::vector<COutput> vTimeLockInfo = model->wallet().GetTermDepositInfo();
+
+        ui->hodlTable->setRowCount(vTimeLockInfo.size());
+
+        ui->hodlTable->setSortingEnabled(false);
+
+        uint64_t totalLocked  = 0;
+        uint64_t totalMatured = 0;
+
+        interfaces::Node& node = clientModel->node();
+        int curHeight = node.getNumBlocks();
+        int k=0;
+        for(auto &out : vTimeLockInfo){
+            CTxOut txOut = out.tx->tx->vout[out.i];
+
+            int lockedHeight=curHeight-out.nDepth;
+            int releaseBlock=txOut.scriptPubKey.GetTermDepositReleaseBlock();
+            int locktimes =releaseBlock-lockedHeight;
+            int blocksRemaining=releaseBlock-curHeight;
+            int blocksSoFar=curHeight-lockedHeight;
+
+            if(curHeight>=releaseBlock){
+                ui->hodlTable->setItem(k, 0, new QTableWidgetItem(QString("Matured")));
+                totalMatured += txOut.nValue;
+            }else{
+                ui->hodlTable->setItem(k, 0, new QTableWidgetItem(QString("TimeLocked")));
+                totalLocked  += txOut.nValue;
+            }
+
+            ui->hodlTable->setItem(k, 1, new QTableWidgetItem(BitcoinUnits::format(model->getOptionsModel()->getDisplayUnit(), txOut.nValue)));
+            ui->hodlTable->setItem(k, 2, new QTableWidgetItem(QString::number(lockedHeight)));
+            ui->hodlTable->setItem(k, 3, new QTableWidgetItem(QString::number(releaseBlock)));
+            ui->hodlTable->setItem(k, 4, new QTableWidgetItem(QString::number(locktimes)));
+            time_t rawtime;
+            struct tm * timeinfo;
+            char buffer[80];
+            time (&rawtime);
+            rawtime+=blocksRemaining*120;		// seconds per block
+            timeinfo = localtime(&rawtime);
+            strftime(buffer,80,"%Y/%m/%d",timeinfo);
+            std::string str(buffer);
+
+            ui->hodlTable->setItem(k, 5, new QTableWidgetItem(QString(buffer)));
+            k++;
+        }
     }
 }
 
@@ -461,11 +506,6 @@ void DepositCoinsDialog::processSendCoinsReturn(const WalletModel::SendCoinsRetu
     }
 
     Q_EMIT message(tr("Deposit Coins"), msgParams.first, msgParams.second);
-}
-
-void DepositCoinsDialog::setMinimumFee()
-{
-    //ui->customFee->setValue(model->wallet().getRequiredFee(1000));
 }
 
 DepositConfirmationDialog::DepositConfirmationDialog(const QString &title, const QString &text, int _secDelay,
