@@ -813,8 +813,8 @@ void BitcoinGUI::createMenuBar()
     //end Resources Links
 
     //
-
- 	settings->addAction(instaswapAction);
+    // temporarily closed it.
+ 	//settings->addAction(instaswapAction);
     settings->addSeparator();
     }
     settings->addAction(optionsAction);
