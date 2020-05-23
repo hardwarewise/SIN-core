@@ -56,7 +56,7 @@ width: 150px;
        </property>
        <widget class="QWidget" name="tabMyMasternodes">
         <attribute name="title">
-         <string>My InfinityNodes</string>
+         <string>My Nodes</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_2">
          <item row="0" column="0">
@@ -202,7 +202,7 @@ width: 150px;
        </widget>
        <widget class="QWidget" name="tabAllMasternodes">
         <attribute name="title">
-         <string>All InfinityNodes</string>
+         <string>InfinityNodes 0.1</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout">
          <item row="1" column="0">
@@ -306,7 +306,7 @@ width: 150px;
        </widget>
        <widget class="QWidget" name="tab">
         <attribute name="title">
-         <string>Interest List</string>
+         <string>DIN 1.0</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>

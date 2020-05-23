@@ -932,11 +932,6 @@ void CWallet::MarkDirty()
         for (std::pair<const uint256, CWalletTx>& item : mapWallet)
             item.second.MarkDirty();
     }
-
-   // Dash
-    fAnonymizableTallyCached = false;
-    fAnonymizableTallyCachedNonDenom = false;
-   //
 }
 
 bool CWallet::MarkReplaced(const uint256& originalHash, const uint256& newHash)
@@ -1115,11 +1110,6 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
         t.detach(); // thread runs free
     }
 
-    // Dash
-    fAnonymizableTallyCached = false;
-    fAnonymizableTallyCachedNonDenom = false;
-    //
-
     return true;
 }
 
@@ -1271,11 +1261,6 @@ bool CWallet::AbandonTransaction(const uint256& hashTx)
         }
     }
 
-    // Dash
-    fAnonymizableTallyCached = false;
-    fAnonymizableTallyCachedNonDenom = false;
-    //
-
     return true;
 }
 
@@ -1331,11 +1316,6 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
             MarkInputsDirty(wtx.tx);
         }
     }
-
-    // Dash
-    fAnonymizableTallyCached = false;
-    fAnonymizableTallyCachedNonDenom = false;
-    //
 }
 
 void CWallet::SyncTransaction(const CTransactionRef& ptx, const CBlockIndex *pindex, int posInBlock, bool update_tx) {
@@ -1346,11 +1326,6 @@ void CWallet::SyncTransaction(const CTransactionRef& ptx, const CBlockIndex *pin
     // available of the outputs it spends. So force those to be
     // recomputed, also:
     MarkInputsDirty(ptx);
-
-    // Dash
-    fAnonymizableTallyCached = false;
-    fAnonymizableTallyCachedNonDenom = false;
-    //
 }
 
 void CWallet::TransactionAddedToMempool(const CTransactionRef& ptx) {
@@ -4281,7 +4256,7 @@ void CWallet::MarkReserveKeysAsUsed(int64_t keypool_id)
         if (batch.ReadPool(index, keypool)) { //TODO: This should be unnecessary
             m_pool_key_to_index.erase(keypool.vchPubKey.GetID());
         }
-		//SIN don't support P2SH_SEGWIT and BECH32 yet
+        //SIN don't support P2SH_SEGWIT and BECH32 yet
         LearnAllRelatedScripts(keypool.vchPubKey);
         batch.ErasePool(index);
         WalletLogPrintf("keypool index %d removed\n", index);
@@ -4320,28 +4295,12 @@ void CWallet::LockCoin(const COutPoint& output)
 {
     AssertLockHeld(cs_wallet); // setLockedCoins
     setLockedCoins.insert(output);
-
-    // Dash
-    std::map<uint256, CWalletTx>::iterator it = mapWallet.find(output.hash);
-    if (it != mapWallet.end()) it->second.MarkDirty(); // recalculate all credits for this tx
-
-    fAnonymizableTallyCached = false;
-    fAnonymizableTallyCachedNonDenom = false;
-    //
 }
 
 void CWallet::UnlockCoin(const COutPoint& output)
 {
     AssertLockHeld(cs_wallet); // setLockedCoins
     setLockedCoins.erase(output);
-
-    // Dash
-    std::map<uint256, CWalletTx>::iterator it = mapWallet.find(output.hash);
-    if (it != mapWallet.end()) it->second.MarkDirty(); // recalculate all credits for this tx
-
-    fAnonymizableTallyCached = false;
-    fAnonymizableTallyCachedNonDenom = false;
-    //
 }
 
 void CWallet::UnlockAllCoins()
