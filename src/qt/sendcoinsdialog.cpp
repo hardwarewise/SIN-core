@@ -58,6 +58,8 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *_platformStyle, QWidget *p
     platformStyle(_platformStyle)
 {
     ui->setupUi(this);
+    //Hide FlashSend check
+    ui->checkUseInstantSend->hide();
 
     #if defined(Q_OS_WIN)
 
