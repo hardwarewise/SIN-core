@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1053</width>
+    <width>1050</width>
     <height>600</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1050</width>
+    <height>600</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Send Coins</string>
@@ -18,6 +24,18 @@
     <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0">
      <item>
       <widget class="QFrame" name="frame">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>500</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
@@ -41,7 +59,7 @@
         <item>
          <widget class="QScrollArea" name="scrollArea">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -246,7 +264,7 @@
    <item>
     <widget class="QFrame" name="frame_2">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -271,6 +289,18 @@
           <property name="enabled">
            <bool>true</bool>
           </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>510</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="editTriggers">
            <set>QAbstractItemView::NoEditTriggers</set>
           </property>
@@ -278,7 +308,7 @@
            <bool>true</bool>
           </property>
           <attribute name="horizontalHeaderDefaultSectionSize">
-           <number>100</number>
+           <number>80</number>
           </attribute>
           <column>
            <property name="text">
@@ -290,7 +320,7 @@
           </column>
           <column>
            <property name="text">
-            <string>Principal</string>
+            <string>Amount</string>
            </property>
            <property name="textAlignment">
             <set>AlignLeading|AlignVCenter</set>
@@ -298,7 +328,7 @@
           </column>
           <column>
            <property name="text">
-            <string>Accrued Interest</string>
+            <string>Start</string>
            </property>
            <property name="textAlignment">
             <set>AlignLeading|AlignVCenter</set>
@@ -306,7 +336,7 @@
           </column>
           <column>
            <property name="text">
-            <string>Accrued Value</string>
+            <string>End</string>
            </property>
            <property name="textAlignment">
             <set>AlignLeading|AlignVCenter</set>
@@ -314,7 +344,7 @@
           </column>
           <column>
            <property name="text">
-            <string>On Maturation</string>
+            <string>Lock time</string>
            </property>
            <property name="textAlignment">
             <set>AlignLeading|AlignVCenter</set>
@@ -322,31 +352,7 @@
           </column>
           <column>
            <property name="text">
-            <string>Term (Days)</string>
-           </property>
-           <property name="textAlignment">
-            <set>AlignLeading|AlignVCenter</set>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Deposit Block</string>
-           </property>
-           <property name="textAlignment">
-            <set>AlignLeading|AlignVCenter</set>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Maturation Block</string>
-           </property>
-           <property name="textAlignment">
-            <set>AlignLeading|AlignVCenter</set>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Estimated Date</string>
+            <string>ETA</string>
            </property>
            <property name="textAlignment">
             <set>AlignLeading|AlignVCenter</set>
