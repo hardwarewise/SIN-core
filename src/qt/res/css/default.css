@@ -242,12 +242,12 @@ image:url(':/images/downArrow_small');
 
 QHeaderView { /* Table Header */
 background-color:transparent;
-font-weight: bold;
+
 }
 
 QHeaderView::section { /* Table Header Sections */
-background-color: transparent;
-color: #2E3191;
+background-color: #2E3191;
+color: #ffffff;
 min-height:30px;
 font-size: 14px;
 border: 0;
@@ -1221,7 +1221,6 @@ QStackedWidget#SendCoinsEntry .QLineEdit#addAsLabel { /* Pay To Input Field */
 background-color:transparent;
 border-color:#45515D;
 font-size:14px;
-font-weight:bold;
 color:#000000;
 }
 
