@@ -404,7 +404,8 @@ void DepositCoinsDialog::setBalance(const interfaces::WalletBalances& balances)
 {
     if(model && model->getOptionsModel())
     {
-        ui->labelBalance->setText(BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), balances.balance));
+        
+        ui->labelBalance->setText(BitcoinUnits::floorHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), balances.balance, false, BitcoinUnits::separatorAlways));
         std::vector<COutput> vTimeLockInfo = model->wallet().GetTermDepositInfo();
 
         ui->hodlTable->setRowCount(vTimeLockInfo.size());
