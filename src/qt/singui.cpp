@@ -874,18 +874,7 @@ void BitcoinGUI::createToolBars()
         toolbar->addAction(statsPageAction);
         //
 
-       QWidget* empty = new QWidget();
-		empty->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-		toolbar->addWidget(empty);
-
-		 QLabel* labelVersion = new QLabel();
-        labelVersion->setText(QString(tr("v%1\n\nAURORA")).arg(QString::fromStdString(FormatVersionFriendly())));
-        labelVersion->setStyleSheet("color: white ; margin-top: 10px; margin-bottom: 2px; font-weight : bold;");
-        labelVersion->setAlignment(Qt::AlignCenter);
-        toolbar->addWidget(labelVersion);
-		
-
-
+      
         overviewAction->setChecked(true);
 
 #ifdef ENABLE_WALLET
@@ -906,6 +895,17 @@ void BitcoinGUI::createToolBars()
         m_wallet_selector_label_action->setVisible(false);
         m_wallet_selector_action->setVisible(false);
 #endif
+    
+         QWidget* empty = new QWidget();
+		empty->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+		toolbar->addWidget(empty);
+
+		 QLabel* labelVersion = new QLabel();
+        labelVersion->setText(QString(tr("v%1\n")).arg(QString::fromStdString(FormatVersionFriendly())));
+        labelVersion->setStyleSheet("color: white ; margin-top: 10px; margin-bottom: 2px; font-weight : bold;");
+        labelVersion->setAlignment(Qt::AlignCenter);
+        toolbar->addWidget(labelVersion);
+
     }
 }
 
