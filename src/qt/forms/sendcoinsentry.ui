@@ -143,18 +143,6 @@
       </item>
       <item>
        <widget class="QLineEdit" name="addAsLabel">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>380</width>
-          <height>0</height>
-         </size>
-        </property>
         <property name="toolTip">
          <string>Enter a label for this address to add it to the list of used addresses</string>
         </property>
@@ -754,7 +742,7 @@
         </color>
        </brush>
       </colorrole>
-      
+     
      </disabled>
     </palette>
    </property>
