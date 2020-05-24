@@ -68,7 +68,6 @@ IsMineResult IsMineInner(const CKeyStore& keystore, const CScript& scriptPubKey,
     {
     case TX_NONSTANDARD:
     case TX_NULL_DATA:
-    case TX_BURN_DATA:
     case TX_WITNESS_UNKNOWN:
         break;
     case TX_PUBKEY:
@@ -95,6 +94,18 @@ IsMineResult IsMineInner(const CKeyStore& keystore, const CScript& scriptPubKey,
         ret = std::max(ret, IsMineInner(keystore, GetScriptForDestination(CKeyID(uint160(vSolutions[0]))), IsMineSigVersion::WITNESS_V0));
         break;
     }
+    case TX_BURN_DATA:
+        keyID = CKeyID(uint160(vSolutions[0]));
+        if (!PermitsUncompressed(sigversion)) {
+            CPubKey pubkey;
+            if (keystore.GetPubKey(keyID, pubkey) && !pubkey.IsCompressed()) {
+                return IsMineResult::INVALID;
+            }
+        }
+        if (keystore.HaveKey(keyID)) {
+            ret = std::max(ret, IsMineResult::WATCH_ONLY);
+        }
+        break;
     case TX_CHECKLOCKTIMEVERIFY:
     case TX_PUBKEYHASH:
         keyID = CKeyID(uint160(vSolutions[0]));
