@@ -35,6 +35,7 @@ class ModalOverlay;
 class MasternodeList;
 class InstaSwap;
 class StatsPage;
+class FaqPage;
 
 namespace interfaces {
 class Handler;
@@ -119,6 +120,10 @@ private:
     QAction *statsPageAction;
     //
 
+    // FaqPage
+    QAction *faqPageAction;
+    //
+
     QAction* quitAction = nullptr;
     QAction* sendCoinsAction = nullptr;
     QAction* depositCoinsAction = nullptr;
@@ -176,6 +181,7 @@ private:
     Notificator* notificator = nullptr;
     RPCConsole* rpcConsole = nullptr;
     StatsPage  *statsWindow;
+    FaqPage  *faqWindow;
     //HelpMessageDialog* helpMessageDialog = nullptr;
     HelpMessageDialog *helpMessageDialog;
 
@@ -289,6 +295,11 @@ private Q_SLOTS:
     //StatsPage
     /** Switch to Stats Page */
     void gotoStatsPage(); 
+    //
+
+    //FaqPage
+    /** Switch to FAQ Page */
+    void gotoFaqPage(); 
     //
 
     /** Switch to receive coins page */

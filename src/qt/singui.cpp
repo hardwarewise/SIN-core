@@ -49,6 +49,10 @@
 #include <qt/statspage.h>
 //
 
+// FaqPage
+#include <qt/faqpage.h>
+//
+
 #include <iostream>
 
 #include <QAction>
@@ -218,6 +222,7 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
     connect(topConsoleButton, SIGNAL (released()), this, SLOT (showDebugWindowActivateConsole()));
     connect(topOptionButton, SIGNAL(released()), this, SLOT(optionsClicked()));
     connect(topAddressButton, SIGNAL(released()), walletFrame, SLOT(usedSendingAddresses()));
+    connect(topFaqButton, SIGNAL (released()), this, SLOT (gotoFaqPage()));
 
 
     //// topBar end ////
@@ -540,6 +545,24 @@ void BitcoinGUI::createActions()
     tabGroup->addAction(statsPageAction);
     connect(statsPageAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(statsPageAction, SIGNAL(triggered()), this, SLOT(gotoStatsPage()));
+    
+    //
+
+
+    // FaqPage
+    faqPageAction = new QAction(platformStyle->SingleColorIcon(":/icons/faq"), tr("&FAQ\n"), this);
+    faqPageAction->setStatusTip(tr("FAQ"));
+    faqPageAction->setToolTip(faqPageAction->statusTip());
+    faqPageAction->setCheckable(true);
+    
+#ifdef Q_OS_MAC
+    faqPageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_8));
+#else
+    faqPageAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_8));
+#endif    
+    tabGroup->addAction(faqPageAction);
+    connect(faqPageAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(faqPageAction, SIGNAL(triggered()), this, SLOT(gotoFaqPage()));
     
     //
 
@@ -1060,6 +1083,10 @@ void BitcoinGUI::setWalletActionsEnabled(bool enabled)
     statsPageAction->setEnabled(enabled);
     //
 
+    // FaqPage
+    faqPageAction->setEnabled(enabled);
+    //
+
     encryptWalletAction->setEnabled(enabled);
     backupWalletAction->setEnabled(enabled);
     changePassphraseAction->setEnabled(enabled);
@@ -1106,6 +1133,7 @@ void BitcoinGUI::createTrayIconMenu()
     trayIconMenu->addAction(ResourcesWebsite7);
     trayIconMenu->addAction(ResourcesWebsite8);
     trayIconMenu->addAction(statsPageAction);
+    trayIconMenu->addAction(faqPageAction);
 
 //end Exchange and Web Links
 
@@ -1276,6 +1304,15 @@ void BitcoinGUI::gotoStatsPage()
     if (walletFrame) walletFrame->gotoStatsPage();
 }
 //
+
+// Faqpage
+void BitcoinGUI::gotoFaqPage()
+{
+         faqPageAction->setChecked(true);
+    if (walletFrame) walletFrame->gotoFaqPage();
+}
+//
+
 
 void BitcoinGUI::gotoReceiveCoinsPage()
 {
