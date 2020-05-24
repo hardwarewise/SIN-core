@@ -19,6 +19,11 @@
   <property name="windowTitle">
    <string>Options</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QTabBar::tab { 
+height: 30px;
+}</string>
+  </property>
   <property name="modal">
    <bool>true</bool>
   </property>
