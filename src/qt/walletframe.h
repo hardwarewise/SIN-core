@@ -15,6 +15,7 @@ class SendCoinsRecipient;
 class WalletModel;
 class WalletView;
 class StatsPage;
+class FaqPage;
 
 QT_BEGIN_NAMESPACE
 class QStackedWidget;
@@ -82,6 +83,11 @@ public Q_SLOTS:
     // StatsPage
     /** Switch to stats page */
     void gotoStatsPage();
+    //
+
+    // FaqPage
+    /** Switch to FAQ page */
+    void gotoFaqPage();
     //
 
     /** Switch to receive coins page */

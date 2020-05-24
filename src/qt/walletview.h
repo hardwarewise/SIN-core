@@ -20,6 +20,10 @@
 #include <qt/statspage.h>
 //
 
+// StatsPage
+#include <qt/faqpage.h>
+//
+
 
 #include <QStackedWidget>
 
@@ -35,6 +39,7 @@ class TransactionView;
 class WalletModel;
 class AddressBookPage;
 class StatsPage;
+class FaqPage;
 
 
 QT_BEGIN_NAMESPACE
@@ -97,6 +102,10 @@ private:
     StatsPage *statsWindow;
     //
 
+    // FaqPage
+    FaqPage *faqWindow;
+    //
+
     TransactionView *transactionView;
 
     QProgressDialog *progressDialog;
@@ -122,6 +131,11 @@ public Q_SLOTS:
     // Stats
     /** Switch to stats page */
     void gotoStatsPage();
+    //
+
+    // FAQ
+    /** Switch to faq page */
+    void gotoFaqPage();
     //
 
     /** Switch to receive coins page */
