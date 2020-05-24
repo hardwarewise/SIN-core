@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>723</width>
-    <height>457</height>
+    <height>476</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -401,15 +401,15 @@ width: 150px;
        </widget>
        <widget class="QWidget" name="tabNodeSetup">
         <attribute name="title">
-         <string>InfiniNode Setup</string>
+         <string>InfinityNode Setup</string>
         </attribute>
         <widget class="QWidget" name="gridLayoutWidget">
          <property name="geometry">
           <rect>
            <x>20</x>
            <y>0</y>
-           <width>691</width>
-           <height>171</height>
+           <width>441</width>
+           <height>201</height>
           </rect>
          </property>
          <layout class="QGridLayout" name="gridLayout_3" rowminimumheight="0,0,0" columnminimumwidth="0,0,0">
@@ -500,9 +500,9 @@ width: 150px;
          <property name="geometry">
           <rect>
            <x>60</x>
-           <y>200</y>
+           <y>240</y>
            <width>651</width>
-           <height>191</height>
+           <height>161</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -568,9 +568,9 @@ width: 150px;
          <property name="geometry">
           <rect>
            <x>20</x>
-           <y>200</y>
+           <y>240</y>
            <width>41</width>
-           <height>191</height>
+           <height>161</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -636,14 +636,17 @@ width: 150px;
          <property name="geometry">
           <rect>
            <x>20</x>
-           <y>170</y>
-           <width>168</width>
+           <y>210</y>
+           <width>561</width>
            <height>27</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
            <widget class="QPushButton" name="btnCheck">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Check</string>
             </property>
@@ -651,12 +654,141 @@ width: 150px;
           </item>
           <item>
            <widget class="QPushButton" name="btnSetup">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Setup</string>
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QLabel" name="labelMessage">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Enter your client data and create a new user or login an existing one.</string>
+            </property>
+           </widget>
+          </item>
          </layout>
+        </widget>
+        <widget class="QWidget" name="horizontalLayoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>469</x>
+           <y>-1</y>
+           <width>241</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLabel" name="labelClientIdValue">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Client ID:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="labelClientId">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>#10</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="widgetLogin" native="true">
+         <property name="geometry">
+          <rect>
+           <x>470</x>
+           <y>30</y>
+           <width>241</width>
+           <height>171</height>
+          </rect>
+         </property>
+         <widget class="QWidget" name="gridLayoutWidget_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>241</width>
+            <height>171</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelFirstName">
+             <property name="text">
+              <string>First Name</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="labelEmail">
+             <property name="text">
+              <string>Email:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="labelPassword">
+             <property name="text">
+              <string>Passsword:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelLastName">
+             <property name="text">
+              <string>Last Name</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="txtEmail"/>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="txtFirstName"/>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="txtLastName"/>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="txtPassword">
+             <property name="echoMode">
+              <enum>QLineEdit::Password</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QPushButton" name="btnLogin">
+             <property name="text">
+              <string>Create/Login</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </widget>
       </widget>
@@ -665,6 +797,26 @@ width: 150px;
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>startButton</tabstop>
+  <tabstop>startAllButton</tabstop>
+  <tabstop>UpdateButton</tabstop>
+  <tabstop>filterLineEdit</tabstop>
+  <tabstop>tableWidgetMasternodes</tabstop>
+  <tabstop>hodlTable</tabstop>
+  <tabstop>radioLILNode</tabstop>
+  <tabstop>radioMIDNode</tabstop>
+  <tabstop>radioBIGNode</tabstop>
+  <tabstop>txtFirstName</tabstop>
+  <tabstop>txtLastName</tabstop>
+  <tabstop>txtEmail</tabstop>
+  <tabstop>txtPassword</tabstop>
+  <tabstop>btnLogin</tabstop>
+  <tabstop>btnCheck</tabstop>
+  <tabstop>btnSetup</tabstop>
+  <tabstop>tableWidgetMyMasternodes</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
  <buttongroups>

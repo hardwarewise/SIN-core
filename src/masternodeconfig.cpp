@@ -21,6 +21,19 @@ void CMasternodeConfig::add(std::string alias, std::string ip, std::string privK
     entries.push_back(cme);
 }
 
+bool CMasternodeConfig::append(std::string path, std::string line  ) {
+
+    bool ret = false;
+    FILE* configFile = fopen(path.c_str(), "a");
+    if (configFile != NULL) {
+        std::string strHeader = line + "\n";
+        fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
+        fclose(configFile);
+        ret = true;
+    }
+    return ret;
+}
+
 bool CMasternodeConfig::read(std::string& strErr) {
     int linenumber = 1;
     boost::filesystem::path pathMasternodeConfigFile = GetConfigFile(gArgs.GetArg(MASTERNODE_CONF_FILENAME_ARG, MASTERNODE_CONF_FILENAME));
@@ -28,14 +41,11 @@ bool CMasternodeConfig::read(std::string& strErr) {
 
     if (!streamConfig.good()) {
 
-        FILE* configFile = fopen(pathMasternodeConfigFile.string().c_str(), "a");
-        if (configFile != NULL) {
-            std::string strHeader = "# infinitynode config file\n"
-                          "# Format: alias IP:port infinitynodeprivkey collateral_output_txid collateral_output_index burnfund_output_txid burnfund_output_index\n"
-                          "# infinitynode1 127.0.0.1:20980 7RVuQhi45vfazyVtskTRLBgNuSrYGecS5zj2xERaooFVnWKKjhS b7ed8c1396cf57ac78d756186b6022d3023fd2f1c338b7fbae42d342fdd7070a 0 563d9434e816b3e8ffc5347c6b8db07509de6068f6759f21a16be5d92b7e3111 1\n";
-            fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
-            fclose(configFile);
-        }
+        std::string path = pathMasternodeConfigFile.string();
+        append(path, "# infinitynode config file");
+        append(path, "# Format: alias IP:port infinitynodeprivkey collateral_output_txid collateral_output_index burnfund_output_txid burnfund_output_index");
+        append(path, "# infinitynode1 127.0.0.1:20980 7RVuQhi45vfazyVtskTRLBgNuSrYGecS5zj2xERaooFVnWKKjhS b7ed8c1396cf57ac78d756186b6022d3023fd2f1c338b7fbae42d342fdd7070a 0 563d9434e816b3e8ffc5347c6b8db07509de6068f6759f21a16be5d92b7e3111 1");
+
         return true; // Nothing to read, so just return
     }
 

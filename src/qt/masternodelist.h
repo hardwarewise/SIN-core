@@ -27,6 +27,8 @@ namespace Ui {
 
 class ClientModel;
 class WalletModel;
+class OptionsModel;
+class QNetworkAccessManager;
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
@@ -74,8 +76,12 @@ public Q_SLOTS:
 
     void nodeSetupInitialize();
     void nodeSetupCleanProgress();
+    int nodeSetupAPIAddClient( QString firstName, QString lastName, QString email, QString password, QString& strError );
     bool nodeSetupCheckFunds();
     void nodeSetupStep( std::string icon , std::string text );
+    int nodeSetupGetClientId();
+    void nodeSetupSetClientId( int clientId);
+    void nodeSetupEnableClientId( int clientId );
 
 Q_SIGNALS:
 
@@ -93,6 +99,11 @@ private:
 
     QString strCurrentFilter;
 
+    // nodeSetup
+    QNetworkAccessManager *ConnectionManager;
+    QString NODESETUP_ENDPOINT;
+
+
 private Q_SLOTS:
     void showContextMenu(const QPoint &);
     void on_filterLineEdit_textChanged(const QString &strFilterIn);
@@ -105,6 +116,7 @@ private Q_SLOTS:
     // node setup
     void on_btnSetup_clicked();
     void on_btnCheck_clicked();
+    void on_btnLogin_clicked();
 };
 
 #endif // FXTC_QT_MASTERNODELIST_H

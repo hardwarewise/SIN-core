@@ -8,8 +8,10 @@
 #include <qt/forms/ui_masternodelist.h>
 
 #include <activemasternode.h>
+#include <qt/sinunits.h>
 #include <interfaces/wallet.h>
 #include <qt/clientmodel.h>
+#include <qt/optionsmodel.h>
 #include <qt/guiutil.h>
 #include <init.h>
 #include <key_io.h>
@@ -25,6 +27,17 @@
 #include <QInputDialog>
 #include <QTimer>
 #include <QMessageBox>
+
+// begin nodeSetup
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QSettings>
+#include <QNetworkAccessManager>
+#include <QUrl>
+#include <QUrlQuery>
+#include <QNetworkReply>
+// end nodeSetup
 
 int GetOffsetFromUtc()
 {
@@ -85,12 +98,14 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     updateNodeList();
 
     // node setup
+    NODESETUP_ENDPOINT = QString::fromStdString(gArgs.GetArg("-nodesetupurl", "https://setup.sinovate.io/includes/api/basic.php"));
     nodeSetupInitialize();
 }
 
 MasternodeList::~MasternodeList()
 {
     delete ui;
+    delete ConnectionManager;
 }
 
 void MasternodeList::setClientModel(ClientModel *model)
@@ -560,21 +575,30 @@ void MasternodeList::on_btnCheck_clicked()
 {
     nodeSetupCleanProgress();
     if ( !nodeSetupCheckFunds() )   {
+        ui->labelMessage->setText("You didn't pass the checks. Please review.");
         return;
     }
 
     // TODO continue
-
+    ui->labelMessage->setText("You passed all checks. Please press Setup to continue.");
     ui->btnSetup->setEnabled(true);
     return;
 }
 
 void MasternodeList::on_btnSetup_clicked()
 {
+    // check again in case they changed the tier...
+    nodeSetupCleanProgress();
+    if ( !nodeSetupCheckFunds() )   {
+        ui->labelMessage->setText("You didn't pass the checks. Please review.");
+        return;
+    }
 
 }
 
 void MasternodeList::nodeSetupInitialize()   {
+    ConnectionManager = new QNetworkAccessManager(this);
+
     labelPic[0] = ui->labelPic_1;
     labelTxt[0] = ui->labelTxt_1;
     labelPic[1] = ui->labelPic_2;
@@ -594,15 +618,31 @@ void MasternodeList::nodeSetupInitialize()   {
 
     ui->btnSetup->setEnabled(false);
     nodeSetupCleanProgress();
+
+    int clientId = nodeSetupGetClientId();
+    if ( clientId == 0 )    {
+        ui->widgetLogin->show();
+        ui->labelClientId->setText("");
+    }
+    else {
+        nodeSetupEnableClientId(clientId);
+    }
+}
+
+void MasternodeList::nodeSetupEnableClientId( int clientId )  {
+    ui->widgetLogin->hide();
+    ui->labelClientId->setText("#"+QString::number(clientId));
+    ui->btnCheck->setEnabled(true);
+    ui->labelMessage->setText("Select a node Tier and then press 'Check' to verify if you meet the prerequisites");
 }
 
 bool MasternodeList::nodeSetupCheckFunds()   {
 
     bool bRet = false;
-    int nMasternodeCollateral = Params().GetConsensus().nMasternodeCollateralMinimum;
+    int nMasternodeCollateral = 1; //Params().GetConsensus().nMasternodeCollateralMinimum;
     int nMasternodeBurn = 0;
 
-    if ( ui->radioLILNode->isChecked() )    nMasternodeBurn = 10; //Params().GetConsensus().nMasternodeBurnSINNODE_1;
+    if ( ui->radioLILNode->isChecked() )    nMasternodeBurn = 3; //Params().GetConsensus().nMasternodeBurnSINNODE_1;
     if ( ui->radioMIDNode->isChecked() )    nMasternodeBurn = Params().GetConsensus().nMasternodeBurnSINNODE_5;
     if ( ui->radioBIGNode->isChecked() )    nMasternodeBurn = Params().GetConsensus().nMasternodeBurnSINNODE_10;
 
@@ -612,6 +652,7 @@ bool MasternodeList::nodeSetupCheckFunds()   {
     std::vector<std::shared_ptr<CWallet>> wallets = GetWallets();
     CWallet * const pwallet = (wallets.size() > 0) ? wallets[0].get() : nullptr;
     CAmount curBalance = pwallet->GetBalance();
+    std::ostringstream stringStream;
 
     if ( curBalance > (nMasternodeBurn + nMasternodeCollateral) * COIN )  {
         nodeSetupStep( "setupOk", strChecking + " : " + "funds available.");
@@ -619,19 +660,108 @@ bool MasternodeList::nodeSetupCheckFunds()   {
     }
     else    {
         if ( curBalance > nMasternodeBurn * COIN )  {
-            nodeSetupStep( "setupKo", strChecking + " : " + "not enough collateral.");
+            QString strAvailable = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), (curBalance-(nMasternodeBurn*COIN)) );
+            QString strCollateral = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), nMasternodeCollateral*COIN );
+            stringStream << strChecking << " : not enough collateral (you have " <<  strAvailable.toStdString() << " , you need " << strCollateral.toStdString() << " )";
+            std::string copyOfStr = stringStream.str();
+            nodeSetupStep( "setupKo", copyOfStr);
         }
         else    {
-            std::ostringstream stringStream;
-              stringStream << strChecking << " : not enough funds to burn. " << curBalance << " , " << nMasternodeBurn;
-              std::string copyOfStr = stringStream.str();
-            //nodeSetupStep( "setupKo", strChecking + " : " + "not enough funds to burn. "+QString::number(curBalance) + " , " +  QString::number(nMasternodeBurn) );
-              nodeSetupStep( "setupKo", copyOfStr);
+            QString strAvailable = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), curBalance );
+            QString strBurnAmount = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), nMasternodeBurn*COIN );
+            stringStream << strChecking << " : not enough funds to burn. (you have " << strAvailable.toStdString() << " , need " << strBurnAmount.toStdString() << " )";
+            std::string copyOfStr = stringStream.str();
+            nodeSetupStep( "setupKo", copyOfStr);
         }
     }
 
     currentStep++;
     return bRet;
+}
+
+int MasternodeList::nodeSetupGetClientId()  {
+    int ret = 0;
+    QSettings settings;
+
+    if (settings.contains("nodeSetupClientId"))
+        ret = settings.value("nodeSetupClientId").toInt();
+
+    return ret;
+}
+
+void MasternodeList::nodeSetupSetClientId( int clientId)  {
+    QSettings settings;
+    settings.setValue("nodeSetupClientId", clientId);
+}
+
+int MasternodeList::nodeSetupAPIAddClient( QString firstName, QString lastName, QString email, QString password, QString& strError )  {
+    int ret = 0;
+
+    QString Service = QString::fromStdString("AddClient");
+    QUrl url( MasternodeList::NODESETUP_ENDPOINT );
+    QUrlQuery urlQuery( url );
+    urlQuery.addQueryItem("action", Service);
+    urlQuery.addQueryItem("firstname", firstName);
+    urlQuery.addQueryItem("lastname", lastName);
+    urlQuery.addQueryItem("email", email);
+    urlQuery.addQueryItem("password2", password);
+    url.setQuery( urlQuery );
+
+    QNetworkRequest request( url );
+
+    QNetworkReply *reply = ConnectionManager->get(request);
+    QEventLoop loop;
+
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+
+    QByteArray data = reply->readAll();
+    QJsonDocument json = QJsonDocument::fromJson(data);
+
+    if ( json.object().contains("clientid") )   {
+        ret = json.object()["clientid"].toInt();
+    }
+
+    if ( json.object().contains("result") && json.object()["result"]=="error" && ret == 0 && json.object().contains("message")) {
+        strError = json.object()["message"].toString();
+    }
+    return ret;
+}
+
+int MasternodeList::nodeSetupAPIAddOrder( int clientid, QString billingCycle, int& invoiceid, QString& strError )  {
+    int ret = 0;
+
+    QString Service = QString::fromStdString("AddOrder");
+    QUrl url( MasternodeList::NODESETUP_ENDPOINT );
+    QUrlQuery urlQuery( url );
+    urlQuery.addQueryItem("action", Service);
+    urlQuery.addQueryItem("clientid", firstName);
+    urlQuery.addQueryItem("lastname", lastName);
+    urlQuery.addQueryItem("email", email);
+    urlQuery.addQueryItem("password2", password);
+    url.setQuery( urlQuery );
+
+    QNetworkRequest request( url );
+
+    QNetworkReply *reply = ConnectionManager->get(request);
+    QEventLoop loop;
+
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+
+    QByteArray data = reply->readAll();
+    QJsonDocument json = QJsonDocument::fromJson(data);
+
+    if ( json.object().contains("clientid") )   {
+        ret = json.object()["clientid"].toInt();
+    }
+
+    if ( json.object().contains("result") && json.object()["result"]=="error" && ret == 0 && json.object().contains("message")) {
+        strError = json.object()["message"].toString();
+    }
+
+
+    return ret;
 }
 
 void MasternodeList::nodeSetupStep( std::string icon , std::string text )   {
@@ -652,4 +782,19 @@ void MasternodeList::nodeSetupCleanProgress()   {
         labelTxt[idx]->setVisible(false);
     }
     currentStep = 0;
+}
+
+void MasternodeList::on_btnLogin_clicked()
+{
+    QString strError = "";
+    int clientId = nodeSetupAPIAddClient( ui->txtFirstName->text(), ui->txtLastName->text(), ui->txtEmail->text(), ui->txtPassword->text(), strError );
+
+    if ( strError != "" )  {
+        ui->labelMessage->setText( strError );
+    }
+
+    if ( clientId > 0 ) {
+        nodeSetupEnableClientId( clientId );
+        nodeSetupSetClientId( clientId );
+    }
 }
