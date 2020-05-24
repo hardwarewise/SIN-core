@@ -164,6 +164,15 @@ void WalletFrame::gotoStatsPage()
 }
 //
 
+// FaqPage
+void WalletFrame::gotoFaqPage()
+{
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoFaqPage();
+}
+//
+
 void WalletFrame::gotoReceiveCoinsPage()
 {
     QMap<QString, WalletView*>::const_iterator i;
