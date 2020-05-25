@@ -587,14 +587,32 @@ void OverviewPage::onResult(QNetworkReply* replystats)
         
 
         // Set INFINITY NODE STATS strings
-        QString totalNodesString = QString::number(dataObject.value("inf_online_big").toInt() + dataObject.value("inf_online_mid").toInt() + dataObject.value("inf_online_lil").toInt()) + " Nodes";
+        int bigRoiDays = 1000000/((720/dataObject.value("inf_online_big").toDouble())*1752);
+        int midRoiDays = 500000/((720/dataObject.value("inf_online_mid").toDouble())*838);
+        int lilRoiDays = 100000/((720/dataObject.value("inf_online_lil").toDouble())*160);
+
+        QString bigROIString = "ROI: " + QString::number(bigRoiDays) + " days" ;
+        QString midROIString = "ROI: " + QString::number(midRoiDays) + " days";
+        QString lilROIString = "ROI: " + QString::number(lilRoiDays) + " days";
+        QString totalNodesString = QString::number(dataObject.value("inf_online_big").toInt() + dataObject.value("inf_online_mid").toInt() + dataObject.value("inf_online_lil").toInt()) + " nodes";
+    
+        QString bigString = dataObject.value("inf_burnt_big").toVariant().toString() + "/" + dataObject.value("inf_online_big").toVariant().toString() + "/" + bigROIString;
+        QString midString = dataObject.value("inf_burnt_mid").toVariant().toString() + "/" + dataObject.value("inf_online_mid").toVariant().toString() + "/" + midROIString;
+        QString lilString = dataObject.value("inf_burnt_lil").toVariant().toString() + "/" + dataObject.value("inf_online_lil").toVariant().toString() + "/"  + lilROIString;
         
         // Set supply string
         int supplyNumber = dataObject.value("supply").toDouble() - dataObject.value("burnFee").toDouble();
 
+        
+
+
 
         ui->totalValueLabel->setText(totalNodesString);
         ui->totalSupplyValueLabel->setText(l.toString(supplyNumber) + " SIN");
+        ui->addressesValueLabel->setText(dataObject.value("explorerAddresses").toVariant().toString());
+        ui->bigValueLabel->setText(bigString);
+        ui->midValueLabel->setText(midString);
+        ui->lilValueLabel->setText(lilString);
     }
     else
     {
