@@ -56,7 +56,7 @@ width: 150px;
        </property>
        <widget class="QWidget" name="tabMyMasternodes">
         <attribute name="title">
-         <string>My Nodes</string>
+         <string>My Infinitynodes</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_2">
          <item row="0" column="0">
@@ -306,11 +306,11 @@ width: 150px;
        </widget>
        <widget class="QWidget" name="tab">
         <attribute name="title">
-         <string>DIN 1.0</string>
+         <string>My Peers DIN</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
-          <widget class="QTableWidget" name="hodlTable">
+          <widget class="QTableWidget" name="dinTable">
            <property name="enabled">
             <bool>true</bool>
            </property>
@@ -325,6 +325,30 @@ width: 150px;
            </attribute>
            <column>
             <property name="text">
+             <string>Owner address</string>
+            </property>
+            <property name="textAlignment">
+             <set>AlignLeading|AlignVCenter</set>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Begin height</string>
+            </property>
+            <property name="textAlignment">
+             <set>AlignLeading|AlignVCenter</set>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Expire height</string>
+            </property>
+            <property name="textAlignment">
+             <set>AlignLeading|AlignVCenter</set>
+            </property>
+           </column>
+           <column>
+            <property name="text">
              <string>Status</string>
             </property>
             <property name="textAlignment">
@@ -333,7 +357,7 @@ width: 150px;
            </column>
            <column>
             <property name="text">
-             <string>Principal</string>
+             <string>Peer address</string>
             </property>
             <property name="textAlignment">
              <set>AlignLeading|AlignVCenter</set>
@@ -341,7 +365,7 @@ width: 150px;
            </column>
            <column>
             <property name="text">
-             <string>Accrued Interest</string>
+             <string>Next reward</string>
             </property>
             <property name="textAlignment">
              <set>AlignLeading|AlignVCenter</set>
@@ -349,7 +373,7 @@ width: 150px;
            </column>
            <column>
             <property name="text">
-             <string>Accrued Value</string>
+             <string>Locked</string>
             </property>
             <property name="textAlignment">
              <set>AlignLeading|AlignVCenter</set>
@@ -357,39 +381,7 @@ width: 150px;
            </column>
            <column>
             <property name="text">
-             <string>On Maturation</string>
-            </property>
-            <property name="textAlignment">
-             <set>AlignLeading|AlignVCenter</set>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Term (Days)</string>
-            </property>
-            <property name="textAlignment">
-             <set>AlignLeading|AlignVCenter</set>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Deposit Block</string>
-            </property>
-            <property name="textAlignment">
-             <set>AlignLeading|AlignVCenter</set>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Maturation Block</string>
-            </property>
-            <property name="textAlignment">
-             <set>AlignLeading|AlignVCenter</set>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Estimated Date</string>
+             <string>Backup address</string>
             </property>
             <property name="textAlignment">
              <set>AlignLeading|AlignVCenter</set>

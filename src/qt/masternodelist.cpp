@@ -9,6 +9,7 @@
 
 #include <activemasternode.h>
 #include <interfaces/wallet.h>
+#include <interfaces/node.h>
 #include <qt/clientmodel.h>
 #include <qt/guiutil.h>
 #include <init.h>
@@ -17,6 +18,11 @@
 #include <masternode-sync.h>
 #include <masternodeconfig.h>
 #include <masternodeman.h>
+//SIN
+#include <infinitynode.h>
+#include <infinitynodeman.h>
+#include <infinitynodemeta.h>
+//
 #include <sync.h>
 #include <wallet/wallet.h>
 #include <qt/walletmodel.h>
@@ -83,6 +89,7 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     fFilterUpdated = false;
     nTimeFilterUpdated = GetTime();
     updateNodeList();
+    updateDINList();
 }
 
 MasternodeList::~MasternodeList()
@@ -322,6 +329,75 @@ void MasternodeList::updateNodeList()
 
     ui->countLabel->setText(QString::number(ui->tableWidgetMasternodes->rowCount()));
     ui->tableWidgetMasternodes->setSortingEnabled(true);
+
+    updateDINList();
+}
+
+void MasternodeList::updateDINList()
+{
+    if(walletModel && walletModel->getOptionsModel())
+    {
+        std::map<COutPoint, std::string> mOnchainDataInfo = walletModel->wallet().GetOnchainDataInfo();
+        std::map<COutPoint, std::string> mapMynode;
+
+        int countNode = 0;
+        for(auto &pair : mOnchainDataInfo){
+            string s, sDataType = "", sData = "";
+            stringstream ss(pair.second);
+            int i=0;
+            while (getline(ss, s,';')) {
+                if (i==0) {
+                    sDataType = s;
+                }
+                if (i==1) {
+                    sData = s;
+                }
+                if(sDataType == "NodeCreation"){
+                    mapMynode[pair.first] = sData;
+                }
+                i++;
+            }
+        }
+
+        ui->dinTable->setRowCount(mapMynode.size());
+        ui->dinTable->setSortingEnabled(true);
+
+        interfaces::Node& node = clientModel->node();
+        int nCurrentHeight = node.getNumBlocks();
+        int k=0;
+        for(auto &pair : mapMynode){
+            infinitynode_info_t infoInf;
+            std::string status = "Unknown", sPeerAddress = "";
+            if(!infnodeman.GetInfinitynodeInfo(pair.first, infoInf)){
+                continue;
+            }
+            CMetadata metadata = infnodemeta.Find(infoInf.metadataID);
+            if (metadata.getMetadataHeight() == 0){
+                status="Incomplete";
+            } else {
+                status="Ready";
+
+                std::string metaPublicKey = metadata.getMetaPublicKey();
+                std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
+                if(tx_data.size() == CPubKey::COMPRESSED_PUBLIC_KEY_SIZE){
+                    CPubKey pubKey(tx_data.begin(), tx_data.end());
+                    CTxDestination dest = GetDestinationForKey(pubKey, DEFAULT_ADDRESS_TYPE);
+                    sPeerAddress = EncodeDestination(dest);
+                }
+            }
+            if(infoInf.nExpireHeight < nCurrentHeight){
+                status="Expried";
+            }
+            QString nodeTxId = QString::fromStdString(infoInf.collateralAddress);
+            ui->dinTable->setItem(k, 0, new QTableWidgetItem(QString(nodeTxId)));
+            ui->dinTable->setItem(k, 1, new QTableWidgetItem(QString::number(infoInf.nHeight)));
+            ui->dinTable->setItem(k, 2, new QTableWidgetItem(QString::number(infoInf.nExpireHeight)));
+            ui->dinTable->setItem(k, 3, new QTableWidgetItem(QString(QString::fromStdString(status))));
+            ui->dinTable->setItem(k, 4, new QTableWidgetItem(QString(QString::fromStdString(sPeerAddress))));
+            ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString(pair.second))));
+            k++;
+        }
+    }
 }
 
 void MasternodeList::on_filterLineEdit_textChanged(const QString &strFilterIn)

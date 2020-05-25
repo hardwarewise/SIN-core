@@ -406,7 +406,7 @@ void DepositCoinsDialog::setBalance(const interfaces::WalletBalances& balances)
     {
         
         ui->labelBalance->setText(BitcoinUnits::floorHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), balances.balance, false, BitcoinUnits::separatorAlways));
-        std::vector<COutput> vTimeLockInfo = model->wallet().GetTermDepositInfo();
+        std::vector<COutput> vTimeLockInfo = model->wallet().GetTimeLockInfo();
 
         ui->hodlTable->setRowCount(vTimeLockInfo.size());
 
@@ -422,7 +422,7 @@ void DepositCoinsDialog::setBalance(const interfaces::WalletBalances& balances)
             CTxOut txOut = out.tx->tx->vout[out.i];
 
             int lockedHeight=curHeight-out.nDepth;
-            int releaseBlock=txOut.scriptPubKey.GetTermDepositReleaseBlock();
+            int releaseBlock=txOut.scriptPubKey.GetTimeLockReleaseBlock();
             int locktimes =releaseBlock-lockedHeight;
             int blocksRemaining=releaseBlock-curHeight;
             int blocksSoFar=curHeight-lockedHeight;

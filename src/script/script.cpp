@@ -278,10 +278,10 @@ bool CScript::IsPushOnly(const_iterator pc) const
 }
 
 bool CScript::IsTermDeposit() const{
-    return GetTermDepositReleaseBlock() > -1;
+    return GetTimeLockReleaseBlock() > -1;
 }
 
-int CScript::GetTermDepositReleaseBlock() const
+int CScript::GetTimeLockReleaseBlock() const
 {
     if(this->size()<29 || this->size()>32 || (*this)[0] > 4 || (*this)[0] == 0){
         return -1;
@@ -308,7 +308,7 @@ std::string CScript::ToStringNew() const
 {
 
     std::ostringstream ss;
-    ss <<"OPS:" << GetTermDepositReleaseBlock() << ":";
+    ss <<"OPS:" << GetTimeLockReleaseBlock() << ":";
     int theSize=this->size();
     for(int i=0;i<theSize;i++){
         //unsigned int opcode = (*this)[0]//*pc++;

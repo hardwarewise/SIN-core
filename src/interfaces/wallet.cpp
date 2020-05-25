@@ -298,9 +298,14 @@ public:
         return result;
     }
 
-    std::vector<COutput> GetTermDepositInfo() override
+    std::vector<COutput> GetTimeLockInfo() override
     {
-        return m_wallet.GetTermDepositInfo();
+        return m_wallet.GetTimeLockInfo();
+    }
+
+    std::map<COutPoint, std::string> GetOnchainDataInfo() override
+    {
+        return m_wallet.GetOnchainDataInfo();
     }
 
     bool tryGetTxStatus(const uint256& txid,
@@ -351,7 +356,8 @@ public:
         result.unconfirmed_balance = m_wallet.GetUnconfirmedBalance();
         result.immature_balance = m_wallet.GetImmatureBalance();
         result.have_watch_only = m_wallet.HaveWatchOnly();
-        result.term_deposit_info = m_wallet.GetTermDepositInfo();
+        result.timelock_info = m_wallet.GetTimeLockInfo();
+        result.onchaindata_info = m_wallet.GetOnchainDataInfo();
         if (result.have_watch_only) {
             result.watch_only_balance = m_wallet.GetBalance();
             result.unconfirmed_watch_only_balance = m_wallet.GetUnconfirmedWatchOnlyBalance();

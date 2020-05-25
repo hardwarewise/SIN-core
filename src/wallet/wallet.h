@@ -521,11 +521,6 @@ public:
         return CalculateMaximumSignedInputSize(tx->vout[out], pwallet, use_max_sig);
     }
 
-    // Dash
-    CAmount GetAnonymizedCredit(bool fUseCache=true) const;
-    CAmount GetDenominatedCredit(bool unconfirmed, bool fUseCache=true) const;
-    //
-
     void GetAmounts(std::list<COutputEntry>& listReceived,
                     std::list<COutputEntry>& listSent, CAmount& nFee, std::string& strSentAccount, const isminefilter& filter) const;
 
@@ -549,8 +544,9 @@ public:
     bool AcceptToMemoryPool(const CAmount& nAbsurdFee, CValidationState& state);
 
     std::set<uint256> GetConflicts() const;
-    bool isOutputTermDeposit(int i) const;
-    int GetTermDepositReleaseBlock(int i) const;
+    bool isOutputTimeLock(int i) const;
+    bool isOutputBurnData(int i) const;
+    int GetTimeLockReleaseBlock(int i) const;
 };
 
 class COutput
@@ -781,9 +777,6 @@ private:
     // Dash
     std::set<COutPoint> setWalletUTXO;
     //
-    // SIN
-    std::map<COutPoint, std::string> mapOnChainData;
-    //
 
     /* Mark a transaction (and its in-wallet descendants) as conflicting with a particular block. */
     void MarkConflicted(const uint256& hashBlock, const uint256& hashTx);
@@ -908,9 +901,9 @@ public:
     std::map<uint256, CWalletTx> mapWallet;
     std::list<CAccountingEntry> laccentries;
 
-    std::vector<COutput> GetTermDepositInfo();
-    std::vector<COutput> GetTermDepositInfo(const std::string& strAccount);
-    std::map<COutPoint, std::string> GetOnchainData(){return mapOnChainData;};
+    std::vector<COutput> GetTimeLockInfo();
+    std::vector<COutput> GetTimeLockInfo(const std::string& strAccount);
+    std::map<COutPoint, std::string> GetOnchainDataInfo();
 
     typedef std::pair<CWalletTx*, CAccountingEntry*> TxPair;
     typedef std::multimap<int64_t, TxPair > TxItems;
