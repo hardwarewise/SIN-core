@@ -531,7 +531,7 @@ color:#000000;</string>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>150</width>
+               <width>35</width>
                <height>20</height>
               </size>
              </property>
@@ -571,7 +571,7 @@ color:#000000;</string>
 color:#000000;</string>
                      </property>
                      <property name="text">
-                      <string>Total Infinity Nodes</string>
+                      <string>Total Addresses</string>
                      </property>
                      <property name="alignment">
                       <set>Qt::AlignCenter</set>
@@ -579,10 +579,9 @@ color:#000000;</string>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLabel" name="totalValueLabel">
+                    <widget class="QLabel" name="addressesValueLabel">
                      <property name="styleSheet">
-                      <string notr="true">font-size:28px;
-font-weight:bold;
+                      <string notr="true">font-size:18px;
 color:#00B4B8;</string>
                      </property>
                      <property name="text">
@@ -616,9 +615,15 @@ color:#000000;</string>
                    </item>
                    <item>
                     <widget class="QLabel" name="totalSupplyValueLabel">
+                     <property name="font">
+                      <font>
+                       <pointsize>-1</pointsize>
+                       <weight>50</weight>
+                       <bold>false</bold>
+                      </font>
+                     </property>
                      <property name="styleSheet">
-                      <string notr="true">font-size:16px;
-font-weight:bold;
+                      <string notr="true">font-size:18px;
 color:#00B4B8;</string>
                      </property>
                      <property name="text">
@@ -638,12 +643,148 @@ color:#00B4B8;</string>
             </layout>
            </item>
            <item>
-            <spacer name="horizontalSpacer_3">
+            <spacer name="horizontalSpacer_7">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeType">
               <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>35</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <property name="bottomMargin">
+              <number>9</number>
+             </property>
+             <item>
+              <layout class="QGridLayout" name="gridLayout">
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_7">
+                 <property name="styleSheet">
+                  <string notr="true">font-size:16px;
+color:#000000;</string>
+                 </property>
+                 <property name="text">
+                  <string>Total</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_6">
+                 <property name="styleSheet">
+                  <string notr="true">font-size:16px;
+color: #2E3191;</string>
+                 </property>
+                 <property name="text">
+                  <string>MINI</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_4">
+                 <property name="styleSheet">
+                  <string notr="true">font-size:16px;
+color:#000000;</string>
+                 </property>
+                 <property name="text">
+                  <string>BIG</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_5">
+                 <property name="styleSheet">
+                  <string notr="true">font-size:16px;
+color: grey;</string>
+                 </property>
+                 <property name="text">
+                  <string>MID</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLabel" name="bigValueLabel">
+                 <property name="styleSheet">
+                  <string notr="true">font-size:16px;
+color:#00B4B8;</string>
+                 </property>
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLabel" name="midValueLabel">
+                 <property name="styleSheet">
+                  <string notr="true">font-size:16px;
+color: grey;</string>
+                 </property>
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLabel" name="lilValueLabel">
+                 <property name="styleSheet">
+                  <string notr="true">font-size:16px;
+color: #2E3191;</string>
+                 </property>
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QLabel" name="totalValueLabel">
+                 <property name="styleSheet">
+                  <string notr="true">font-size:16px;
+color:#00B4B8;</string>
+                 </property>
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0" colspan="2">
+                <widget class="QLabel" name="label">
+                 <property name="font">
+                  <font>
+                   <pointsize>-1</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">font-size:16px;
+color:#000000;</string>
+                 </property>
+                 <property name="text">
+                  <string>Total Infinity Nodes</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Expanding</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
