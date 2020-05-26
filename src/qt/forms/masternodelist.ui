@@ -333,7 +333,7 @@ width: 150px;
            </column>
            <column>
             <property name="text">
-             <string>Begin height</string>
+             <string>Begin</string>
             </property>
             <property name="textAlignment">
              <set>AlignLeading|AlignVCenter</set>
@@ -341,7 +341,7 @@ width: 150px;
            </column>
            <column>
             <property name="text">
-             <string>Expire height</string>
+             <string>Expire</string>
             </property>
             <property name="textAlignment">
              <set>AlignLeading|AlignVCenter</set>

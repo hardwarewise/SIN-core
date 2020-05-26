@@ -1504,9 +1504,14 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Check error: %s, Register LockReward error: %s\n",
                          sErrorCheck, sErrorRegister);
             } else {
-                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Register LockReward broadcasted!!!\n");
                 //memory the musig in map. No build for this anymore
                 mapSigned[mapLockRewardRequest[nHashLockRequest].nRewardHeight] = nHashGroupSigner;
+                //send register info
+                if(!AutoResigterLockReward(sLockRewardMusig, sErrorCheck)){
+                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Register LockReward false: %s\n", sErrorCheck);
+                } else {
+                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Register LockReward broadcasted!!!\n");
+                }
             }
         }//end number signature check
     }//end loop in mapMyPartialSigns

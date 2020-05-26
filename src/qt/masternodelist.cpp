@@ -73,6 +73,15 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     ui->tableWidgetMasternodes->setColumnWidth(3, columnActiveWidth);
     ui->tableWidgetMasternodes->setColumnWidth(4, columnLastSeenWidth);
 
+    ui->dinTable->setColumnWidth(0, 250);
+    ui->dinTable->setColumnWidth(1, 60);
+    ui->dinTable->setColumnWidth(2, 60);
+    ui->dinTable->setColumnWidth(3, 60);
+    ui->dinTable->setColumnWidth(4, 250);
+    ui->dinTable->setColumnWidth(5, 90);
+    ui->dinTable->setColumnWidth(6, 60);
+    ui->dinTable->setColumnWidth(7, 250);
+
     ui->tableWidgetMyMasternodes->setContextMenuPolicy(Qt::CustomContextMenu);
 
     QAction *startAliasAction = new QAction(tr("Start alias"), this);
@@ -372,7 +381,7 @@ void MasternodeList::updateDINList()
                 continue;
             }
             CMetadata metadata = infnodemeta.Find(infoInf.metadataID);
-            if (metadata.getMetadataHeight() == 0){
+            if (metadata.getMetadataHeight() == 0 || metadata.getMetaPublicKey() == "" ){
                 status="Incomplete";
             } else {
                 status="Ready";
@@ -394,6 +403,8 @@ void MasternodeList::updateDINList()
             ui->dinTable->setItem(k, 2, new QTableWidgetItem(QString::number(infoInf.nExpireHeight)));
             ui->dinTable->setItem(k, 3, new QTableWidgetItem(QString(QString::fromStdString(status))));
             ui->dinTable->setItem(k, 4, new QTableWidgetItem(QString(QString::fromStdString(sPeerAddress))));
+            ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString(QString::fromStdString(""))));
+            ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString(QString::fromStdString(""))));
             ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString(pair.second))));
             k++;
         }
