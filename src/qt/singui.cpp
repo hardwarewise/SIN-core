@@ -850,7 +850,7 @@ void BitcoinGUI::createMenuBar()
     	help->addAction(openRPCConsoleAction);
     }
     help->addAction(showHelpMessageAction);
-    //help->addAction(showSpecsHelpAction);
+    help->addAction(faqPageAction);
     help->addSeparator();
     help->addAction(aboutAction);
     help->addAction(aboutQtAction);
