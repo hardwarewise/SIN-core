@@ -472,7 +472,7 @@ border: 1px solid #2E3191;
                  <x>0</x>
                  <y>0</y>
                  <width>658</width>
-                 <height>4688</height>
+                 <height>5020</height>
                 </rect>
                </property>
                <property name="autoFillBackground">
@@ -581,7 +581,7 @@ color: white;</string>
                      <item>
                       <widget class="QLabel" name="labelContent1">
                        <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Since its inception in September 2018, the SINOVATE project has strived to deliver innovative solutions in the blockchain space. A complete democratic solution was created by respecting and taking on board opinions from the community. Ultimately, the community is the most critical aspect of any blockchain project.  It is vital for all members of the community to feel welcome and appreciated. &lt;/p&gt;&lt;p&gt;SINOVATE has a different perspective on how to utilize blockchain technology to improve private and corporate parties. &lt;/p&gt;&lt;p&gt;The goal is to create a blockchain platform in which the community's needs are accommodated while learning from past mistakes and misfortune. SINOVATE is committed to transparency, accountability, and honesty as they strive to solve existing problems within the blockchain technology space. As succinctly put by the slogan; create, build, and innovate. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Blockchain Cloud Storage&lt;/span&gt;&lt;/p&gt;&lt;p&gt;SINOVATE (SIN) is a technically sound, open-source, and state of the art community-driven public blockchain for answering Big Data paradigms.&lt;/p&gt;&lt;p&gt;Incorruptible Data Storage (I.D.S) provides decentralized cloud storage, leveraging thousands of Infinity Nodes (Evolved Masternodes) that are low cost and highly secure.  &lt;/p&gt;&lt;p&gt;Combining the innovations on both the proof-of-work layer with the uniqueness of the Infinity Node coin burning system delivers a robust standard of security in the blockchain space. &lt;/p&gt;&lt;p&gt;SINOVATE did not have an ICO. There was no pre-sale of coins, and no coins were pre-mined. &lt;/p&gt;&lt;p&gt;Since its inception in September 2018, the SINOVATE project has strived to deliver innovative solutions in the blockchain space. A complete democratic solution was created by respecting and taking on board opinions from the community. Ultimately, the community is the most critical aspect of any blockchain project. It is vital for all members of the community to feel welcome and appreciated.&lt;/p&gt;&lt;p&gt;SINOVATE has a different perspective on how to utilize blockchain technology to improve private and corporate parties.&lt;/p&gt;&lt;p&gt;The goal is to create a blockchain platform in which the community's needs are accommodated while learning from past mistakes and misfortune. SINOVATE is committed to transparency, accountability, and honesty as they strive to solve existing problems within the blockchain technology space. As succinctly put by the slogan; create, build, and innovate. &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                        <property name="alignment">
                         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -840,7 +840,7 @@ color: white;</string>
                      <item>
                       <widget class="QLabel" name="labelSubtitle4">
                        <property name="text">
-                        <string>4) What differentiates Infinite Node 1.0 
+                        <string>What differentiates Infinite Node 1.0 
  and masternode technology?</string>
                        </property>
                        <property name="wordWrap">
