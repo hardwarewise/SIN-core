@@ -2295,7 +2295,11 @@
         <source>Enter a label for this address to add it to your address book</source>
         <translation>Adres defterinize eklemek için bu adrese bir etiket giriniz</translation>
     </message>
-</context>
+    <message>
+        <source>Add address label</source>
+        <translation>Bir etiket ekleyin</translation>
+    </message>
+    </context>
 <context>
     <name>SendConfirmationDialog</name>
     <message>
@@ -3457,5 +3461,289 @@
         <source>Error</source>
         <translation>Hata</translation>
     </message>
-</context>
+    </context>
+    <context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Pending</source>
+        <translation>Bekliyor</translation>
+    </message>
+    <message>
+        <source>Immature</source>
+        <translation>Olgunlaşmamış</translation>
+    </message>
+    <message>
+        <source>Available SIN</source>
+        <translation>Mevcut SIN</translation>
+    </message>
+    <message>
+        <source>Available USD</source>
+        <translation>Mevcut USD</translation>
+    </message>
+    <message>
+        <source>Total Addresses</source>
+        <translation>Toplam Adres</translation>
+    </message>
+    <message>
+        <source>Circulating Supply</source>
+        <translation>Dolaşım Arzı</translation>
+    </message>
+    <message>
+        <source>Total Infinity Nodes</source>
+        <translation>Toplam Infinity Node</translation>
+    </message>
+    <message>
+        <source>Value USD</source>
+        <translation>Değer USD</translation>
+    </message>
+    <message>
+        <source>Value BTC</source>
+        <translation>Değer BTC</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Toplam</translation>
+    </message>
+    </context>
+    <context>
+    <name>SendCoinsDialog</name>
+    <message>
+        <source>Send SIN Coins</source>
+        <translation>SIN Coin Gönder</translation>
+    </message>
+    <message>
+        <source>Coin Control</source>
+        <translation>Koin Kontrolü</translation>
+    </message>
+    <message>
+        <source> Automatically selected</source>
+        <translation>Otomatik olarak seçildi</translation>
+    </message>
+    <message>
+        <source> Insufficient funds!</source>
+        <translation>Yetersiz bakiye!</translation>
+    </message>
+    <message>
+        <source>Warning: Fee estimation is currently not possible.</source>
+        <translation>Uyarı: Ücret tahmini şu anda mümkün değil.</translation>
+    </message>
+    <message>
+        <source>Per kilobyte</source>
+        <translation>Kilobayt başına</translation>
+    </message>
+    <message>
+        <source>Enable Replace-By-Fee</source>
+        <translation>Ücret Değiştirmeyi Etkinleştir</translation>
+    </message>
+    <message>
+        <source>Customize Fee</source>
+        <translation>Ücreti Özelleştir</translation>
+    </message>
+    <message>
+        <source>[Read the tooltip]</source>
+        <translation>[Bilgi balonunu oku]</translation>
+    </message>
+    <message>
+        <source>Minimize</source>
+        <translation>Küçült</translation>
+    </message>
+    </context>
+    <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Select SIN Coins to Send</source>
+        <translation>Gönderilecek SIN Paraları Seçin</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Etiket</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>Select all</source>
+        <translation>Tümünü seç</translation>
+    </message>
+    <message>
+        <source>Lock-Unlock All</source>
+        <translation>Tümünü Kilitle/Aç</translation>
+    </message>
+    <message>
+        <source>Ages</source>
+        <translation>Onaylar</translation>
+    </message>
+    <message>
+        <source>After Fee: </source>
+        <translation>Ücret Sonrası:</translation>
+    </message>
+    </context>
+    <context>
+    <name>DepositCoinsDialog</name>
+    <message>
+        <source>&amp;EARN</source>
+        <translation>&amp;KAZAN</translation>
+    </message>
+    <message>
+        <source>HCO-Hodl Coin Offering. Lock SIN to EARN.</source>
+        <translation>HCO-Hodl Coin Offering. SINlerinizle KAZANMAK için Kilitleyin</translation>
+    </message>
+    <message>
+        <source>Balance:</source>
+        <translation>Bakiye:</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Durum</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Miktar</translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation>Başlangıç</translation>
+    </message>
+    <message>
+        <source>End</source>
+        <translation>Bitiş</translation>
+    </message>
+    <message>
+        <source>Lock time</source>
+        <translation>Kilit Süresi</translation>
+    </message>
+    </context>
+    <context>
+    <name>SendCoinsEntry</name>
+    <message>
+        <source>Blocks</source>
+        <translation>Bloklar</translation>
+    </message>
+    <message>
+        <source>For:</source>
+        <translation>İçin:</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>Ay</translation>
+    </message>
+    </context>
+    <context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>Receive SIN Coins</source>
+        <translation>SIN Talep Edin</translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;Etiket</translation>
+    </message>
+    <message>
+        <source>&amp;Message</source>
+        <translation>&amp;Mesaj</translation>
+    </message>
+    <message>
+        <source>Generate native segwit (Bech32) address</source>
+        <translation>Yerel segwit (Bech32) adresi oluştur</translation>
+    </message>
+    <message>
+        <source>&amp;Amount</source>
+        <translation>&amp;Miktar</translation>
+    </message>
+    </context>
+    <context>
+    <name>MasternodeList</name>
+    <message>
+        <source>My Infinitynodes</source>
+        <translation>InfinityNodelarım</translation>
+    </message>
+    <message>
+        <source>My Peers DIN</source>
+        <translation>DIN Akranlarım</translation>
+    </message>
+    <message>
+        <source>Alias</source>
+        <translation>Takma Ad</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>Protokol</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Durum</translation>
+    </message>
+    <message>
+        <source>Active</source>
+        <translation>Aktif</translation>
+    </message>
+    <message>
+        <source>Last Seen</source>
+        <translation>Son Görülen</translation>
+    </message>
+    <message>
+        <source>Payee</source>
+        <translation>Alacaklı</translation>
+    </message>
+    <message>
+        <source>S&amp;tart alias</source>
+        <translation>T&amp;akma Adı Başlat</translation>
+    </message>
+    <message>
+        <source>Start &amp;all</source>
+        <translation>Tümünü &amp;Başlat</translation>
+    </message>
+    <message>
+        <source>&amp;Update status</source>
+        <translation>&amp;Durumları güncelle</translation>
+    </message>
+    <message>
+        <source>Status will be updated automatically in (sec):</source>
+        <translation>Durum (saniye) içinde otomatik olarak güncellenecektir:</translation>
+    </message>
+    <message>
+        <source>Owner address</source>
+        <translation>Sahip adresi</translation>
+    </message>
+    <message>
+        <source>Begin</source>
+        <translation>Başla</translation>
+    </message>
+    <message>
+        <source>Expire</source>
+        <translation>Sona erme</translation>
+    </message>
+    <message>
+        <source>Peer address</source>
+        <translation>Eş adresi</translation>
+    </message>
+    <message>
+        <source>Peer address</source>
+        <translation>Eş adresi</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>Kilitli</translation>
+    </message>
+    <message>
+        <source>Backup address</source>
+        <translation>Yedekleme adresi</translation>
+    </message>
+    <message>
+        <source>Next reward</source>
+        <translation>Sonraki ödül</translation>
+    </message>
+    <message>
+        <source>Note: Status of your InfinityNodes in local wallet can potentially be slightly incorrect.</source>
+        <translation>Not: InfinityNodes'unuzun yerel cüzdandaki durumu potansiyel olarak biraz yanlış olabilir.</translation>
+    </message>
+   
+    </context>
+
+
 </TS>
