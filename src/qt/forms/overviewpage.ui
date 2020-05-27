@@ -1010,7 +1010,7 @@ background-color: transparent;</string>
          <number>0</number>
         </property>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="52,0,0,45">
+         <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="52,0,45">
           <item>
            <widget class="QListView" name="listTransactions">
             <property name="styleSheet">
@@ -1050,45 +1050,12 @@ margin-bottom: 9px;
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="verticalLineLabel">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>1</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>1</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color:black;
-padding:0px;
-border:none;
-margin-bottom: 35px;</string>
-            </property>
-            <property name="text">
-             <string>TextLabel</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QFrame" name="frame_5">
             <property name="styleSheet">
              <string notr="true">background-image: url(':/images/sinbg');
 background-repeat:none;
-background-position: right bottom;</string>
+background-position: right bottom;
+background-size: 440px 412px;</string>
             </property>
             <property name="frameShape">
              <enum>QFrame::WinPanel</enum>
