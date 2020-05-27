@@ -143,7 +143,7 @@ WalletView::~WalletView()
 {
 }
 
-void WalletView::setBitcoinGUI(BitcoinGUI *gui)
+void WalletView::setSINGUI(SINGUI *gui)
 {
     if (gui)
     {
