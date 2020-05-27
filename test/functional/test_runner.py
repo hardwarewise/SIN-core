@@ -59,6 +59,7 @@ BASE_SCRIPTS = [
     # Scripts that are run by the travis build process.
     # Longest test should go first, to favor running tests in parallel
     'wallet_hd.py',
+    'feature_in_test.py',
     'wallet_backup.py',
     # vv Tests less than 5m vv
     'feature_block.py',

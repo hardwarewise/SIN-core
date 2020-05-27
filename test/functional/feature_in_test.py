@@ -134,7 +134,7 @@ class ExampleTest(SinTestFramework):
         # Create P2P connections will wait for a verack to make sure the connection is fully up
         self.nodes[0].add_p2p_connection(BaseNode())
 
-        self.setup_infinitynode_params(9, 2)
+        self.setup_infinitynode_params(2)
 
         self.init_sinovate_stuff()
 
