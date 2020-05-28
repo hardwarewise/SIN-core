@@ -143,7 +143,7 @@ int SendCoinsEntry::getTermDepositLength()
 
     const int thePeriod = ui->locklength->currentIndex();
 
-    QString theSt = ui->lockperiod->text();
+    QString theSt = ui->lockperiod->currentText();
     int theLength = theSt.toInt();
 
     if (thePeriod==0) {
