@@ -3625,4 +3625,340 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
         <translation>Errore</translation>
     </message>
 </context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Pending</source>
+        <translation>Pendente</translation>
+    </message>
+    <message>
+        <source>Immature</source>
+        <translation>In Maturazione</translation>
+    </message>
+    <message>
+        <source>Available SIN</source>
+        <translation>SIN Disponibili</translation>
+    </message>
+    <message>
+        <source>Available USD</source>
+        <translation>Dollari Disponibili</translation>
+    </message>
+    <message>
+        <source>Total Addresses</source>
+        <translation>Indirizzi Totali</translation>
+    </message>
+    <message>
+        <source>Circulating Supply</source>
+        <translation>Saldo Circolante</translation>
+    </message>
+    <message>
+        <source>Total Infinity Nodes</source>
+        <translation>Totale Nodi Infinity</translation>
+    </message>
+    <message>
+        <source>Value USD</source>
+        <translation>Valore in USD</translation>
+    </message>
+    <message>
+        <source>Value BTC</source>
+        <translation>Valore in Bitcoin</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Totale</translation>
+    </message>
+    </context>
+    <context>
+    <name>SendCoinsDialog</name>
+    <message>
+        <source>Send SIN Coins</source>
+        <translation>Inviare Monete Sin</translation>
+    </message>
+    <message>
+        <source>Coin Control</source>
+        <translation>Controllo Monete</translation>
+    </message>
+    <message>
+        <source> Automatically selected</source>
+        <translation>Selezionato Automaticamente</translation>
+    </message>
+    <message>
+        <source> Insufficient funds!</source>
+        <translation>Saldo Insufficiente!</translation>
+    </message>
+    <message>
+        <source>Warning: Fee estimation is currently not possible.</source>
+        <translation>Attenzione: Impossibile Stimare Commissioni.</translation>
+    </message>
+    <message>
+        <source>Per kilobyte</source>
+        <translation>Per kilobyte</translation>
+    </message>
+    <message>
+        <source>Enable Replace-By-Fee</source>
+        <translation>Attivare Rimpiazza Sostituire per Tassa</translation>
+    </message>
+    <message>
+        <source>Customize Fee</source>
+        <translation>Personalizza Tassa</translation>
+    </message>
+    <message>
+        <source>[Read the tooltip]</source>
+        <translation>[Leggi i Suggerimenti delle Opzioni]</translation>
+    </message>
+    <message>
+        <source>Minimize</source>
+        <translation>Minimizzare</translation>
+    </message>
+    </context>
+    <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Select SIN Coins to Send</source>
+        <translation>Selezionare Monete Sin per l'Invio</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Etichetta</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Indirizzo</translation>
+    </message>
+    <message>
+        <source>Select all</source>
+        <translation>Seleziona Tutto</translation>
+    </message>
+    <message>
+        <source>Lock-Unlock All</source>
+        <translation>Blocc/Sblocca Tutto</translation>
+    </message>
+    <message>
+        <source>Ages</source>
+        <translation>Epoche</translation>
+    </message>
+    <message>
+        <source>After Fee: </source>
+        <translation>Dopo la Tassa:</translation>
+    </message>
+    </context>
+    <context>
+    <name>DepositCoinsDialog</name>
+    <message>
+        <source>&amp;EARN</source>
+        <translation>&amp;Guadagna</translation>
+    </message>
+    <message>
+        <source>HCO-Hodl Coin Offering. Lock SIN to EARN.</source>
+        <translation>HCO-Hodl Coin Offering. Blocca Sin per Guadagnare</translation>
+    </message>
+    <message>
+        <source>Balance:</source>
+        <translation>Saldo:</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Status</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Ammontare</translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation>Inizio</translation>
+    </message>
+    <message>
+        <source>Fine</source>
+        <translation>Bitiş</translation>
+    </message>
+    <message>
+        <source>Lock time</source>
+        <translation>Blocco Temporale</translation>
+    </message>
+    </context>
+    <context>
+    <name>SendCoinsEntry</name>
+    <message>
+        <source>Blocks</source>
+        <translation>Blocchi</translation>
+    </message>
+    <message>
+        <source>Add address label</source>
+        <translation>Inserire Etichetta Indirizzo</translation>
+    </message>
+    <message>
+        <source>For:</source>
+        <translation>Per:</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>Mese</translation>
+    </message>
+    </context>
+    <context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>Receive SIN Coins</source>
+        <translation>Ricevere Monete SIN</translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;Etichetta</translation>
+    </message>
+    <message>
+        <source>&amp;Message</source>
+        <translation>&amp;Messaggio</translation>
+    </message>
+    <message>
+        <source>Generate native segwit (Bech32) address</source>
+        <translation>Crea Indirizzo Nativo Segwit (Bech32)</translation>
+    </message>
+    <message>
+        <source>&amp;Amount</source>
+        <translation>&amp;Ammontare</translation>
+    </message>
+    </context>
+    <context>
+    <name>MasternodeList</name>
+    <message>
+        <source>My Infinitynodes</source>
+        <translation>Mio Nodo Infinity</translation>
+    </message>
+    <message>
+        <source>My Peers DIN</source>
+        <translation>Miei Collegamenti Esterni DIN</translation>
+    </message>
+    <message>
+        <source>Alias</source>
+        <translation>Alias</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Indirizzi</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>Protocollo</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Status</translation>
+    </message>
+    <message>
+        <source>Active</source>
+        <translation>Attivo</translation>
+    </message>
+    <message>
+        <source>Last Seen</source>
+        <translation>Visto per Ultimo</translation>
+    </message>
+    <message>
+        <source>Payee</source>
+        <translation>Beneficiario</translation>
+    </message>
+    <message>
+        <source>S&amp;tart alias</source>
+        <translation>I&amp;niziare Alias</translation>
+    </message>
+    <message>
+        <source>Start &amp;all</source>
+        <translation>Iniziare &amp;Tutti</translation>
+    </message>
+    <message>
+        <source>&amp;Update status</source>
+        <translation>&amp;Aggiorna Stato</translation>
+    </message>
+    <message>
+        <source>Status will be updated automatically in (sec):</source>
+        <translation>Stato si Aggiornerà Automaticamente in (sec):</translation>
+    </message>
+    <message>
+        <source>Owner address</source>
+        <translation>Indirizzo Proprietario</translation>
+    </message>
+    <message>
+        <source>Begin</source>
+        <translation>Inizio</translation>
+    </message>
+    <message>
+        <source>Expire</source>
+        <translation>Fine</translation>
+    </message>
+    <message>
+        <source>Peer address</source>
+        <translation>Indirizzo Peer</translation>
+    </message>
+    <message>
+        <source>Peer address</source>
+        <translation>Indirizzo Peer</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>Bloccato</translation>
+    </message>
+    <message>
+        <source>Backup address</source>
+        <translation>Indirizzo Salvataggio</translation>
+    </message>
+    <message>
+        <source>Next reward</source>
+        <translation>Prossima Ricompensa</translation>
+    </message>
+    </context>
+    <context>
+   <name>StatsPage</name>
+   <message>
+        <source>Hashrate:</source>
+        <translation>Hashrate:</translation>
+    </message>
+    <message>
+        <source>Difficulty:</source>
+        <translation>Difficoltà:</translation>
+    </message>
+    <message>
+        <source>Last Price:</source>
+        <translation>Ultimo Prezzo:</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>Altezza:</translation>
+    </message>
+    <message>
+        <source>Burnt Fees:</source>
+        <translation>Commissioni Bruciate:</translation>
+    </message>
+    <message>
+        <source>Burnt Nodes:</source>
+        <translation>Nodi Bruciati:</translation>
+    </message>
+    <message>
+        <source>Total Burnts:</source>
+        <translation>Totale Bruciati:</translation>
+    </message>
+    <message>
+        <source>Total Supply:</source>
+        <translation>Totale Circolante:</translation>
+    </message>
+    <message>
+        <source>Addresses:</source>
+        <translation>Indirizzi:</translation>
+    </message>
+    <message>
+        <source>Active:</source>
+        <translation>Attivi:</translation>
+    </message>
+    <message>
+        <source>Top 10:</source>
+        <translation>Top 10</translation>
+    </message>
+    <message>
+        <source>Top 50:</source>
+        <translation>Top 50</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Totale:</translation>
+    </message>
+    </context>
 </TS>

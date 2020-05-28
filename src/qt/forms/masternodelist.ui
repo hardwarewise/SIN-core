@@ -308,7 +308,7 @@ width: 150px;
         <attribute name="title">
          <string>My Peers DIN</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
           <widget class="QTableWidget" name="dinTable">
            <property name="enabled">
@@ -388,6 +388,40 @@ width: 150px;
             </property>
            </column>
           </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="currentheight_label">
+             <property name="text">
+              <string>Current height:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="currentHeightLabel">
+             <property name="text">
+              <string>0</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_6">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>

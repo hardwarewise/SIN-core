@@ -304,6 +304,7 @@ public:
         consensus.cBurnAddressPubKey = "ebaf5ec74cb2e2342dfda0229111738ff4dc742d";
         consensus.cMetadataAddress = "SinBurnAddressForMetadataXXXXEU2mj";
         consensus.cNotifyAddress = "SinBurnAddressForNotifyXXXXXc42TcT";
+        consensus.cLockRewardAddress = "SinBurnAddressForLockRewardXTbeffB";
         consensus.cGovernanceAddress = "SinBurnAddressGovernanceVoteba5vkQ";
         strSporkPubKey = "0454E1B43ECCAC17E50402370477455BE34593E272CA9AE0DF04F6F3D423D1366D017822C77990A3D8DD980C60D3692C9B6D7DFD75F683F7056C1E97E82BD94DBE";
 
@@ -441,6 +442,7 @@ public:
         consensus.cBurnAddressPubKey = "ebaf5ec74cb2e2342dfda0229111738ff4dc742d";
         consensus.cMetadataAddress = "SinBurnAddressForMetadataXXXXEU2mj";
         consensus.cNotifyAddress = "SinBurnAddressForNotifyXXXXXc42TcT";
+        consensus.cLockRewardAddress = "SinBurnAddressForLockRewardXTbeffB";
         consensus.cGovernanceAddress = "SinBurnAddressGovernanceVoteba5vkQ";
         strSporkPubKey = "0454E1B43ECCAC17E50402370477455BE34593E272CA9AE0DF04F6F3D423D1366D017822C77990A3D8DD980C60D3692C9B6D7DFD75F683F7056C1E97E82BD94DBE";
 
@@ -565,6 +567,7 @@ public:
         consensus.cBurnAddress = "mjX1AbMEHU14PmHjG2wtSvoydnJ6RxYwC2";
         consensus.cMetadataAddress = "mueP7L3nMXdshqPEMZ3L5wJumKqhq5dFpm";
         consensus.cNotifyAddress = "mobk9h9A3QLYKsKw9xWSC4bqYSUsqEwnpk";
+        consensus.cLockRewardAddress = "SinBurnAddressForLockRewardXTbeffB";
         consensus.cGovernanceAddress = "mgmp6o3V4z3kU83QFbNrdtRKGFS6T9yQyB";
         strSporkPubKey = "0454E1B43ECCAC17E50402370477455BE34593E272CA9AE0DF04F6F3D423D1366D017822C77990A3D8DD980C60D3692C9B6D7DFD75F683F7056C1E97E82BD94DBE";
 

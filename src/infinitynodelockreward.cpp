@@ -1500,16 +1500,16 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
             std::string sErrorRegister = "";
             std::string sErrorCheck = "";
 
-            if(!CheckLockRewardRegisterInfo(sLockRewardMusig, sErrorCheck) && !AutoResigterLockReward(sLockRewardMusig, sErrorRegister)){
+            if(!CheckLockRewardRegisterInfo(sLockRewardMusig, sErrorCheck)){
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Check error: %s, Register LockReward error: %s\n",
                          sErrorCheck, sErrorRegister);
             } else {
-                //memory the musig in map. No build for this anymore
-                mapSigned[mapLockRewardRequest[nHashLockRequest].nRewardHeight] = nHashGroupSigner;
                 //send register info
                 if(!AutoResigterLockReward(sLockRewardMusig, sErrorCheck)){
                     LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Register LockReward false: %s\n", sErrorCheck);
                 } else {
+                    //memory the musig in map. No build for this anymore
+                    mapSigned[mapLockRewardRequest[nHashLockRequest].nRewardHeight] = nHashGroupSigner;
                     LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Register LockReward broadcasted!!!\n");
                 }
             }
@@ -1538,7 +1538,7 @@ bool CInfinityNodeLockReward::AutoResigterLockReward(std::string sLockReward, st
 
     CAmount nFeeRet = 0;
     mapValue_t mapValue;
-    bool fSubtractFeeFromAmount = true;
+    bool fSubtractFeeFromAmount = false;
     bool fUseInstantSend=false;
     int nChangePosRet = -1;
     CReserveKey reservekey(pwallet);
@@ -1546,7 +1546,7 @@ bool CInfinityNodeLockReward::AutoResigterLockReward(std::string sLockReward, st
     CAmount curBalance = pwallet->GetBalance();
 
     CAmount nAmountRegister = 0.001 * COIN;
-    CAmount nAmountToSelect = 0.05 * COIN;
+    CAmount nAmountToSelect = 0.1 * COIN;
 
     //select coin
     CAmount selected = 0;
@@ -1590,7 +1590,7 @@ bool CInfinityNodeLockReward::AutoResigterLockReward(std::string sLockReward, st
     if (!pwallet->CreateTransaction(vecSend, tx, reservekey, nFeeRequired, nChangePosRet, strError, coin_control, true, ALL_COINS, fUseInstantSend)) {
         if (!fSubtractFeeFromAmount && nAmountRegister + nFeeRequired > curBalance)
             strErrorRet = strprintf("Error: This transaction requires a transaction fee of at least %s", FormatMoney(nFeeRequired));
-        else strErrorRet = strError;
+        else strErrorRet = strprintf("%s, selected coins %s", strError, FormatMoney(selected));
         return false;
     }
 

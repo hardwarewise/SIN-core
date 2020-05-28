@@ -795,9 +795,13 @@ bool CInfinitynodeMan::deterministicRewardAtHeight(int nBlockHeight, int nSinTyp
                 lastStatementSize = stm.second;
             }
         }
+        LogPrintf("CInfinitynodeMan::deterministicRewardAtHeight -- Stm height: %d, stm size: %d, Delta: %d\n", stm.first, stm.second, nDelta);
     }
     //return false if not found statement
-    if (lastStatement == 0) return false;
+    if (lastStatement == 0){
+        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::deterministicRewardAtHeight -- lastStatement not found: %d\n", lastStatement);
+        return false;
+    }
 
     std::map<int, CInfinitynode> rankOfStatement = calculInfinityNodeRank(lastStatement, nSinType, false);
     if(rankOfStatement.empty()){

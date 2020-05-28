@@ -348,10 +348,15 @@ void MasternodeList::updateDINList()
     {
         std::map<COutPoint, std::string> mOnchainDataInfo = walletModel->wallet().GetOnchainDataInfo();
         std::map<COutPoint, std::string> mapMynode;
+        std::map<std::string, int> mapLockRewardHeight;
+
+        interfaces::Node& node = clientModel->node();
+        int nCurrentHeight = node.getNumBlocks();
+        ui->currentHeightLabel->setText(QString::number(nCurrentHeight));
 
         int countNode = 0;
         for(auto &pair : mOnchainDataInfo){
-            string s, sDataType = "", sData = "";
+            string s, sDataType = "", sData1 = "", sData2 = "";
             stringstream ss(pair.second);
             int i=0;
             while (getline(ss, s,';')) {
@@ -359,10 +364,18 @@ void MasternodeList::updateDINList()
                     sDataType = s;
                 }
                 if (i==1) {
-                    sData = s;
+                    sData1 = s;
+                }
+                if (i==2) {
+                    sData2 = s;
                 }
                 if(sDataType == "NodeCreation"){
-                    mapMynode[pair.first] = sData;
+                    mapMynode[pair.first] = sData1;
+                } else if(sDataType == "LockReward" && i==2){
+                    int nRewardHeight = atoi(sData2);
+                    if(nRewardHeight > nCurrentHeight){
+                        mapLockRewardHeight[sData1] = nRewardHeight;
+                    }
                 }
                 i++;
             }
@@ -371,8 +384,6 @@ void MasternodeList::updateDINList()
         ui->dinTable->setRowCount(mapMynode.size());
         ui->dinTable->setSortingEnabled(true);
 
-        interfaces::Node& node = clientModel->node();
-        int nCurrentHeight = node.getNumBlocks();
         int k=0;
         for(auto &pair : mapMynode){
             infinitynode_info_t infoInf;
@@ -403,8 +414,14 @@ void MasternodeList::updateDINList()
             ui->dinTable->setItem(k, 2, new QTableWidgetItem(QString::number(infoInf.nExpireHeight)));
             ui->dinTable->setItem(k, 3, new QTableWidgetItem(QString(QString::fromStdString(status))));
             ui->dinTable->setItem(k, 4, new QTableWidgetItem(QString(QString::fromStdString(sPeerAddress))));
-            ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString(QString::fromStdString(""))));
-            ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString(QString::fromStdString(""))));
+            bool flocked = mapLockRewardHeight.find(sPeerAddress) != mapLockRewardHeight.end();
+            if(flocked) {
+                ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString::number(mapLockRewardHeight[sPeerAddress])));
+                ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString(QString::fromStdString("Yes"))));
+            } else {
+                ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString(QString::fromStdString(""))));
+                ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString(QString::fromStdString("No"))));
+            }
             ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString(pair.second))));
             k++;
         }
