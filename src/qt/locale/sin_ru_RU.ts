@@ -2312,7 +2312,7 @@
     </message>
     <message>
         <source>Total Infinity Nodes</source>
-        <translation>Обшее количество Infinity нод</translation>
+        <translation>Количество Infinity нод</translation>
     </message>
     <message>
         <source>Value USD</source>
@@ -2409,7 +2409,7 @@
     </message>
     <message>
         <source>HCO-Hodl Coin Offering. Lock SIN to EARN.</source>
-        <translation>HCO-Hodl Coin Offering. Заблокировать SIN для пассивного дохода</translation>
+        <translation>HCO-Hodl Coin Offering. Заблокировать SIN для заработка.</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -2448,7 +2448,7 @@
     </message>
     <message>
         <source>For:</source>
-        <translation>Источник</translation>
+        <translation>Период</translation>
     </message>
     <message>
         <source>Month</source>
@@ -2530,7 +2530,7 @@
     </message>
     <message>
         <source>Status will be updated automatically in (sec):</source>
-        <translation>Durum (saniye) Статус будет обновлён через:</translation>
+        <translation>Статус будет обновлён через:</translation>
     </message>
     <message>
         <source>Owner address</source>
@@ -2577,15 +2577,15 @@
     </message>
     <message>
         <source>Last Price:</source>
-        <translation>Последняя актуальная цена:</translation>
+        <translation>Цена:</translation>
     </message>
     <message>
         <source>Height:</source>
-        <translation>Последний блок:</translation>
+        <translation>Блок:</translation>
     </message>
     <message>
         <source>Burnt Fees:</source>
-        <translation>Сожжено Комиссий:</translation>
+        <translation>Сожжено Fees:</translation>
     </message>
     <message>
         <source>Burnt Nodes:</source>
@@ -2597,7 +2597,7 @@
     </message>
     <message>
         <source>Total Supply:</source>
-        <translation>Общее количество:</translation>
+        <translation>В обращении:</translation>
     </message>
     <message>
         <source>Addresses:</source>
