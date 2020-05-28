@@ -3676,7 +3676,7 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
     </message>
     <message>
         <source>Immature</source>
-        <translation>Onvolwassen</translation>
+        <translation>Niet voldaan</translation>
     </message>
     <message>
         <source>Available SIN</source>
@@ -3691,8 +3691,8 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
         <translation>Totaal Adressen</translation>
     </message>
     <message>
-        <source>Circulerend aanbod</source>
-        <translation>Оборот</translation>
+        <source>Circulating Supply</source>
+        <translation>Circulerend Aanbod</translation>
     </message>
     <message>
         <source>Total Infinity Nodes</source>
@@ -3793,7 +3793,7 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
     </message>
     <message>
         <source>HCO-Hodl Coin Offering. Lock SIN to EARN.</source>
-        <translation>HCO-Hodl Coin Offering. Zet je sin op slot voor rente</translation>
+        <translation>HCO-Hodl Coin Offering. Zet je sin op slot en krijk Rente!</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -3832,11 +3832,11 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
     </message>
     <message>
         <source>For:</source>
-        <translation>Voor:</translation>
+        <translation>Hoelang:</translation>
     </message>
     <message>
         <source>Month</source>
-        <translation>maand</translation>
+        <translation>Maanden</translation>
     </message>
     </context>
     <context>
@@ -3926,7 +3926,7 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
     </message>
     <message>
         <source>Expire</source>
-        <translation>Verlopen</translation>
+        <translation>Eindigt</translation>
     </message>
     <message>
         <source>Peer address</source>
@@ -3938,7 +3938,7 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
     </message>
     <message>
         <source>Locked</source>
-        <translation>Op slot</translation>
+        <translation>Slot</translation>
     </message>
     <message>
         <source>Backup address</source>
@@ -3957,7 +3957,7 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
     </message>
     <message>
         <source>Difficulty:</source>
-        <translation>Moeilijkheidsgraad:</translation>
+        <translation>Moeilijkheid:</translation>
     </message>
     <message>
         <source>Last Price:</source>
@@ -3969,11 +3969,11 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
     </message>
     <message>
         <source>Burnt Fees:</source>
-        <translation>Verbrande fees:</translation>
+        <translation>Geburnde fees:</translation>
     </message>
     <message>
         <source>Burnt Nodes:</source>
-        <translation>Verbrande Nodes:</translation>
+        <translation>Geburnde Nodes:</translation>
     </message>
     <message>
         <source>Total Burnts:</source>
