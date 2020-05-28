@@ -107,7 +107,7 @@ void CMasternode::updateInfinityNodeInfo(bool fAllowFull)
     }
 
     if(!GetUTXOCoin(vin.prevout, coinCollateral)) {
-        LogPrintf("CMasternode::updateInfinityNodeInfo -- BurnFund tx not found %s-%d\n", vin.prevout.hash.ToString(), vin.prevout.n);
+        LogPrintf("CMasternode::updateInfinityNodeInfo -- Collateral tx not found %s-%d\n", vin.prevout.hash.ToString(), vin.prevout.n);
         return;
     }
 
