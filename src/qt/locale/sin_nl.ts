@@ -3668,4 +3668,340 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
         <translation>Fout</translation>
     </message>
 </context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Pending</source>
+        <translation>In afwachting</translation>
+    </message>
+    <message>
+        <source>Immature</source>
+        <translation>Onvolwassen</translation>
+    </message>
+    <message>
+        <source>Available SIN</source>
+        <translation>Beschikbare SIN</translation>
+    </message>
+    <message>
+        <source>Available USD</source>
+        <translation>Beschikbare USD</translation>
+    </message>
+    <message>
+        <source>Total Addresses</source>
+        <translation>Totaal Adressen</translation>
+    </message>
+    <message>
+        <source>Circulerend aanbod</source>
+        <translation>Оборот</translation>
+    </message>
+    <message>
+        <source>Total Infinity Nodes</source>
+        <translation>Totaal Infinity nodes</translation>
+    </message>
+    <message>
+        <source>Value USD</source>
+        <translation>Waarde USD</translation>
+    </message>
+    <message>
+        <source>Value BTC</source>
+        <translation>Waarde BTC</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Totaal</translation>
+    </message>
+    </context>
+    <context>
+    <name>SendCoinsDialog</name>
+    <message>
+        <source>Send SIN Coins</source>
+        <translation>Verzend SIN</translation>
+    </message>
+    <message>
+        <source>Coin Control</source>
+        <translation>Munt controlle</translation>
+    </message>
+    <message>
+        <source> Automatically selected</source>
+        <translation>Automatisch geselecteerd</translation>
+    </message>
+    <message>
+        <source> Insufficient funds!</source>
+        <translation>Onvoldoende saldo!</translation>
+    </message>
+    <message>
+        <source>Warning: Fee estimation is currently not possible.</source>
+        <translation>Het inschatten van vergoedingen is momenteel niet mogelijk.</translation>
+    </message>
+    <message>
+        <source>Per kilobyte</source>
+        <translation>Per kilobyte</translation>
+    </message>
+    <message>
+        <source>Enable Replace-By-Fee</source>
+        <translation>Activeer Vervang-door-Fee</translation>
+    </message>
+    <message>
+        <source>Customize Fee</source>
+        <translation>Verander Fees</translation>
+    </message>
+    <message>
+        <source>[Read the tooltip]</source>
+        <translation>[Lees de tooltip]</translation>
+    </message>
+    <message>
+        <source>Minimize</source>
+        <translation>Minimaliseren</translation>
+    </message>
+    </context>
+    <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Select SIN Coins to Send</source>
+        <translation>Kies SIN om te verzenden</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Label</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>Select all</source>
+        <translation>Selecteer alle</translation>
+    </message>
+    <message>
+        <source>Lock-Unlock All</source>
+        <translation>Lock-Unlock Alle</translation>
+    </message>
+    <message>
+        <source>Ages</source>
+        <translation>Leeftijden</translation>
+    </message>
+    <message>
+        <source>After Fee: </source>
+        <translation>Na Fees:</translation>
+    </message>
+    </context>
+    <context>
+    <name>DepositCoinsDialog</name>
+    <message>
+        <source>&amp;EARN</source>
+        <translation>&amp;Verdien</translation>
+    </message>
+    <message>
+        <source>HCO-Hodl Coin Offering. Lock SIN to EARN.</source>
+        <translation>HCO-Hodl Coin Offering. Zet je sin op slot voor rente</translation>
+    </message>
+    <message>
+        <source>Balance:</source>
+        <translation>Balance:</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Status</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Aantal</translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation>Start</translation>
+    </message>
+    <message>
+        <source>End</source>
+        <translation>Einde</translation>
+    </message>
+    <message>
+        <source>Lock time</source>
+        <translation>Slot tijd</translation>
+    </message>
+    </context>
+    <context>
+    <name>SendCoinsEntry</name>
+    <message>
+        <source>Blocks</source>
+        <translation>Blokken</translation>
+    </message>
+    <message>
+        <source>Add address label</source>
+        <translation>Voeg adres label toe</translation>
+    </message>
+    <message>
+        <source>For:</source>
+        <translation>Voor:</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>maand</translation>
+    </message>
+    </context>
+    <context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>Receive SIN Coins</source>
+        <translation>Ontvang SIN munten</translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;Label</translation>
+    </message>
+    <message>
+        <source>&amp;Message</source>
+        <translation>&amp;Bericht</translation>
+    </message>
+    <message>
+        <source>Generate native segwit (Bech32) address</source>
+        <translation>Genereer native segwit (Bech32) adres</translation>
+    </message>
+    <message>
+        <source>&amp;Amount</source>
+        <translation>&amp;Aantal</translation>
+    </message>
+    </context>
+    <context>
+    <name>MasternodeList</name>
+    <message>
+        <source>My Infinitynodes</source>
+        <translation>Mijn Infinity nodes</translation>
+    </message>
+    <message>
+        <source>My Peers DIN</source>
+        <translation>Mijn peers DIN </translation>
+    </message>
+    <message>
+        <source>Alias</source>
+        <translation>Alias</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>Protocol</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Status</translation>
+    </message>
+    <message>
+        <source>Active</source>
+        <translation>Actief</translation>
+    </message>
+    <message>
+        <source>Last Seen</source>
+        <translation>Laatst gezien</translation>
+    </message>
+    <message>
+        <source>Payee</source>
+        <translation>Begunstigde</translation>
+    </message>
+    <message>
+        <source>S&amp;tart alias</source>
+        <translation>S&amp;tart alias</translation>
+    </message>
+    <message>
+        <source>Start &amp;all</source>
+        <translation>Start &amp;alle</translation>
+    </message>
+    <message>
+        <source>&amp;Update status</source>
+        <translation>&amp;Update status</translation>
+    </message>
+    <message>
+        <source>Status will be updated automatically in (sec):</source>
+        <translation>Status wordt automatisch bijgewerkt in:</translation>
+    </message>
+    <message>
+        <source>Owner address</source>
+        <translation>adres eigenaar</translation>
+    </message>
+    <message>
+        <source>Begin</source>
+        <translation>Begin</translation>
+    </message>
+    <message>
+        <source>Expire</source>
+        <translation>Verlopen</translation>
+    </message>
+    <message>
+        <source>Peer address</source>
+        <translation>Peer-adres</translation>
+    </message>
+    <message>
+        <source>Peer address</source>
+        <translation>Peer-adres</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>Op slot</translation>
+    </message>
+    <message>
+        <source>Backup address</source>
+        <translation>Backup adres</translation>
+    </message>
+    <message>
+        <source>Next reward</source>
+        <translation>Volgende Beloning</translation>
+    </message>
+    </context>
+    <context>
+   <name>StatsPage</name>
+   <message>
+        <source>Hashrate:</source>
+        <translation>Hashrate:</translation>
+    </message>
+    <message>
+        <source>Difficulty:</source>
+        <translation>Moeilijkheidsgraad:</translation>
+    </message>
+    <message>
+        <source>Last Price:</source>
+        <translation>Laaste prijs:</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>Hoogte:</translation>
+    </message>
+    <message>
+        <source>Burnt Fees:</source>
+        <translation>Verbrande fees:</translation>
+    </message>
+    <message>
+        <source>Burnt Nodes:</source>
+        <translation>Verbrande Nodes:</translation>
+    </message>
+    <message>
+        <source>Total Burnts:</source>
+        <translation>Totaal verbrand:</translation>
+    </message>
+    <message>
+        <source>Total Supply:</source>
+        <translation>Totaal aanbod:</translation>
+    </message>
+    <message>
+        <source>Addresses:</source>
+        <translation>Adressen:</translation>
+    </message>
+    <message>
+        <source>Active:</source>
+        <translation>Aktief:</translation>
+    </message>
+    <message>
+        <source>Top 10:</source>
+        <translation>Тоp 10</translation>
+    </message>
+    <message>
+        <source>Top 50:</source>
+        <translation>Top 50</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Totaal:</translation>
+    </message>
+    </context>
 </TS>
