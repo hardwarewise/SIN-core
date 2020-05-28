@@ -37,6 +37,7 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
 {
     ui->setupUi(this);
 
+
     #if defined(Q_OS_WIN)
 
     #else
@@ -60,6 +61,11 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
 
     ui->pruneSize->setEnabled(false);
     connect(ui->prune, SIGNAL(toggled(bool)), ui->pruneSize, SLOT(setEnabled(bool)));
+
+    // Hide Prune
+    ui->prune->hide();
+    ui->pruneSize->hide();
+    //
 
     /* Network elements init */
 #ifndef USE_UPNP
