@@ -861,10 +861,12 @@ UniValue infinitynode(const JSONRPCRequest& request)
         std::string sBase64 = EncodeBase64(pubkey.begin(), pubkey.size());
         std::vector<unsigned char> tx_data = DecodeBase64(sBase64.c_str());
         CPubKey decodePubKey(tx_data.begin(), tx_data.end());
+        CTxDestination dest = GetDestinationForKey(decodePubKey, DEFAULT_ADDRESS_TYPE);
 
         obj.push_back(Pair("PrivateKey", EncodeSecret(secret)));
         obj.push_back(Pair("PublicKey", sBase64));
         obj.push_back(Pair("DecodePublicKey", decodePubKey.GetID().ToString()));
+        obj.push_back(Pair("Address", EncodeDestination(dest)));
         obj.push_back(Pair("isCompressed", pubkey.IsCompressed()));
 
 
@@ -883,10 +885,12 @@ UniValue infinitynode(const JSONRPCRequest& request)
         std::string sBase64 = EncodeBase64(pubkey.begin(), pubkey.size());
         std::vector<unsigned char> tx_data = DecodeBase64(sBase64.c_str());
         CPubKey decodePubKey(tx_data.begin(), tx_data.end());
+        CTxDestination dest = GetDestinationForKey(decodePubKey, DEFAULT_ADDRESS_TYPE);
 
         obj.push_back(Pair("PrivateKey", EncodeSecret(secret)));
         obj.push_back(Pair("PublicKey", sBase64));
         obj.push_back(Pair("DecodePublicKey", decodePubKey.GetID().ToString()));
+        obj.push_back(Pair("Address", EncodeDestination(dest)));
         obj.push_back(Pair("isCompressed", pubkey.IsCompressed()));
 
         return obj;
