@@ -142,7 +142,7 @@ bool CInfinitynodeMeta::metaScan(int nBlockHeight)
                                             //lets INs run on 127.0.0.1 only on regtest
                                             check ++;
                                         }
-                                        //3th position: 12 character from Infinitynode BurnTx
+                                        //3th position: 16 character from Infinitynode BurnTx
                                         if (i==2 && s.length() >= 16) {
                                             check++;
                                             burnTxID = s.substr(0, 16);
