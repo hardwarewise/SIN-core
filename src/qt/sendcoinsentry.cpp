@@ -13,6 +13,7 @@
 
 #include <QApplication>
 #include <QClipboard>
+#include <QStyleFactory>
 
 SendCoinsEntry::SendCoinsEntry(const PlatformStyle *_platformStyle, QWidget *parent) :
     QStackedWidget(parent),
@@ -22,6 +23,12 @@ SendCoinsEntry::SendCoinsEntry(const PlatformStyle *_platformStyle, QWidget *par
 {
     isTermDeposit = false;
     ui->setupUi(this);
+
+    #if defined(Q_OS_WIN)
+    #else
+        ui->locklength->setStyle(QStyleFactory::create("Windows"));
+        ui->payAmount->setStyle(QStyleFactory::create("Windows"));
+    #endif
 
     ui->addressBookButton->setIcon(platformStyle->SingleColorIcon(":/icons/address-book"));
     ui->pasteButton->setIcon(platformStyle->SingleColorIcon(":/icons/editpaste"));
@@ -33,7 +40,7 @@ SendCoinsEntry::SendCoinsEntry(const PlatformStyle *_platformStyle, QWidget *par
 
     if (platformStyle->getUseExtraSpacing())
         ui->payToLayout->setSpacing(4);
-    ui->addAsLabel->setPlaceholderText(tr("Enter a label for this address to add it to your address book"));
+    ui->addAsLabel->setPlaceholderText(tr("Add address label"));
 
     // normal sin address field
     GUIUtil::setupAddressWidget(ui->payTo, this);
@@ -112,6 +119,8 @@ void SendCoinsEntry::clear()
         ui->lockperiod->hide();
         ui->locklength->hide();
     } else {
+    	ui->useAvailableBalanceButton->hide();
+        ui->checkboxSubtractFeeFromAmount->hide();
         ui->payToLabel->setText("Deposit Address:");
     }
 
@@ -134,16 +143,12 @@ int SendCoinsEntry::getTermDepositLength()
 
     const int thePeriod = ui->locklength->currentIndex();
 
-    QString theSt = ui->lockperiod->text();
+    QString theSt = ui->lockperiod->currentText();
     int theLength = theSt.toInt();
 
-    if (thePeriod==2) {
+    if (thePeriod==0) {
         return theLength;
-    }else if(thePeriod==1) {
-        return theLength*720;
-    }else if(thePeriod==0) {
-        return theLength*720*7;
-    }
+     }
     return 0;
 }
 

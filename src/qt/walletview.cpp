@@ -22,6 +22,8 @@
 #include <qt/transactiontablemodel.h>
 #include <qt/transactionview.h>
 #include <qt/walletmodel.h>
+#include "statspage.h"
+#include "faqpage.h"
 
 #include <interfaces/node.h>
 #include <ui_interface.h>
@@ -34,6 +36,7 @@
 #include <QPushButton>
 #include <QSettings>
 #include <QVBoxLayout>
+#include <QLabel>
 
 WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     QStackedWidget(parent),
@@ -50,11 +53,27 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     transactionView = new TransactionView(platformStyle, this);
     vbox->addWidget(transactionView);
     QPushButton *exportButton = new QPushButton(tr("&Export"), this);
+    exportButton->setObjectName("exportButton"); // Label ID as CSS-reference
     exportButton->setToolTip(tr("Export the data in the current tab to a file"));
     if (platformStyle->getImagesOnButtons()) {
         exportButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
     }
     hbox_buttons->addStretch();
+
+
+    // Sum of selected transactions
+    QLabel *transactionSumLabel = new QLabel(); // Label
+    transactionSumLabel->setObjectName("transactionSumLabel"); // Label ID as CSS-reference
+    transactionSumLabel->setText(tr("Selected amount:"));
+    hbox_buttons->addWidget(transactionSumLabel);
+
+    transactionSum = new QLabel(); // Amount
+    transactionSum->setObjectName("transactionSum"); // Label ID as CSS-reference
+    transactionSum->setMinimumSize(200, 8);
+    transactionSum->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    hbox_buttons->addWidget(transactionSum);
+
+    
     hbox_buttons->addWidget(exportButton);
     vbox->addLayout(hbox_buttons);
     transactionsPage->setLayout(vbox);
@@ -72,6 +91,7 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     addWidget(sendCoinsPage);
     addWidget(depositCoinsPage);
 
+
     // Dash
     QSettings settings;
     if (settings.value("fShowMasternodesTab").toBool()) {
@@ -85,6 +105,17 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     addWidget(instaswapListPage);
     //
 
+    //StatsPage
+    statsWindow = new StatsPage(platformStyle);
+    addWidget(statsWindow);
+    //
+
+
+     //FAQPage
+    faqWindow = new FaqPage(platformStyle);
+    addWidget(faqWindow);
+    //
+
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
     connect(overviewPage, SIGNAL(outOfSyncWarningClicked()), this, SLOT(requestedSyncWarningInfo()));
@@ -94,6 +125,10 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
 
     // Double-clicking on a transaction on the transaction history page shows details
     connect(transactionView, SIGNAL(doubleClicked(QModelIndex)), transactionView, SLOT(showDetails()));
+
+
+    // Update wallet with sum of selected transactions
+    connect(transactionView, SIGNAL(trxAmount(QString)), this, SLOT(trxAmount(QString)));
 
     // Clicking on "Export" allows to export the transaction list
     connect(exportButton, SIGNAL(clicked()), transactionView, SLOT(exportClicked()));
@@ -108,7 +143,7 @@ WalletView::~WalletView()
 {
 }
 
-void WalletView::setBitcoinGUI(BitcoinGUI *gui)
+void WalletView::setSINGUI(SINGUI *gui)
 {
     if (gui)
     {
@@ -138,6 +173,7 @@ void WalletView::setClientModel(ClientModel *_clientModel)
 
     overviewPage->setClientModel(_clientModel);
     sendCoinsPage->setClientModel(_clientModel);
+    depositCoinsPage->setClientModel(_clientModel);
 
     // Dash
     QSettings settings;
@@ -166,6 +202,7 @@ void WalletView::setWalletModel(WalletModel *_walletModel)
     instaswapListPage->setWalletModel(walletModel);
     //
 
+     
     receiveCoinsPage->setModel(_walletModel);
     sendCoinsPage->setModel(_walletModel);
     depositCoinsPage->setModel(_walletModel);
@@ -243,6 +280,22 @@ void WalletView::gotoInstaswapPage()
     setCurrentWidget(instaswapListPage);
 }
 //
+
+
+// StatsPage
+void WalletView::gotoStatsPage()
+{
+    setCurrentWidget(statsWindow);
+}
+//
+
+// FAQPage
+void WalletView::gotoFaqPage()
+{
+    setCurrentWidget(faqWindow);
+}
+//
+
 
 void WalletView::gotoReceiveCoinsPage()
 {
@@ -413,4 +466,9 @@ void WalletView::showProgress(const QString &title, int nProgress)
 void WalletView::requestedSyncWarningInfo()
 {
     Q_EMIT outOfSyncWarningClicked();
+}
+/** Update wallet with the sum of the selected transactions */
+void WalletView::trxAmount(QString amount)
+{
+    transactionSum->setText(amount);
 }

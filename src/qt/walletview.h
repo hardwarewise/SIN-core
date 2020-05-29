@@ -15,9 +15,19 @@
 #include <qt/instaswap.h>
 //
 
+
+// StatsPage
+#include <qt/statspage.h>
+//
+
+// StatsPage
+#include <qt/faqpage.h>
+//
+
+
 #include <QStackedWidget>
 
-class BitcoinGUI;
+class SINGUI;
 class ClientModel;
 class OverviewPage;
 class PlatformStyle;
@@ -28,8 +38,12 @@ class SendCoinsRecipient;
 class TransactionView;
 class WalletModel;
 class AddressBookPage;
+class StatsPage;
+class FaqPage;
+
 
 QT_BEGIN_NAMESPACE
+class QLabel;
 class QModelIndex;
 class QProgressDialog;
 QT_END_NAMESPACE
@@ -48,7 +62,7 @@ public:
     explicit WalletView(const PlatformStyle *platformStyle, QWidget *parent);
     ~WalletView();
 
-    void setBitcoinGUI(BitcoinGUI *gui);
+    void setSINGUI(SINGUI *gui);
     /** Set the client model.
         The client model represents the part of the core that communicates with the P2P network, and is wallet-agnostic.
     */
@@ -84,9 +98,18 @@ private:
     InstaSwap *instaswapListPage;
     //
 
+    // StatsPage
+    StatsPage *statsWindow;
+    //
+
+    // FaqPage
+    FaqPage *faqWindow;
+    //
+
     TransactionView *transactionView;
 
     QProgressDialog *progressDialog;
+    QLabel *transactionSum;
     const PlatformStyle *platformStyle;
 
 public Q_SLOTS:
@@ -103,6 +126,16 @@ public Q_SLOTS:
     // Instaswap
     /** Switch to instaswap page */
     void gotoInstaswapPage();
+    //
+
+    // Stats
+    /** Switch to stats page */
+    void gotoStatsPage();
+    //
+
+    // FAQ
+    /** Switch to faq page */
+    void gotoFaqPage();
     //
 
     /** Switch to receive coins page */
@@ -145,6 +178,9 @@ public Q_SLOTS:
 
     /** Show progress dialog e.g. for rescan */
     void showProgress(const QString &title, int nProgress);
+
+    /** Update selected SIN amount from transactionview */
+    void trxAmount(QString amount);
 
     /** User has requested more information about the out of sync state */
     void requestedSyncWarningInfo();

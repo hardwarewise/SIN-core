@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
    <property name="sizeConstraint">
     <enum>QLayout::SetDefaultConstraint</enum>
@@ -33,8 +36,8 @@
     <widget class="QWidget" name="bgWidget" native="true">
      <property name="styleSheet">
       <string notr="true">QWidget#bgWidget {
-background-color:#D6DCE5;
-color: #fff;
+background-color:#ffffff;
+color: #707070;
 } 
 </string>
      </property>
@@ -54,12 +57,12 @@ color: #fff;
       <item>
        <widget class="QWidget" name="contentWidget" native="true">
         <property name="styleSheet">
-         <string notr="true">QLabel { color: #333;  }
+         <string notr="true">QLabel { color: #707070;  }
 
 #contentWidget {
-background-color: #D6DCE5;
+background-color: #FFFFFF;
  border-radius: 6px;
-color: #333;
+color: #707070;
 } </string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayoutSub" stretch="1,0,0,0">

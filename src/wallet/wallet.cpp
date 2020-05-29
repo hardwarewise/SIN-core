@@ -932,11 +932,6 @@ void CWallet::MarkDirty()
         for (std::pair<const uint256, CWalletTx>& item : mapWallet)
             item.second.MarkDirty();
     }
-
-   // Dash
-    fAnonymizableTallyCached = false;
-    fAnonymizableTallyCachedNonDenom = false;
-   //
 }
 
 bool CWallet::MarkReplaced(const uint256& originalHash, const uint256& newHash)
@@ -1101,11 +1096,6 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
         t.detach(); // thread runs free
     }
 
-    // Dash
-    fAnonymizableTallyCached = false;
-    fAnonymizableTallyCachedNonDenom = false;
-    //
-
     return true;
 }
 
@@ -1257,11 +1247,6 @@ bool CWallet::AbandonTransaction(const uint256& hashTx)
         }
     }
 
-    // Dash
-    fAnonymizableTallyCached = false;
-    fAnonymizableTallyCachedNonDenom = false;
-    //
-
     return true;
 }
 
@@ -1317,11 +1302,6 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
             MarkInputsDirty(wtx.tx);
         }
     }
-
-    // Dash
-    fAnonymizableTallyCached = false;
-    fAnonymizableTallyCachedNonDenom = false;
-    //
 }
 
 void CWallet::SyncTransaction(const CTransactionRef& ptx, const CBlockIndex *pindex, int posInBlock, bool update_tx) {
@@ -1332,11 +1312,6 @@ void CWallet::SyncTransaction(const CTransactionRef& ptx, const CBlockIndex *pin
     // available of the outputs it spends. So force those to be
     // recomputed, also:
     MarkInputsDirty(ptx);
-
-    // Dash
-    fAnonymizableTallyCached = false;
-    fAnonymizableTallyCachedNonDenom = false;
-    //
 }
 
 void CWallet::TransactionAddedToMempool(const CTransactionRef& ptx) {
@@ -1793,32 +1768,99 @@ void CWalletTx::GetAmounts(std::list<COutputEntry>& listReceived,
 
 }
 
-std::vector<COutput> CWallet::GetTermDepositInfo()
+std::vector<COutput> CWallet::GetTimeLockInfo()
 {
-    std::vector<COutput> termDeposits;
+    std::vector<COutput> vTimeLockOutput;
     {
         LOCK2(cs_main, cs_wallet);
         for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
-            // const uint256& wtxid = it->first;
             const CWalletTx* pcoin = &(*it).second;
 
             for (unsigned int i = 0; i < pcoin->tx->vout.size(); i++) {
-                if(pcoin->isOutputTermDeposit(i)){
+                if(pcoin->isOutputTimeLock(i)){
                     if (!IsSpent(pcoin->GetHash(),i)){
                         isminetype mine = IsMine(pcoin->tx->vout[i]);
                         if(mine != ISMINE_NO){
                             int nDepth = pcoin->GetDepthInMainChain();
-                            termDeposits.push_back(COutput(pcoin, i, nDepth, (mine & ISMINE_SPENDABLE) != ISMINE_NO));
+                            vTimeLockOutput.push_back(COutput(pcoin, i, nDepth, (mine & ISMINE_SPENDABLE) != ISMINE_NO));
                         }
                     }
                 }
             }
         }
     }
-    return termDeposits;
+    return vTimeLockOutput;
 }
 
+std::map<COutPoint, std::string> CWallet::GetOnchainDataInfo()
+{
+    std::map<COutPoint, std::string> ret;
+    {
+        LOCK2(cs_main, cs_wallet);
+        for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
+        {
+            const CWalletTx* pcoin = &(*it).second;
+            uint256 txHash = (*it).first;
+
+            for (unsigned int i = 0; i < pcoin->tx->vout.size(); i++) {
+                std::vector<valtype> vSolutions;
+                txnouttype whichType;
+                Solver(pcoin->tx->vout[i].scriptPubKey, whichType, vSolutions);
+                if (whichType == TX_BURN_DATA && vSolutions.size() == 2){
+                    CKeyID keyId = CKeyID(uint160(vSolutions[0]));
+                    
+                    if (HaveKey(keyId) || IsAllFromMe((CTransaction)*pcoin->tx, ISMINE_SPENDABLE)){
+                        std::string data(vSolutions[1].begin(), vSolutions[1].end());
+                        std::string strMessage = "";
+                        if(EncodeDestination(keyId) == Params().GetConsensus().cBurnAddress){
+                            strMessage = strprintf("BurnAddress;%s",data);
+                            CAmount valueOut = pcoin->tx->vout[i].nValue;
+                            if(
+                            ((Params().GetConsensus().nMasternodeBurnSINNODE_1 - 1) * COIN < valueOut && valueOut <= Params().GetConsensus().nMasternodeBurnSINNODE_1 * COIN) ||
+                            ((Params().GetConsensus().nMasternodeBurnSINNODE_5 - 1) * COIN < valueOut && valueOut <= Params().GetConsensus().nMasternodeBurnSINNODE_5 * COIN) ||
+                            ((Params().GetConsensus().nMasternodeBurnSINNODE_10 - 1) * COIN < valueOut && valueOut <= Params().GetConsensus().nMasternodeBurnSINNODE_10 * COIN)
+                            ) {
+                                strMessage = strprintf("NodeCreation;%s",data);
+                            }
+                        }
+                        if(EncodeDestination(keyId) == Params().GetConsensus().cGovernanceAddress){
+                            strMessage = strprintf("GovernanceAddress;%s",data);
+                        }
+                        if(EncodeDestination(keyId) == Params().GetConsensus().cMetadataAddress){
+                            strMessage = strprintf("MetadataAddress;%s",data);
+                        }
+                        if(EncodeDestination(keyId) == Params().GetConsensus().cNotifyAddress){
+                            strMessage = strprintf("NotifyAddress;%s",data);
+                        }
+                        if(EncodeDestination(keyId) == Params().GetConsensus().cLockRewardAddress){
+                            //find address of LockReward
+                            //Address payee: we known that there is only 1 address for metadata
+                            const CTxIn& txin = pcoin->tx->vin[0];
+                            int index = txin.prevout.n;
+
+                            CTransactionRef prevtx;
+                            uint256 hashblock;
+                            if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false)) {
+                                continue;
+                            }
+
+                            CTxDestination addressLR;
+                            if(!ExtractDestination(prevtx->vout[index].scriptPubKey, addressLR)){
+                                continue;
+                            }
+                            strMessage = strprintf("LockReward;%s;%s",EncodeDestination(addressLR),data);
+
+                        }
+                        ret[COutPoint(txHash, i)] = strMessage;
+                    }
+                }
+            }
+
+        }
+    }
+    return ret;
+}
 /**
  * Scan active chain for relevant transactions after importing keys. This should
  * be called whenever new keys are added to the wallet, with the oldest key
@@ -2095,11 +2137,11 @@ CAmount CWalletTx::GetImmatureTermDepositCredit() const
     for (unsigned int i = 0; i < tx->vout.size(); i++)
     {
         if (pwallet->IsMine(tx->vout[i]) == ISMINE_SPENDABLE && 
-            isOutputTermDeposit(i) &&
-            GetTermDepositReleaseBlock(i) > chainActive.Height())
+            isOutputTimeLock(i) &&
+            GetTimeLockReleaseBlock(i) > chainActive.Height())
         {
             int nHeightFirst = (chainActive.Height()+1) - this->GetDepthInMainChain();
-            int nHeightSecond = this->GetTermDepositReleaseBlock(i) + 1;
+            int nHeightSecond = this->GetTimeLockReleaseBlock(i) + 1;
             sum = sum + tx->vout[i].GetValueWithInterest(nHeightFirst,nHeightSecond);
         }
     }
@@ -2150,7 +2192,7 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const isminefilter& filter
         if (!pwallet->IsSpent(hashTx, i))
         {
             const CTxOut &txout = tx->vout[i];
-            if (txout.scriptPubKey.GetTermDepositReleaseBlock() > chainActive.Height())
+            if (txout.scriptPubKey.GetTimeLockReleaseBlock() > chainActive.Height())
                 continue;
             nCredit += pwallet->GetCredit(txout, filter, GetDepthInMainChain());
             if (!MoneyRange(nCredit))
@@ -2226,7 +2268,7 @@ bool CWalletTx::IsTrusted() const
     return true;
 }
 
-int CWalletTx::GetTermDepositReleaseBlock(int i) const{
+int CWalletTx::GetTimeLockReleaseBlock(int i) const{
     std::vector<valtype> vSolutions;
     txnouttype whichType;
     int releaseBlockNum;
@@ -2236,11 +2278,20 @@ int CWalletTx::GetTermDepositReleaseBlock(int i) const{
     return 0;
 }
 
-bool CWalletTx::isOutputTermDeposit(int i) const{
+bool CWalletTx::isOutputTimeLock(int i) const{
     std::vector<valtype> vSolutions;
     txnouttype whichType;
     Solver(tx->vout[i].scriptPubKey, whichType, vSolutions);
     if (whichType == TX_CHECKLOCKTIMEVERIFY)
+        return true;
+    return false;
+}
+
+bool CWalletTx::isOutputBurnData(int i) const{
+    std::vector<valtype> vSolutions;
+    txnouttype whichType;
+    Solver(tx->vout[i].scriptPubKey, whichType, vSolutions);
+    if (whichType == TX_BURN_DATA)
         return true;
     return false;
 }
@@ -2387,7 +2438,7 @@ CAmount CWallet::GetImmatureWatchOnlyBalance() const
     return nTotal;
 }
 
-std::vector<COutput> CWallet::GetTermDepositInfo(const std::string& strAccount)
+std::vector<COutput> CWallet::GetTimeLockInfo(const std::string& strAccount)
 {
     std::vector<COutput> termDeposits;
     {
@@ -2398,7 +2449,7 @@ std::vector<COutput> CWallet::GetTermDepositInfo(const std::string& strAccount)
             if( pcoin->strFromAccount == strAccount)
             {
               for (unsigned int i = 0; i < pcoin->tx->vout.size(); i++)
-                if(pcoin->isOutputTermDeposit(i))
+                if(pcoin->isOutputTimeLock(i))
                     if (!IsSpent(pcoin->GetHash(),i))
                     {
                         isminetype mine = IsMine(pcoin->tx->vout[i]);
@@ -2556,7 +2607,7 @@ void CWallet::AvailableCoins(std::vector<COutput> &vCoins, bool fOnlySafe, const
             }
             if(!found) continue;
 
-            if (pcoin->isOutputTermDeposit(i) && pcoin->GetTermDepositReleaseBlock(i) > chainActive.Height())
+            if (pcoin->isOutputTimeLock(i) && pcoin->GetTimeLockReleaseBlock(i) > chainActive.Height())
                 continue;
 
             if (pcoin->tx->vout[i].nValue < nMinimumAmount || pcoin->tx->vout[i].nValue > nMaximumAmount)
@@ -2594,8 +2645,8 @@ std::map<CTxDestination, std::vector<COutput>> CWallet::ListCoins() const
     // CWalletTx objects, callers to this function really should acquire the
     // cs_wallet lock before calling it. However, the current caller doesn't
     // acquire this lock yet. There was an attempt to add the missing lock in
-    // https://github.com/sin/sin/pull/10340, but that change has been
-    // postponed until after https://github.com/sin/sin/pull/10244 to
+    // https://github.com/bitcoin/bitcoin/pull/10340, but that change has been
+    // postponed until after https://github.com/bitcoin/bitcoin/pull/10244 to
     // avoid adding some extra complexity to the Qt code.
 
     std::map<CTxDestination, std::vector<COutput>> result;
@@ -2919,30 +2970,6 @@ int CWallet::CountInputsWithAmount(CAmount nInputAmount)
     return nTotal;
 }
 
-bool CWallet::GetBudgetSystemCollateralTX(CTransactionRef& tx, uint256 hash, CAmount amount, bool fUseInstantSend)
-{
-    // make our change address
-    CReserveKey reservekey(this);
-
-    CScript scriptChange;
-    scriptChange << OP_RETURN << ToByteVector(hash);
-
-    CAmount nFeeRet = 0;
-    int nChangePosRet = -1;
-    std::string strFail = "";
-    std::vector< CRecipient > vecSend;
-    vecSend.push_back((CRecipient){scriptChange, amount, false});
-
-    CCoinControl *coinControl=NULL;
-    bool success = CreateTransaction(vecSend, tx, reservekey, nFeeRet, nChangePosRet, strFail, *coinControl, true, ALL_COINS, fUseInstantSend);
-    if(!success){
-        LogPrintf("CWallet::GetBudgetSystemCollateralTX -- Error: %s\n", strFail);
-        return false;
-    }
-
-    return true;
-}
-
 bool CWallet::ConvertList(std::vector<CTxIn> vecTxIn, std::vector<CAmount>& vecAmounts)
 {
     for (auto txin : vecTxIn) {
@@ -3133,6 +3160,7 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend, CTransac
     FeeCalculation feeCalc;
     CAmount nFeeNeeded;
     int nBytes;
+    bool fTimeLock = false;
     {
         std::set<CInputCoin> setCoins;
         LOCK2(cs_main, cs_wallet);
@@ -3244,6 +3272,17 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend, CTransac
                         return false;
                     }
                     txNew.vout.push_back(txout);
+
+                    //Tx has TimeLock
+                    if(!fTimeLock){
+                        std::vector<std::vector<unsigned char>> vSolutions;
+                        txnouttype whichType;
+                        const CScript& prevScript = recipient.scriptPubKey;
+                        Solver(prevScript, whichType, vSolutions);
+                        if(whichType == TX_CHECKLOCKTIMEVERIFY){
+                            fTimeLock = true;
+                        }
+                    }
                 }
 
                 // Choose coins to use
@@ -3461,7 +3500,7 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend, CTransac
                 nFeeRet = nFeeNeeded;
                 coin_selection_params.use_bnb = false;
                 continue;
-            }
+            }//end loop to select input
         }
 
         if (nChangePosInOut == -1) reservekey.ReturnKey(); // Return any reserved key if we don't have change
@@ -3479,7 +3518,18 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend, CTransac
         // to avoid conflicting with other possible uses of nSequence,
         // and in the spirit of "smallest possible change from prior
         // behavior."
-        const uint32_t nSequence = coin_control.m_signal_bip125_rbf.get_value_or(m_signal_rbf) ? MAX_BIP125_RBF_SEQUENCE : (CTxIn::SEQUENCE_FINAL - 1);
+
+        if(fTimeLock && coin_control.m_signal_bip125_rbf.get_value_or(m_signal_rbf))
+        {
+            strFailReason = _("TimeLock is not compatible with RBF");
+            return false;
+        }
+
+        uint32_t nSequence = coin_control.m_signal_bip125_rbf.get_value_or(m_signal_rbf) ? MAX_BIP125_RBF_SEQUENCE : (CTxIn::SEQUENCE_FINAL - 1);
+
+        //if Tx has TimeLock, force nSequence to NON FINAL
+        if(fTimeLock) nSequence = (uint32_t) (CTxIn::SEQUENCE_FINAL - 2);
+
         for (const auto& coin : selected_coins) {
             txNew.vin.push_back(CTxIn(coin.outpoint, CScript(), nSequence));
         }
@@ -4231,7 +4281,7 @@ void CWallet::MarkReserveKeysAsUsed(int64_t keypool_id)
         if (batch.ReadPool(index, keypool)) { //TODO: This should be unnecessary
             m_pool_key_to_index.erase(keypool.vchPubKey.GetID());
         }
-		//SIN don't support P2SH_SEGWIT and BECH32 yet
+        //SIN don't support P2SH_SEGWIT and BECH32 yet
         LearnAllRelatedScripts(keypool.vchPubKey);
         batch.ErasePool(index);
         WalletLogPrintf("keypool index %d removed\n", index);
@@ -4270,28 +4320,12 @@ void CWallet::LockCoin(const COutPoint& output)
 {
     AssertLockHeld(cs_wallet); // setLockedCoins
     setLockedCoins.insert(output);
-
-    // Dash
-    std::map<uint256, CWalletTx>::iterator it = mapWallet.find(output.hash);
-    if (it != mapWallet.end()) it->second.MarkDirty(); // recalculate all credits for this tx
-
-    fAnonymizableTallyCached = false;
-    fAnonymizableTallyCachedNonDenom = false;
-    //
 }
 
 void CWallet::UnlockCoin(const COutPoint& output)
 {
     AssertLockHeld(cs_wallet); // setLockedCoins
     setLockedCoins.erase(output);
-
-    // Dash
-    std::map<uint256, CWalletTx>::iterator it = mapWallet.find(output.hash);
-    if (it != mapWallet.end()) it->second.MarkDirty(); // recalculate all credits for this tx
-
-    fAnonymizableTallyCached = false;
-    fAnonymizableTallyCachedNonDenom = false;
-    //
 }
 
 void CWallet::UnlockAllCoins()
@@ -4390,7 +4424,7 @@ void CWallet::GetKeyBirthTimes(std::map<CTxDestination, int64_t> &mapKeyBirth) c
  *
  * For more information see CWalletTx::nTimeSmart,
  * https://sintalk.org/?topic=54527, or
- * https://github.com/sin/sin/pull/1393.
+ * https://github.com/bitcoin/bitcoin/pull/1393.
  */
 unsigned int CWallet::ComputeTimeSmart(const CWalletTx& wtx) const
 {

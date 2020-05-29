@@ -9,6 +9,7 @@
 
 #include <activemasternode.h>
 #include <interfaces/wallet.h>
+#include <interfaces/node.h>
 #include <qt/clientmodel.h>
 #include <qt/guiutil.h>
 #include <init.h>
@@ -17,6 +18,11 @@
 #include <masternode-sync.h>
 #include <masternodeconfig.h>
 #include <masternodeman.h>
+//SIN
+#include <infinitynode.h>
+#include <infinitynodeman.h>
+#include <infinitynodemeta.h>
+//
 #include <sync.h>
 #include <wallet/wallet.h>
 #include <qt/walletmodel.h>
@@ -67,6 +73,15 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     ui->tableWidgetMasternodes->setColumnWidth(3, columnActiveWidth);
     ui->tableWidgetMasternodes->setColumnWidth(4, columnLastSeenWidth);
 
+    ui->dinTable->setColumnWidth(0, 250);
+    ui->dinTable->setColumnWidth(1, 60);
+    ui->dinTable->setColumnWidth(2, 60);
+    ui->dinTable->setColumnWidth(3, 60);
+    ui->dinTable->setColumnWidth(4, 250);
+    ui->dinTable->setColumnWidth(5, 90);
+    ui->dinTable->setColumnWidth(6, 60);
+    ui->dinTable->setColumnWidth(7, 250);
+
     ui->tableWidgetMyMasternodes->setContextMenuPolicy(Qt::CustomContextMenu);
 
     QAction *startAliasAction = new QAction(tr("Start alias"), this);
@@ -83,6 +98,7 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     fFilterUpdated = false;
     nTimeFilterUpdated = GetTime();
     updateNodeList();
+    updateDINList();
 }
 
 MasternodeList::~MasternodeList()
@@ -322,6 +338,94 @@ void MasternodeList::updateNodeList()
 
     ui->countLabel->setText(QString::number(ui->tableWidgetMasternodes->rowCount()));
     ui->tableWidgetMasternodes->setSortingEnabled(true);
+
+    updateDINList();
+}
+
+void MasternodeList::updateDINList()
+{
+    if(walletModel && walletModel->getOptionsModel())
+    {
+        std::map<COutPoint, std::string> mOnchainDataInfo = walletModel->wallet().GetOnchainDataInfo();
+        std::map<COutPoint, std::string> mapMynode;
+        std::map<std::string, int> mapLockRewardHeight;
+
+        interfaces::Node& node = clientModel->node();
+        int nCurrentHeight = node.getNumBlocks();
+        ui->currentHeightLabel->setText(QString::number(nCurrentHeight));
+
+        int countNode = 0;
+        for(auto &pair : mOnchainDataInfo){
+            string s, sDataType = "", sData1 = "", sData2 = "";
+            stringstream ss(pair.second);
+            int i=0;
+            while (getline(ss, s,';')) {
+                if (i==0) {
+                    sDataType = s;
+                }
+                if (i==1) {
+                    sData1 = s;
+                }
+                if (i==2) {
+                    sData2 = s;
+                }
+                if(sDataType == "NodeCreation"){
+                    mapMynode[pair.first] = sData1;
+                } else if(sDataType == "LockReward" && i==2){
+                    int nRewardHeight = atoi(sData2);
+                    if(nRewardHeight > nCurrentHeight){
+                        mapLockRewardHeight[sData1] = nRewardHeight;
+                    }
+                }
+                i++;
+            }
+        }
+
+        ui->dinTable->setRowCount(mapMynode.size());
+        ui->dinTable->setSortingEnabled(true);
+
+        int k=0;
+        for(auto &pair : mapMynode){
+            infinitynode_info_t infoInf;
+            std::string status = "Unknown", sPeerAddress = "";
+            if(!infnodeman.GetInfinitynodeInfo(pair.first, infoInf)){
+                continue;
+            }
+            CMetadata metadata = infnodemeta.Find(infoInf.metadataID);
+            if (metadata.getMetadataHeight() == 0 || metadata.getMetaPublicKey() == "" ){
+                status="Incomplete";
+            } else {
+                status="Ready";
+
+                std::string metaPublicKey = metadata.getMetaPublicKey();
+                std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
+                if(tx_data.size() == CPubKey::COMPRESSED_PUBLIC_KEY_SIZE){
+                    CPubKey pubKey(tx_data.begin(), tx_data.end());
+                    CTxDestination dest = GetDestinationForKey(pubKey, DEFAULT_ADDRESS_TYPE);
+                    sPeerAddress = EncodeDestination(dest);
+                }
+            }
+            if(infoInf.nExpireHeight < nCurrentHeight){
+                status="Expried";
+            }
+            QString nodeTxId = QString::fromStdString(infoInf.collateralAddress);
+            ui->dinTable->setItem(k, 0, new QTableWidgetItem(QString(nodeTxId)));
+            ui->dinTable->setItem(k, 1, new QTableWidgetItem(QString::number(infoInf.nHeight)));
+            ui->dinTable->setItem(k, 2, new QTableWidgetItem(QString::number(infoInf.nExpireHeight)));
+            ui->dinTable->setItem(k, 3, new QTableWidgetItem(QString(QString::fromStdString(status))));
+            ui->dinTable->setItem(k, 4, new QTableWidgetItem(QString(QString::fromStdString(sPeerAddress))));
+            bool flocked = mapLockRewardHeight.find(sPeerAddress) != mapLockRewardHeight.end();
+            if(flocked) {
+                ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString::number(mapLockRewardHeight[sPeerAddress])));
+                ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString(QString::fromStdString("Yes"))));
+            } else {
+                ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString(QString::fromStdString(""))));
+                ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString(QString::fromStdString("No"))));
+            }
+            ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString(pair.second))));
+            k++;
+        }
+    }
 }
 
 void MasternodeList::on_filterLineEdit_textChanged(const QString &strFilterIn)
@@ -392,153 +496,6 @@ void MasternodeList::on_startAllButton_clicked()
     }
 
     StartAll();
-}
-
-void MasternodeList::on_startAutoSINButton_clicked()
-{
-    std::vector<std::shared_ptr<CWallet>> wallets = GetWallets();
-    CWallet * const pwallet = (wallets.size() > 0) ? wallets[0].get() : nullptr;
-    LOCK2(cs_main, pwallet->cs_wallet);
-    bool ok;
-    setStyleSheet( "QDialog{ background-color: #0d1827; }");
-    QString vpsip = QInputDialog::getText(this, tr("SINnode"), tr("Enter VPS address:"), QLineEdit::Normal, "", &ok);
-
-    if (!ok)
-       return;
-
-    //Write in file
-    boost::filesystem::path pathMasternodeConfigFile = GetMasternodeConfigFile();
-    boost::filesystem::ifstream streamConfig(pathMasternodeConfigFile);
-    FILE* configFile = fopen(pathMasternodeConfigFile.string().c_str(), "w");
-    std::string strHeader = "# infinitynode config file\n"
-                            "# Format: alias IP:port infinitynodeprivkey collateral_output_txid collateral_output_index burnfund_output_txid burnfund_output_index\n"
-                            "# infinitynode1 127.0.0.1:20980 7RVuQhi45vfazyVtskTRLBgNuSrYGecS5zj2xERaooFVnWKKjhS b7ed8c1396cf57ac78d756186b6022d3023fd2f1c338b7fbae42d342fdd7070a 0 563d9434e816b3e8ffc5347c6b8db07509de6068f6759f21a16be5d92b7e3111 1\n";
-    fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
-
-    LogPrintf("MasternodeList::AutoSIN -- location of configFile is %s\n",pathMasternodeConfigFile.string());
-    // quick input parsing
-    int vpsiplen = strlen(vpsip.toUtf8().constData());
-    if (vpsiplen < 7 || vpsiplen > 16) {
-       strHeader = "#IP format is not valid\n";
-       fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
-       fclose(configFile);
-       return;
-    }
-    // char type parsing
-    for (int i=0; i<vpsiplen; i++) {
-       if ((vpsip[i] < 46 || vpsip[i] > 57) || vpsip[i] == 47) {
-           strHeader = "#IP format is not valid\n";
-           fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
-           fclose(configFile);
-           return;
-       }
-    }
-
-    // generate masternode key
-    CKey secret;
-    std::vector<infinitynode_conf_t> listNode;
-    std::set<uint256> trackCollateralTx;
-
-    secret.MakeNewKey(false);
-
-    bool foundCollat = false;
-    CTxDestination collateralAddress = CTxDestination();
-
-    // find suitable burntx
-    bool foundBurn = false;
-    int counter = 0;
-    listNode.clear();
-
-    for (map<uint256, CWalletTx>::const_iterator it = pwallet->mapWallet.begin(); it != pwallet->mapWallet.end(); ++it) {
-      const uint256* txid = &(*it).first;
-      const CWalletTx* pcoin = &(*it).second;
-      for (unsigned int i = 0; i < pcoin->tx->vout.size(); i++) {
-          CTxDestination address;
-          bool fValidAddress = ExtractDestination(pcoin->tx->vout[i].scriptPubKey, address);
-          CTxDestination BurnAddress = DecodeDestination(Params().GetConsensus().cBurnAddress);
-          if (
-                (address == BurnAddress) &&
-                (
-                    ((Params().GetConsensus().nMasternodeBurnSINNODE_1 - 1) * COIN < pcoin->tx->vout[i].nValue && pcoin->tx->vout[i].nValue <= Params().GetConsensus().nMasternodeBurnSINNODE_1 * COIN) ||
-                    ((Params().GetConsensus().nMasternodeBurnSINNODE_5 - 1) * COIN < pcoin->tx->vout[i].nValue && pcoin->tx->vout[i].nValue <= Params().GetConsensus().nMasternodeBurnSINNODE_5 * COIN) ||
-                    ((Params().GetConsensus().nMasternodeBurnSINNODE_10 - 1) * COIN < pcoin->tx->vout[i].nValue && pcoin->tx->vout[i].nValue <= Params().GetConsensus().nMasternodeBurnSINNODE_10 * COIN)
-                )
-          ) {
-                    //add dummy
-                    listNode.push_back(infinitynode_conf_t());
-                    foundBurn = true;
-
-                    //add to list
-                    listNode[counter].burnFundHash = txid->ToString();
-                    listNode[counter].burnFundIndex = i;
-                    const CTxIn txin = pcoin->tx->vin[0]; //BurnFund Input is only one address. So we can take the first without problem
-                    CTxDestination sendAddress;
-                    ExtractDestination(pwallet->mapWallet.at(txin.prevout.hash).tx->vout[txin.prevout.n].scriptPubKey, sendAddress);
-                    LogPrintf("MasternodeList::AutoSIN -- find BurnFund tx: %s, index: %d\n",listNode[counter].burnFundHash, listNode[counter].burnFundIndex);
-                    LogPrintf("MasternodeList::AutoSIN -- Sender's address:%s\n", EncodeDestination(sendAddress));
-                    listNode[counter].collateralAddress = sendAddress;
-                    secret.MakeNewKey(false);
-                    listNode[counter].infinitynodePrivateKey = EncodeSecret(secret);
-                    listNode[counter].IPaddress = vpsip.toUtf8().constData();
-                    listNode[counter].port = Params().GetDefaultPort();
-                    counter++;
-            }
-        }
-    }
-
-    // find suitable collateral outputs
-    std::vector<COutput> vPossibleCoins;
-    pwallet->AvailableCoins(vPossibleCoins, true, NULL, false, ONLY_MASTERNODE_COLLATERAL);
-
-    for (COutput& out : vPossibleCoins) {
-      CTxDestination address;
-        const CScript& scriptPubKey = out.tx->tx->vout[out.i].scriptPubKey;
-        bool fValidAddress = ExtractDestination(scriptPubKey, address);
-        for (unsigned int i = 0; i < listNode.size(); i++) {
-            if (address == listNode[i].collateralAddress && trackCollateralTx.count(out.tx->GetHash()) != 1) {
-                listNode[i].collateralHash = out.tx->GetHash().ToString();
-                listNode[i].collateralIndex = out.i;
-                trackCollateralTx.insert(out.tx->GetHash());
-                foundCollat = true;
-            }
-        }
-    }
-
-    if (!foundBurn) {
-        LogPrintf("MasternodeList::AutoSIN -- burnTx not found\n");
-        strHeader = "#BurnFund tx was not found\n";
-        fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
-    } else {
-        strHeader = "#BurnFund tx was found\n";
-        fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
-    }
-
-    if (!foundCollat) {
-        LogPrintf("MasternodeList::AutoSIN -- collateral not found\n");
-        strHeader = "#Collateral tx was not found\n";
-        fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
-    } else {
-        strHeader = "#Collateral tx was found\n";
-        fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
-    }
-
-    if (foundBurn) {
-       for (unsigned int i = 0; i < listNode.size(); i++) {
-           char inconfigline[300];
-           memset(inconfigline,'\0',300);
-           sprintf(inconfigline,"infinitynode%d %s:%d %s %s %d %s %d %s\n",i, listNode[i].IPaddress.c_str(), listNode[i].port, listNode[i].infinitynodePrivateKey.c_str(), listNode[i].collateralHash.c_str(), listNode[i].collateralIndex, listNode[i].burnFundHash.c_str(), listNode[i].burnFundIndex, EncodeDestination(listNode[i].collateralAddress).c_str());
-           fwrite(inconfigline, strlen(inconfigline), 1, configFile);
-       }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    QMessageBox messageBox;
-    messageBox.setWindowTitle("Alert");
-    messageBox.setText(QString::fromStdString("Please open config file in:\n"+pathMasternodeConfigFile.string()));
-    messageBox.exec();
-    ////////////////////////////////////////////////////////////////////////////////
-
-    fclose(configFile);
 }
 
 void MasternodeList::on_tableWidgetMyMasternodes_itemSelectionChanged()

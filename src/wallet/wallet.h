@@ -394,11 +394,7 @@ public:
     mutable bool fCreditCached;
     mutable bool fImmatureCreditCached;
     mutable bool fAvailableCreditCached;
-    // Dash
-    mutable bool fAnonymizedCreditCached;
-    mutable bool fDenomUnconfCreditCached;
-    mutable bool fDenomConfCreditCached;
-    //
+
     mutable bool fWatchDebitCached;
     mutable bool fWatchCreditCached;
     mutable bool fImmatureWatchCreditCached;
@@ -409,11 +405,7 @@ public:
     mutable CAmount nCreditCached;
     mutable CAmount nImmatureCreditCached;
     mutable CAmount nAvailableCreditCached;
-    // Dash
-    mutable CAmount nAnonymizedCreditCached;
-    mutable CAmount nDenomUnconfCreditCached;
-    mutable CAmount nDenomConfCreditCached;
-    //
+
     mutable CAmount nWatchDebitCached;
     mutable CAmount nWatchCreditCached;
     mutable CAmount nImmatureWatchCreditCached;
@@ -500,11 +492,6 @@ public:
         fCreditCached = false;
         fAvailableCreditCached = false;
         fImmatureCreditCached = false;
-        // Dash
-        fAnonymizedCreditCached = false;
-        fDenomUnconfCreditCached = false;
-        fDenomConfCreditCached = false;
-        //
         fWatchDebitCached = false;
         fWatchCreditCached = false;
         fAvailableWatchCreditCached = false;
@@ -534,11 +521,6 @@ public:
         return CalculateMaximumSignedInputSize(tx->vout[out], pwallet, use_max_sig);
     }
 
-    // Dash
-    CAmount GetAnonymizedCredit(bool fUseCache=true) const;
-    CAmount GetDenominatedCredit(bool unconfirmed, bool fUseCache=true) const;
-    //
-
     void GetAmounts(std::list<COutputEntry>& listReceived,
                     std::list<COutputEntry>& listSent, CAmount& nFee, std::string& strSentAccount, const isminefilter& filter) const;
 
@@ -562,8 +544,9 @@ public:
     bool AcceptToMemoryPool(const CAmount& nAbsurdFee, CValidationState& state);
 
     std::set<uint256> GetConflicts() const;
-    bool isOutputTermDeposit(int i) const;
-    int GetTermDepositReleaseBlock(int i) const;
+    bool isOutputTimeLock(int i) const;
+    bool isOutputBurnData(int i) const;
+    int GetTimeLockReleaseBlock(int i) const;
 };
 
 class COutput
@@ -767,13 +750,6 @@ private:
     int64_t nLastResend = 0;
     bool fBroadcastTransactions = false;
 
-    // Dash
-    mutable bool fAnonymizableTallyCached;
-    mutable std::vector<CompactTallyItem> vecAnonymizableTallyCached;
-    mutable bool fAnonymizableTallyCachedNonDenom;
-    mutable std::vector<CompactTallyItem> vecAnonymizableTallyCachedNonDenom;
-    //
-
     /**
      * Used to keep track of spent outpoints, and
      * detect and report conflicts (double-spends or
@@ -925,8 +901,9 @@ public:
     std::map<uint256, CWalletTx> mapWallet;
     std::list<CAccountingEntry> laccentries;
 
-    std::vector<COutput> GetTermDepositInfo();
-    std::vector<COutput> GetTermDepositInfo(const std::string& strAccount);
+    std::vector<COutput> GetTimeLockInfo();
+    std::vector<COutput> GetTimeLockInfo(const std::string& strAccount);
+    std::map<COutPoint, std::string> GetOnchainDataInfo();
 
     typedef std::pair<CWalletTx*, CAccountingEntry*> TxPair;
     typedef std::multimap<int64_t, TxPair > TxItems;
@@ -1083,17 +1060,6 @@ public:
     CAmount GetAvailableBalance(const CCoinControl* coinControl = nullptr) const;
 
     OutputType TransactionChangeType(OutputType change_type, const std::vector<CRecipient>& vecSend);
-
-    // Dash
-    CAmount GetAnonymizableBalance(bool fSkipDenominated = false, bool fSkipUnconfirmed = true) const;
-    CAmount GetAnonymizedBalance() const;
-    float GetAverageAnonymizedRounds() const;
-    CAmount GetNormalizedAnonymizedBalance() const;
-    CAmount GetNeedsToBeAnonymizedBalance(CAmount nMinBalance = 0) const;
-    CAmount GetDenominatedBalance(bool unconfirmed=false) const;
-
-    bool GetBudgetSystemCollateralTX(CTransactionRef& tx, uint256 hash, CAmount amount, bool fUseInstantSend);
-    //
 
     /**
      * Insert additional inputs into the transaction by

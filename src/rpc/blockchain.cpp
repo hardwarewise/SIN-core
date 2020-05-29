@@ -1039,13 +1039,13 @@ static void ApplyTimeLockedStats(CTermDepositStats &stats, 	std::set<uint160> &a
 			txnouttype whichType;
 			const CScript& prevScript = output.second.out.scriptPubKey;
 			Solver(prevScript, whichType, vSolutions);
-			if ( whichType == TX_CHECKLOCKTIMEVERIFY && output.second.out.scriptPubKey.GetTermDepositReleaseBlock()>chainActive.Height())
+			if ( whichType == TX_CHECKLOCKTIMEVERIFY && output.second.out.scriptPubKey.GetTimeLockReleaseBlock()>chainActive.Height())
 			{
 				stats.nTransactions++;
 				nNumberTxAmount += 1;
 				nValueAmount += output.second.out.nValue;
 				addresses.insert(uint160(vSolutions[0]));
-				int nBlockMatured = output.second.out.scriptPubKey.GetTermDepositReleaseBlock() - chainActive.Height();
+				int nBlockMatured = output.second.out.scriptPubKey.GetTimeLockReleaseBlock() - chainActive.Height();
 				if (nBlockMatured <= 720){
 					stats.n1day += output.second.out.nValue;
 				} else if (720 < nBlockMatured && nBlockMatured <= 1440){

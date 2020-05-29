@@ -78,7 +78,7 @@ void CSporkManager::ProcessSpork(CNode* pfrom, const std::string& strCommand, CD
 
         if(mapSporksActive.count(spork.nSporkID)) {
             if (mapSporksActive[spork.nSporkID].nTimeSigned >= spork.nTimeSigned) {
-                LogPrint(BCLog::SPORK, "%s seen\n", strLogMsg);
+                LogPrintf("%s seen\n", strLogMsg);
                 return;
             } else {
                 LogPrintf("%s updated\n", strLogMsg);
@@ -128,7 +128,7 @@ void CSporkManager::ExecuteSpork(int nSporkID, int nValue)
         static int64_t nTimeExecuted = 0; // i.e. it was never executed before
 
         if(GetTime() - nTimeExecuted < nTimeout) {
-            LogPrint(BCLog::SPORK, "CSporkManager::ExecuteSpork -- ERROR: Trying to reconsider blocks, too soon - %d/%d\n", GetTime() - nTimeExecuted, nTimeout);
+            LogPrintf("CSporkManager::ExecuteSpork -- ERROR: Trying to reconsider blocks, too soon - %d/%d\n", GetTime() - nTimeExecuted, nTimeout);
             return;
         }
 
@@ -180,7 +180,7 @@ bool CSporkManager::IsSporkActive(int nSporkID)
             case SPORK_14_REQUIRE_SENTINEL_FLAG:            r = SPORK_14_REQUIRE_SENTINEL_FLAG_DEFAULT; break;
 
             default:
-                LogPrint(BCLog::SPORK, "CSporkManager::IsSporkActive -- Unknown Spork ID %d\n", nSporkID);
+                LogPrintf("CSporkManager::IsSporkActive -- Unknown Spork ID %d\n", nSporkID);
                 r = 4070908800ULL; // 2099-1-1 i.e. off by default
                 break;
         }
@@ -207,7 +207,7 @@ int64_t CSporkManager::GetSporkValue(int nSporkID)
         case SPORK_14_REQUIRE_SENTINEL_FLAG:            return SPORK_14_REQUIRE_SENTINEL_FLAG_DEFAULT;
 
         default:
-            LogPrint(BCLog::SPORK, "CSporkManager::GetSporkValue -- Unknown Spork ID %d\n", nSporkID);
+            LogPrintf("CSporkManager::GetSporkValue -- Unknown Spork ID %d\n", nSporkID);
             return -1;
     }
 
@@ -225,7 +225,7 @@ int CSporkManager::GetSporkIDByName(std::string strName)
     if (strName == "SPORK_13_OLD_SUPERBLOCK_FLAG")              return SPORK_13_OLD_SUPERBLOCK_FLAG;
     if (strName == "SPORK_14_REQUIRE_SENTINEL_FLAG")            return SPORK_14_REQUIRE_SENTINEL_FLAG;
 
-    LogPrint(BCLog::SPORK, "CSporkManager::GetSporkIDByName -- Unknown Spork name '%s'\n", strName);
+    LogPrintf("CSporkManager::GetSporkIDByName -- Unknown Spork name '%s'\n", strName);
     return -1;
 }
 
@@ -243,7 +243,7 @@ std::string CSporkManager::GetSporkNameByID(int nSporkID)
         case SPORK_14_REQUIRE_SENTINEL_FLAG:            return "SPORK_14_REQUIRE_SENTINEL_FLAG";
 
         default:
-            LogPrint(BCLog::SPORK, "CSporkManager::GetSporkNameByID -- Unknown Spork ID %d\n", nSporkID);
+            LogPrintf("CSporkManager::GetSporkNameByID -- Unknown Spork ID %d\n", nSporkID);
             return "Unknown";
     }
 }

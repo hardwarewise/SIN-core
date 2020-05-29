@@ -73,6 +73,9 @@
 //sinovate
 #include <infinitynodeman.h>
 #include <infinitynodersv.h>
+#include <infinitynodepeer.h>
+#include <infinitynodemeta.h>
+#include <infinitynodelockreward.h>
 //
 
 #ifndef WIN32
@@ -192,6 +195,7 @@ public:
 
 static std::unique_ptr<CCoinsViewErrorCatcher> pcoinscatcher;
 static std::unique_ptr<ECCVerifyHandle> globalVerifyHandle;
+static std::unique_ptr<ECCMusigHandle> globalMusigHandle;
 
 static boost::thread_group threadGroup;
 static CScheduler scheduler;
@@ -270,6 +274,8 @@ void Shutdown()
     flatdb5.Dump(infnodeman);
     CFlatDB<CInfinitynodersv> flatdb6("infinitynodersv.dat", "magicInfinityRSV");
     flatdb6.Dump(infnodersv);
+    CFlatDB<CInfinitynodeMeta> flatdb7("infinitynodemeta.dat", "magicInfinityMeta");
+    flatdb7.Dump(infnodemeta);
     //
 
     if (fFeeEstimatesInitialized)
@@ -339,6 +345,8 @@ void Shutdown()
     g_wallet_init_interface.Close();
     globalVerifyHandle.reset();
     ECC_Stop();
+    globalMusigHandle.reset();
+    //ECC_MusigStop();
     LogPrintf("%s: done\n", __func__);
 }
 
@@ -355,7 +363,7 @@ static void HandleSIGTERM(int)
 
 static void HandleSIGHUP(int)
 {
-    g_logger->m_reopen_file = true;
+    LogInstance().m_reopen_file = true;
 }
 #else
 static BOOL WINAPI consoleCtrlHandler(DWORD dwCtrlType)
@@ -450,6 +458,15 @@ void SetupServerArgs()
     hidden_args.emplace_back("-sysperms");
 #endif
     gArgs.AddArg("-txindex", strprintf("Maintain a full transaction index, used by the getrawtransaction rpc call (default: %u)", DEFAULT_TXINDEX), false, OptionsCategory::OPTIONS);
+
+    gArgs.AddArg("-masternode=<n>", strprintf("Enable the client to act as a masternode (0-1)"), false, OptionsCategory::OPTIONS);
+    gArgs.AddArg("-mnconf=<file>", strprintf("Specify masternode configuration file (default: infinitynode.conf)"), false, OptionsCategory::OPTIONS);
+    gArgs.AddArg("-mnconflock=<n>", strprintf("Lock masternodes from masternode configuration file"), false, OptionsCategory::OPTIONS);
+    gArgs.AddArg("-masternodeprivkey=<n>","Set the masternode private key", false, OptionsCategory::OPTIONS);
+
+    //SIN
+    gArgs.AddArg("-infinitynode=<n>", strprintf("Enable the client to act as an infinitynode (0-1)"), false, OptionsCategory::OPTIONS);
+    gArgs.AddArg("-infinitynodeprivkey=<n>","Set the infinitynode private key", false, OptionsCategory::OPTIONS);
 
     gArgs.AddArg("-addnode=<ip>", "Add a node to connect to and attempt to keep the connection open (see the `addnode` RPC command help for more info). This option can be specified multiple times to add multiple nodes.", false, OptionsCategory::CONNECTION);
     gArgs.AddArg("-banscore=<n>", strprintf("Threshold for disconnecting misbehaving peers (default: %u)", DEFAULT_BANSCORE_THRESHOLD), false, OptionsCategory::CONNECTION);
@@ -881,17 +898,17 @@ static std::string ResolveErrMsg(const char * const optname, const std::string& 
  */
 void InitLogging()
 {
-    g_logger->m_print_to_file = !gArgs.IsArgNegated("-debuglogfile");
-    g_logger->m_file_path = AbsPathForConfigVal(gArgs.GetArg("-debuglogfile", DEFAULT_DEBUGLOGFILE));
+    LogInstance().m_print_to_file = !gArgs.IsArgNegated("-debuglogfile");
+    LogInstance().m_file_path = AbsPathForConfigVal(gArgs.GetArg("-debuglogfile", DEFAULT_DEBUGLOGFILE));
 
     // Add newlines to the logfile to distinguish this execution from the last
     // one; called before console logging is set up, so this is only sent to
     // debug.log.
     LogPrintf("\n\n\n\n\n");
 
-    g_logger->m_print_to_console = gArgs.GetBoolArg("-printtoconsole", !gArgs.GetBoolArg("-daemon", false));
-    g_logger->m_log_timestamps = gArgs.GetBoolArg("-logtimestamps", DEFAULT_LOGTIMESTAMPS);
-    g_logger->m_log_time_micros = gArgs.GetBoolArg("-logtimemicros", DEFAULT_LOGTIMEMICROS);
+    LogInstance().m_print_to_console = gArgs.GetBoolArg("-printtoconsole", !gArgs.GetBoolArg("-daemon", false));
+    LogInstance().m_log_timestamps = gArgs.GetBoolArg("-logtimestamps", DEFAULT_LOGTIMESTAMPS);
+    LogInstance().m_log_time_micros = gArgs.GetBoolArg("-logtimemicros", DEFAULT_LOGTIMEMICROS);
 
     fLogIPs = gArgs.GetBoolArg("-logips", DEFAULT_LOGIPS);
 
@@ -1023,7 +1040,7 @@ bool AppInitParameterInteraction()
         if (std::none_of(categories.begin(), categories.end(),
             [](std::string cat){return cat == "0" || cat == "none";})) {
             for (const auto& cat : categories) {
-                if (!g_logger->EnableCategory(cat)) {
+                if (!LogInstance().EnableCategory(cat)) {
                     InitWarning(strprintf(_("Unsupported logging category %s=%s."), "-debug", cat));
                 }
             }
@@ -1032,7 +1049,7 @@ bool AppInitParameterInteraction()
 
     // Now remove the logging categories which were explicitly excluded
     for (const std::string& cat : gArgs.GetArgs("-debugexclude")) {
-        if (!g_logger->DisableCategory(cat)) {
+        if (!LogInstance().DisableCategory(cat)) {
             InitWarning(strprintf(_("Unsupported logging category %s=%s."), "-debugexclude", cat));
         }
     }
@@ -1256,6 +1273,8 @@ bool AppInitSanityChecks()
     RandomInit();
     ECC_Start();
     globalVerifyHandle.reset(new ECCVerifyHandle());
+    //ECC_MusigStart();
+    globalMusigHandle.reset(new ECCMusigHandle());
 
     // Sanity check
     if (!InitSanityCheck())
@@ -1283,29 +1302,24 @@ bool AppInitLockDataDirectory()
 void ThreadCheckInfinityNode(CConnman& connman)
 {
     if(fLiteMode) return; // disable all Dash specific functionality
-
     static bool fOneThread;
     if(fOneThread) return;
     fOneThread = true;
-
     RenameThread("sinovate-ps");
-
     unsigned int nTick = 0;
-
+    //if this node is an Infinitynode peer, so verify the state
+    if(fInfinityNode) {
+        infinitynodePeer.ManageState(connman);
+    }
     while (true)
     {
         MilliSleep(1000);
-
         // try to sync from all available nodes, one step at a time
         masternodeSync.ProcessTick(connman);
         if(masternodeSync.IsBlockchainSynced() && !ShutdownRequested() && masternodeSync.IsSynced()) {
-
             nTick++;
-            LogPrintf("nTick: %d\n",nTick);
-
             // make sure to check all masternodes first
             mnodeman.Check();
-
             // check if we should activate or ping every few minutes,
             // slightly postpone first run to give net thread a chance to connect to some peers
             if(nTick % MASTERNODE_MIN_MNP_SECONDS == 15)
@@ -1316,6 +1330,10 @@ void ThreadCheckInfinityNode(CConnman& connman)
                 mnodeman.CheckAndRemove(connman);
                 mnpayments.CheckAndRemove();
                 instantsend.CheckAndRemove();
+                if(fInfinityNode && infinitynodePeer.nState != INFINITYNODE_PEER_STARTED)
+                {
+                    infinitynodePeer.ManageState(connman);
+                }
             }
             if(fMasterNode && (nTick % (60 * 5) == 0)) {
                 mnodeman.DoFullVerificationStep(connman);
@@ -1323,9 +1341,6 @@ void ThreadCheckInfinityNode(CConnman& connman)
             if(nTick % (60 * 5) == 0) {
                 infnodeman.CheckAndRemove(connman);
                 mnodeman.CheckAndRemoveBurnFundNotUniqueNode(connman);
-                mnodeman.CheckAndRemoveLimitNumberNode(connman, 1, Params().GetConsensus().nLimitSINNODE_1);
-                mnodeman.CheckAndRemoveLimitNumberNode(connman, 5, Params().GetConsensus().nLimitSINNODE_5);
-                mnodeman.CheckAndRemoveLimitNumberNode(connman, 10, Params().GetConsensus().nLimitSINNODE_10);
             }
         }
     }
@@ -1339,19 +1354,19 @@ bool AppInitMain()
 #ifndef WIN32
     CreatePidFile(GetPidFile(), getpid());
 #endif
-    if (g_logger->m_print_to_file) {
-        if (gArgs.GetBoolArg("-shrinkdebugfile", g_logger->DefaultShrinkDebugFile())) {
+    if (LogInstance().m_print_to_file) {
+        if (gArgs.GetBoolArg("-shrinkdebugfile", LogInstance().DefaultShrinkDebugFile())) {
             // Do this first since it both loads a bunch of debug.log into memory,
             // and because this needs to happen before any other debug.log printing
-            g_logger->ShrinkDebugFile();
+            LogInstance().ShrinkDebugFile();
         }
-        if (!g_logger->OpenDebugLog()) {
+        if (!LogInstance().StartLogging()) {
             return InitError(strprintf("Could not open debug log file %s",
-                                       g_logger->m_file_path.string()));
+                                       LogInstance().m_file_path.string()));
         }
     }
 
-    if (!g_logger->m_log_timestamps)
+    if (!LogInstance().m_log_timestamps)
         LogPrintf("Startup time: %s\n", FormatISO8601DateTime(GetTime()));
     LogPrintf("Default data directory %s\n", GetDefaultDataDir().string());
     LogPrintf("Using data directory %s\n", GetDataDir().string());
@@ -1838,6 +1853,20 @@ bool AppInitMain()
         return false;
     }
 
+    // SIN
+    fInfinityNode = gArgs.GetBoolArg("-infinitynode", false);
+    if(fInfinityNode) {
+        std::string strInfinityNodePrivKey = gArgs.GetArg("-infinitynodeprivkey", "");
+        if(!strInfinityNodePrivKey.empty()) {
+            if(!CMessageSigner::GetKeysFromSecret(strInfinityNodePrivKey, infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode))
+                return InitError(_("Invalid masternodeprivkey. Please see documentation."));
+            LogPrintf("  pubKeyInfinitynode: %s\n", infinitynodePeer.pubKeyInfinitynode.GetID().ToString());
+            infinitynodePeer.ManageState(connman);
+        } else {
+            return InitError(_("You must specify a infinitynodeprivkey in the configuration. Please see documentation for help."));
+        }
+    }
+    //
     // Dash
     // ********************************************************* Step 11a: setup InfinityNode
     fMasterNode = gArgs.GetBoolArg("-masternode", false);
@@ -1951,6 +1980,13 @@ bool AppInitMain()
         return InitError(_("Failed to load RSV vote cache from") + "\n" + (pathDB / strDBName).string());
     }
 
+    strDBName = "infinitynodemeta.dat";
+    uiInterface.InitMessage(_("Loading infinitynode Meta..."));
+    CFlatDB<CInfinitynodeMeta> flatdb7(strDBName, "magicInfinityMeta");
+    if(!flatdb7.Load(infnodemeta)) {
+        return InitError(_("Failed to load Metatdata cache from") + "\n" + (pathDB / strDBName).string());
+    }
+
     LogPrintf("InfinityNode last scan height: %d and active Height: %d\n", infnodeman.getLastScan(), chainActive.Height());
     if (infnodeman.getLastScan() == 0){
         uiInterface.InitMessage(_("Initial on-chain infinitynode list..."));
@@ -1972,7 +2008,7 @@ bool AppInitMain()
     // force UpdatedBlockTip to initialize nCachedBlockHeight for DS, MN payments and budgets
     // but don't call it directly to prevent triggering of other listeners like zmq etc.
     // GetMainSignals().UpdatedBlockTip(chainActive.Tip());
-    pdsNotificationInterface->InitializeCurrentBlockTip();
+    //pdsNotificationInterface->InitializeCurrentBlockTip();
 
     // ********************************************************* Step 11d: start dash-ps-<smth> threads
 

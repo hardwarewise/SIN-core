@@ -71,6 +71,18 @@ struct Params {
     int nInfinityNodeGenesisStatement;// integer
     int nInfinityNodeUpdateMeta;// integer
     int nInfinityNodeVoteValue; // in coins
+    int nInfinityNodeNotificationValue; // in coins
+    int nInfinityNodeCallLockRewardDeepth; //in number of blocks
+    int nInfinityNodeCallLockRewardLoop; //in number of blocks
+    int nInfinityNodeLockRewardTop; //in number
+    int nInfinityNodeLockRewardSigners; //in number
+    int nInfinityNodeLockRewardSINType; //in number
+    int nSchnorrActivationHeight; // block height (int)
+    int nNewDevfeeAddress; // block height (int)
+
+    // these params were once hardcoded in validation.cpp
+    int nINActivationHeight; // block height (int)
+    int nINEnforcementHeight; // block height (int)
 
     int nInstantSendKeepLock; // in blocks
 
@@ -97,12 +109,16 @@ struct Params {
     int BIP66Height;
     const char *devAddressPubKey;
     const char *devAddress;
+    const char *devAddress2PubKey;
+    const char *devAddress2;
     const char *cBurnAddress;
     const char *cBurnAddressPubKey;
     const char *cMetadataAddress;
     const char *cMetadataAddressPubKey;
     const char *cNotifyAddress;
     const char *cNotifyAddressPubKey;
+    const char *cLockRewardAddress;
+    const char *cLockRewardAddressPubKey;
     const char *cGovernanceAddress;
     /**
      * Minimum blocks including miner confirmation of the total of 2016 blocks in a retargeting period,

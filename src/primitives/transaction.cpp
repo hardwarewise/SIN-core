@@ -169,7 +169,7 @@ std::string CTransaction::ToString() const
 
 CAmount CTxOut::GetValueWithInterest(int outputBlockHeight, int valuationHeight) const
 {
-    return GetInterest(nValue, outputBlockHeight, valuationHeight, scriptPubKey.GetTermDepositReleaseBlock());
+    return GetInterest(nValue, outputBlockHeight, valuationHeight, scriptPubKey.GetTimeLockReleaseBlock());
 }
 
 #define BLOCKSPERDAY 720

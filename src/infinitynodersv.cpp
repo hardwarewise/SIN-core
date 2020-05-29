@@ -38,10 +38,10 @@ bool CInfinitynodersv::Has(std::string proposal)
 bool CInfinitynodersv::Add(CVote &vote)
 {
     LOCK(cs);
-    LogPrintf("CInfinitynodersv::new vote from %s %d\n", vote.getVoter().ToString(), vote.getHeight());
+    LogPrint(BCLog::INFINITYRSV,"CInfinitynodersv::new vote from %s %d\n", vote.getVoter().ToString(), vote.getHeight());
     auto it = mapProposalVotes.find(vote.getProposalId());
     if(it == mapProposalVotes.end()){
-        LogPrintf("CInfinitynodersv::1st vote from %s\n", vote.getVoter().ToString());
+        LogPrint(BCLog::INFINITYRSV,"CInfinitynodersv::1st vote from %s\n", vote.getVoter().ToString());
         mapProposalVotes[vote.getProposalId()].push_back(vote);
     } else {
         int i=0;
@@ -49,10 +49,10 @@ bool CInfinitynodersv::Add(CVote &vote)
             //added
             if(v.getVoter() == vote.getVoter()){
                 if(v.getHeight() >= vote.getHeight()){
-                    LogPrintf("CInfinitynodersv::same voter from with low height %s\n", v.getVoter().ToString());
+                    LogPrint(BCLog::INFINITYRSV,"CInfinitynodersv::same voter from with low height %s\n", v.getVoter().ToString());
                     return false;
                 }else{
-                    LogPrintf("CInfinitynodersv::new vote from higher height %s\n", vote.getVoter().ToString());
+                    LogPrint(BCLog::INFINITYRSV,"CInfinitynodersv::new vote from higher height %s\n", vote.getVoter().ToString());
                     mapProposalVotes[vote.getProposalId()].erase (mapProposalVotes[vote.getProposalId()].begin()+i);
                     mapProposalVotes[vote.getProposalId()].push_back(vote);
                     return true;
@@ -61,7 +61,7 @@ bool CInfinitynodersv::Add(CVote &vote)
             i++;
         }
         //not found the same voter ==> add
-        LogPrintf("CInfinitynodersv::new vote from %s for proposal %s\n", vote.getVoter().ToString(), vote.getProposalId());
+        LogPrint(BCLog::INFINITYRSV,"CInfinitynodersv::new vote from %s for proposal %s\n", vote.getVoter().ToString(), vote.getProposalId());
         mapProposalVotes[vote.getProposalId()].push_back(vote);
     }
     return true;
@@ -73,7 +73,7 @@ bool CInfinitynodersv::Add(CVote &vote)
  */
 int CInfinitynodersv::getResult(std::string proposal, bool opinion, int mode)
 {
-    LogPrintf("CInfinitynodersv::result --%s %d\n", proposal, mode);
+    LogPrint(BCLog::INFINITYRSV,"CInfinitynodersv::result --%s %d\n", proposal, mode);
     LOCK(cs);
     std::map<COutPoint, CInfinitynode> mapInfinitynodesCopy = infnodeman.GetFullInfinitynodeMap();
     int result = 0;
@@ -108,8 +108,8 @@ int CInfinitynodersv::getResult(std::string proposal, bool opinion, int mode)
 bool CInfinitynodersv::rsvScan(int nBlockHeight)
 {
     Clear();
-    LogPrintf("CInfinitynodersv::rsvScan -- Cleared map. Size is %d\n", (int)mapProposalVotes.size());
-    if (nBlockHeight <= INFINITYNODE_RSV_BEGIN) return false;
+    LogPrint(BCLog::INFINITYRSV,"CInfinitynodersv::rsvScan -- Cleared map. Size is %d\n", (int)mapProposalVotes.size());
+    if (nBlockHeight <= Params().GetConsensus().nInfinityNodeGenesisStatement) return false;
     uint256 blockHash;
     if(!GetBlockHash(blockHash, nBlockHeight)) {
         LogPrint(BCLog::INFINITYNODE, "CInfinitynodeMan::buildInfinitynodeList -- can not read block hash\n");
@@ -120,7 +120,7 @@ bool CInfinitynodersv::rsvScan(int nBlockHeight)
     pindex = LookupBlockIndex(blockHash);
     CBlockIndex* prevBlockIndex = pindex;
 
-    while (prevBlockIndex->nHeight >= INFINITYNODE_RSV_BEGIN)
+    while (prevBlockIndex->nHeight >= Params().GetConsensus().nInfinityNodeGenesisStatement)
     {
         CBlock blockReadFromDisk;
         if (ReadBlockFromDisk(blockReadFromDisk, prevBlockIndex, Params().GetConsensus()))
@@ -152,24 +152,24 @@ bool CInfinitynodersv::rsvScan(int nBlockHeight)
                                         CTransactionRef prevtx;
                                         uint256 hashblock;
                                         if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false)) {
-                                            LogPrintf("CInfinitynodersv::rsvScan -- PrevBurnFund tx is not in block.\n");
+                                            LogPrint(BCLog::INFINITYRSV,"CInfinitynodersv::rsvScan -- PrevBurnFund tx is not in block.\n");
                                             return false;
                                         }
 
                                         CTxDestination addressBurnFund;
                                         if(!ExtractDestination(prevtx->vout[index].scriptPubKey, addressBurnFund)){
-                                            LogPrintf("CInfinitynodersv::rsvScan -- False when extract payee from BurnFund tx.\n");
+                                            LogPrint(BCLog::INFINITYRSV,"CInfinitynodersv::rsvScan -- False when extract payee from BurnFund tx.\n");
                                             return false;
                                         }
                                         //we have all infos. Then add in map
                                         if(prevBlockIndex->nHeight < pindex->nHeight - Params().MaxReorganizationDepth()) {
-                                            LogPrintf("CInfinitynodeMan::rsvScan -- Voter: %s, Heigh: %d, proposal: %s.\n", 
+                                            LogPrint(BCLog::INFINITYRSV,"CInfinitynodeMan::rsvScan -- Voter: %s, Heigh: %d, proposal: %s.\n", 
                                                      EncodeDestination(addressBurnFund), prevBlockIndex->nHeight, voteOpinion);
                                             CVote vote = CVote(proposalID, prevtx->vout[index].scriptPubKey, prevBlockIndex->nHeight, opinion);
                                             Add(vote);
                                         } else {
                                             //non matured
-                                            LogPrintf("CInfinitynodeMan::rsvScan -- Non matured vote.\n");
+                                            LogPrint(BCLog::INFINITYRSV,"CInfinitynodeMan::rsvScan -- Non matured vote.\n");
                                         }
                                     }
                                 }

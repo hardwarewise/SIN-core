@@ -20,6 +20,28 @@
 
 #define NEVER 2000000000
 
+//Useful for devnets
+
+bool CheckProof(uint256 hash, unsigned int nBits)
+{
+    bool fNegative;
+    bool fOverflow;
+    arith_uint256 bnTarget;
+
+
+    bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
+
+    // Check range
+    if (fNegative || bnTarget == 0 || fOverflow)
+        return false; //error("CheckProofOfWork() : nBits below minimum work");
+
+    // Check proof of work matches claimed amount
+    if (UintToArith256(hash) > bnTarget)
+        return false; //error("CheckProofOfWork() : hash doesn't match nBits");
+
+    return true;
+}
+
 static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
     CMutableTransaction txNew;
@@ -95,6 +117,19 @@ public:
         consensus.nInfinityNodeGenesisStatement=250000;
         consensus.nInfinityNodeUpdateMeta=25;
         consensus.nInfinityNodeVoteValue=100;
+        consensus.nInfinityNodeNotificationValue=1;
+        consensus.nInfinityNodeCallLockRewardDeepth=50;
+        consensus.nInfinityNodeCallLockRewardLoop=10; //in number of blocks
+        consensus.nInfinityNodeLockRewardTop=16; //in number
+        consensus.nInfinityNodeLockRewardSigners=5; //in number
+        consensus.nInfinityNodeLockRewardSINType=10; //in number
+        consensus.nSchnorrActivationHeight = 1350000; // wait for active
+
+        /*Previously used as simple constants in validation */
+        consensus.nINActivationHeight = 170000; // Activation of IN payments, should also be the same as nSinHeightMainnet in primitives/block.cpp
+        consensus.nINEnforcementHeight = 178000; // Enforcement of IN payments
+
+        consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440 * 5; // 1 common year
         consensus.nBudgetPaymentsCycleBlocks = 10958; // weekly
@@ -120,10 +155,13 @@ public:
         consensus.nMinerConfirmationWindow = 2016;
         consensus.devAddressPubKey = "841e6bf56b99a59545da932de2efb23ab93b4f44";
         consensus.devAddress = "SZLafuDjnjqh2tAfTrG9ZAGzbP8HkzNXvB";
+        consensus.devAddress2PubKey = "413395a3a8fedfc2a06f645ad40151412d414544";
+        consensus.devAddress2 = "STEkkU29v5rjb6CMUdGciF1e4STZ6jx7aq";
         consensus.cBurnAddressPubKey = "ebaf5ec74cb2e2342dfda0229111738ff4dc742d";
         consensus.cBurnAddress = "SinBurnAddress123456789SuqaXbx3AMC";
         consensus.cMetadataAddress = "SinBurnAddressForMetadataXXXXEU2mj";
         consensus.cNotifyAddress = "SinBurnAddressForNotifyXXXXXc42TcT";
+        consensus.cLockRewardAddress = "SinBurnAddressForLockRewardXTbeffB";
         consensus.cGovernanceAddress = "SinBurnAddressGovernanceVoteba5vkQ";
         strSporkPubKey = "0449434681D96595AC04470E5613475D259489CAA79C260814D22D4F29F7361D84A85F1F535F7B11F51B87F4E7B8E168AA68747A6E7465DCF34ABDD25570430573";
 
@@ -164,14 +202,7 @@ public:
         assert(consensus.hashGenesisBlock == uint256S("000032bd27c65ec42967b7854a49df222abdfae8d9350a61083af8eab2a25e03"));
         assert(genesis.hashMerkleRoot == uint256S("c3555790e3804130514a674f3374b451dce058407dad6b9e82e191e198012680"));
 
-        vSeeds.push_back("88.198.108.224");
-        vSeeds.push_back("95.216.140.124");
-        vSeeds.push_back("149.28.109.29");
-        vSeeds.push_back("104.248.4.79");
-        vSeeds.push_back("157.245.166.223");
-        vSeeds.push_back("206.189.147.193");
-        vSeeds.push_back("167.172.42.45");
-        vSeeds.push_back("138.197.135.125");
+        vSeeds.push_back("seederdns.suqa.org"); //SIN dns seeder
 
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,63);
@@ -231,6 +262,19 @@ public:
         consensus.nInfinityNodeBeginHeight=100;
         consensus.nInfinityNodeGenesisStatement=110;
         consensus.nInfinityNodeUpdateMeta=5;
+        consensus.nInfinityNodeNotificationValue=1;
+        consensus.nInfinityNodeCallLockRewardDeepth=12;
+        consensus.nInfinityNodeCallLockRewardLoop=5; //next LR will be in 5 blocks
+        consensus.nInfinityNodeLockRewardTop=20; //top 20 nodes will build Musig in number
+        consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
+        consensus.nInfinityNodeLockRewardSINType=1; //in number
+        consensus.nSchnorrActivationHeight = 1350000; // wait for active
+
+        /*Previously used as simple constants in validation */
+        consensus.nINActivationHeight = 170000; // Activation of IN payment enforcement, should also be the same as nSinHeightMainnet in primitives/block.cpp
+        consensus.nINEnforcementHeight = 178000; // Enforcement of IN payments
+
+        consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
         consensus.nBudgetPaymentsCycleBlocks = 10958; // weekly
@@ -254,10 +298,13 @@ public:
         consensus.nMinerConfirmationWindow = 2016;
         consensus.devAddressPubKey = "841e6bf56b99a59545da932de2efb23ab93b4f44";
         consensus.devAddress = "SZLafuDjnjqh2tAfTrG9ZAGzbP8HkzNXvB";
+        consensus.devAddress2PubKey = "413395a3a8fedfc2a06f645ad40151412d414544";
+        consensus.devAddress2 = "STEkkU29v5rjb6CMUdGciF1e4STZ6jx7aq";
         consensus.cBurnAddress = "SinBurnAddress123456789SuqaXbx3AMC";
         consensus.cBurnAddressPubKey = "ebaf5ec74cb2e2342dfda0229111738ff4dc742d";
         consensus.cMetadataAddress = "SinBurnAddressForMetadataXXXXEU2mj";
         consensus.cNotifyAddress = "SinBurnAddressForNotifyXXXXXc42TcT";
+        consensus.cLockRewardAddress = "SinBurnAddressForLockRewardXTbeffB";
         consensus.cGovernanceAddress = "SinBurnAddressGovernanceVoteba5vkQ";
         strSporkPubKey = "0454E1B43ECCAC17E50402370477455BE34593E272CA9AE0DF04F6F3D423D1366D017822C77990A3D8DD980C60D3692C9B6D7DFD75F683F7056C1E97E82BD94DBE";
 
@@ -298,7 +345,7 @@ public:
 
         //vSeeds.emplace_back("206.189.57.75");
         //vSeeds.emplace_back("165.22.81.15");
-		nDefaultPort = 20980;
+        nDefaultPort = 20980;
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,63);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
@@ -353,6 +400,19 @@ public:
         consensus.nInfinityNodeBeginHeight=100;
         consensus.nInfinityNodeGenesisStatement=110;
         consensus.nInfinityNodeUpdateMeta=5;
+        consensus.nInfinityNodeNotificationValue=1;
+        consensus.nInfinityNodeCallLockRewardDeepth=5;
+        consensus.nInfinityNodeCallLockRewardLoop=2; //in number of blocks
+        consensus.nInfinityNodeLockRewardTop=5; //in number
+        consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
+        consensus.nInfinityNodeLockRewardSINType=1; //in number
+        consensus.nSchnorrActivationHeight = 1350000; // wait for active
+
+        /*Previously used as simple constants in validation */
+        consensus.nINActivationHeight = 170000; // Activation of IN payment enforcement, should also be the same as nSinHeightMainnet in primitives/block.cpp
+        consensus.nINEnforcementHeight = 178000; // Enforcement of IN payments
+        
+        consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
         consensus.nBudgetPaymentsCycleBlocks = 10958; // weekly
@@ -376,10 +436,13 @@ public:
         consensus.nMinerConfirmationWindow = 2016;
         consensus.devAddressPubKey = "841e6bf56b99a59545da932de2efb23ab93b4f44";
         consensus.devAddress = "SZLafuDjnjqh2tAfTrG9ZAGzbP8HkzNXvB";
+        consensus.devAddress2PubKey = "413395a3a8fedfc2a06f645ad40151412d414544";
+        consensus.devAddress2 = "STEkkU29v5rjb6CMUdGciF1e4STZ6jx7aq";
         consensus.cBurnAddress = "SinBurnAddress123456789SuqaXbx3AMC";
         consensus.cBurnAddressPubKey = "ebaf5ec74cb2e2342dfda0229111738ff4dc742d";
         consensus.cMetadataAddress = "SinBurnAddressForMetadataXXXXEU2mj";
         consensus.cNotifyAddress = "SinBurnAddressForNotifyXXXXXc42TcT";
+        consensus.cLockRewardAddress = "SinBurnAddressForLockRewardXTbeffB";
         consensus.cGovernanceAddress = "SinBurnAddressGovernanceVoteba5vkQ";
         strSporkPubKey = "0454E1B43ECCAC17E50402370477455BE34593E272CA9AE0DF04F6F3D423D1366D017822C77990A3D8DD980C60D3692C9B6D7DFD75F683F7056C1E97E82BD94DBE";
 
@@ -461,10 +524,28 @@ class CRegTestParams : public CChainParams {
 public:
     CRegTestParams() {
         strNetworkID = "regtest";
+        consensus.nMasternodeMinimumConfirmations = 15;
         consensus.nSubsidyHalvingInterval = 150;
         consensus.nInfinityNodeBeginHeight=100;
         consensus.nInfinityNodeGenesisStatement=110;
         consensus.nInfinityNodeUpdateMeta=5;
+        consensus.nInfinityNodeNotificationValue=1;
+        consensus.nInfinityNodeCallLockRewardDeepth=5;
+        consensus.nInfinityNodeCallLockRewardLoop=2; //in number of blocks
+        consensus.nInfinityNodeLockRewardTop=5; //in number
+        consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
+        consensus.nInfinityNodeLockRewardSINType=1; //in number
+        consensus.nSchnorrActivationHeight = 1350000; // wait for active
+        consensus.nMasternodeBurnSINNODE_1 = 100000;
+        consensus.nMasternodeBurnSINNODE_5 = 500000;
+        consensus.nMasternodeBurnSINNODE_10 = 1000000;
+        consensus.nMasternodeCollateralMinimum = 10000;
+
+        /*Previously used as simple constants in validation */
+        consensus.nINActivationHeight = 5000; // Activation of IN payment enforcement, should also be the same as nSinHeightMainnet in primitives/block.cpp
+        consensus.nINEnforcementHeight = 5500; // Enforcement of IN payments
+        
+        consensus.nNewDevfeeAddress = 60000000; // Placeholder, need to choose a fork block.
 
         consensus.BIP16Exception = uint256();
         consensus.BIP34Height = 100000000;
@@ -478,7 +559,17 @@ public:
         consensus.fPowNoRetargeting = true;
         consensus.nRuleChangeActivationThreshold = 108;
         consensus.nMinerConfirmationWindow = 144;
-        consensus.devAddressPubKey = "841e6bf56b99a59545da932de2efb23ab93b4f44";
+        consensus.devAddress2PubKey = "d63bf3a5822bb2f7ac9ced84ae2c1f319c4253e2";
+        consensus.devAddress2 = "n13iidFw2jiVVoz86ouMqv31x7oEe5V4Wm";
+        consensus.devAddressPubKey = "d63bf3a5822bb2f7ac9ced84ae2c1f319c4253e2";
+        consensus.devAddress = "n13iidFw2jiVVoz86ouMqv31x7oEe5V4Wm";
+        consensus.cBurnAddressPubKey = "76a9142be2e66836eda517af05e5b628eb9fedefcd669b88ac";
+        consensus.cBurnAddress = "mjX1AbMEHU14PmHjG2wtSvoydnJ6RxYwC2";
+        consensus.cMetadataAddress = "mueP7L3nMXdshqPEMZ3L5wJumKqhq5dFpm";
+        consensus.cNotifyAddress = "mobk9h9A3QLYKsKw9xWSC4bqYSUsqEwnpk";
+        consensus.cLockRewardAddress = "SinBurnAddressForLockRewardXTbeffB";
+        consensus.cGovernanceAddress = "mgmp6o3V4z3kU83QFbNrdtRKGFS6T9yQyB";
+        strSporkPubKey = "0454E1B43ECCAC17E50402370477455BE34593E272CA9AE0DF04F6F3D423D1366D017822C77990A3D8DD980C60D3692C9B6D7DFD75F683F7056C1E97E82BD94DBE";
 
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 0;
@@ -503,10 +594,10 @@ public:
         nDefaultPort = 18444;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1296688602, 2, 0x207fffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1296688602, 3, 0x207fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        // assert(consensus.hashGenesisBlock == uint256S("0000000000000000000000000000000000000000000000000000000000000000"));
-        // assert(genesis.hashMerkleRoot == uint256S("0000000000000000000000000000000000000000000000000000000000000000"));
+        assert(consensus.hashGenesisBlock == uint256S("0x1cf45e8c265c41a6c29e40a285cd635924c7658e2334c19829c3722777cd4823"));
+        assert(genesis.hashMerkleRoot == uint256S("0x2fa6ca3a7c3115918d274574d4016a660e9d9dec86ea984d8815b68e956bb24a"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.

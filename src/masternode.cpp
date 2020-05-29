@@ -107,7 +107,7 @@ void CMasternode::updateInfinityNodeInfo(bool fAllowFull)
     }
 
     if(!GetUTXOCoin(vin.prevout, coinCollateral)) {
-        LogPrintf("CMasternode::updateInfinityNodeInfo -- BurnFund tx not found %s-%d\n", vin.prevout.hash.ToString(), vin.prevout.n);
+        LogPrintf("CMasternode::updateInfinityNodeInfo -- Collateral tx not found %s-%d\n", vin.prevout.hash.ToString(), vin.prevout.n);
         return;
     }
 
@@ -130,6 +130,7 @@ void CMasternode::updateInfinityNodeInfo(bool fAllowFull)
     if (whichType == TX_BURN_DATA){burnTxStandard="burn_and_data";}
 
     nExpireHeight = coinBurnFund.nHeight + 720*365;
+    if(Params().NetworkIDString() == CBaseChainParams::TESTNET){nExpireHeight = coinBurnFund.nHeight + 720*7;}
     nBurnAmount = coinBurnFund.out.nValue / COIN + 1; //automaticaly round
     nCollateralAmount = coinCollateral.out.nValue / COIN;
     collateralAddress = EncodeDestination(addressCollateral);
@@ -384,12 +385,14 @@ void CMasternode::Check(bool fForce)
     // don't expire if we are still in "waiting for ping" mode unless it's our own masternode
     if(!fWaitForPing || fOurMasternode) {
 
-        if(!IsPingedWithin(MASTERNODE_NEW_START_REQUIRED_SECONDS)) {
-            nActiveState = MASTERNODE_NEW_START_REQUIRED;
-            if(nActiveStatePrev != nActiveState) {
-                LogPrint(BCLog::MASTERNODE, "CMasternode::Check -- Masternode %s is in %s state now\n", vin.prevout.ToStringShort(), GetStateString());
+        if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+            if(!IsPingedWithin(MASTERNODE_NEW_START_REQUIRED_SECONDS)) {
+                nActiveState = MASTERNODE_NEW_START_REQUIRED;
+                if(nActiveStatePrev != nActiveState) {
+                    LogPrint(BCLog::MASTERNODE, "CMasternode::Check -- Masternode %s is in %s state now\n", vin.prevout.ToStringShort(), GetStateString());
+                }
+                return;
             }
-            return;
         }
 
         bool fWatchdogActive = masternodeSync.IsSynced() && mnodeman.IsWatchdogActive();
@@ -406,12 +409,14 @@ void CMasternode::Check(bool fForce)
             return;
         }
 
-        if(!IsPingedWithin(MASTERNODE_EXPIRATION_SECONDS)) {
-            nActiveState = MASTERNODE_EXPIRED;
-            if(nActiveStatePrev != nActiveState) {
-                LogPrint(BCLog::MASTERNODE, "CMasternode::Check -- Masternode %s is in %s state now\n", vin.prevout.ToStringShort(), GetStateString());
+        if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+            if(!IsPingedWithin(MASTERNODE_EXPIRATION_SECONDS)) {
+                nActiveState = MASTERNODE_EXPIRED;
+                if(nActiveStatePrev != nActiveState) {
+                    LogPrint(BCLog::MASTERNODE, "CMasternode::Check -- Masternode %s is in %s state now\n", vin.prevout.ToStringShort(), GetStateString());
+                }
+                return;
             }
-            return;
         }
     }
 
@@ -634,10 +639,12 @@ bool CMasternodeBroadcast::SimpleCheck(int& nDos)
         return false;
     }
 
-    if(addr.GetPort() != Params().GetDefaultPort()) {
-        LogPrintf("CMasternodeBroadcast::SimpleCheck -- Invalid port, rejected: masternode=%s  addr=%s\n",
-                    vin.prevout.ToStringShort(), addr.ToString());
-        return false;
+    if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+        if(addr.GetPort() != Params().GetDefaultPort()) {
+            LogPrintf("CMasternodeBroadcast::SimpleCheck -- Invalid port, rejected: masternode=%s  addr=%s\n",
+                        vin.prevout.ToStringShort(), addr.ToString());
+            return false;
+        }
     }
 
     // make sure signature isn't in the future (past is OK)
@@ -682,11 +689,16 @@ bool CMasternodeBroadcast::SimpleCheck(int& nDos)
         return false;
     }
 
-    int nDefaultPort = Params().GetDefaultPort();
-    if(Params().NetworkIDString() == CBaseChainParams::MAIN) {
-        if(addr.GetPort() != nDefaultPort) return false;
-    } else if(addr.GetPort() == Params().GetMainnetPort()) return false;
-
+    if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+        int nDefaultPort = Params().GetDefaultPort();
+        if(Params().NetworkIDString() == CBaseChainParams::MAIN) {
+            if(addr.GetPort() != nDefaultPort) {
+                return false;
+            }
+        } else if(addr.GetPort() == Params().GetMainnetPort()) { 
+            return false;
+        }
+    }
     return true;
 }
 

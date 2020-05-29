@@ -124,6 +124,9 @@ BITCOIN_CORE_H = \
   infinitynode.h \
   infinitynodeman.h \
   infinitynodesrv.h \
+  infinitynodemeta.h \
+  infinitynodepeer.h \
+  infinitynodelockreward.h \
   interfaces/handler.h \
   interfaces/node.h \
   interfaces/wallet.h \
@@ -234,7 +237,7 @@ obj/build.h: FORCE
 	  "$(abs_top_srcdir)"
 libsin_util_a-clientversion.$(OBJEXT): obj/build.h
 
-# server: shared between sind and bitcoin-qt
+# server: shared between sind and sin-qt
 libsin_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 libsin_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libsin_server_a_SOURCES = \
@@ -289,6 +292,9 @@ libsin_server_a_SOURCES += \
   infinitynode.cpp \
   infinitynodeman.cpp \
   infinitynodersv.cpp \
+  infinitynodemeta.cpp \
+  infinitynodepeer.cpp \
+  infinitynodelockreward.cpp \
   leveldbwrapper.cpp \
   masternode.cpp \
   masternodeman.cpp \
@@ -683,6 +689,18 @@ if EMBEDDED_LEVELDB
 include Makefile.leveldb.include
 endif
 
+if ENABLE_TESTS
+include Makefile.test.include
+endif
+
+if ENABLE_BENCH
+include Makefile.bench.include
+endif
+
 if ENABLE_QT
 include Makefile.qt.include
+endif
+
+if ENABLE_QT_TESTS
+include Makefile.qttest.include
 endif

@@ -39,7 +39,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "sendtoaddress", 6, "conf_target" },
     { "instantsendtoaddress", 1, "address" },
     { "instantsendtoaddress", 4, "comment_to" },
-    { "deposittoaddress", 3, "termdepositlength" },
+    //{ "sendwithlockedtoaddress", 3, "nBlockLocked" },
     { "settxfee", 0, "amount" },
     { "sethdseed", 0, "newkeypool" },
     { "getreceivedbyaddress", 1, "minconf" },
@@ -180,6 +180,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "rescanblockchain", 0, "start_height"},
     { "rescanblockchain", 1, "stop_height"},
     { "createwallet", 1, "disable_private_keys"},
+    { "stop", 0, "wait" },
 };
 
 class CRPCConvertTable

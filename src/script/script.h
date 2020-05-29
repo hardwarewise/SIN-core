@@ -547,7 +547,7 @@ public:
     bool IsWitnessProgram(int& version, std::vector<unsigned char>& program) const;
 
     bool IsTermDeposit() const;
-    int GetTermDepositReleaseBlock() const;
+    int GetTimeLockReleaseBlock() const;
     std::string ToStringNew() const;
 
     /** Called by IsStandardTx and P2SH/BIP62 VerifyScript (which makes it consensus-critical). */
