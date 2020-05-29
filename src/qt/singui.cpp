@@ -1253,7 +1253,6 @@ void SINGUI::showDebugWindowActivateConsole()
 void SINGUI::onThemeClicked()
 {
     QSettings settings;
-    // Store theme
     bool lightTheme = !settings.value("lightTheme", false).toBool();
 
     QString cssFileName = lightTheme ? ":/css/light" : ":/css/default";
