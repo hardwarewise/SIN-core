@@ -242,11 +242,9 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                             //ui->labelCurrentPrice->setToolTip(tr("Brought to you by coinmarketcap.com"));
 
                             QString total;
-    						double current2 = (current * totalBalance / 100000000);
-  							total = QString::number(current2, 'f', 2);
-  							ui->labelUSDTotal->setText("$" + total + " USD");
-
-                            
+                            double current2 = (current * totalBalance / 100000000);
+                            total = QString::number(current2, 'f', 2);
+                            ui->labelUSDTotal->setText("$" + total + " USD");
                         }
                     }
                 }
@@ -300,14 +298,6 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                                     
                             }
                             ui->labelCurrentPriceBTC->setText(QString("%1").arg(QString().setNum(next, 'f', 8)));
-                            //ui->labelCurrentPriceBTC->setToolTip(tr("Brought to you by coinmarketcap.com"));
-
-                            //QString total;
-    						//double current2 = (current * totalBalance / 100000000);
-  							//total = QString::number(current2, 'f', 2);
-  							//ui->labelUSDTotal->setText("$" + total + " USD");
-
-                            
                         }
                     }
                 }
@@ -602,10 +592,6 @@ void OverviewPage::onResult(QNetworkReply* replystats)
         
         // Set supply string
         int supplyNumber = dataObject.value("supply").toDouble() - dataObject.value("burnFee").toDouble();
-
-        
-
-
 
         ui->totalValueLabel->setText(totalNodesString);
         ui->totalSupplyValueLabel->setText(l.toString(supplyNumber) + " SIN");
