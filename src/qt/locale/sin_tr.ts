@@ -3738,12 +3738,61 @@
         <source>Next reward</source>
         <translation>Sonraki ödül</translation>
     </message>
-    <message>
-        <source>Note: Status of your InfinityNodes in local wallet can potentially be slightly incorrect.</source>
-        <translation>Not: InfinityNodes'unuzun yerel cüzdandaki durumu potansiyel olarak biraz yanlış olabilir.</translation>
-    </message>
-   
     </context>
-
-
+    <context>
+   <name>StatsPage</name>
+   <message>
+        <source>Hashrate:</source>
+        <translation>Karma Hızı:</translation>
+    </message>
+    <message>
+        <source>Difficulty:</source>
+        <translation>Zorluk:</translation>
+    </message>
+    <message>
+        <source>Last Price:</source>
+        <translation>Son Fiyat:</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>Yükseklik:</translation>
+    </message>
+    <message>
+        <source>Burnt Fees:</source>
+        <translation>Yanmış Ücretler:</translation>
+    </message>
+    <message>
+        <source>Burnt Nodes:</source>
+        <translation>Yanmış Düğümler:</translation>
+    </message>
+    <message>
+        <source>Total Burnts:</source>
+        <translation>Toplam Yanık:</translation>
+    </message>
+    <message>
+        <source>Total Supply:</source>
+        <translation>Toplam Arz:</translation>
+    </message>
+    <message>
+        <source>Addresses:</source>
+        <translation>Adresler:</translation>
+    </message>
+    <message>
+        <source>Active:</source>
+        <translation>Aktif:</translation>
+    </message>
+    <message>
+        <source>Top 10:</source>
+        <translation>İlk 10</translation>
+    </message>
+    <message>
+        <source>Top 50:</source>
+        <translation>İlk 50</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Toplam:</translation>
+    </message>
+    </context>
+   
 </TS>

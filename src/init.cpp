@@ -464,6 +464,10 @@ void SetupServerArgs()
     gArgs.AddArg("-mnconflock=<n>", strprintf("Lock masternodes from masternode configuration file"), false, OptionsCategory::OPTIONS);
     gArgs.AddArg("-masternodeprivkey=<n>","Set the masternode private key", false, OptionsCategory::OPTIONS);
 
+    //SIN
+    gArgs.AddArg("-infinitynode=<n>", strprintf("Enable the client to act as an infinitynode (0-1)"), false, OptionsCategory::OPTIONS);
+    gArgs.AddArg("-infinitynodeprivkey=<n>","Set the infinitynode private key", false, OptionsCategory::OPTIONS);
+
     gArgs.AddArg("-addnode=<ip>", "Add a node to connect to and attempt to keep the connection open (see the `addnode` RPC command help for more info). This option can be specified multiple times to add multiple nodes.", false, OptionsCategory::CONNECTION);
     gArgs.AddArg("-banscore=<n>", strprintf("Threshold for disconnecting misbehaving peers (default: %u)", DEFAULT_BANSCORE_THRESHOLD), false, OptionsCategory::CONNECTION);
     gArgs.AddArg("-bantime=<n>", strprintf("Number of seconds to keep misbehaving peers from reconnecting (default: %u)", DEFAULT_MISBEHAVING_BANTIME), false, OptionsCategory::CONNECTION);

@@ -2284,4 +2284,340 @@
         <translation>Ошибка</translation>
     </message>
 </context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Pending</source>
+        <translation>В ожидании</translation>
+    </message>
+    <message>
+        <source>Immature</source>
+        <translation>Незрелые</translation>
+    </message>
+    <message>
+        <source>Available SIN</source>
+        <translation>Доступно SIN</translation>
+    </message>
+    <message>
+        <source>Available USD</source>
+        <translation>Доступно USD</translation>
+    </message>
+    <message>
+        <source>Total Addresses</source>
+        <translation>Общее количество адресов</translation>
+    </message>
+    <message>
+        <source>Circulating Supply</source>
+        <translation>Оборот</translation>
+    </message>
+    <message>
+        <source>Total Infinity Nodes</source>
+        <translation>Количество Infinity нод</translation>
+    </message>
+    <message>
+        <source>Value USD</source>
+        <translation>Цена в USD</translation>
+    </message>
+    <message>
+        <source>Value BTC</source>
+        <translation>Цена в BTC</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Всего</translation>
+    </message>
+    </context>
+    <context>
+    <name>SendCoinsDialog</name>
+    <message>
+        <source>Send SIN Coins</source>
+        <translation>Отправить SIN</translation>
+    </message>
+    <message>
+        <source>Coin Control</source>
+        <translation>Контроль входов</translation>
+    </message>
+    <message>
+        <source> Automatically selected</source>
+        <translation>Автоматически</translation>
+    </message>
+    <message>
+        <source> Insufficient funds!</source>
+        <translation>Недостаточно средств!</translation>
+    </message>
+    <message>
+        <source>Warning: Fee estimation is currently not possible.</source>
+        <translation>Внимание: Оценка комиссии сейчас невозможна.</translation>
+    </message>
+    <message>
+        <source>Per kilobyte</source>
+        <translation>За килобайт</translation>
+    </message>
+    <message>
+        <source>Enable Replace-By-Fee</source>
+        <translation>Включить Replace-By-Fee</translation>
+    </message>
+    <message>
+        <source>Customize Fee</source>
+        <translation>Пользовательская комиссия</translation>
+    </message>
+    <message>
+        <source>[Read the tooltip]</source>
+        <translation>[Прочитать подсказку]</translation>
+    </message>
+    <message>
+        <source>Minimize</source>
+        <translation>Минимизировать</translation>
+    </message>
+    </context>
+    <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Select SIN Coins to Send</source>
+        <translation>Выбрать SIN для отправки</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Метка</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Адрес</translation>
+    </message>
+    <message>
+        <source>Select all</source>
+        <translation>Выбрать всё</translation>
+    </message>
+    <message>
+        <source>Lock-Unlock All</source>
+        <translation>Заблокировать-разблокировать всё</translation>
+    </message>
+    <message>
+        <source>Ages</source>
+        <translation>Сроки</translation>
+    </message>
+    <message>
+        <source>After Fee: </source>
+        <translation>После комиссии:</translation>
+    </message>
+    </context>
+    <context>
+    <name>DepositCoinsDialog</name>
+    <message>
+        <source>&amp;EARN</source>
+        <translation>&amp;ЗАРАБАТЫВАТЬ</translation>
+    </message>
+    <message>
+        <source>HCO-Hodl Coin Offering. Lock SIN to EARN.</source>
+        <translation>HCO-Hodl Coin Offering. Заблокировать SIN для заработка.</translation>
+    </message>
+    <message>
+        <source>Balance:</source>
+        <translation>Баланс:</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Статус</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Количество</translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation>Начало</translation>
+    </message>
+    <message>
+        <source>End</source>
+        <translation>Заканчивается</translation>
+    </message>
+    <message>
+        <source>Lock time</source>
+        <translation>Время блокировки</translation>
+    </message>
+    </context>
+    <context>
+    <name>SendCoinsEntry</name>
+    <message>
+        <source>Blocks</source>
+        <translation>Блоков</translation>
+    </message>
+    <message>
+        <source>Add address label</source>
+        <translation>Добавить метку адреса</translation>
+    </message>
+    <message>
+        <source>For:</source>
+        <translation>Период</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>Месяц</translation>
+    </message>
+    </context>
+    <context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>Receive SIN Coins</source>
+        <translation>Получить монеты SIN</translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;Метка</translation>
+    </message>
+    <message>
+        <source>&amp;Message</source>
+        <translation>&amp;Сообщение</translation>
+    </message>
+    <message>
+        <source>Generate native segwit (Bech32) address</source>
+        <translation>Создать нативный сегвит (Bech32) адрес</translation>
+    </message>
+    <message>
+        <source>&amp;Amount</source>
+        <translation>&amp;Количество</translation>
+    </message>
+    </context>
+    <context>
+    <name>MasternodeList</name>
+    <message>
+        <source>My Infinitynodes</source>
+        <translation>Мои Infinity Ноды</translation>
+    </message>
+    <message>
+        <source>My Peers DIN</source>
+        <translation>Мои пиры DIN </translation>
+    </message>
+    <message>
+        <source>Alias</source>
+        <translation>Псевдоним</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Адрес</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>Протокол</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Статус</translation>
+    </message>
+    <message>
+        <source>Active</source>
+        <translation>Активно</translation>
+    </message>
+    <message>
+        <source>Last Seen</source>
+        <translation>Последняя проверка</translation>
+    </message>
+    <message>
+        <source>Payee</source>
+        <translation>Получатель</translation>
+    </message>
+    <message>
+        <source>S&amp;tart alias</source>
+        <translation>С&amp;тарт ноды</translation>
+    </message>
+    <message>
+        <source>Start &amp;all</source>
+        <translation>Стартовать &amp;все</translation>
+    </message>
+    <message>
+        <source>&amp;Update status</source>
+        <translation>&amp;Обновление статуса</translation>
+    </message>
+    <message>
+        <source>Status will be updated automatically in (sec):</source>
+        <translation>Статус будет обновлён через:</translation>
+    </message>
+    <message>
+        <source>Owner address</source>
+        <translation>Адрес владельца</translation>
+    </message>
+    <message>
+        <source>Begin</source>
+        <translation>Начало</translation>
+    </message>
+    <message>
+        <source>Expire</source>
+        <translation>Истекает</translation>
+    </message>
+    <message>
+        <source>Peer address</source>
+        <translation>Адреса пиров</translation>
+    </message>
+    <message>
+        <source>Peer address</source>
+        <translation>Адреса пиров</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>Заблокировано</translation>
+    </message>
+    <message>
+        <source>Backup address</source>
+        <translation>Резервный адрес</translation>
+    </message>
+    <message>
+        <source>Next reward</source>
+        <translation>Следующее вознаграждение</translation>
+    </message>
+    </context>
+    <context>
+   <name>StatsPage</name>
+   <message>
+        <source>Hashrate:</source>
+        <translation>Хешрейт:</translation>
+    </message>
+    <message>
+        <source>Difficulty:</source>
+        <translation>Сложность:</translation>
+    </message>
+    <message>
+        <source>Last Price:</source>
+        <translation>Цена:</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>Блок:</translation>
+    </message>
+    <message>
+        <source>Burnt Fees:</source>
+        <translation>Сожжено Fees:</translation>
+    </message>
+    <message>
+        <source>Burnt Nodes:</source>
+        <translation>Сожжено нод:</translation>
+    </message>
+    <message>
+        <source>Total Burnts:</source>
+        <translation>Всего сожжено:</translation>
+    </message>
+    <message>
+        <source>Total Supply:</source>
+        <translation>В обращении:</translation>
+    </message>
+    <message>
+        <source>Addresses:</source>
+        <translation>Адресов:</translation>
+    </message>
+    <message>
+        <source>Active:</source>
+        <translation>Активных:</translation>
+    </message>
+    <message>
+        <source>Top 10:</source>
+        <translation>Топ 10</translation>
+    </message>
+    <message>
+        <source>Top 50:</source>
+        <translation>Топ 50</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Общее:</translation>
+    </message>
+    </context>
 </TS>
