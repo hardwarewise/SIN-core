@@ -189,22 +189,21 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
 
     bool lightTheme = settings.value("lightTheme", false).toBool();
 
-    QFile White(":/css/default");
-    QFile Light(":/css/light");
+    QString cssFileName = lightTheme ? ":/css/light" : ":/css/default";
+    QFile cssFile(cssFileName);
 
     if (lightTheme) {
         topThemeButton->setIcon(QIcon(":/icons/theme-light"));
         topThemeButton->setToolTip( "White Theme"  );
-        Light.open(QFile::ReadOnly);
-        QString StyleSheet = QLatin1String(Light.readAll());
-        this->setStyleSheet(StyleSheet);
     } else {
         topThemeButton->setIcon(QIcon(":/icons/theme-white"));
         topThemeButton->setToolTip( "Light Theme"  );
-        White.open(QFile::ReadOnly);
-        QString StyleSheet = QLatin1String(White.readAll());
-        this->setStyleSheet(StyleSheet);
     }
+
+    cssFile.open(QFile::ReadOnly);
+    QString styleSheet = QLatin1String(cssFile.readAll());
+    this->setStyleSheet(styleSheet);
+
     topThemeButton->setIconSize(QSize(24, 24));
     topThemeButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
 
@@ -1257,25 +1256,23 @@ void SINGUI::onThemeClicked()
     // Store theme
     bool lightTheme = !settings.value("lightTheme", false).toBool();
 
-    QFile White(":/css/default");
-    QFile Light(":/css/light");
+    QString cssFileName = lightTheme ? ":/css/light" : ":/css/default";
+    QFile cssFile(cssFileName);
 
-
+    // Store theme
     settings.setValue("lightTheme", lightTheme);
 
     if (lightTheme) {
         topThemeButton->setIcon(QIcon(":/icons/theme-light"));
         topThemeButton->setToolTip( "White Theme"  );
-        Light.open(QFile::ReadOnly);
-        QString StyleSheet = QLatin1String(Light.readAll());
-        this->setStyleSheet(StyleSheet);
     } else {
         topThemeButton->setIcon(QIcon(":/icons/theme-white"));
         topThemeButton->setToolTip( "Light Theme"  );
-        White.open(QFile::ReadOnly);
-        QString StyleSheet = QLatin1String(White.readAll());
-        this->setStyleSheet(StyleSheet);
     }
+
+    cssFile.open(QFile::ReadOnly);
+    QString styleSheet = QLatin1String(cssFile.readAll());
+    this->setStyleSheet(styleSheet);
 }
 
 // Dash
