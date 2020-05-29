@@ -148,14 +148,6 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     
 
 
-
-//******** Load CSS ************/
-  QFile File(":/css/default");
-  File.open(QFile::ReadOnly);
-  QString StyleSheet = QLatin1String(File.readAll());
-  this->setStyleSheet(StyleSheet);
-//******** Load CSS ************/
-
  // Accept D&D of URIs
     setAcceptDrops(true);
 
@@ -165,7 +157,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
 
     // Create application menu bar
     createMenuBar();
-	
+
     // Create the toolbars
     createToolBars();
 
@@ -175,23 +167,47 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     // Create status bar
     statusBar();
 
-    
+
     //// Set widget topBar on the top right corner ////
-    
+
     QWidget *topBar = new QWidget;
+    topThemeButton = new QPushButton();
     QPushButton *topConsoleButton = new QPushButton();
     QPushButton *topOptionButton = new QPushButton();
     QPushButton *topAddressButton = new QPushButton();
     QPushButton *topFaqButton = new QPushButton();
-    
+
 
     QHBoxLayout *topBarLayout = new QHBoxLayout;
-    
+
+    topBarLayout->addWidget(topThemeButton);
     topBarLayout->addWidget(topConsoleButton);
     topBarLayout->addWidget(topOptionButton);
     topBarLayout->addWidget(topAddressButton);
     topBarLayout->addWidget(topFaqButton);
-    
+
+
+    bool lightTheme = settings.value("lightTheme", false).toBool();
+
+    QFile White(":/css/default");
+    QFile Light(":/css/light");
+
+    if (lightTheme) {
+        topThemeButton->setIcon(QIcon(":/icons/theme-light"));
+        topThemeButton->setToolTip( "White Theme"  );
+        Light.open(QFile::ReadOnly);
+        QString StyleSheet = QLatin1String(Light.readAll());
+        this->setStyleSheet(StyleSheet);
+    } else {
+        topThemeButton->setIcon(QIcon(":/icons/theme-white"));
+        topThemeButton->setToolTip( "Light Theme"  );
+        White.open(QFile::ReadOnly);
+        QString StyleSheet = QLatin1String(White.readAll());
+        this->setStyleSheet(StyleSheet);
+    }
+    topThemeButton->setIconSize(QSize(24, 24));
+    topThemeButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
+
 
     topConsoleButton->setIcon(QIcon(":/icons/debugwindow"));
     topConsoleButton->setIconSize(QSize(20, 20));
@@ -219,6 +235,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     appMenuBar->setCornerWidget(topBar, Qt::TopRightCorner);
 
 
+    connect(topThemeButton, SIGNAL (released()), this, SLOT (onThemeClicked()));
     connect(topConsoleButton, SIGNAL (released()), this, SLOT (showDebugWindowActivateConsole()));
     connect(topOptionButton, SIGNAL(released()), this, SLOT(optionsClicked()));
     connect(topAddressButton, SIGNAL(released()), walletFrame, SLOT(usedSendingAddresses()));
@@ -227,9 +244,9 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
 
     //// topBar end ////
 
-    
 
-    
+
+
 
 
  // Social Media icons
@@ -239,7 +256,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     QHBoxLayout* frameSocialLayout = new QHBoxLayout(frameSocial);
     frameSocialLayout->setContentsMargins(16, 0, 16, 0);
     frameSocialLayout->setSpacing(16);
-    
+
     QLabel* explorer = new QLabel();
     explorer->setObjectName(QStringLiteral("explorer"));
     explorer->setMinimumSize(QSize(32, 32));
@@ -252,7 +269,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     explorer->setToolTip(QApplication::translate("OverviewPage", "Visit SINOVATE Block Explorer.", nullptr));
 #endif // QT_NO_TOOLTIP
     explorer->setText(QApplication::translate("OverviewPage", "<a href=\"https://sinovate.io/links/explorer\"><img src=\":/icons/explorer\" width=\"32\" height=\"32\"></a>", nullptr));
-            
+
             QLabel* website = new QLabel();
     website->setObjectName(QStringLiteral("website"));
     website->setMinimumSize(QSize(19, 19));
@@ -265,7 +282,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     website->setToolTip(QApplication::translate("OverviewPage", "Visit SINOVATE Website", nullptr));
 #endif // QT_NO_TOOLTIP
     website->setText(QApplication::translate("OverviewPage", "<a href=\"https://sinovate.io\"><img src=\":/icons/website\" width=\"19\" height=\"19\"></a>", nullptr));
-                        
+
             QLabel* instaswap = new QLabel();
     instaswap->setObjectName(QStringLiteral("instaswap"));
     instaswap->setMinimumSize(QSize(32, 32));
@@ -304,7 +321,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     discord->setToolTip(QApplication::translate("OverviewPage", "Join the official SINOVATE Discord community.", nullptr));
 #endif // QT_NO_TOOLTIP
     discord->setText(QApplication::translate("OverviewPage", "<a href=\"https://sinovate.io/links/discord\"><img src=\":/icons/discord\" width=\"32\" height=\"32\"></a>", nullptr));
-            
+
             QLabel* github = new QLabel();
     github->setObjectName(QStringLiteral("github"));
     github->setMinimumSize(QSize(32, 32));
@@ -317,17 +334,17 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     github->setToolTip(QApplication::translate("OverviewPage", "Visit SINOVATE Github", nullptr));
 #endif // QT_NO_TOOLTIP
     github->setText(QApplication::translate("OverviewPage", "<a href=\"https://github.com/SINOVATEblockchain\"><img src=\":/icons/github\" width=\"32\" height=\"32\"></a>", nullptr));
-     
-    frameSocialLayout->addWidget(website); 
+
+    frameSocialLayout->addWidget(website);
     frameSocialLayout->addWidget(discord);
     frameSocialLayout->addWidget(twitter);
-    frameSocialLayout->addWidget(github);     
+    frameSocialLayout->addWidget(github);
     frameSocialLayout->addWidget(instaswap);
     frameSocialLayout->addWidget(explorer);
-    
-    
-    
-            
+
+
+
+
         // Disable size grip because it looks ugly and nobody needs it
     statusBar()->setSizeGripEnabled(false);
 
@@ -378,6 +395,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
         progressBar->setStyleSheet("QProgressBar { background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
     }
 
+
     statusBar()->addWidget(frameSocial);
     statusBar()->addWidget(progressBarLabel);
     progressBarLabel->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 1px solid white; } QLabel {color: #fff; }");
@@ -385,8 +403,8 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     statusBar()->addPermanentWidget(frameBlocks);
 
 
-       
-    
+
+
     // Install event filter to be able to catch status tip events (QEvent::StatusTip)
     this->installEventFilter(this);
 
@@ -399,8 +417,8 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     connect(connectionsControl, SIGNAL(clicked(QPoint)), this, SLOT(toggleNetworkActive()));
 
     ///Resorces Web Links
-    
-      
+
+
     connect(ResourcesWebsite1, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot1()));
     connect(ResourcesWebsite2, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot2()));
     connect(ResourcesWebsite3, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot3()));
@@ -416,7 +434,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     ///end Exhange, Resources and Web Links
 
 
-    
+
     modalOverlay = new ModalOverlay(this->centralWidget());
 #ifdef ENABLE_WALLET
     if(enableWallet) {
@@ -494,7 +512,7 @@ void SINGUI::createActions()
     historyAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_4));
     tabGroup->addAction(historyAction);
 
-   
+
 #ifdef ENABLE_WALLET
     // Dash
     QSettings settings;
@@ -527,7 +545,7 @@ void SINGUI::createActions()
     tabGroup->addAction(instaswapAction);
     connect(instaswapAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(instaswapAction, SIGNAL(triggered()), this, SLOT(gotoInstaswapPage()));
-	
+
     //
 
 
@@ -536,16 +554,16 @@ void SINGUI::createActions()
     statsPageAction->setStatusTip(tr("Statistics"));
     statsPageAction->setToolTip(statsPageAction->statusTip());
     statsPageAction->setCheckable(true);
-    
+
 #ifdef Q_OS_MAC
     statsPageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_7));
 #else
     statsPageAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_7));
-#endif    
+#endif
     tabGroup->addAction(statsPageAction);
     connect(statsPageAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(statsPageAction, SIGNAL(triggered()), this, SLOT(gotoStatsPage()));
-    
+
     //
 
 
@@ -554,16 +572,16 @@ void SINGUI::createActions()
     faqPageAction->setStatusTip(tr("FAQ"));
     faqPageAction->setToolTip(faqPageAction->statusTip());
     faqPageAction->setCheckable(true);
-    
+
 #ifdef Q_OS_MAC
     faqPageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_8));
 #else
     faqPageAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_8));
-#endif    
+#endif
     tabGroup->addAction(faqPageAction);
     connect(faqPageAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(faqPageAction, SIGNAL(triggered()), this, SLOT(gotoFaqPage()));
-    
+
     //
 
 
@@ -585,7 +603,7 @@ void SINGUI::createActions()
     connect(receiveCoinsMenuAction, SIGNAL(triggered()), this, SLOT(gotoReceiveCoinsPage()));
     connect(historyAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
-    
+
 #endif // ENABLE_WALLET
 
     quitAction = new QAction(platformStyle->TextColorIcon(":/icons/quit"), tr("E&xit"), this);
@@ -711,7 +729,7 @@ void SINGUI::createActions()
     connect(quitAction, SIGNAL(triggered()), rpcConsole, SLOT(hide()));
 
 //start Resources Web Links
-           
+
     ResourcesWebsite1 = new QAction(QIcon(":/icons/info"), tr("&Whitepaper"), this);
     ResourcesWebsite2 = new QAction(QIcon(":/icons/info"), tr("&Roadmap"), this);
     ResourcesWebsite3 = new QAction(QIcon(":/icons/info"), tr("&Documents"), this);
@@ -780,12 +798,12 @@ void SINGUI::createMenuBar()
     }
     file->addAction(quitAction);
 
-     
 
-   
 
-   
-     
+
+
+
+
 
     QMenu *settings = appMenuBar->addMenu(tr("&Settings"));
     if(walletFrame)
@@ -831,7 +849,7 @@ void SINGUI::createMenuBar()
         hyperlinks3->addAction(ResourcesWebsite7);
         hyperlinks3->addAction(ResourcesWebsite8);
         hyperlinks3->addAction(showSpecsHelpAction);
-        
+
     }
     //end Resources Links
 
@@ -854,7 +872,7 @@ void SINGUI::createMenuBar()
     help->addSeparator();
     help->addAction(aboutAction);
     help->addAction(aboutQtAction);
-   
+
 }
 
 void SINGUI::createToolBars()
@@ -881,14 +899,14 @@ void SINGUI::createToolBars()
         toolbar->addAction(depositCoinsAction);
         toolbar->addAction(receiveCoinsAction);
         toolbar->addAction(historyAction);
-        
+
         // Dash
         QSettings settings;
         if (settings.value("fShowMasternodesTab").toBool())
         {
             toolbar->addAction(masternodeAction);
         }
-        
+
         //InstaSwap
         //toolbar->addAction(instaswapAction);
     	//
@@ -897,7 +915,7 @@ void SINGUI::createToolBars()
         toolbar->addAction(statsPageAction);
         //
 
-      
+
         overviewAction->setChecked(true);
 
 #ifdef ENABLE_WALLET
@@ -918,7 +936,7 @@ void SINGUI::createToolBars()
         m_wallet_selector_label_action->setVisible(false);
         m_wallet_selector_action->setVisible(false);
 #endif
-    
+
          QWidget* empty = new QWidget();
 		empty->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 		toolbar->addWidget(empty);
@@ -1066,7 +1084,7 @@ void SINGUI::setWalletActionsEnabled(bool enabled)
     receiveCoinsAction->setEnabled(enabled);
     receiveCoinsMenuAction->setEnabled(enabled);
     historyAction->setEnabled(enabled);
-    
+
 
     // Dash
     QSettings settings;
@@ -1121,8 +1139,8 @@ void SINGUI::createTrayIconMenu()
     trayIcon->setContextMenu(trayIconMenu);
 
 
-//start Resources Web Links       
-      
+//start Resources Web Links
+
     trayIconMenu->addAction(ResourcesWebsite9);
     trayIconMenu->addAction(ResourcesWebsite1);
     trayIconMenu->addAction(ResourcesWebsite2);
@@ -1231,6 +1249,33 @@ void SINGUI::showDebugWindowActivateConsole()
 {
     rpcConsole->setTabFocus(RPCConsole::TAB_CONSOLE);
     showDebugWindow();
+}
+
+void SINGUI::onThemeClicked()
+{
+    QSettings settings;
+    // Store theme
+    bool lightTheme = !settings.value("lightTheme", false).toBool();
+
+    QFile White(":/css/default");
+    QFile Light(":/css/light");
+
+
+    settings.setValue("lightTheme", lightTheme);
+
+    if (lightTheme) {
+        topThemeButton->setIcon(QIcon(":/icons/theme-light"));
+        topThemeButton->setToolTip( "White Theme"  );
+        Light.open(QFile::ReadOnly);
+        QString StyleSheet = QLatin1String(Light.readAll());
+        this->setStyleSheet(StyleSheet);
+    } else {
+        topThemeButton->setIcon(QIcon(":/icons/theme-white"));
+        topThemeButton->setToolTip( "Light Theme"  );
+        White.open(QFile::ReadOnly);
+        QString StyleSheet = QLatin1String(White.readAll());
+        this->setStyleSheet(StyleSheet);
+    }
 }
 
 // Dash

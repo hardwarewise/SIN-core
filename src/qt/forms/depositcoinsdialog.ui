@@ -79,7 +79,7 @@
              <x>0</x>
              <y>0</y>
              <width>498</width>
-             <height>456</height>
+             <height>466</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0">
@@ -181,7 +181,7 @@
              <string>Clear &amp;All</string>
             </property>
             <property name="icon">
-             <iconset resource="../sin.qrc">
+             <iconset>
               <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
             </property>
             <property name="autoDefault">
@@ -198,7 +198,7 @@
              <string>Add &amp;Recipient</string>
             </property>
             <property name="icon">
-             <iconset resource="../sin.qrc">
+             <iconset>
               <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
             </property>
             <property name="autoDefault">
