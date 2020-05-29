@@ -3793,7 +3793,7 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
     </message>
     <message>
         <source>HCO-Hodl Coin Offering. Lock SIN to EARN.</source>
-        <translation>HCO-Hodl Coin Offering. Zet je sin op slot en krijk Rente!</translation>
+        <translation>HCO-Hodl Coin Offering. Zet je sin op slot en verdien Rente!!</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -3817,7 +3817,7 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
     </message>
     <message>
         <source>Lock time</source>
-        <translation>Slot tijd</translation>
+        <translation>Aantal Blokken</translation>
     </message>
     </context>
     <context>
