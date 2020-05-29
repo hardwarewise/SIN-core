@@ -124,6 +124,11 @@ public:
         consensus.nInfinityNodeLockRewardSigners=5; //in number
         consensus.nInfinityNodeLockRewardSINType=10; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
+
+        /*Previously used as simple constants in validation */
+        consensus.nINActivationHeight = 170000; // Activation of IN payments, should also be the same as nSinHeightMainnet in primitives/block.cpp
+        consensus.nINEnforcementHeight = 178000; // Enforcement of IN payments
+
         consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440 * 5; // 1 common year
@@ -264,6 +269,11 @@ public:
         consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
         consensus.nInfinityNodeLockRewardSINType=1; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
+
+        /*Previously used as simple constants in validation */
+        consensus.nINActivationHeight = 170000; // Activation of IN payment enforcement, should also be the same as nSinHeightMainnet in primitives/block.cpp
+        consensus.nINEnforcementHeight = 178000; // Enforcement of IN payments
+
         consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
@@ -397,6 +407,11 @@ public:
         consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
         consensus.nInfinityNodeLockRewardSINType=1; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
+
+        /*Previously used as simple constants in validation */
+        consensus.nINActivationHeight = 170000; // Activation of IN payment enforcement, should also be the same as nSinHeightMainnet in primitives/block.cpp
+        consensus.nINEnforcementHeight = 178000; // Enforcement of IN payments
+        
         consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
@@ -509,6 +524,7 @@ class CRegTestParams : public CChainParams {
 public:
     CRegTestParams() {
         strNetworkID = "regtest";
+        consensus.nMasternodeMinimumConfirmations = 15;
         consensus.nSubsidyHalvingInterval = 150;
         consensus.nInfinityNodeBeginHeight=100;
         consensus.nInfinityNodeGenesisStatement=110;
@@ -524,7 +540,12 @@ public:
         consensus.nMasternodeBurnSINNODE_5 = 500000;
         consensus.nMasternodeBurnSINNODE_10 = 1000000;
         consensus.nMasternodeCollateralMinimum = 10000;
-        consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
+
+        /*Previously used as simple constants in validation */
+        consensus.nINActivationHeight = 5000; // Activation of IN payment enforcement, should also be the same as nSinHeightMainnet in primitives/block.cpp
+        consensus.nINEnforcementHeight = 5500; // Enforcement of IN payments
+        
+        consensus.nNewDevfeeAddress = 60000000; // Placeholder, need to choose a fork block.
 
         consensus.BIP16Exception = uint256();
         consensus.BIP34Height = 100000000;

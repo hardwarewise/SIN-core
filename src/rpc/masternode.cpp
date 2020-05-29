@@ -1274,7 +1274,7 @@ static UniValue infinitynodeburnfund(const JSONRPCRequest& request)
     return results;
 }
 
-
+ 
 static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
@@ -1312,8 +1312,10 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
 
     std::string strService = request.params[2].get_str();
     CService service;
-    if (!Lookup(strService.c_str(), service, 0, false)){
-           throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "IP address is not valide");
+    if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+        if (!Lookup(strService.c_str(), service, 0, false)){
+               throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "IP address is not valide");
+        }
     }
 
     std::string burnfundTxID = "";

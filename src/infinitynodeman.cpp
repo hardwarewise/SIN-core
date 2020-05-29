@@ -165,15 +165,15 @@ void CInfinitynodeMan::CheckAndRemove(CConnman& connman)
 
 int CInfinitynodeMan::getRoi(int nSinType, int totalNode)
 {
-     LOCK(cs);
-     int nBurnAmount = 0;
-     if (nSinType == 10) nBurnAmount = Params().GetConsensus().nMasternodeBurnSINNODE_10;
-     if (nSinType == 5) nBurnAmount = Params().GetConsensus().nMasternodeBurnSINNODE_5;
-     if (nSinType == 1) nBurnAmount = Params().GetConsensus().nMasternodeBurnSINNODE_1;
+    LOCK(cs);
+    int nBurnAmount = 0;
+    if (nSinType == 10) nBurnAmount = Params().GetConsensus().nMasternodeBurnSINNODE_10;
+    if (nSinType == 5) nBurnAmount = Params().GetConsensus().nMasternodeBurnSINNODE_5;
+    if (nSinType == 1) nBurnAmount = Params().GetConsensus().nMasternodeBurnSINNODE_1;
 
-     float nReward = GetMasternodePayment(nCachedBlockHeight, nSinType) / COIN;
-     float roi = nBurnAmount / ((720 / (float)totalNode) * nReward) ;
-     return (int) roi;
+    float nReward = GetMasternodePayment(nCachedBlockHeight, nSinType) / COIN;
+    float roi = nBurnAmount / ((720 / (float)totalNode) * nReward) ;
+    return (int) roi;
 }
 
 bool CInfinitynodeMan::initialInfinitynodeList(int nBlockHeight)
@@ -395,8 +395,13 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
                                             CPubKey decodePubKey(tx_data.begin(), tx_data.end());
                                             if (decodePubKey.IsValid()) {check++;}
                                         }
-                                        //2nd position: Node IP
-                                        if (i==1 && Lookup(s.c_str(), service, 0, false)) {
+                                        if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+                                            //2nd position: Node IP
+                                            if (i==1 && Lookup(s.c_str(), service, 0, false)) {
+                                                check++;
+                                            }
+                                        } else {
+                                            //lets INs run on 127.0.0.1 only on REGTEST
                                             check++;
                                         }
                                         //3th position: 12 character from Infinitynode BurnTx
@@ -805,11 +810,11 @@ bool CInfinitynodeMan::deterministicRewardAtHeight(int nBlockHeight, int nSinTyp
 
     std::map<int, CInfinitynode> rankOfStatement = calculInfinityNodeRank(lastStatement, nSinType, false);
     if(rankOfStatement.empty()){
-        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::deterministicRewardAtHeight -- can not calcul rank at %d\n", lastStatement);
+        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::deterministicRewardAtHeight -- can not calculate rank at %d\n", lastStatement);
         return false;
     }
     if((nBlockHeight < lastStatement) || (rankOfStatement.size() < (nBlockHeight - lastStatement + 1))){
-        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::deterministicRewardAtHeight -- out of rang at %d\n", lastStatement);
+        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::deterministicRewardAtHeight -- out of range at %d\n", lastStatement);
         return false;
     }
     infinitynodeRet = rankOfStatement[nBlockHeight - lastStatement + 1];
