@@ -164,6 +164,7 @@ EXTENDED_SCRIPTS = [
     # These tests are not run by the travis build process.
     # Longest test should go first, to favor running tests in parallel
     # Here stood, for example, the long pruning test
+    'feature_in_test.py',
     # vv Tests less than 20m vv
     'feature_fee_estimation.py',
     # vv Tests less than 5m vv

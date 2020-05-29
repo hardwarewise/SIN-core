@@ -134,8 +134,13 @@ bool CInfinitynodeMeta::metaScan(int nBlockHeight)
                                             }
                                         }
                                         //2nd position: Node IP
-                                        if (i==1 && Lookup(s.c_str(), service, 0, false)) {
-                                            check++;
+                                        if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+                                            if (i==1 && Lookup(s.c_str(), service, 0, false)) {
+                                                check++;
+                                            }
+                                        } else {
+                                            //lets INs run on 127.0.0.1 only on regtest
+                                            check ++;
                                         }
                                         //3th position: 12 character from Infinitynode BurnTx
                                         if (i==2 && s.length() >= 16) {

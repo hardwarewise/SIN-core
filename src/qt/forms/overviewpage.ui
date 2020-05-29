@@ -1013,9 +1013,12 @@ background-color: transparent;</string>
          <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="52,0,45">
           <item>
            <widget class="QListView" name="listTransactions">
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
             <property name="styleSheet">
              <string notr="true">QListView {
-/*background: #D6DCE5; */
+background: transparent;
  alternate-background-color: #D6D7D8;
 font-weight: lighter;
 font-size:14px;

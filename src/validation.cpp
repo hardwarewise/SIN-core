@@ -2251,17 +2251,14 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
 	LogPrintf("Miner -- Dev fee paid: %d, Calcul dev fee %d\n", block.vtx[0]->vout[1].nValue, GetDevCoin(pindex->nHeight, blockReward));
     if (block.vtx[0]->vout[1].nValue < GetDevCoin(pindex->nHeight, blockReward))
         return state.DoS(100, error("ConnectBlock(): coinbase does not pay enough to the dev fund address."), REJECT_INVALID, "bad-cb-dev-fee");
-
-    // Basic testing to ensure pays go to correct sinnode tiers
-	int forkInfinityNode = 170000;
-    int enforceHeight = 178000;
-    if (pindex->nHeight > forkInfinityNode)
+    //Legacy IN payee validation
+    if (pindex->nHeight > chainparams.GetConsensus().nINActivationHeight)
     {
 		if (!IsBlockPayeeValid(block.vtx[0], pindex->nHeight, block.vtx[0]->GetValueOut(), pindex->GetBlockHeader())) {
 			mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
 			LogPrintf("IsBlockPayeeValid -- disconnect block!\n");
-			if (pindex->nHeight >= enforceHeight) {
-				return state.DoS(0, error("ConnectBlock(DASH): couldn't find masternode or superblock payments"),
+			if (pindex->nHeight >= chainparams.GetConsensus().nINEnforcementHeight) {
+				return state.DoS(0, error("ConnectBlock(SIN): couldn't find masternode or superblock payments"),
 					REJECT_INVALID, "bad-cb-payee");
 			}
    		}

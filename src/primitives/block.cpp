@@ -11,6 +11,7 @@
 #include <utilstrencodings.h>
 #include <crypto/common.h>
 
+//TODO move this to chainparams/organise this better
 const int nSinHeightFinalnet = 5;
 const int nSinHeightTestnet  = 5;
 const int nSinHeightRegtest  = 5;
