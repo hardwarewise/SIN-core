@@ -195,6 +195,12 @@ bool CInfinitynodeMan::updateInfinitynodeList(int nBlockHeight)
     return buildInfinitynodeList(nBlockHeight, nLastScanHeight);
 }
 
+bool CInfinitynodeMan::buildInfinitynodeListRPC(int nBlockHeight, int nLowHeight)
+{
+    LOCK2(cs, cs_main);
+    return buildInfinitynodeList(nBlockHeight, nLowHeight);
+}
+
 bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
 {
     if(nBlockHeight < Params().GetConsensus().nInfinityNodeBeginHeight){
@@ -207,11 +213,13 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
     mapInfinitynodesNonMatured.clear();
 
     //first run, make sure that all variable is clear
-    if (nLowHeight == Params().GetConsensus().nInfinityNodeBeginHeight){
+    if (nLowHeight == Params().GetConsensus().nInfinityNodeBeginHeight) {
         Clear();
         infnodersv.Clear();
         //first run in testnet, scan to block number 1
-        if (Params().NetworkIDString() == CBaseChainParams::TESTNET) {nLowHeight = 1;}
+        if (Params().NetworkIDString() == CBaseChainParams::TESTNET || Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+            nLowHeight = 1;
+        }
     } else {
         nLowHeight = nLastScanHeight;
     }

@@ -138,7 +138,9 @@ public:
     int64_t getLastScan(){return nLastScanHeight;}
     int64_t getLastScanWithLimit(){return nLastScanHeight + INF_MATURED_LIMIT;}
 
-    bool buildInfinitynodeList(int nBlockHeight, int nLowHeight = 165000);
+
+    bool buildInfinitynodeList(int nBlockHeight, int nLowHeight = 0); /* init this to zero for better compat with regtest/testnet/devnets */
+    bool buildInfinitynodeListRPC(int nBlockHeight, int nLowHeight = 0); /* exposes cs to RPC indirectly */
     bool buildListForBlock(int nBlockHeight);
     void updateLastPaid();
     bool updateInfinitynodeList(int fromHeight);//call in init.cppp

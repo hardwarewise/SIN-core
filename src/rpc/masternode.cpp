@@ -907,12 +907,12 @@ UniValue infinitynode(const JSONRPCRequest& request)
     {
         CBlockIndex* pindex = NULL;
         {
-                LOCK(cs_main);
+                //LOCK(cs_main);
                 pindex = chainActive.Tip();
         }
 
         if (request.params.size() == 1)
-            return infnodeman.buildInfinitynodeList(pindex->nHeight);
+            return infnodeman.buildInfinitynodeListRPC(pindex->nHeight);
 
         std::string strMode = request.params[1].get_str();
 
