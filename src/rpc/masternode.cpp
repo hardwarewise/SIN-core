@@ -1318,7 +1318,7 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
     CService service;
     if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
         if (!Lookup(strService.c_str(), service, 0, false)){
-               throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "IP address is not valide");
+               throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "IP address is not valid");
         }
     }
 
