@@ -101,6 +101,8 @@
         <file alias="instaswap1">res/icons/instaswap1.png</file>
         <file alias="stats">res/icons/stats.png</file>
         <file alias="faq">res/icons/faq.svg</file>
+        <file alias="theme-white">res/icons/theme-white.svg</file>
+        <file alias="theme-light">res/icons/theme-light.svg</file>
 
     </qresource>
     <qresource prefix="/movies">
@@ -143,6 +145,7 @@
     </qresource>
 	<qresource prefix="/css">
 	 <file alias="default">res/css/default.css</file>
+	 <file alias="light">res/css/light.css</file>
 	 </qresource>
 	 <qresource prefix="/images">
 	 <file alias="sinbg">res/images/sinbg.png</file>

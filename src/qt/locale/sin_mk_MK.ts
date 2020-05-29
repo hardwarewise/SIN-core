@@ -139,7 +139,7 @@
     </message>
     <message>
         <source>Send coins to a SIN address</source>
-        <translation>Испрати биткоини на Биткоин адреса</translation>
+        <translation>Испрати SINи на SIN адреса</translation>
     </message>
     <message>
         <source>&amp;Verify message...</source>
@@ -147,7 +147,7 @@
     </message>
     <message>
         <source>SIN</source>
-        <translation>Биткоин</translation>
+        <translation>SIN</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -300,7 +300,7 @@
     <name>Intro</name>
     <message>
         <source>SIN</source>
-        <translation>Биткоин</translation>
+        <translation>SIN</translation>
     </message>
     <message>
         <source>Error</source>
@@ -591,7 +591,7 @@
     <name>sin-core</name>
     <message>
         <source>SIN Core</source>
-        <translation>Биткоин Core</translation>
+        <translation>SIN Core</translation>
     </message>
     <message>
         <source>Warning</source>

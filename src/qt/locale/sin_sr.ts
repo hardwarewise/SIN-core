@@ -67,11 +67,11 @@
     </message>
     <message>
         <source>These are your SIN addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Ово су ваше Биткоин адресе за слање уплата. Увек добро проверите износ и адресу на коју шаљете пре него што пошаљете уплату.</translation>
+        <translation>Ово су ваше SIN адресе за слање уплата. Увек добро проверите износ и адресу на коју шаљете пре него што пошаљете уплату.</translation>
     </message>
     <message>
         <source>These are your SIN addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Ово су ваше Биткоин адресе за примање уплате. Препоручује се да се за сваку трансакцију користи нова адреса.</translation>
+        <translation>Ово су ваше SIN адресе за примање уплате. Препоручује се да се за сваку трансакцију користи нова адреса.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -177,7 +177,7 @@
     </message>
     <message>
         <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR SIN COINS&lt;/b&gt;!</source>
-        <translation>Упозорење: Уколико шифрирате новчаник и изгубите своју лозинку, &lt;b&gt;ИЗГУБИЋЕТЕ СВЕ СВОЈЕ БИТКОИНЕ&lt;/b&gt;!</translation>
+        <translation>Упозорење: Уколико шифрирате новчаник и изгубите своју лозинку, &lt;b&gt;ИЗГУБИЋЕТЕ СВЕ СВОЈЕ SINЕ&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -189,7 +189,7 @@
     </message>
     <message>
         <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your sins from being stolen by malware infecting your computer.</source>
-        <translation>%1 ће се сада затворити како би се завршио процес шифрирања.  Запамтите да шифрирањем свог новчаника не можете у потпуности заштити своје биткоине од крађе од стране злоћудних програма и компјутерских инфекција.</translation>
+        <translation>%1 ће се сада затворити како би се завршио процес шифрирања.  Запамтите да шифрирањем свог новчаника не можете у потпуности заштити своје SINе од крађе од стране злоћудних програма и компјутерских инфекција.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -359,7 +359,7 @@
     </message>
     <message>
         <source>Send coins to a SIN address</source>
-        <translation>Пошаљите новац на Биткоин адресу</translation>
+        <translation>Пошаљите новац на SIN адресу</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -383,7 +383,7 @@
     </message>
     <message>
         <source>SIN</source>
-        <translation>Биткоин</translation>
+        <translation>SIN</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -411,11 +411,11 @@
     </message>
     <message>
         <source>Sign messages with your SIN addresses to prove you own them</source>
-        <translation>Потписуј поруку са своје Биткоин адресе као доказ да си њихов власник</translation>
+        <translation>Потписуј поруку са своје SIN адресе као доказ да си њихов власник</translation>
     </message>
     <message>
         <source>Verify messages to ensure they were signed with specified SIN addresses</source>
-        <translation>Верификуј поруке и утврди да ли су потписане од стране спецификованих Биткоин адреса</translation>
+        <translation>Верификуј поруке и утврди да ли су потписане од стране спецификованих SIN адреса</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -435,7 +435,7 @@
     </message>
     <message>
         <source>Request payments (generates QR codes and sin: URIs)</source>
-        <translation>Затражи плаћање (генерише QR кодове и биткоин: URI-е)</translation>
+        <translation>Затражи плаћање (генерише QR кодове и SIN: URI-е)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -447,7 +447,7 @@
     </message>
     <message>
         <source>Open a sin: URI or payment request</source>
-        <translation>Отворите биткоин: URI или захтев за плаћање</translation>
+        <translation>Отворите SIN: URI или захтев за плаћање</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -455,7 +455,7 @@
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to SIN network</source>
-        <translation><numerusform>%n aктивна веза са Биткоин мрежом</numerusform><numerusform>%n aктивних веза са Биткоин мрежом</numerusform><numerusform>%n aктивних веза са Биткоин мрежом</numerusform></translation>
+        <translation><numerusform>%n aктивна веза са SIN мрежом</numerusform><numerusform>%n aктивних веза са SIN мрежом</numerusform><numerusform>%n aктивних веза са SIN мрежом</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -499,7 +499,7 @@
     </message>
     <message>
         <source>Show the %1 help message to get a list with possible SIN command-line options</source>
-        <translation>Прикажи  поруку помоћи %1 за листу са могућим опцијама Биткоин командне линије</translation>
+        <translation>Прикажи  поруку помоћи %1 за листу са могућим опцијама SIN командне линије</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -571,7 +571,7 @@
     </message>
     <message>
         <source>A fatal error occurred. SIN can no longer continue safely and will quit.</source>
-        <translation>Дошло је до критичне грешке. Биткоин не може безбедно да настави са радом и искључиће се.</translation>
+        <translation>Дошло је до критичне грешке. SIN не може безбедно да настави са радом и искључиће се.</translation>
     </message>
 </context>
 <context>
@@ -827,7 +827,7 @@
     </message>
     <message>
         <source>SIN</source>
-        <translation>Биткоин</translation>
+        <translation>SIN</translation>
     </message>
     <message>
         <source>Error</source>
