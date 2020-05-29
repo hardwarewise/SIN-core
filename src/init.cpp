@@ -1339,7 +1339,11 @@ void ThreadCheckInfinityNode(CConnman& connman)
                 mnodeman.DoFullVerificationStep(connman);
             }
             if(nTick % (60 * 5) == 0) {
-                infnodeman.CheckAndRemove(connman);
+                ENTER_CRITICAL_SECTION(cs_main);
+                {
+                    infnodeman.CheckAndRemove(connman);
+                }
+                LEAVE_CRITICAL_SECTION(cs_main);
                 mnodeman.CheckAndRemoveBurnFundNotUniqueNode(connman);
             }
         }
@@ -1990,11 +1994,15 @@ bool AppInitMain()
     LogPrintf("InfinityNode last scan height: %d and active Height: %d\n", infnodeman.getLastScan(), chainActive.Height());
     if (infnodeman.getLastScan() == 0){
         uiInterface.InitMessage(_("Initial on-chain infinitynode list..."));
+        // lock main here
+        LOCK(cs_main);
         if ( chainActive.Height() < Params().GetConsensus().nInfinityNodeBeginHeight || infnodeman.initialInfinitynodeList(chainActive.Height()) == false){
             LogPrintf("InfinityNode does not begin or error in initial list of node:\n");
         }
     } else {
         uiInterface.InitMessage(_("Update on-chain infinitynode list..."));
+        // lock main here
+        LOCK(cs_main);
         if ( chainActive.Height() < infnodeman.getLastScan() || infnodeman.updateInfinitynodeList(chainActive.Height()) == false){
             LogPrintf("Lastscan is higher than chainActive or error in update list of node:\n");
         }
