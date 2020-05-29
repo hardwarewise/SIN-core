@@ -47,6 +47,7 @@ class QAction;
 class QComboBox;
 class QProgressBar;
 class QProgressDialog;
+class QPushButton;
 QT_END_NAMESPACE
 
 /**
@@ -103,7 +104,7 @@ private:
     QLabel* progressBarLabel = nullptr;
     QProgressBar* progressBar = nullptr;
     QProgressDialog* progressDialog = nullptr;
-
+    QPushButton *topThemeButton = nullptr;
     QMenuBar* appMenuBar = nullptr;
     QMenuBar* subMenu = nullptr;
     QToolBar* appToolBar = nullptr;
@@ -317,6 +318,8 @@ private Q_SLOTS:
     /** Show open dialog */
     void openClicked();
 #endif // ENABLE_WALLET
+    /** toggle Theme */
+    void onThemeClicked();
     /** Show configuration dialog */
     void optionsClicked();
     /** Show about dialog */
