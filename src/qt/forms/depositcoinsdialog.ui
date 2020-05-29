@@ -79,7 +79,7 @@
              <x>0</x>
              <y>0</y>
              <width>498</width>
-             <height>466</height>
+             <height>456</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0">
@@ -181,7 +181,7 @@
              <string>Clear &amp;All</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../sin.qrc">
               <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
             </property>
             <property name="autoDefault">
@@ -198,7 +198,7 @@
              <string>Add &amp;Recipient</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../sin.qrc">
               <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
             </property>
             <property name="autoDefault">
@@ -300,6 +300,11 @@
             <width>510</width>
             <height>0</height>
            </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QTableWidget {
+background: transparent;
+}</string>
           </property>
           <property name="editTriggers">
            <set>QAbstractItemView::NoEditTriggers</set>

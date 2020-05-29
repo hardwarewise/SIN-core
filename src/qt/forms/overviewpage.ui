@@ -252,10 +252,7 @@
                   <widget class="QLabel" name="labelTitle1">
                    <property name="font">
                     <font>
-                     <family>OpenSans</family>
                      <pointsize>-1</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
                     </font>
                    </property>
                    <property name="styleSheet">
@@ -271,7 +268,6 @@ color:#000000;</string>
                   <widget class="QLabel" name="labelBalance">
                    <property name="font">
                     <font>
-                     <family>OpenSans</family>
                      <pointsize>-1</pointsize>
                      <weight>75</weight>
                      <bold>true</bold>
@@ -415,10 +411,7 @@ border:none;</string>
                    <widget class="QLabel" name="labelTitleAvailableUSD">
                     <property name="font">
                      <font>
-                      <family>OpenSans</family>
                       <pointsize>-1</pointsize>
-                      <weight>75</weight>
-                      <bold>true</bold>
                      </font>
                     </property>
                     <property name="styleSheet">
@@ -584,8 +577,6 @@ border:none;</string>
                        <property name="font">
                         <font>
                          <pointsize>-1</pointsize>
-                         <weight>75</weight>
-                         <bold>true</bold>
                         </font>
                        </property>
                        <property name="styleSheet">
@@ -619,8 +610,6 @@ color:#00B4B8;</string>
                        <property name="font">
                         <font>
                          <pointsize>-1</pointsize>
-                         <weight>75</weight>
-                         <bold>true</bold>
                         </font>
                        </property>
                        <property name="styleSheet">
@@ -640,8 +629,6 @@ color:#000000;</string>
                        <property name="font">
                         <font>
                          <pointsize>-1</pointsize>
-                         <weight>50</weight>
-                         <bold>false</bold>
                         </font>
                        </property>
                        <property name="styleSheet">
@@ -789,8 +776,6 @@ color:#00B4B8;</string>
                      <property name="font">
                       <font>
                        <pointsize>-1</pointsize>
-                       <weight>75</weight>
-                       <bold>true</bold>
                       </font>
                      </property>
                      <property name="styleSheet">
@@ -886,7 +871,6 @@ color:#000000;</string>
             </property>
             <property name="font">
              <font>
-              <family>OpenSans</family>
               <pointsize>-1</pointsize>
               <weight>75</weight>
               <bold>true</bold>
@@ -1013,9 +997,12 @@ background-color: transparent;</string>
          <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="52,0,45">
           <item>
            <widget class="QListView" name="listTransactions">
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
             <property name="styleSheet">
              <string notr="true">QListView {
-/*background: #D6DCE5; */
+background: transparent;
  alternate-background-color: #D6D7D8;
 font-weight: lighter;
 font-size:14px;
