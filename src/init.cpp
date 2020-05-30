@@ -1307,6 +1307,7 @@ void ThreadCheckInfinityNode(CConnman& connman)
     fOneThread = true;
     RenameThread("sinovate-ps");
     unsigned int nTick = 0;
+    unsigned int nTickDIN = 0;
     //if this node is an Infinitynode peer, so verify the state
     if(fInfinityNode) {
         infinitynodePeer.ManageState(connman);
@@ -1314,33 +1315,42 @@ void ThreadCheckInfinityNode(CConnman& connman)
     while (true)
     {
         MilliSleep(1000);
-        // try to sync from all available nodes, one step at a time
-        masternodeSync.ProcessTick(connman);
-        if(masternodeSync.IsBlockchainSynced() && !ShutdownRequested() && masternodeSync.IsSynced()) {
-            nTick++;
-            // make sure to check all masternodes first
-            mnodeman.Check();
-            // check if we should activate or ping every few minutes,
-            // slightly postpone first run to give net thread a chance to connect to some peers
-            if(nTick % MASTERNODE_MIN_MNP_SECONDS == 15)
-                activeMasternode.ManageState(connman);
-            if(nTick % 60 == 0) {
-                netfulfilledman.CheckAndRemove();
-                mnodeman.ProcessMasternodeConnections(connman);
-                mnodeman.CheckAndRemove(connman);
-                mnpayments.CheckAndRemove();
-                instantsend.CheckAndRemove();
-                if(fInfinityNode && infinitynodePeer.nState != INFINITYNODE_PEER_STARTED)
-                {
-                    infinitynodePeer.ManageState(connman);
+
+        nTickDIN++;
+        if(nTickDIN % 60 == 0) {
+            if(fInfinityNode && infinitynodePeer.nState != INFINITYNODE_PEER_STARTED)
+            {
+                infinitynodePeer.ManageState(connman);
+            }
+        }
+        if(nTickDIN % (60 * 5) == 0) {
+            //call buildInfinitynodeList and deterministicRewardStatement(nSINtype)
+            infnodeman.CheckAndRemove(connman);
+        }
+        if(!fTurnOffMasternode) {
+            // try to sync from all available nodes, one step at a time
+            masternodeSync.ProcessTick(connman);
+            if(masternodeSync.IsBlockchainSynced() && !ShutdownRequested() && masternodeSync.IsSynced()) {
+                nTick++;
+                // make sure to check all masternodes first
+                mnodeman.Check();
+                // check if we should activate or ping every few minutes,
+                // slightly postpone first run to give net thread a chance to connect to some peers
+                if(nTick % MASTERNODE_MIN_MNP_SECONDS == 15)
+                    activeMasternode.ManageState(connman);
+                if(nTick % 60 == 0) {
+                    netfulfilledman.CheckAndRemove();
+                    mnodeman.ProcessMasternodeConnections(connman);
+                    mnodeman.CheckAndRemove(connman);
+                    mnpayments.CheckAndRemove();
+                    instantsend.CheckAndRemove();
                 }
-            }
-            if(fMasterNode && (nTick % (60 * 5) == 0)) {
-                mnodeman.DoFullVerificationStep(connman);
-            }
-            if(nTick % (60 * 5) == 0) {
-                infnodeman.CheckAndRemove(connman);
-                mnodeman.CheckAndRemoveBurnFundNotUniqueNode(connman);
+                if(fMasterNode && (nTick % (60 * 5) == 0)) {
+                    mnodeman.DoFullVerificationStep(connman);
+                }
+                if(nTick % (60 * 5) == 0) {
+                    mnodeman.CheckAndRemoveBurnFundNotUniqueNode(connman);
+                }
             }
         }
     }
@@ -1855,6 +1865,7 @@ bool AppInitMain()
 
     // SIN
     fInfinityNode = gArgs.GetBoolArg("-infinitynode", false);
+    fTurnOffMasternode = gArgs.GetBoolArg("-turnoffmasternode", false);
     if(fInfinityNode) {
         std::string strInfinityNodePrivKey = gArgs.GetArg("-infinitynodeprivkey", "");
         if(!strInfinityNodePrivKey.empty()) {
