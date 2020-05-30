@@ -133,7 +133,7 @@ std::string CInfinitynodeMan::ToString() const
 void CInfinitynodeMan::CheckAndRemove(CConnman& connman)
 {
     /*this function is called in InfinityNode thread and after sync of node*/
-    LOCK2(cs, cs_main); //Make sure we also lock main
+    LOCK(cs); //cs_main needs to be called by the parent function
 
     LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::CheckAndRemove -- at Height: %d, last build height: %d nodes\n", nCachedBlockHeight, nLastScanHeight);
     //first scan -- normaly, list is built in init.cpp
@@ -178,7 +178,7 @@ int CInfinitynodeMan::getRoi(int nSinType, int totalNode)
 
 bool CInfinitynodeMan::initialInfinitynodeList(int nBlockHeight)
 {
-    LOCK2(cs, cs_main); //Make sure we also lock main
+    LOCK(cs); // cs_main needs to be called by the parent function
     if(nBlockHeight < Params().GetConsensus().nInfinityNodeBeginHeight) return false;
     LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::initialInfinitynodeList -- initial at height: %d, last scan height: %d\n", nBlockHeight, nLastScanHeight);
     return buildInfinitynodeList(nBlockHeight, Params().GetConsensus().nInfinityNodeBeginHeight);
@@ -186,13 +186,19 @@ bool CInfinitynodeMan::initialInfinitynodeList(int nBlockHeight)
 
 bool CInfinitynodeMan::updateInfinitynodeList(int nBlockHeight)
 {
-    LOCK2(cs, cs_main); //Make sure we also lock main
+    LOCK(cs); // cs_main needs to be called by the parent function
     if (nLastScanHeight == 0) {
         LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinitynodeList -- update list for 1st scan at Height %d\n",nBlockHeight); 
         return buildInfinitynodeList(nBlockHeight, Params().GetConsensus().nInfinityNodeBeginHeight);
     }
     if(nBlockHeight < nLastScanHeight) return false;
     return buildInfinitynodeList(nBlockHeight, nLastScanHeight);
+}
+
+bool CInfinitynodeMan::buildInfinitynodeListRPC(int nBlockHeight, int nLowHeight)
+{
+    LOCK(cs); //cs_main needs to be called by the parent function
+    return buildInfinitynodeList(nBlockHeight, nLowHeight);
 }
 
 bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
@@ -207,11 +213,16 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
     mapInfinitynodesNonMatured.clear();
 
     //first run, make sure that all variable is clear
-    if (nLowHeight == Params().GetConsensus().nInfinityNodeBeginHeight){
+    if (nLowHeight == Params().GetConsensus().nInfinityNodeBeginHeight) {
         Clear();
         infnodersv.Clear();
         //first run in testnet, scan to block number 1
-        if (Params().NetworkIDString() == CBaseChainParams::TESTNET) {nLowHeight = 1;}
+        if (Params().NetworkIDString() == CBaseChainParams::TESTNET) {
+            nLowHeight = 1;
+        }
+    } else if (Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+        //on regtest, always scan from block number 1, as startup scans may be inconsistent and we may have never scanned before while going over IN fork block
+        nLowHeight = 1;
     } else {
         nLowHeight = nLastScanHeight;
     }

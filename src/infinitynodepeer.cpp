@@ -171,18 +171,20 @@ void CInfinitynodePeer::ManageStateInitial(CConnman& connman)
 
     LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateInitial -- Checking inbound connection to '%s'\n", service.ToString());
 
-    bool fConnected = false;
-    SOCKET hSocket = CreateSocket(service);
-    if (hSocket != INVALID_SOCKET) {
-        fConnected = ConnectSocketDirectly(service, hSocket, nConnectTimeout, true) && IsSelectableSocket(hSocket);
-        CloseSocket(hSocket);
-    }
+    if (Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+        bool fConnected = false;
+        SOCKET hSocket = CreateSocket(service);
+        if (hSocket != INVALID_SOCKET) {
+            fConnected = ConnectSocketDirectly(service, hSocket, nConnectTimeout, true) && IsSelectableSocket(hSocket);
+            CloseSocket(hSocket);
+        }
 
-    if (!fConnected) {
-        nState = INFINITYNODE_PEER_NOT_CAPABLE;
-        strNotCapableReason = "Could not connect to " + service.ToString();
-        LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateInitial -- %s: %s\n", GetStateString(), strNotCapableReason);
-        return;
+        if (!fConnected) {
+            nState = INFINITYNODE_PEER_NOT_CAPABLE;
+            strNotCapableReason = "Could not connect to " + service.ToString();
+            LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateInitial -- %s: %s\n", GetStateString(), strNotCapableReason);
+            return;
+        }
     }
 
     // Default to REMOTE
