@@ -150,13 +150,13 @@ void CInfinitynodeMan::CheckAndRemove(CConnman& connman)
         buildInfinitynodeList(nCachedBlockHeight, nLastScanHeight);
     }
 
-    if (nBIGLastStmHeight + nBIGLastStmSize - nCachedBlockHeight < INF_MATURED_LIMIT){
+    if (nBIGLastStmHeight + nBIGLastStmSize - nCachedBlockHeight < Params().MaxReorganizationDepth()){
         deterministicRewardStatement(10);
     }
-    if (nMIDLastStmHeight + nMIDLastStmSize - nCachedBlockHeight < INF_MATURED_LIMIT){
+    if (nMIDLastStmHeight + nMIDLastStmSize - nCachedBlockHeight < Params().MaxReorganizationDepth()){
         deterministicRewardStatement(5);
     }
-    if (nLILLastStmHeight + nLILLastStmSize - nCachedBlockHeight < INF_MATURED_LIMIT){
+    if (nLILLastStmHeight + nLILLastStmSize - nCachedBlockHeight < Params().MaxReorganizationDepth()){
         deterministicRewardStatement(1);
     }
 
@@ -302,7 +302,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
                                 inf.setScriptPublicKey(prevtx->vout[index].scriptPubKey);
 
                                 //we have all infos. Then add in map
-                                if(prevBlockIndex->nHeight < pindex->nHeight - INF_MATURED_LIMIT) {
+                                if(prevBlockIndex->nHeight < pindex->nHeight - Params().MaxReorganizationDepth()) {
                                     //matured
                                     Add(inf);
                                 } else {
@@ -369,7 +369,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
                                             return false;
                                         }
                                         //we have all infos. Then add in map
-                                        if(prevBlockIndex->nHeight < pindex->nHeight - INF_MATURED_LIMIT) {
+                                        if(prevBlockIndex->nHeight < pindex->nHeight - Params().MaxReorganizationDepth()) {
                                             //matured
 	                                        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- Voter: %s, proposal: %s.\n", EncodeDestination(addressBurnFund), voteOpinion);
                                             CVote vote = CVote(proposalID, prevtx->vout[index].scriptPubKey, prevBlockIndex->nHeight, opinion);
@@ -524,7 +524,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
         prevBlockIndex = prevBlockIndex->pprev;
     }
 
-    nLastScanHeight = nBlockHeight - INF_MATURED_LIMIT;
+    nLastScanHeight = nBlockHeight - Params().MaxReorganizationDepth();
     updateLastPaid();
 
     fMapInfinitynodeUpdated = true;
@@ -610,7 +610,7 @@ bool CInfinitynodeMan::deterministicRewardStatement(int nSinType)
         //loop
         stm_height_temp = stm_height_temp + totalSinType;
         //we will out of loop this next step, but we can calculate the next STM now
-        if(nCachedBlockHeight <=  stm_height_temp && stm_height_temp < nCachedBlockHeight + INF_MATURED_LIMIT){
+        if(nCachedBlockHeight <=  stm_height_temp && stm_height_temp < nCachedBlockHeight + Params().MaxReorganizationDepth()){
             int totalSinTypeNextStm = 0;
             for (auto& infpair : mapInfinitynodes) {
                 if (infpair.second.getSINType() == nSinType && infpair.second.getHeight() < stm_height_temp && stm_height_temp <= infpair.second.getExpireHeight()){
