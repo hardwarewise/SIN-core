@@ -27,6 +27,7 @@
 #include <QInputDialog>
 #include <QTimer>
 #include <QMessageBox>
+#include <QStyleFactory>
 
 // begin nodeSetup
 #include <QJsonDocument>
@@ -571,6 +572,7 @@ void MasternodeList::on_UpdateButton_clicked()
     updateMyNodeList(true);
 }
 
+// nodeSetup buttons
 void MasternodeList::on_btnCheck_clicked()
 {
     nodeSetupCleanProgress();
@@ -580,7 +582,7 @@ void MasternodeList::on_btnCheck_clicked()
     }
 
     // TODO continue
-    ui->labelMessage->setText("You passed all checks. Please press Setup to continue.");
+    ui->labelMessage->setText("You passed all checks. Please select a billing period and press Setup to continue.");
     ui->btnSetup->setEnabled(true);
     return;
 }
@@ -594,7 +596,65 @@ void MasternodeList::on_btnSetup_clicked()
         return;
     }
 
+    int orderid, invoiceid, productid;
+    QString strError;
+    QString strBillingCycle = QString::fromStdString(billingOptions[ui->comboBilling->currentData().toInt()]);
+
+//LogPrintf("place order %d, %s ", mClientid, strBillingCycle);
+    mOrderid = nodeSetupAPIAddOrder( mClientid, strBillingCycle, mProductIds, mInvoiceid, strError );
+    if ( mOrderid > 0 && mInvoiceid > 0) {
+        nodeSetupSetOrderId( mOrderid, mInvoiceid, mProductIds );
+        nodeSetupEnableOrderUI(true, mOrderid, mInvoiceid);
+        ui->labelMessage->setText(QString::fromStdString(strprintf("Order placed successfully. Order ID #%d Invoice ID #%d", mOrderid, mInvoiceid)));
+
+        // get invoice data and do payment
+        QString strAmount, strStatus, paymentAddress;
+        nodeSetupAPIGetInvoice( mInvoiceid, strAmount, strStatus, paymentAddress, strError );
+        CAmount invoiceAmount = strAmount.toDouble() * COIN;
+ui->labelMessage->setText(QString::fromStdString(strprintf("Check for invoice amount #%d", invoiceAmount)));
+        if ( nodeSetupCheckFunds( invoiceAmount ) ) {
+            nodeSetupStep( "setupWait", "Paying invoice");
+        }
+        else {
+            nodeSetupStep( "setupKo", "Process stopped");
+        }
+        currentStep++;
+    }
+    else    {
+        ui->labelMessage->setText(strError);
+    }
 }
+
+
+void MasternodeList::on_btnLogin_clicked()
+{
+    QString strError = "";
+
+    if ( mClientid > 0 )    {   // reset
+        nodeSetupResetClientId();
+    }
+    else {      // create/login
+        int clientId = nodeSetupAPIAddClient( ui->txtFirstName->text(), ui->txtLastName->text(), ui->txtEmail->text(), ui->txtPassword->text(), strError );
+LogPrintf("nodeSetup API client id %d\n", clientId);
+        if ( strError != "" )  {
+            ui->labelMessage->setText( strError );
+        }
+
+        if ( clientId > 0 ) {
+            nodeSetupEnableClientId( clientId );
+            nodeSetupSetClientId( clientId, ui->txtEmail->text(), ui->txtPassword->text() );
+LogPrintf("nodeSetup enable %d\n", clientId);
+        }
+    }
+}
+
+void MasternodeList::on_btnSetupReset_clicked()
+{
+    nodeSetupSetOrderId(0, 0, "");
+    nodeSetupEnableOrderUI(false);
+}
+
+// END nodeSetup buttons
 
 void MasternodeList::nodeSetupInitialize()   {
     ConnectionManager = new QNetworkAccessManager(this);
@@ -616,10 +676,27 @@ void MasternodeList::nodeSetupInitialize()   {
     labelPic[7] = ui->labelPic_8;
     labelTxt[7] = ui->labelTxt_8;
 
+    // combo billing
+    for (int i=0; i<sizeof(billingOptions)/sizeof(billingOptions[0]); i++)    {
+        std::string option = billingOptions[i];
+        ui->comboBilling->addItem(QString::fromStdString(option), QVariant(i));
+    }
+
+#if defined(Q_OS_WIN)
+#else
+    ui->comboBilling->setStyle(QStyleFactory::create("Windows"));
+#endif
+
+    // buttons
     ui->btnSetup->setEnabled(false);
+
+    // progress lines
     nodeSetupCleanProgress();
 
-    int clientId = nodeSetupGetClientId();
+    // recover data
+    QString email, pass;
+
+    int clientId = nodeSetupGetClientId( email, pass );
     if ( clientId == 0 )    {
         ui->widgetLogin->show();
         ui->labelClientId->setText("");
@@ -627,6 +704,62 @@ void MasternodeList::nodeSetupInitialize()   {
     else {
         nodeSetupEnableClientId(clientId);
     }
+
+    mOrderid = nodeSetupGetOrderId( mInvoiceid, mProductIds );
+    if ( mOrderid > 0 )    {
+        ui->labelMessage->setText(QString::fromStdString(strprintf("There is an order ongoing (#%d). Press 'Continue' or 'Reset' order.", mOrderid)));
+        nodeSetupEnableOrderUI(true, mOrderid, mInvoiceid);
+    }
+    else    {
+        nodeSetupEnableOrderUI(false);
+    }
+
+}
+
+void MasternodeList::nodeSetupEnableOrderUI( bool bEnable, int orderID , int invoiceID ) {
+    if (bEnable)    {
+        ui->btnCheck->setEnabled(false);
+        ui->btnSetup->setEnabled(true);
+        ui->btnSetupReset->setEnabled(true);
+        ui->labelOrder->setVisible(true);
+        ui->labelOrderID->setVisible(true);
+        ui->labelOrderID->setText(QString::fromStdString("#")+QString::number(orderID));
+        ui->btnSetup->setText(QString::fromStdString("Continue Order"));
+        ui->labelInvoice->setVisible(true);
+        ui->labelInvoiceID->setVisible(true);
+        ui->labelInvoiceID->setText(QString::fromStdString("#")+QString::number(mInvoiceid));
+    }
+    else {
+        ui->btnCheck->setEnabled(true);
+        ui->btnSetup->setEnabled(false);
+        ui->btnSetupReset->setEnabled(false);
+        ui->labelOrder->setVisible(false);
+        ui->labelOrderID->setVisible(false);
+        ui->labelInvoice->setVisible(false);
+        ui->labelInvoiceID->setVisible(false);
+    }
+}
+
+void MasternodeList::nodeSetupResetClientId( )  {
+    nodeSetupSetClientId( 0 , "", "");
+    ui->widgetLogin->show();
+    ui->labelClientId->setText("");
+    ui->btnLogin->setText("Create/Login");
+    ui->btnCheck->setEnabled(false);
+    ui->btnSetup->setEnabled(false);
+    ui->btnCheck->setEnabled(false);
+    mClientid = 0;
+    nodeSetupResetOrderId();
+    ui->labelMessage->setText("Enter your client data and create a new user or login an existing one.");
+}
+
+void MasternodeList::nodeSetupResetOrderId( )   {
+    nodeSetupSetOrderId( 0, 0, "");
+    ui->btnSetupReset->setEnabled(false);
+    ui->btnSetup->setEnabled(false);
+    ui->btnCheck->setEnabled(true);
+    ui->labelMessage->setText("Select a node Tier and then press 'Check' to verify if you meet the prerequisites");
+    mOrderid = mInvoiceid = 0;
 }
 
 void MasternodeList::nodeSetupEnableClientId( int clientId )  {
@@ -634,15 +767,17 @@ void MasternodeList::nodeSetupEnableClientId( int clientId )  {
     ui->labelClientId->setText("#"+QString::number(clientId));
     ui->btnCheck->setEnabled(true);
     ui->labelMessage->setText("Select a node Tier and then press 'Check' to verify if you meet the prerequisites");
+    mClientid = clientId;
+    ui->btnLogin->setText("Logout");
 }
 
-bool MasternodeList::nodeSetupCheckFunds()   {
+bool MasternodeList::nodeSetupCheckFunds( CAmount invoiceAmount )   {
 
     bool bRet = false;
     int nMasternodeCollateral = 1; //Params().GetConsensus().nMasternodeCollateralMinimum;
     int nMasternodeBurn = 0;
 
-    if ( ui->radioLILNode->isChecked() )    nMasternodeBurn = 3; //Params().GetConsensus().nMasternodeBurnSINNODE_1;
+    if ( ui->radioLILNode->isChecked() )    nMasternodeBurn = 5; //Params().GetConsensus().nMasternodeBurnSINNODE_1;
     if ( ui->radioMIDNode->isChecked() )    nMasternodeBurn = Params().GetConsensus().nMasternodeBurnSINNODE_5;
     if ( ui->radioBIGNode->isChecked() )    nMasternodeBurn = Params().GetConsensus().nMasternodeBurnSINNODE_10;
 
@@ -653,25 +788,36 @@ bool MasternodeList::nodeSetupCheckFunds()   {
     CWallet * const pwallet = (wallets.size() > 0) ? wallets[0].get() : nullptr;
     CAmount curBalance = pwallet->GetBalance();
     std::ostringstream stringStream;
+    CAmount nNodeRequirement = (nMasternodeBurn + nMasternodeCollateral) * COIN ;
 
-    if ( curBalance > (nMasternodeBurn + nMasternodeCollateral) * COIN )  {
+    if ( curBalance > invoiceAmount + nNodeRequirement )  {
         nodeSetupStep( "setupOk", strChecking + " : " + "funds available.");
         bRet = true;
     }
     else    {
-        if ( curBalance > nMasternodeBurn * COIN )  {
+        if ( curBalance > nNodeRequirement )  {
+            QString strAvailable = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), curBalance - nNodeRequirement );
+            QString strInvoiceAmount = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), invoiceAmount );
+            stringStream << strChecking << " : not enough funds to pay invoice. (you have " << strAvailable.toStdString() << " , need " << strInvoiceAmount.toStdString() << " )";
+            std::string copyOfStr = stringStream.str();
+                nodeSetupStep( "setupKo", copyOfStr);
+        }
+        else if ( curBalance > nMasternodeBurn * COIN )  {
             QString strAvailable = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), (curBalance-(nMasternodeBurn*COIN)) );
             QString strCollateral = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), nMasternodeCollateral*COIN );
             stringStream << strChecking << " : not enough collateral (you have " <<  strAvailable.toStdString() << " , you need " << strCollateral.toStdString() << " )";
             std::string copyOfStr = stringStream.str();
             nodeSetupStep( "setupKo", copyOfStr);
         }
-        else    {
+        else if ( curBalance > nNodeRequirement )  {
             QString strAvailable = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), curBalance );
             QString strBurnAmount = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), nMasternodeBurn*COIN );
             stringStream << strChecking << " : not enough funds to burn. (you have " << strAvailable.toStdString() << " , need " << strBurnAmount.toStdString() << " )";
             std::string copyOfStr = stringStream.str();
             nodeSetupStep( "setupKo", copyOfStr);
+        }
+        else    {
+
         }
     }
 
@@ -679,20 +825,52 @@ bool MasternodeList::nodeSetupCheckFunds()   {
     return bRet;
 }
 
-int MasternodeList::nodeSetupGetClientId()  {
+int MasternodeList::nodeSetupGetClientId( QString& email, QString& pass )  {
     int ret = 0;
     QSettings settings;
 
     if (settings.contains("nodeSetupClientId"))
         ret = settings.value("nodeSetupClientId").toInt();
 
+    if (settings.contains("nodeSetupEmail"))
+        email = settings.value("nodeSetupEmail").toString();
+
+    if (settings.contains("nodeSetupPassword"))
+        pass = settings.value("nodeSetupPassword").toString();
+
     return ret;
 }
 
-void MasternodeList::nodeSetupSetClientId( int clientId)  {
+void MasternodeList::nodeSetupSetClientId( int clientId, QString email, QString pass )  {
     QSettings settings;
     settings.setValue("nodeSetupClientId", clientId);
+    settings.setValue("nodeSetupEmail", email);
+    settings.setValue("nodeSetupPassword", pass);
 }
+
+int MasternodeList::nodeSetupGetOrderId( int& invoiceid, QString& productids )  {
+    int ret = 0;
+    QSettings settings;
+
+    if (settings.contains("nodeSetupOrderId"))
+        ret = settings.value("nodeSetupOrderId").toInt();
+
+    if (settings.contains("nodeSetupInvoiceId"))
+        invoiceid = settings.value("nodeSetupInvoiceId").toInt();
+
+    if (settings.contains("nodeSetupProductIds"))
+        productids = settings.value("nodeSetupProductIds").toString();
+
+    return ret;
+}
+
+void MasternodeList::nodeSetupSetOrderId( int orderid , int invoiceid, QString productids )  {
+    QSettings settings;
+    settings.setValue("nodeSetupOrderId", orderid);
+    settings.setValue("nodeSetupInvoiceId", invoiceid);
+    settings.setValue("nodeSetupProductIds", productids);
+}
+
 
 int MasternodeList::nodeSetupAPIAddClient( QString firstName, QString lastName, QString email, QString password, QString& strError )  {
     int ret = 0;
@@ -709,6 +887,7 @@ int MasternodeList::nodeSetupAPIAddClient( QString firstName, QString lastName, 
 
     QNetworkRequest request( url );
 
+LogPrintf("nodeSetup::AddClient -- %s\n", url.toString().toStdString());
     QNetworkReply *reply = ConnectionManager->get(request);
     QEventLoop loop;
 
@@ -728,21 +907,22 @@ int MasternodeList::nodeSetupAPIAddClient( QString firstName, QString lastName, 
     return ret;
 }
 
-int MasternodeList::nodeSetupAPIAddOrder( int clientid, QString billingCycle, int& invoiceid, QString& strError )  {
-    int ret = 0;
+int MasternodeList::nodeSetupAPIAddOrder( int clientid, QString billingCycle, QString& productids, int& invoiceid, QString& strError )  {
+    int orderid = 0;
 
     QString Service = QString::fromStdString("AddOrder");
     QUrl url( MasternodeList::NODESETUP_ENDPOINT );
     QUrlQuery urlQuery( url );
     urlQuery.addQueryItem("action", Service);
-    urlQuery.addQueryItem("clientid", firstName);
-    urlQuery.addQueryItem("lastname", lastName);
-    urlQuery.addQueryItem("email", email);
-    urlQuery.addQueryItem("password2", password);
+    urlQuery.addQueryItem("clientid", QString::number(clientid));
+    urlQuery.addQueryItem("pid", "22");
+    urlQuery.addQueryItem("domain", "nodeSetup.sinovate.io");
+    urlQuery.addQueryItem("billingcycle", billingCycle);
+    urlQuery.addQueryItem("paymentmethod", "sin");
     url.setQuery( urlQuery );
 
     QNetworkRequest request( url );
-
+LogPrintf("nodeSetup::AddOrder -- %s\n", url.toString().toStdString());
     QNetworkReply *reply = ConnectionManager->get(request);
     QEventLoop loop;
 
@@ -752,14 +932,68 @@ int MasternodeList::nodeSetupAPIAddOrder( int clientid, QString billingCycle, in
     QByteArray data = reply->readAll();
     QJsonDocument json = QJsonDocument::fromJson(data);
 
-    if ( json.object().contains("clientid") )   {
-        ret = json.object()["clientid"].toInt();
+    if ( json.object().contains("result") ) {
+        if ( json.object()["result"]=="success" ) {
+            if ( json.object().contains("orderid") ) {
+                orderid = json.object()["orderid"].toInt();
+            }
+            if ( json.object().contains("productids") ) {
+                productids = json.object()["productids"].toString();
+            }
+            if ( json.object().contains("invoiceid") ) {
+                invoiceid = json.object()["invoiceid"].toInt();
+            }
+        }
+        else    {
+            if ( json.object().contains("message") )    {
+                strError = json.object()["message"].toString();
+            }
+        }
     }
 
-    if ( json.object().contains("result") && json.object()["result"]=="error" && ret == 0 && json.object().contains("message")) {
-        strError = json.object()["message"].toString();
-    }
+    return orderid;
+}
 
+bool MasternodeList::nodeSetupAPIGetInvoice( int invoiceid, QString& strAmount, QString& strStatus, QString& paymentAddress, QString& strError )  {
+    bool ret = false;
+
+    QString Service = QString::fromStdString("GetInvoice");
+    QUrl url( MasternodeList::NODESETUP_ENDPOINT );
+    QUrlQuery urlQuery( url );
+    urlQuery.addQueryItem("action", Service);
+    urlQuery.addQueryItem("invoiceid", QString::number(invoiceid));
+    url.setQuery( urlQuery );
+
+    QNetworkRequest request( url );
+LogPrintf("nodeSetup::GetInvoice -- %s\n", url.toString().toStdString());
+    QNetworkReply *reply = ConnectionManager->get(request);
+    QEventLoop loop;
+
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+
+    QByteArray data = reply->readAll();
+    QJsonDocument json = QJsonDocument::fromJson(data);
+
+    if ( json.object().contains("result") ) {
+        if ( json.object()["result"]=="success" ) {
+            if ( json.object().contains("description") ) {
+                strAmount = json.object()["description"].toString();
+            }
+            if ( json.object().contains("status") ) {
+                strStatus = json.object()["status"].toString();
+            }
+            if ( json.object().contains("transid") ) {
+                paymentAddress = json.object()["transid"].toInt();
+            }
+            ret = true;
+        }
+        else    {
+            if ( json.object().contains("message") )    {
+                strError = json.object()["message"].toString();
+            }
+        }
+    }
 
     return ret;
 }
@@ -784,17 +1018,3 @@ void MasternodeList::nodeSetupCleanProgress()   {
     currentStep = 0;
 }
 
-void MasternodeList::on_btnLogin_clicked()
-{
-    QString strError = "";
-    int clientId = nodeSetupAPIAddClient( ui->txtFirstName->text(), ui->txtLastName->text(), ui->txtEmail->text(), ui->txtPassword->text(), strError );
-
-    if ( strError != "" )  {
-        ui->labelMessage->setText( strError );
-    }
-
-    if ( clientId > 0 ) {
-        nodeSetupEnableClientId( clientId );
-        nodeSetupSetClientId( clientId );
-    }
-}

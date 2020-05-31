@@ -76,12 +76,19 @@ public Q_SLOTS:
 
     void nodeSetupInitialize();
     void nodeSetupCleanProgress();
+    void nodeSetupEnableOrderUI( bool bEnable, int orderID = 0, int invoiceID = 0 );
     int nodeSetupAPIAddClient( QString firstName, QString lastName, QString email, QString password, QString& strError );
-    bool nodeSetupCheckFunds();
+    int nodeSetupAPIAddOrder( int clientid, QString billingCycle, QString& productids, int& invoiceid, QString& strError );
+    bool nodeSetupAPIGetInvoice( int invoiceid, QString& strAmount, QString& strStatus, QString& paymentAddress, QString& strError );
+    bool nodeSetupCheckFunds( CAmount invoiceAmount = 0 );
     void nodeSetupStep( std::string icon , std::string text );
-    int nodeSetupGetClientId();
-    void nodeSetupSetClientId( int clientId);
+    int  nodeSetupGetClientId( QString& email, QString& pass );
+    void nodeSetupSetClientId( int clientId, QString email, QString pass );
     void nodeSetupEnableClientId( int clientId );
+    int  nodeSetupGetOrderId( int& invoiceid, QString& mProductIds );
+    void nodeSetupSetOrderId( int orderid , int invoiceid, QString strProductIds );
+    void nodeSetupResetClientId( );
+    void nodeSetupResetOrderId( );
 
 Q_SIGNALS:
 
@@ -102,6 +109,9 @@ private:
     // nodeSetup
     QNetworkAccessManager *ConnectionManager;
     QString NODESETUP_ENDPOINT;
+    int mClientid, mOrderid, mInvoiceid;
+    QString mProductIds;
+    std::string billingOptions[3] = {"Monthly", "Semiannually", "Annually"};
 
 
 private Q_SLOTS:
@@ -117,6 +127,7 @@ private Q_SLOTS:
     void on_btnSetup_clicked();
     void on_btnCheck_clicked();
     void on_btnLogin_clicked();
+    void on_btnSetupReset_clicked();
 };
 
 #endif // FXTC_QT_MASTERNODELIST_H
