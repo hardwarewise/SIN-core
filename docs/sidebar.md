@@ -3,6 +3,7 @@
 - **Documentation**
 - [SINOVATE Whitepaper V2 Light](SINOVATE_Whitepaper_V_2_Light)
 - [Infinity Node setup](infinity_node_setup_guide)
+- [Inf. Node Guide with setUP](infinity_node_guide_with_setup)
 - [Bootstrap](bootstrap)
 - [Wallet](wallet)
 - **Tutorials & Guides**
