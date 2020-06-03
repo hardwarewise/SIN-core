@@ -207,6 +207,12 @@
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="QComboBox" name="lockperiod">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <item>
            <property name="text">
             <string>3</string>
@@ -234,7 +240,12 @@
           </property>
           <item>
            <property name="text">
-            <string>Month</string>
+            <string>Months</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Blocks</string>
            </property>
           </item>
          </widget>

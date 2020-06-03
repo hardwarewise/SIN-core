@@ -147,8 +147,10 @@ int SendCoinsEntry::getTermDepositLength()
     int theLength = theSt.toInt();
 
     if (thePeriod==0) {
+        return theLength*720*30;
+    } else if (thePeriod==1) {
         return theLength;
-     }
+    }
     return 0;
 }
 
