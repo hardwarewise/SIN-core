@@ -62,7 +62,6 @@ Open your Sinovate local wallet and create a new receiving address:
 
 * Copy that newly generated address.
 * Go to the `Send` tab of the wallet and paste the address in the `Pay To` field.
-![Image 02](assets/img/infinity_node_setup_guide/send.png)
 * In the `Amount` field, enter the **Burn** amount you wish to build your Infinity Node with \(100,000 / 500,000 / 1,000,000\) – see screenshot below.
 * the amount has to be exact, no more, no less.
 
@@ -109,6 +108,7 @@ Unlike the Burn transaction, which takes the coins out of reach, making them uns
 * From Transaction tab, get the **Collateral** transaction information double clicking the transaction. **Copy the Transaction ID and Output Index in Notepad, you will need this info later.**
 
 ![Image 07](assets/img/infinity_node_setup_guide/collateral.png)
+!> :warning: Please wait **Collateral** and **Burn** transactions have **15 confirmations** before setting up the VPS.
 
 ### 4. The Infinity Node PRIVKEY
 
