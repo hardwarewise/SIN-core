@@ -136,6 +136,10 @@ Unlike the Burn transaction, which takes the coins out of reach, making them uns
 
 ![Image 09](assets/img/infinity_node_setup_guide/img_09.jpg)
 
+
+* **If the collateral output or the burntx index output gives an outpoint error, please try to change the output.**
+* If your output is **0** then please try **1**  or vice versa.
+
 * Save the file, then **Restart the wallet**.
 
 
