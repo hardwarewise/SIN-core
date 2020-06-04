@@ -1,23 +1,23 @@
 PACKAGE=qt
-$(package)_version=5.9.9
-$(package)_download_path=https://download.qt.io/official_releases/qt/5.9/$($(package)_version)/submodules
-$(package)_suffix=opensource-src-$($(package)_version).tar.xz
+$(package)_version=5.12.6
+$(package)_download_path=https://download.qt.io/official_releases/qt/5.12/$($(package)_version)/submodules
+$(package)_suffix=everywhere-src-$($(package)_version).tar.xz
 $(package)_file_name=qtbase-$($(package)_suffix)
-$(package)_sha256_hash=d5a97381b9339c0fbaf13f0c05d599a5c999dcf94145044058198987183fed65
+$(package)_sha256_hash=6ab52649d74d7c1728cf4a6cf335d1142b3bf617d476e2857eb7961ef43f9f27
 $(package)_dependencies=openssl zlib
 $(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext
 $(package)_build_subdir=qtbase
 $(package)_qt_libs=corelib network widgets gui plugins testlib
-$(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_configure_mac.patch fix_no_printer.patch fix_rcc_determinism.patch xkb-default.patch
+$(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_no_printer.patch
 
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
-$(package)_qttranslations_sha256_hash=f7474f260a1382549720081bf2359a3d425ec3bf7d31976c512834303d30d73b
+$(package)_qttranslations_sha256_hash=798ac44414206898d0192653118de3f115c59016e2bf82ad0c659f9f8c864768
 
 $(package)_qttools_file_name=qttools-$($(package)_suffix)
-$(package)_qttools_sha256_hash=fce6e0fd39a40bcef880c669080087dba94af1ec442296222210472e0852bf98
+$(package)_qttools_sha256_hash=e94991c7885c2650cefd71189873e45b1d64d6042e439a0a0d9652c191d3c777
 
 $(package)_qtsvg_file_name=qtsvg-$($(package)_suffix)
-$(package)_qtsvg_sha256_hash=0d2759178c0c1ec8c7ea0d05b7bf57787c09d8059ca9b9518607a8e97933e888
+$(package)_qtsvg_sha256_hash=46243e6c425827ab4e91fbe31567f683ff14cb01d12f9f7543a83a571228ef8f
 
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
@@ -36,6 +36,7 @@ $(package)_config_opts += -hostprefix $(build_prefix)
 $(package)_config_opts += -no-cups
 $(package)_config_opts += -no-egl
 $(package)_config_opts += -no-eglfs
+$(package)_config_opts += -no-evdev
 $(package)_config_opts += -no-freetype
 $(package)_config_opts += -no-glib
 $(package)_config_opts += -no-icu
@@ -46,7 +47,6 @@ $(package)_config_opts += -no-libudev
 $(package)_config_opts += -no-mtdev
 $(package)_config_opts += -no-openvg
 $(package)_config_opts += -no-reduce-relocations
-$(package)_config_opts += -no-qml-debug
 $(package)_config_opts += -no-sql-db2
 $(package)_config_opts += -no-sql-ibase
 $(package)_config_opts += -no-sql-oci
@@ -57,7 +57,7 @@ $(package)_config_opts += -no-sql-psql
 $(package)_config_opts += -no-sql-sqlite
 $(package)_config_opts += -no-sql-sqlite2
 $(package)_config_opts += -no-use-gold-linker
-$(package)_config_opts += -no-xinput2
+$(package)_config_opts += -no-xcb-xinput
 $(package)_config_opts += -nomake examples
 $(package)_config_opts += -nomake tests
 $(package)_config_opts += -opensource
@@ -74,9 +74,52 @@ $(package)_config_opts += -system-zlib
 $(package)_config_opts += -static
 $(package)_config_opts += -silent
 $(package)_config_opts += -v
-$(package)_config_opts += -no-feature-printer
-$(package)_config_opts += -no-feature-printdialog
+$(package)_config_opts += -no-feature-bearermanagement
+$(package)_config_opts += -no-feature-calendarwidget
+$(package)_config_opts += -no-feature-colordialog
+$(package)_config_opts += -no-feature-commandlineparser
 $(package)_config_opts += -no-feature-concurrent
+$(package)_config_opts += -no-feature-cups
+$(package)_config_opts += -no-feature-dial
+$(package)_config_opts += -no-feature-dtls
+$(package)_config_opts += -no-feature-filesystemwatcher
+$(package)_config_opts += -no-feature-fontcombobox
+$(package)_config_opts += -no-feature-fontdialog
+$(package)_config_opts += -no-feature-fscompleter
+$(package)_config_opts += -no-feature-ftp
+$(package)_config_opts += -no-feature-future
+$(package)_config_opts += -no-feature-gestures
+$(package)_config_opts += -no-feature-http
+$(package)_config_opts += -no-feature-image_heuristic_mask
+$(package)_config_opts += -no-feature-keysequenceedit
+$(package)_config_opts += -no-feature-lcdnumber
+$(package)_config_opts += -no-feature-networkdiskcache
+$(package)_config_opts += -no-feature-networkproxy
+$(package)_config_opts += -no-feature-networkproxy
+$(package)_config_opts += -no-feature-paint_debug
+$(package)_config_opts += -no-feature-pdf
+$(package)_config_opts += -no-feature-printdialog
+$(package)_config_opts += -no-feature-printer
+$(package)_config_opts += -no-feature-printpreviewdialog
+$(package)_config_opts += -no-feature-printpreviewwidget
+$(package)_config_opts += -no-feature-sessionmanager
+$(package)_config_opts += -no-feature-socks5
+$(package)_config_opts += -no-feature-sql
+$(package)_config_opts += -no-feature-sqlmodel
+$(package)_config_opts += -no-feature-statemachine
+$(package)_config_opts += -no-feature-syntaxhighlighter
+$(package)_config_opts += -no-feature-systemsemaphore
+$(package)_config_opts += -no-feature-textbrowser
+$(package)_config_opts += -no-feature-textodfwriter
+$(package)_config_opts += -no-feature-topleveldomain
+$(package)_config_opts += -no-feature-tuiotouch
+$(package)_config_opts += -no-feature-udpsocket
+$(package)_config_opts += -no-feature-undocommand
+$(package)_config_opts += -no-feature-undogroup
+$(package)_config_opts += -no-feature-undostack
+$(package)_config_opts += -no-feature-undoview
+$(package)_config_opts += -no-feature-vnc
+$(package)_config_opts += -no-feature-wizard
 $(package)_config_opts += -no-feature-xml
 
 ifneq ($(build_os),darwin)
@@ -89,17 +132,16 @@ $(package)_config_opts_darwin += -device-option MAC_TARGET=$(host)
 $(package)_config_opts_darwin += -device-option MAC_LD64_VERSION=$(LD64_VERSION)
 endif
 
-$(package)_config_opts_linux  = -qt-xkbcommon-x11
+$(package)_config_opts_linux  = -xkbcommon
 $(package)_config_opts_linux += -qt-xcb
 $(package)_config_opts_linux += -system-freetype
 $(package)_config_opts_linux += -no-feature-sessionmanager
 $(package)_config_opts_linux += -fontconfig
-$(package)_config_opts_linux += -no-opengl
 $(package)_config_opts_arm_linux += -platform linux-g++ -xplatform bitcoin-linux-g++
 $(package)_config_opts_i686_linux  = -xplatform linux-g++-32
 $(package)_config_opts_x86_64_linux = -xplatform linux-g++-64
 $(package)_config_opts_aarch64_linux = -xplatform linux-aarch64-gnu-g++
-$(package)_config_opts_mingw32  = -no-opengl -xplatform win32-g++ -device-option CROSS_COMPILE="$(host)-"
+$(package)_config_opts_mingw32  = -xplatform win32-g++ -device-option CROSS_COMPILE="$(host)-"
 $(package)_build_env  = QT_RCC_TEST=1
 $(package)_build_env += QT_RCC_SOURCE_DATE_OVERRIDE=1
 endef
@@ -144,10 +186,7 @@ define $(package)_preprocess_cmds
   cp -r qtbase/mkspecs/linux-arm-gnueabi-g++ qtbase/mkspecs/bitcoin-linux-g++ && \
   sed -i.old "s/arm-linux-gnueabi-/$(host)-/g" qtbase/mkspecs/bitcoin-linux-g++/qmake.conf && \
   patch -p1 -i $($(package)_patch_dir)/fix_qt_pkgconfig.patch &&\
-  patch -p1 -i $($(package)_patch_dir)/fix_configure_mac.patch &&\
   patch -p1 -i $($(package)_patch_dir)/fix_no_printer.patch &&\
-  patch -p1 -i $($(package)_patch_dir)/fix_rcc_determinism.patch &&\
-  patch -p1 -i $($(package)_patch_dir)/xkb-default.patch &&\
   echo "!host_build: QMAKE_CFLAGS     += $($(package)_cflags) $($(package)_cppflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
   echo "!host_build: QMAKE_CXXFLAGS   += $($(package)_cxxflags) $($(package)_cppflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
   echo "!host_build: QMAKE_LFLAGS     += $($(package)_ldflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
