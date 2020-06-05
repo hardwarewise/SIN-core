@@ -20,10 +20,7 @@ Some of the innovations include the X25X algorithm, FlashSend, Infinity Nodes, I
 
 The SINOVATE team is committed to transparency and acknowledges that the Blockchain industry is still in its infancy. As such, several obstacles must be addressed, and to overcome these, SINOVATE has assembled an experienced and talented team that is ready for the challenge.
 
-  
-  
 
-# ![](https://lh4.googleusercontent.com/Bq-Pq6IOudEJZ8uwovOQK21qnk0pO3dndIkokKcYcAS94G7g7WrZ43CswfTNO4jagkg4aq4eFL9uxucuo5leKrus_6G_FNSfx5Q5IsG-P9TB4jWYvbGqODobiXGEP2995IZLQMJw)
 
 1.  # OUR VIEW
     
@@ -34,18 +31,8 @@ Since its inception in late 2018, the SINOVATE project has strived to deliver in
 
 SINOVATE has a different perspective on how blockchain technology can be utilized to improve the lives of private and corporate parties. Community building and management, custom code development, and innovations are some of the things that differ SINOVATE from others. SINOVATE is committed to transparency, accountability, and honesty as they strive to solve existing problems within the blockchain technology space. As succinctly put by the slogan; create, build, and innovate.
 
-  
-  
-  
-  
-  
-
-# ![](https://lh4.googleusercontent.com/Bq-Pq6IOudEJZ8uwovOQK21qnk0pO3dndIkokKcYcAS94G7g7WrZ43CswfTNO4jagkg4aq4eFL9uxucuo5leKrus_6G_FNSfx5Q5IsG-P9TB4jWYvbGqODobiXGEP2995IZLQMJw)
-
 # 2. OUR MISSION
-
-  
-  
+ 
   
 
 Building and improving upon trusted and proven aspects of blockchain, the SINOVATE team is aware of future challenges. Blockchain technology is still considered by many to be in its early stages of development or infancy. Economists are familiar with the space forecast that blockchain will revolutionize nearly every modern industry and impact the daily lives of people on a global scale. The implications are far-reaching and extend beyond the traditional use of cryptocurrency as a store of value.
@@ -56,10 +43,7 @@ SINOVATE is a technically sound decentralized open-source network that is formed
 
 Therefore, our goal is to launch SINOVATE innovations in combination with a user-friendly platform to fully integrate into the user’s day to day life.
 
-  
-  
-
-# ![](https://lh4.googleusercontent.com/Bq-Pq6IOudEJZ8uwovOQK21qnk0pO3dndIkokKcYcAS94G7g7WrZ43CswfTNO4jagkg4aq4eFL9uxucuo5leKrus_6G_FNSfx5Q5IsG-P9TB4jWYvbGqODobiXGEP2995IZLQMJw)
+ 
 
 # 3. FEATURES
 
