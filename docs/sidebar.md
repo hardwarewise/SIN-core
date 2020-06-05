@@ -7,6 +7,7 @@
 - [Bootstrap](bootstrap)
 - [Wallet](wallet)
 - **Tutorials & Guides**
+- [Multiple Nodes on one VPS](multiple_nodes_on_one_vps)
 - [Infinity Node tips](infinity_node_tips)
 - [SUQA Coins Conflict](suqa_conflict)
 - [X25X Pow GPU Mining](X25X-PoW-GPU-Mining)
