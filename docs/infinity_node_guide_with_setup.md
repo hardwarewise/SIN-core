@@ -142,6 +142,7 @@ Unlike the Burn transaction, which takes the coins out of reach, making them uns
 * Save the file, then **Restart the wallet**.
 
 ## III. Setting up the VPS
+!> :warning: Please wait **Collateral** and **Burn** transactions have **15 confirmations** before setting up the VPS.
 ### Step 1
 
 Login or Create an account on  [setup.sinovate.io](https://setup.sinovate.io/)
