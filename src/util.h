@@ -58,6 +58,7 @@ extern bool fLiteMode;
 extern int nWalletBackups;
 //
 extern bool fInfinityNode;
+extern bool fTurnOffMasternode;
 
 /** Signals for translation. */
 class CTranslationInterface

@@ -3235,7 +3235,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
     }
     else
     {
-        // Dash
         bool found = false;
         const std::vector<std::string> &allMessages = getAllNetMessageTypes();
         for (const std::string msg : allMessages) {
@@ -3247,23 +3246,23 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
         if (found)
         {
-            //probably one the extensions
-            mnodeman.ProcessMessage(pfrom, strCommand, vRecv, *connman);
-            mnpayments.ProcessMessage(pfrom, strCommand, vRecv, *connman);
-            instantsend.ProcessMessage(pfrom, strCommand, vRecv, *connman);
-            sporkManager.ProcessSpork(pfrom, strCommand, vRecv, *connman);
-            masternodeSync.ProcessMessage(pfrom, strCommand, vRecv);
+            //probably one the extensions.
+            if(!fTurnOffMasternode) {
+                mnodeman.ProcessMessage(pfrom, strCommand, vRecv, *connman);
+                mnpayments.ProcessMessage(pfrom, strCommand, vRecv, *connman);
+                instantsend.ProcessMessage(pfrom, strCommand, vRecv, *connman);
+                sporkManager.ProcessSpork(pfrom, strCommand, vRecv, *connman);
+                masternodeSync.ProcessMessage(pfrom, strCommand, vRecv);
+            }
             inflockreward.ProcessMessage(pfrom, strCommand, vRecv, *connman);
         }
-        //
         else
         {
             // Ignore unknown commands for extensibility
             LogPrint(BCLog::NET, "Unknown command \"%s\" from peer=%d\n", SanitizeString(strCommand), pfrom->GetId());
         }
-        // Dash
     }
-    //
+
     return true;
 }
 

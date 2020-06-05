@@ -31,9 +31,6 @@ private:
     int nCachedBlockHeight;
     bool fMapInfinitynodeUpdated = false;
 
-    //make sure that this value is sup than chain reorg limit. After this depth, situation of MAP is matured
-    static const int INF_MATURED_LIMIT = 55;
-
     // map to hold all INFs
     std::map<COutPoint, CInfinitynode> mapInfinitynodes;
     std::map<COutPoint, CInfinitynode> mapInfinitynodesNonMatured;
@@ -136,9 +133,11 @@ public:
 
     std::map<CScript, int> GetFullLastPaidMap() { return mapLastPaid; }
     int64_t getLastScan(){return nLastScanHeight;}
-    int64_t getLastScanWithLimit(){return nLastScanHeight + INF_MATURED_LIMIT;}
+    int64_t getLastScanWithLimit(){return nLastScanHeight/* + INF_MATURED_LIMIT*/;} // We'll need to move this to functions who actually use it and match it with our max reorg depth
 
-    bool buildInfinitynodeList(int nBlockHeight, int nLowHeight = 165000);
+
+    bool buildInfinitynodeList(int nBlockHeight, int nLowHeight = 0); /* init this to zero for better compat with regtest/testnet/devnets */
+    bool buildInfinitynodeListRPC(int nBlockHeight, int nLowHeight = 0); /* exposes cs to RPC indirectly */
     bool buildListForBlock(int nBlockHeight);
     void updateLastPaid();
     bool updateInfinitynodeList(int fromHeight);//call in init.cppp

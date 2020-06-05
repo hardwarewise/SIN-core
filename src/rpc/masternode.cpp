@@ -861,10 +861,12 @@ UniValue infinitynode(const JSONRPCRequest& request)
         std::string sBase64 = EncodeBase64(pubkey.begin(), pubkey.size());
         std::vector<unsigned char> tx_data = DecodeBase64(sBase64.c_str());
         CPubKey decodePubKey(tx_data.begin(), tx_data.end());
+        CTxDestination dest = GetDestinationForKey(decodePubKey, DEFAULT_ADDRESS_TYPE);
 
         obj.push_back(Pair("PrivateKey", EncodeSecret(secret)));
         obj.push_back(Pair("PublicKey", sBase64));
         obj.push_back(Pair("DecodePublicKey", decodePubKey.GetID().ToString()));
+        obj.push_back(Pair("Address", EncodeDestination(dest)));
         obj.push_back(Pair("isCompressed", pubkey.IsCompressed()));
 
 
@@ -883,10 +885,12 @@ UniValue infinitynode(const JSONRPCRequest& request)
         std::string sBase64 = EncodeBase64(pubkey.begin(), pubkey.size());
         std::vector<unsigned char> tx_data = DecodeBase64(sBase64.c_str());
         CPubKey decodePubKey(tx_data.begin(), tx_data.end());
+        CTxDestination dest = GetDestinationForKey(decodePubKey, DEFAULT_ADDRESS_TYPE);
 
         obj.push_back(Pair("PrivateKey", EncodeSecret(secret)));
         obj.push_back(Pair("PublicKey", sBase64));
         obj.push_back(Pair("DecodePublicKey", decodePubKey.GetID().ToString()));
+        obj.push_back(Pair("Address", EncodeDestination(dest)));
         obj.push_back(Pair("isCompressed", pubkey.IsCompressed()));
 
         return obj;
@@ -905,14 +909,12 @@ UniValue infinitynode(const JSONRPCRequest& request)
 
     if (strCommand == "build-list")
     {
-        CBlockIndex* pindex = NULL;
-        {
-                LOCK(cs_main);
-                pindex = chainActive.Tip();
+        if (request.params.size() == 1) {
+            CBlockIndex* pindex = NULL;
+            LOCK(cs_main); // make sure this scopes until we reach the function which needs this most, buildInfinitynodeListRPC()
+            pindex = chainActive.Tip();
+            return infnodeman.buildInfinitynodeListRPC(pindex->nHeight);
         }
-
-        if (request.params.size() == 1)
-            return infnodeman.buildInfinitynodeList(pindex->nHeight);
 
         std::string strMode = request.params[1].get_str();
 
@@ -1130,11 +1132,13 @@ static UniValue infinitynodeburnfund(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_TYPE_ERROR, "Please wait until InfinityNode data is synced!");
     }
 
-    LOCK2(cs_main, pwallet->cs_wallet);
     EnsureWalletIsUnlocked(pwallet);
     // Make sure the results are valid at least up to the most recent block
     // the user could have gotten from another RPC command prior to now
     pwallet->BlockUntilSyncedToCurrentChain();
+
+    // Grab locks here as BlockUntilSyncedToCurrentChain() handles them on its own, but we need them for most other funcs
+    LOCK2(cs_main, pwallet->cs_wallet);
 
     std::string strError;
     std::vector<COutput> vPossibleCoins;
@@ -1314,7 +1318,7 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
     CService service;
     if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
         if (!Lookup(strService.c_str(), service, 0, false)){
-               throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "IP address is not valide");
+               throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "IP address is not valid");
         }
     }
 
@@ -1325,11 +1329,13 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "node BurnFundTx ID is invalid. Please enter first 16 characters of BurnFundTx");
     }
 
-    LOCK2(cs_main, pwallet->cs_wallet);
     EnsureWalletIsUnlocked(pwallet);
     // Make sure the results are valid at least up to the most recent block
     // the user could have gotten from another RPC command prior to now
     pwallet->BlockUntilSyncedToCurrentChain();
+
+    // Grab locks here as BlockUntilSyncedToCurrentChain() handles them on its own, but we need them for most other funcs
+    LOCK2(cs_main, pwallet->cs_wallet);
 
     std::string strError;
     std::vector<COutput> vPossibleCoins;
@@ -1447,11 +1453,12 @@ static UniValue infinitynodevote(const JSONRPCRequest& request)
     }
     if (opinion == "YES") {vote = "1";}
 
-    LOCK2(cs_main, pwallet->cs_wallet);
     EnsureWalletIsUnlocked(pwallet);
     // Make sure the results are valid at least up to the most recent block
     // the user could have gotten from another RPC command prior to now
     pwallet->BlockUntilSyncedToCurrentChain();
+    // Grab locks here as BlockUntilSyncedToCurrentChain() handles them on its own, but we need them for most other funcs
+    LOCK2(cs_main, pwallet->cs_wallet);
 
     std::vector<COutput> vPossibleCoins;
     pwallet->AvailableCoins(vPossibleCoins, true, NULL, false, ALL_COINS);

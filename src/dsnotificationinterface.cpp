@@ -1,5 +1,4 @@
 // Copyright (c) 2014-2017 The Dash Core developers
-// Copyright (c) 2018 FXTC developers
 // Copyright (c) 2018-2019 SIN developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -10,6 +9,8 @@
 #include <masternodeman.h>
 #include <masternode-payments.h>
 #include <masternode-sync.h>
+
+#include <infinitynodetip.h>
 #include <infinitynodeman.h>
 #include <infinitynodelockreward.h>
 
@@ -35,6 +36,7 @@ void CDSNotificationInterface::UpdatedBlockTip(const CBlockIndex *pindexNew, con
         return;
 
     masternodeSync.UpdatedBlockTip(pindexNew, fInitialDownload, connman);
+    infTip.UpdatedBlockTip(pindexNew, fInitialDownload, connman);
 
     if (fInitialDownload)
         return;

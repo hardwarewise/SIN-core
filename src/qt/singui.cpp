@@ -222,7 +222,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
 
     topAddressButton->setIcon(QIcon(":/icons/address-book"));
     topAddressButton->setIconSize(QSize(20, 20));
-    topAddressButton->setToolTip( "Open Address Book"  );
+    topAddressButton->setToolTip( "Open Receiving Addresses"  );
     topAddressButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
 
     topFaqButton->setIcon(QIcon(":/icons/faq"));
@@ -237,7 +237,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     connect(topThemeButton, SIGNAL (released()), this, SLOT (onThemeClicked()));
     connect(topConsoleButton, SIGNAL (released()), this, SLOT (showDebugWindowActivateConsole()));
     connect(topOptionButton, SIGNAL(released()), this, SLOT(optionsClicked()));
-    connect(topAddressButton, SIGNAL(released()), walletFrame, SLOT(usedSendingAddresses()));
+    connect(topAddressButton, SIGNAL(released()), walletFrame, SLOT(usedReceivingAddresses()));
     connect(topFaqButton, SIGNAL (released()), this, SLOT (gotoFaqPage()));
 
 
