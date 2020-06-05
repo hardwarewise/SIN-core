@@ -54,7 +54,7 @@ Follow the steps below to create a new SIN address **to be used only for this pu
 Open your Sinovate local wallet and create a new receiving address:
 
 * Top menu, click on `File`, then on `Receiving address`
-* Label the address \(for example: 01-BIG – see screenshot\).
+* Label the address \(for example: 01-MINI – see screenshot\).
 
 ![Image 01](assets/img/infinity_node_setup_guide/receiving.png)
 ![Image 005](assets/img/infinity_node_setup_guide/01-MINI.png)
@@ -131,7 +131,7 @@ Unlike the Burn transaction, which takes the coins out of reach, making them uns
 
 | Alias | VPS IP:PORT | privkey | Collateral tx ID | Collateral Output index | Burn tx ID | Burn Output index |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| 01-BIG | 78.47.162.140:20970 | 7RRfQkxYPUKkKFAQBpoMde1qaB56EvPU5X8LYWq16e2YtTycvVi | 7f48e48e51b487f0a962d492b03debdd89835bc619242be29e720080fc4b2e09 | 0 | 764fe088b95d287b56f85ee0da11bb08195a862ded8b7ded08a3783135418e3c | 0 |
+| 01-MINI | 78.47.162.140:20970 | 7RRfQkxYPUKkKFAQBpoMde1qaB56EvPU5X8LYWq16e2YtTycvVi | 7f48e48e51b487f0a962d492b03debdd89835bc619242be29e720080fc4b2e09 | 0 | 764fe088b95d287b56f85ee0da11bb08195a862ded8b7ded08a3783135418e3c | 0 |
 
 **Screenshot of the infinitynode.conf file:**
 
