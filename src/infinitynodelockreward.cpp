@@ -2031,32 +2031,32 @@ void CInfinityNodeLockReward::CheckAndRemove(CConnman& connman)
     }
 
     //remove mapLockRewardCommitment
-    std::map<uint256, CLockRewardCommitment>::iterator it = CLockRewardCommitment.begin();
-    while(it != CLockRewardCommitment.end()) {
-        if (it->second.nRewardHeight < nCachedBlockHeight - LIMIT_MEMORY) {
-            CLockRewardCommitment.erase(it++);
+    std::map<uint256, CLockRewardCommitment>::iterator itCommit = mapLockRewardCommitment.begin();
+    while(itCommit != mapLockRewardCommitment.end()) {
+        if (itCommit->second.nRewardHeight < nCachedBlockHeight - LIMIT_MEMORY) {
+            mapLockRewardCommitment.erase(itCommit++);
         } else {
-            ++it;
+            ++itCommit;
         }
     }
 
     //remove mapLockRewardGroupSigners
-    std::map<uint256, mapLockRewardGroupSigners>::iterator it = mapLockRewardGroupSigners.begin();
-    while(it != mapLockRewardGroupSigners.end()) {
-        if (it->second.nRewardHeight < nCachedBlockHeight - LIMIT_MEMORY) {
-            mapLockRewardGroupSigners.erase(it++);
+    std::map<uint256, CGroupSigners>::iterator itGroup = mapLockRewardGroupSigners.begin();
+    while(itGroup != mapLockRewardGroupSigners.end()) {
+        if (itGroup->second.nRewardHeight < nCachedBlockHeight - LIMIT_MEMORY) {
+            mapLockRewardGroupSigners.erase(itGroup++);
         } else {
-            ++it;
+            ++itGroup;
         }
     }
 
     //remove mapPartialSign
-    std::map<uint256, mapPartialSign>::iterator it = mapPartialSign.begin();
-    while(it != mapPartialSign.end()) {
-        if (it->second.nRewardHeight < nCachedBlockHeight - LIMIT_MEMORY) {
-            mapPartialSign.erase(it++);
+    std::map<uint256, CMusigPartialSignLR>::iterator itSign = mapPartialSign.begin();
+    while(itSign != mapPartialSign.end()) {
+        if (itSign->second.nRewardHeight < nCachedBlockHeight - LIMIT_MEMORY) {
+            mapPartialSign.erase(itSign++);
         } else {
-            ++it;
+            ++itSign;
         }
     }
 }
