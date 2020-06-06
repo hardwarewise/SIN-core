@@ -297,6 +297,7 @@ libsin_server_a_SOURCES += \
   infinitynodepeer.cpp \
   infinitynodetip.cpp \
   infinitynodelockreward.cpp \
+  rpc/infinitynode.cpp \
   leveldbwrapper.cpp \
   masternode.cpp \
   masternodeman.cpp \

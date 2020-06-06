@@ -304,6 +304,9 @@ public:
     bool CheckLockRewardRegisterInfo(std::string sLR, std::string& strErrorRet);
 
     //remove unused data to avoid memory issue
+    //call int init.cpp
+    void CheckAndRemove(CConnman& connman);
+    std::string GetMemorySize();
 
     //Connection
     void TryConnectToMySigners(int rewardHeight, CConnman& connman);
@@ -314,8 +317,6 @@ public:
     void ProcessDirectMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman);
     //call in dsnotificationinterface.cpp when node connect a new block
     void UpdatedBlockTip(const CBlockIndex *pindex, CConnman& connman);
-    //call int init.cpp
-    void CheckAndRemove(CConnman& connman);
 };
 
 class ECCMusigHandle

@@ -2061,6 +2061,15 @@ void CInfinityNodeLockReward::CheckAndRemove(CConnman& connman)
     }
 }
 
+//call in infinitynode.cpp: show memory size
+std::string CInfinityNodeLockReward::GetMemorySize()
+{
+    LOCK(cs);
+    std::string ret = "";
+    ret = strprintf("Request: %d, Commitment: %d, GroupSigners: %d, mapPartialSign: %d", mapLockRewardRequest.size(),
+                     mapLockRewardCommitment.size(), mapLockRewardGroupSigners.size(), mapPartialSign.size());
+    return ret;
+}
 
 /* static */ int ECCMusigHandle::refcount = 0;
 

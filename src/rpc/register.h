@@ -24,6 +24,8 @@ void RegisterRawTransactionRPCCommands(CRPCTable &tableRPC);
 /** Register Dash masternode RPC commands */
 void RegisterDashMasternodeRPCCommands(CRPCTable &tableRPC);
 
+void RegisterInfinitynodeRPCCommands(CRPCTable &tableRPC);
+
 static inline void RegisterAllCoreRPCCommands(CRPCTable &t)
 {
     RegisterBlockchainRPCCommands(t);
@@ -31,6 +33,8 @@ static inline void RegisterAllCoreRPCCommands(CRPCTable &t)
     RegisterMiscRPCCommands(t);
     RegisterMiningRPCCommands(t);
     RegisterRawTransactionRPCCommands(t);
+    RegisterInfinitynodeRPCCommands(t);
+
     RegisterDashMasternodeRPCCommands(t);
 }
 
