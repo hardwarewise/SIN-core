@@ -15,6 +15,7 @@ class CLockRewardCommitment;
 extern CInfinityNodeLockReward inflockreward;
 
 static const int MIN_INFINITYNODE_PAYMENT_PROTO_VERSION = 250003;
+static const int LIMIT_MEMORY = 10; //nblocks
 
 class CLockRewardRequest
 {
@@ -313,6 +314,8 @@ public:
     void ProcessDirectMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman);
     //call in dsnotificationinterface.cpp when node connect a new block
     void UpdatedBlockTip(const CBlockIndex *pindex, CConnman& connman);
+    //call int init.cpp
+    void CheckAndRemove(CConnman& connman);
 };
 
 class ECCMusigHandle

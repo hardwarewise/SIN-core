@@ -132,7 +132,7 @@ std::string CInfinitynodeMan::ToString() const
 
 void CInfinitynodeMan::CheckAndRemove(CConnman& connman)
 {
-    /*this function is called in InfinityNode thread and after sync of node*/
+    /*this function is called in InfinityNode thread*/
     LOCK(cs); //cs_main needs to be called by the parent function
 
     LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::CheckAndRemove -- at Height: %d, last build height: %d nodes\n", nCachedBlockHeight, nLastScanHeight);

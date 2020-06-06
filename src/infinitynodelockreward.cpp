@@ -2011,6 +2011,57 @@ void CInfinityNodeLockReward::UpdatedBlockTip(const CBlockIndex *pindex, CConnma
 }
 
 
+void CInfinityNodeLockReward::CheckAndRemove(CConnman& connman)
+{
+    /*this function is called in InfinityNode thread*/
+    LOCK(cs); //cs_main needs to be called by the parent function
+
+    //nothing to remove
+    if (nCachedBlockHeight <= Params().GetConsensus().nInfinityNodeBeginHeight) { return;}
+
+    //remove mapLockRewardRequest
+    std::map<uint256, CLockRewardRequest>::iterator itRequest = mapLockRewardRequest.begin();
+    while(itRequest != mapLockRewardRequest.end()) {
+        if(itRequest->second.nRewardHeight < nCachedBlockHeight - LIMIT_MEMORY)
+        {
+            mapLockRewardRequest.erase(itRequest++);
+        }else{
+            ++itRequest;
+        }
+    }
+
+    //remove mapLockRewardCommitment
+    std::map<uint256, CLockRewardCommitment>::iterator it = CLockRewardCommitment.begin();
+    while(it != CLockRewardCommitment.end()) {
+        if (it->second.nRewardHeight < nCachedBlockHeight - LIMIT_MEMORY) {
+            CLockRewardCommitment.erase(it++);
+        } else {
+            ++it;
+        }
+    }
+
+    //remove mapLockRewardGroupSigners
+    std::map<uint256, mapLockRewardGroupSigners>::iterator it = mapLockRewardGroupSigners.begin();
+    while(it != mapLockRewardGroupSigners.end()) {
+        if (it->second.nRewardHeight < nCachedBlockHeight - LIMIT_MEMORY) {
+            mapLockRewardGroupSigners.erase(it++);
+        } else {
+            ++it;
+        }
+    }
+
+    //remove mapPartialSign
+    std::map<uint256, mapPartialSign>::iterator it = mapPartialSign.begin();
+    while(it != mapPartialSign.end()) {
+        if (it->second.nRewardHeight < nCachedBlockHeight - LIMIT_MEMORY) {
+            mapPartialSign.erase(it++);
+        } else {
+            ++it;
+        }
+    }
+}
+
+
 /* static */ int ECCMusigHandle::refcount = 0;
 
 ECCMusigHandle::ECCMusigHandle()
