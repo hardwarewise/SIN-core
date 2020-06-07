@@ -1,4 +1,4 @@
-# Infinity Kurulum Klavuzu
+# setUP ile Infinity Kurulum Klavuzu
 
 !> Lütfen yalnızca Ubuntu **18.04** ile kurulum yapın
 
@@ -32,102 +32,71 @@
 Daha fazla güvenlik olarak, Infinity Nodes'a yeni bir özellik eklendi: ** Yedekleme Adresi **. Herhangi bir nedenle PC'nizin saldırıya uğraması ve yerel cüzdanınızın güvenliği ihlal edilirse, başka bir cüzdan kaynağından Yedekleme Adresi ile yeni bir Infinity Node oluşturulabilir.
 Yeni bir SIN adresi oluşturmak için aşağıdaki adımları izleyin **sadece bu amaçla kullanılmalıdır** ve paranızın güvenliğini en üst düzeye çıkarır.
 
-* Yerel SIN cüzdanınızı açın.
-* Cüzdan üst menüsünde, önce `Help` ve ardından `Debug  Window` ve `Console` seçeneklerini tıklayın.
-* Aşağıdaki komutu girin:
+* [https://sinovate.io/sin-wallets/](https://sinovate.io/sin-wallets/) adresine gidin.
+* [Android](https://play.google.com/store/apps/details?id=io.sinovate.wallet) yada [Apple IOS](https://apps.apple.com/gb/app/sinovate-wallet/id1483969772) cüzdanını indirin
+* Mobil cüzdanınızdaki alma sekmesinden `KOPYALA` yı tıklayın.
+![Image-bkup-001](assets/img/infinity_node_setup_guide/mobilcopy.png)
 
-  ```
-  createwallet "SIN_Backup"
-  ```
+* :warning: **Bu, yedek adresiniz olacaktır** Aşağıdaki ekran görüntüsüne bakın:
 
-* :warning: **Devam etmeden önce yeni cüzdanı seçtiğinizden emin olun.** Aşağıdaki ekran görüntüsüne bakın:
+![Image-bkup-002](assets/img/infinity_node_setup_guide/mobilcopied.png)
 
-![Image-bkup-01](assets/img/infinity_node_setup_guide/img_bkup_addr_01.jpg)
 
-* Şimdi yeni cüzdanda yeni SIN adresini oluşturun:
+* **YEDEK** adresini E-Posta veya seçtiğiniz başka bir yöntemle  Mobil uygulamanızdan PC'nize gönderin.
+* :warning: :key: _**YENİ SIN ADRESİNİ VE ÖZEL ANAHTARI MUHAFAZA EDİN VE GÜVENLİ BİR ŞEKİLDE SAKLAYIN SADECE ÖZEL ANAHTAR İLE ADRESİN TAM KONTROL EDİLMESİ GEREKİR. ASLA HERHANGİ BİR DURUMDA, ÖZEL ANAHTARINIZI DİĞER BİR KİŞİ İLE PAYLAŞMAYIN**_ :warning: :key:
+* SIN Backup adresini aldıktan sonra, senkronize PC cüzdanınıza gidebilirsiniz. 
 
-  ```
-  getnewaddress
-  ```
 
-* Oluşturulan SIN adresini seçin ve kopyalayın.
-* Şimdi yeni SIN adresiniz için özel anahtarı alın:
-
-  ```
-  dumpprivkey YOUR_ADDRESS
-  ```
-
-* :warning: :key: _**YENİ SIN ADRESİNİ VE ÖZEL ANAHTARI MUHAFAZA EDİN VE GÜVENLİ BİR ŞEKİLDE SAKLAYIN SADECE ÖZEL ANAHTAR İLE ADRESİN TAM KONTROL EDİLMESİ GEREKİR. ASLA HERHANGİ BİR DURUMDA, ÖZEL ANAHTARINIZI DİĞER BİR KİŞİ İLE PAYLAŞMAYIN.**_ :warning: :key:
-* Yeni SIN adresinizi ve özel anahtarı güvenli bir yerde sakladıktan sonra, artık ikinci cüzdanı devreden çıkarabilirsiniz.. Aşağıdaki komutu girin:
-
-  ```
-  unloadwallet
-  ```
-
-![Image-bkup-02](assets/img/infinity_node_setup_guide/img_bkup_addr_02.jpg)
-
-* **ŞİMDİ ÇOK ÖNEMLİ** geçici cüzdan klasörünüz SIN_Backup'ı fiziksel olarak sildiğinizden emin olun. Ayrıca geri dönüşüm kutusunu boşalttığınızdan emin olun.
-* Yerel SIN cüzdanınızı kapatın.
-* Sabit diskinizde önceden oluşturulan geçici cüzdan klasörünü bulun `SIN_Backup`:
-  * Linux: `~/.sin/wallets/`
-  * MAC: `~/Library/Application Support/SIN/wallets/`
-  * Windows: `%appdata%\SIN\wallets`
-    * \(Bu varsayılan olarak Windows XP de `C:\Documents and Settings\KullanıcıAdınız\Application data\SIN\wallets`  ve Windows Vista, 7, 8, ve 10 da `C:\Users\KullanıcıAdınız\Appdata\Roaming\SIN\wallets` klasöründe yer alır.\)
-* **SIN\_Backup** dizinini **Silin**
-
-![Image-bkup-03](assets/img/infinity_node_setup_guide/img_bkup_addr_03.jpg)
-
-* Geri dönüşüm kutusunu boşaltın.
-* Lütfen **sonraki bölümde yeni oluşturulan yedek SIN adresini kullanın** \(Yanma İşlemi\).
-  * _Birden fazla Infinity Node oluştururken aynı yedekleme adresini kullanabilirsiniz._
 
 ### 2. Yanma İşlemi
 
 Sinovate yerel cüzdanınızı açın ve yeni bir alıcı adresi oluşturun:
 
 * Üst menüde, `File` ve ardından `Receiving Address` e tıklayın
-* Adresi etiketleyin \(Örneğin: 01-BIG – ekran görüntüsüne bakın\).
+* Adresi etiketleyin \(Örneğin: 01-MINI – ekran görüntüsüne bakın\).
 
-![Image 01](assets/img/infinity_node_setup_guide/img_01.jpg)
+![Image 01](assets/img/infinity_node_setup_guide/receiving.png)
+![Image 005](assets/img/infinity_node_setup_guide/01-MINI.png)
+
 
 * Yeni oluşturulan adresi kopyalayın.
 * Cüzdanın `Send` sekmesine gidin ve adresi `Pay to` alanına yapıştırın.
 * `Amount` alanında, Infinity Node oluşturmak istediğiniz **Yanma** miktarını girin \(100,000 / 500,000 / 1,000,000\) – aşağıdaki ekran görüntüsüne bakın.
 * Miktar tam olmalıdır, ne daha fazla, ne daha az olmamalıdır.
 
-![Image 02](assets/img/infinity_node_setup_guide/img_02.jpg)
+![Image 009](assets/img/infinity_node_setup_guide/send100k.png)
 
-:warning:**ÖNEMLİ:** `Subtract fee from amount` yazan küçük onay kutusunu İŞARETLEMEYİN. Olduğu gibi bırakın.
+:warning:**ÖNEMLİ:** `Subtract fee from amount` yazan küçük onay kutusunu **İŞARETLEMEYİN**. Olduğu gibi bırakın.
 
 * **Transactions** sekmesini tıklayın ve işlemin **2 onay** almasını bekleyin.
 * Onaylar geldikten sonra **Send** sekmesine dönün ve ` OPEN COIN CONTROL ` düğmesine tıklayın.
-* Miktarlar içeren bir liste açılmalıdır. Yanma miktarını karşılayacak miktarı seçin \(Örneğimizde bu 1.000.000 SIN olurdu\). Solundaki küçük onay kutusunu işaretleyerek seçin ve onaylamak için Tamam düğmesini tıklayın. Bu, bir sonraki işlem olan yanma işleminin yalnızca bu kaynaktan yapılmasını sağlayacaktır.
+* Miktarlar içeren bir liste açılmalıdır. Yanma miktarını karşılayacak miktarı seçin \(Örneğimizde bu 100000 SIN olurdu\). Solundaki küçük onay kutusunu işaretleyerek seçin ve onaylamak için Tamam düğmesini tıklayın. Bu, bir sonraki işlem olan yanma işleminin yalnızca bu kaynaktan yapılmasını sağlayacaktır.
 
-![Image 03](assets/img/infinity_node_setup_guide/img_03.jpg)
+![Image 03](assets/img/infinity_node_setup_guide/coincontrol.png)
 
-* Cüzdan üst menüsünde, önce `Help` ve ardından `Debug Window` ve `Console` seçeneklerini tıklayın.
+* Cüzdan üst menüsünde, önce `Settings` ve ardından `Debug Window Console`  seçeneklerini tıklayın.
   * Yanma komutunu girmeden önce, cüzdanınız şifrelenmişse cüzdanın kilidini açtığınızdan emin olun. `Debug Console` / penceresini açın ve şu komutu girin: `walletpassphrase şifre 999` \(şifreyi cüzdan şifrenizle değiştirin\). 999, cüzdanınızın kilidinin açık kalacağı saniye sayısıdır, bunu yeterli herhangi bir sayı yapabilirsiniz.
 * Aşağıdaki ekran görüntüsünde gösterildiği gibi, hata ayıklama penceresinin alt alanına yazma komutunu girin. Komut `infinitynodeburnfund` olacaktır, ardından **YANMA miktarı \(100000 / 500000 / 1000000\) ve ardından yedek adres gelir.**
-* Lütfen daha önce oluşturulan yedek adresi kullanın. \(Bölüm 1. SIN Yedekleme Adresi oluşturma\)
+* Lütfen mobil cüzdanınızdan daha önce oluşturulan yedek adresi kullanın. \(Bölüm 1. SIN Yedekleme Adresi oluşturma\)
   * _Yerel cüzdanınızın elegeçirilmesi durumunda bu cüzdana para alabilmek için yedek adresin başka bir cüzdandan olması gerekir._
 * **Komutun düzgün girildiğinden emin olun, çünkü bu paraları artık kurtaramazsınız.**
-* Aşağıdaki ekran görüntüsünde SIN-BIG Infinity Node için bir örneğimiz var, bu durumda komut
+* Aşağıdaki ekran görüntüsünde SIN-MINI Infinity Node için bir örneğimiz var, bu durumda komut
 
   ```
-  infinitynodeburnfund 1000000 sizinSINyedekadresiniz
+  infinitynodeburnfund 100000 sizinSINyedekadresiniz
   ```
 
-![Image 04](assets/img/infinity_node_setup_guide/img_04.jpg)
+![Image 04](assets/img/infinity_node_setup_guide/console.png)
 
 !> **UNUTMAYIN: BU EKRAN SADECE ÖRNEK AMAÇLIDIR! Bu noktada herhangi bir şüpheniz varsa, bir hatanın sonuçlarını tam olarak anlamadan komutu girmeden önce Sinovate Destek ile iletişime geçmek en iyisidir.**
 
 * YANMA komutunu girdikten sonra, aşağıdaki ekran görüntüsündekine benzer bir çıktı alırsınız.
 
-![Image 05](assets/img/infinity_node_setup_guide/img_05.jpg)
+![Image 05](assets/img/infinity_node_setup_guide/burnfunds.png)
 
 * İşlem sekmesinden, işlemi çift tıklayarak **Yanma** işlem bilgilerini alın. **Transaction ID ve Output Index'ini Not Defteri'ne kopyalayın, daha sonra bu bilgilere ihtiyacınız olacaktır.**
 
-![Image 06](assets/img/infinity_node_setup_guide/img_06.jpg)
+![Image 06](assets/img/infinity_node_setup_guide/transaction.png)
 
 ### 3. Teminat işlemi
 
@@ -136,13 +105,14 @@ Madeni paraları ulaşılamaz hale getiren Yanma işleminden farklı olarak, **T
 * Sinovate cüzdanınızdaki `Send` sekmesine gidin ve YANMA işlemi için kullandığınız AYNI ADRES'e tam olarak 10.000 SIN gönderin.
 * Transaction sekmesinden, **Teminat** işlem bilgisini işleme çift tıklayarak alın. **Transaction ID ve Output Index'ini Not Defteri'ne kopyalayın, daha sonra bu bilgilere ihtiyacınız olacaktır.**
 
-![Image 07](assets/img/infinity_node_setup_guide/img_07.jpg)
+![Image 07](assets/img/infinity_node_setup_guide/collateral.png)
 
+!> :warning: VPS'i kurmadan önce lütfen **Collateral** ve **Burn** işlemlerinin **15 onay** olmasını bekleyin.
 ### 4. Infinity Node PRIVKEY
 
-* Cüzdan üst menüsünde, önce `Help` ve ardından `Debug Window` ve `Console` seçeneklerini tıklayın. Yeni bir masternode privkey oluşturmak için şu komutu yazın: `masternode genkey`. **Not Defteri'ne bu özel anahtarı kopyalayın, bu bilgiye daha sonra ihtiyacınız olacak.**
+* Cüzdan üst menüsünde, önce `Help` ve ardından `Debug Window Console` seçeneklerini tıklayın. Yeni bir masternode privkey oluşturmak için şu komutu yazın: `masternode genkey`. **Not Defteri'ne bu özel anahtarı kopyalayın, bu bilgiye daha sonra ihtiyacınız olacak.**
 
-![Image 08](assets/img/infinity_node_setup_guide/img_08.jpg)
+![Image 08](assets/img/infinity_node_setup_guide/genkey.png)
 
 ### 5. infinitynode.conf dosyasını düzenleme
 
@@ -159,94 +129,131 @@ Madeni paraları ulaşılamaz hale getiren Yanma işleminden farklı olarak, **T
 
 | Alias | VPS IP:PORT | privkey | Collateral tx ID | Collateral Output index | Burn tx ID | Burn Output index |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| 01-BIG | 78.47.162.140:20970 | 7RRfQkxYPUKkKFAQBpoMde1qaB56EvPU5X8LYWq16e2YtTycvVi | 7f48e48e51b487f0a962d492b03debdd89835bc619242be29e720080fc4b2e09 | 0 | 764fe088b95d287b56f85ee0da11bb08195a862ded8b7ded08a3783135418e3c | 0 |
+| 01-MINI | 78.47.162.140:20970 | 7RRfQkxYPUKkKFAQBpoMde1qaB56EvPU5X8LYWq16e2YtTycvVi | 7f48e48e51b487f0a962d492b03debdd89835bc619242be29e720080fc4b2e09 | 0 | 764fe088b95d287b56f85ee0da11bb08195a862ded8b7ded08a3783135418e3c | 0 |
 
 **infinitynode.conf dosyasının ekran görüntüsü:**
 
 ![Image 09](assets/img/infinity_node_setup_guide/img_09.jpg)
 
-* Dosyayı kaydedin, ardından **Cüzdanı yeniden başlatın.**
+* **Teminat çıktısı veya burntx endeksi çıktısı bir çıkış noktası hatası veriyorsa, lütfen çıktıyı değiştirmeyi deneyin.** Çıktınız **0** ise, lütfen **1** veya tersini deneyin.* Dosyayı kaydedin, sonra **Cüzdanı yeniden başlatın**.*
 
 ## III. VPS kurulumu
 
 !> :warning: VPS kurulumundan önce lütfen **Teminat** ve **Yanma** işlemlerinin **15 onay** almasını bekleyin.
 
-### A. İlk Aşama
+### İlk Aşama
+[setup.sinovate.io](https://setup.sinovate.io/) adresine gidin. Mevcut bir hesabınız yoksa bir hesap oluşturun.
 
-* Windows kullanıcısıysanız, bir SSH istemcisi indirip yükleyin\(Ör. [Bitvise](https://www.bitvise.com), [Putty](https://www.putty.org/), [Xshell](https://www.netsarang.com/en/free-for-home-school/), vb...\)
-* VPS'nize bağlanın ve ilk kurulum için yeni şifrenizi girin.
-* Ardından aşağıdaki komutları girin:
+[![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image15.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image15.png)
 
-  ```bash
-  wget https://sinovate.io/downloads/sin_install_vps_noroot.sh
-  chmod +x sin_install_vps_noroot.sh
-  ./sin_install_vps_noroot.sh
-  ```
+### Step 2
 
-* Komut dosyası, güvenlik nedeniyle **yeni bir kullanıcı adı** girmenizi ister.
-* Yeni bir kullanıcı adı girmezseniz, varsayılan kullanıcı adı **sinovate** olacaktır!
-* Yeni kullanıcı adından sonra, **yeni bir şifre istenecektir** \(unutmayacağınız güçlü bir şifre seçin\).
-* Kurulum birkaç dakika sürecek, lütfen sabırlı olun!
+Giriş yaptığınızda **SERVICES** sekmesini tıklayın ve açılır menüden **ORDER NEW SERVİCES** 'i seçin
 
-![Image 10](assets/img/infinity_node_setup_guide/img_10.jpg)
+[![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image14.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image14.png)
 
-* Sizden **Sinovate Infinitynode Private Key** istenecek .
-  * Önceki adımda `4. infinitynode.conf dosyasını düzenleme` bölümünde belirtildiği gibi `infinitynode.conf` dosyanızda bulabilirsiniz.
 
-![Image 11](assets/img/infinity_node_setup_guide/img_11.jpg)
+### Step 3
 
-* Kurulumun ilk aşaması tamamlandı.
+Fatura döngünüzü seçin, 12 ay elbette çok daha iyi bir değerdir. Faturalandırma döngünüzü seçtikten sonra **CONTINUE** tıklayın.
 
-![Image 12](assets/img/infinity_node_setup_guide/img_12.jpg)
+[![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image6.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image6.png)
 
-* VPS'nizden çıkış yapın.
+### Step 4
 
-### B. İkinci Aşama
+Siparişinizden memnunsanız **CHECKOUT** düğmesini tıklayın.
+[![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image4.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image4.png)
 
-* SSH istemcinizde bir bağlantı profili oluşturun
 
-![Image 13\_1](assets/img/infinity_node_setup_guide/img_13_1.jpg)
+### Step 5
 
-> Infinity Node yüklemesi sırasında seçtiğiniz kullanıcı adı veya varsayılan sinovate kullanıcı adı
+İsterseniz e-posta adresinizi ve ayrıca Discord kimliğinizi girin ve ardından **COMPLETE ORDER** seçeneğini tıklayın
 
-![Image 13\_2](assets/img/infinity_node_setup_guide/img_13_2.jpg)
+[![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image2.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image2.png)
 
-* Bağlandıktan sonra aşağıdaki komutları yazın:
+### Step 6
 
-```bash
-# your choosen username during infinity node installation or default sinovate username
-su sinovate
-bash
-```
+Verilen adrese gereken miktarda SIN'i ÖDEME yapın. Lütfen Dikkat **BU SAYFAYI KAPATMAYIN**
 
-![Image 14](assets/img/infinity_node_setup_guide/img_14.jpg)
+[![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image10.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image10.png)
 
-* Senkronizasyon işlemini gerçek zamanlı olarak görmek için aşağıdaki komutları girin ve **MASTERNODE\_SYNC\_FINISHED** durumunu görene kadar bekleyin. Bu işlem 30 dakika kadar sürebilir, lütfen sabırlı olun!
 
-```bash
-# CTRL+C to exit
-# The following command will indicate the current blockheight, masternode status and sync status
-watch -n 5 '~/sin-cli getblockcount && ~/sin-cli masternode status && ~/sin-cli mnsync status'
-```
+### Step 7
 
-![Image 15](assets/img/infinity_node_setup_guide/img_15.jpg)
+6. Adımda faturanızdan size verilen adrese **İstenen Miktarda** SIN gönderin.
+[![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image11a.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image11a.png)
 
-* Infinity Node senkronizasyon durumunuz **MASTERNODE\_SYNC\_FINISHED** olduğunda, yerel cüzdanınızı açın.
-* Infinity sekmesinin `Settings, Options, Wallet` 'da etkinleştirildiğinden ve `Show InfinityNodes Tab` kutucuğunun işaretlendiğinden emin olun.
-* Infinitynodes sekmesine gidin, nodunuzu seçin, ardından **START ALIAS** düğmesine tıklayın.
-* Infinitiy Node durumu önce **PRE\_ENABLED**, ardından **ENABLED** olarak birkaç dakika sonra değişmelidir. \(genellikle 10-30 dakika\).
+### Step 8
 
-![Image 16](assets/img/infinity_node_setup_guide/img_16.jpg)
+Daha sonra ORDER CONFIRMATION sayfasına gönderilirsiniz. **Lütfen sabırlı olun, bu sayfanın işlenmesi 15 dakika sürebilir**
 
-* Ancak, tüm masternode soğuk cüzdanları bazen düğümünüzün üzerindeki küçük **Not** 'da belirtildiği gibi sizi yeniden başlatmanıza neden olabilecek yanlış durumları gösterebilir\(s\).
-* Bu nedenle, VPS'den Infinity Node durumunu da kontrol edebilirsiniz.
-* VPS ekranınıza aşağıdaki komutu girin, bu durumu görmelisiniz: **Masternode successfully started**
+[![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image8.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image8.png)
 
-  ```bash
-  ~/sin-cli masternode status
-  ```
 
-![Image 17](assets/img/infinity_node_setup_guide/img_17.jpg)
+### Step 9
 
-**TEBRİKLER! INFINITY NODE'UNUZ ÇALIŞIYOR!**
+**SERVICES** düğmesini tıklayın.
+
+[![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image17.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image17.png)
+
+### Step 10
+
+**INFINITY NODE HOSTING** bölümüne tıklayın
+[![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image12.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image12.png)
+
+
+
+### Step 11
+
+**SERVER** cihazınızın hazır olduğunu onaylamak için bekleyin
+
+[![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image16.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image16.png)
+
+### Step 12
+
+Sunucunuz hazır olduğunda size InfinityNode üzerinde yapmanız gereken ** İKİ ** değişiklik verilecektir. Bunlar aşağıda işaretlediğimiz kırmızı kutularda olacak.
+
+[![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image1.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image1.png)
+
+
+
+### Step 13
+
+**TOOLS** 'u tıklayın ve **INFINITY CONFIGURATION FILE**' ı açın
+
+[![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image13.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image13.png)
+
+### Step 14
+
+**BİLGİYİ**  ADIM 12'den aldınız. Bu bilgileri aşağıdaki gibi **INFINITY NODE CONFIGURATION FILE** içine yerleştirin.  Kaydedin ve Cüzdanı Kapatın.
+
+[![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image7.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image7.png)
+
+
+
+### Step 15
+
+Cüzdanı açın ve senkronize olmasını bekleyin ve ardından **INFINITY NODE sekmesine tıklayın**
+  
+START ALIAS butonuna tıklayın 
+Ardından YES  butonuna tıklayın.
+  
+_INFINITY NODE daha sonra PRE-ENABLE moda geçecek ve kısa bir süre sonra ENABLE moda geçecektir._
+
+[![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image5.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image5.png)
+
+### Step 16
+
+InfinityNode kurulumunu **setUP** aracılığıyla **BAŞARILI** bir şekilde tamamladınız.
+
+[Start](https://setup.sinovate.io/getcycle.php)
+
+[![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image9.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image9.png)
+
+
+
+
+
+**TEBRİKLER! INFINITY NODE'UNUZ AKTİF VE ÇALIŞIYOR!**
+
 
