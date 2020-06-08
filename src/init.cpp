@@ -1327,6 +1327,7 @@ void ThreadCheckInfinityNode(CConnman& connman)
             ENTER_CRITICAL_SECTION(cs_main);
                 //call buildInfinitynodeList and deterministicRewardStatement(nSINtype)
                 infnodeman.CheckAndRemove(connman);
+                inflockreward.CheckAndRemove(connman);
             LEAVE_CRITICAL_SECTION(cs_main);
         }
         if(!fTurnOffMasternode) {
