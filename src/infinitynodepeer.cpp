@@ -93,9 +93,11 @@ std::string CInfinitynodePeer::GetMyPeerInfo() const
 
 bool CInfinitynodePeer::AutoCheck(CConnman& connman)
 {
-    if(!fPingerEnabled) {
-        LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::AutoCheck -- %s: infinitynode ping service is disabled, skipping...\n", GetStateString());
-        return false;
+    if (Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+        if(!fPingerEnabled) {
+            LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::AutoCheck -- %s: infinitynode ping service is disabled, skipping...\n", GetStateString());
+            return false;
+        }
     }
 
     infinitynode_info_t infoInf;
@@ -230,8 +232,7 @@ void CInfinitynodePeer::ManageStateRemote()
             nSINType = infoInf.nSINType;
             nState = INFINITYNODE_PEER_STARTED;
         }
-    }
-    else {
+    } else {
         nState = INFINITYNODE_PEER_NOT_CAPABLE;
         strNotCapableReason = "Infinitynode is not in Deterministic Infinitynode list";
         LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateRemote -- %s: %s\n", GetStateString(), strNotCapableReason);
