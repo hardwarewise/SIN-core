@@ -27,7 +27,7 @@
 - [setUP ile Inf. Node Kurulumu](infinity_node_setup_guide_TR)
 - [SIN WebTool Klavuzu](sin_webtool_guide_TR)
 - **Archived**
-- [Stuck block 350094](archive/20200214_stuck_block_350094)
+- [Stuck block solution](archive/20200214_stuck_block_350094)
 - **Links**
 - [![Home](https://icongr.am/feather/home.svg?size=16&color=808080)Sinovate Home](https://www.sinovate.io)
 - [![Explorer](https://icongr.am/feather/link.svg?size=16&color=808080)Blocks Explorer](https://explorer.sinovate.io)
