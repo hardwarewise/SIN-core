@@ -1,6 +1,5 @@
 # Infinity Node Setup Guide
 
-!> Please, setup only with **Ubuntu 18.04**
 
 ## I. PRE-SETUP PREPARATION
 
