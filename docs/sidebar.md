@@ -13,6 +13,8 @@
 - [X25X Pow GPU Mining](X25X-PoW-GPU-Mining)
 - [SIN WebTool](sin_webtool_guide)
 - [WIN Wallet Backup & Upgrade](windows_wallet_backup_and_upgrade)
+- [MAC Wallet Backup & Upgrade](mac_wallet_backup_and_upgrade)
+
 - **Articles**
 - [Decentralized Cloud](decentralized_cloud)
 - [Proof-of-Burn](proof_of_burn)
