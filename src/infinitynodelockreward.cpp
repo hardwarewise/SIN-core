@@ -1575,7 +1575,7 @@ bool CInfinityNodeLockReward::AutoResigterLockReward(std::string sLockReward, st
     std::vector<std::vector<unsigned char> > vSolutions;
     txnouttype whichType;
     if (!Solver(scriptPubKeyBurnAddress, whichType, vSolutions)){
-        strErrorRet = strprintf("Intenal Fatal Error!");
+        strErrorRet = strprintf("Internal Fatal Error!");
         return false;
     }
     CKeyID keyid = CKeyID(uint160(vSolutions[0]));
