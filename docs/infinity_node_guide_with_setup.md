@@ -227,6 +227,7 @@ From the  **INFORMATION**  you got from STEP 12. Place that information into the
 * If your output is **0** then please try **1**  or vice versa.
 * Save the file, then **Restart the wallet**.
 
+* Make sure the collateral burntx has 15 confirmations.
 
 [![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image7.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image7.png)
 
