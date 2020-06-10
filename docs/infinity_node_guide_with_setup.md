@@ -109,16 +109,11 @@ Unlike the Burn transaction, which takes the coins out of reach, making them uns
 ![Image 07](assets/img/infinity_node_setup_guide/collateral.png)
 !> :warning: Please wait **Collateral** and **Burn** transactions have **15 confirmations** before setting up the VPS.
 
-### 4. The Infinity Node PRIVKEY
 
-* From the wallet top menu, click on `Help` then on `Debug Window` and `Console`. Type the following command to generate a new masternode privkey: `masternode genkey`. **Copy the privkey in Notepad, you will need this info later.**
-
-![Image 08](assets/img/infinity_node_setup_guide/genkey.png)
-
-### 5. Editing the infinitynode.conf file
+### 4. Editing the infinitynode.conf file
 
 * In the wallet's top menu, click on `Tools` and `Open Infinitynode Configuration File`
-* On a new row, enter the infinitynode's configuration line as indicated in the next steps, **getting all the needed information you previously copied in Notepad**
+* On a new row, enter the infinitynode's configuration line as indicated in the next steps, **getting all the needed information you previously copied in Notepad and the infinitynode genkey will be given by the setup.sinovate.io in the next steps**
 
 **The line is composed of:**
 
