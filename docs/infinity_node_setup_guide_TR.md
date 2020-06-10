@@ -108,16 +108,11 @@ Madeni paraları ulaşılamaz hale getiren Yanma işleminden farklı olarak, **T
 ![Image 07](assets/img/infinity_node_setup_guide/collateral.png)
 
 !> :warning: VPS'i kurmadan önce lütfen **Collateral** ve **Burn** işlemlerinin **15 onay** olmasını bekleyin.
-### 4. Infinity Node PRIVKEY
 
-* Cüzdan üst menüsünde, önce `Help` ve ardından `Debug Window Console` seçeneklerini tıklayın. Yeni bir masternode privkey oluşturmak için şu komutu yazın: `masternode genkey`. **Not Defteri'ne bu özel anahtarı kopyalayın, bu bilgiye daha sonra ihtiyacınız olacak.**
-
-![Image 08](assets/img/infinity_node_setup_guide/genkey.png)
-
-### 5. infinitynode.conf dosyasını düzenleme
+### 4. infinitynode.conf dosyasını düzenleme
 
 * Cüzdanın üst menüsünde ` Tools` ve `Open Infinitynode Configuration File` ı tıklayın.
-* Yeni bir satıra, sonraki adımlarda gösterildiği gibi infinitynode yapılandırmasının satırını girin, **daha önce Not Defteri'nde kopyaladığınız tüm gerekli bilgileri elde edin**
+* Yeni bir satırda, sonraki adımlarda belirtildiği gibi infinitynode'un yapılandırma satırını girin, daha önce Not Defteri'nde kopyaladığınız tüm gerekli bilgileri alın. **infinitynode genkey sonraki adımlarda setup.sinovate.io tarafından verilecektir.**
 
 **Satır şunlardan oluşur:**
 
@@ -226,6 +221,11 @@ Sunucunuz hazır olduğunda size InfinityNode üzerinde yapmanız gereken ** İK
 ### Step 14
 
 **BİLGİYİ**  ADIM 12'den aldınız. Bu bilgileri aşağıdaki gibi **INFINITY NODE CONFIGURATION FILE** içine yerleştirin.  Kaydedin ve Cüzdanı Kapatın.
+
+* Teminat çıktısı veya burntx dizin çıktısı bir çıkış noktası hatası veriyorsa, lütfen çıktıyı **değiştirmeyi** deneyin.
+* Çıktınız **0** ise, lütfen **1**'i deneyin veya tam tersi.
+* Dosyayı kaydedin ve ardından cüzdanı yeniden başlatın.
+* Teminat burntx'in **15** onayı olduğundan emin olun.
 
 [![](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image7.png)](https://setup.sinovate.io/templates/sinsetup/template/img/logos/images/image7.png)
 
