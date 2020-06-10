@@ -567,7 +567,7 @@ To build awareness around the brand and to put the project on the radar, the SIN
   
   
 
-[Website](https://sinovate.io/)  [Discord](https://discord.gg/8rxutDv) . [Telegram](https://t.me/SINOVATEChain) . [Bitcointalk](https://bitcointalk.org/index.php?topic=5147827.new#new) . [Twitter](https://twitter.com/SinovateChain) . [Facebook](https://www.facebook.com/SinovateBlockchain/) .[Linkedin](http://linkedin.com/in/sinovate-foundation-818672172). [Team](https://sinovate.io/team).[YouTube.](https://www.youtube.com/channel/UCdqVQvJu8yhmXUYXOcaEThg)
+[Website](https://sinovate.io/)  [Discord](https://discordapp.com/invite/CWbnW5y) . [Telegram](https://t.me/SINOVATEChain) . [Bitcointalk](https://bitcointalk.org/index.php?topic=5147827.new#new) . [Twitter](https://twitter.com/SinovateChain) . [Facebook](https://www.facebook.com/SinovateBlockchain/) .[Linkedin](http://linkedin.com/in/sinovate-foundation-818672172). [Team](https://sinovate.io/team).[YouTube.](https://www.youtube.com/channel/UCdqVQvJu8yhmXUYXOcaEThg)
 
 [Reddit](https://www.reddit.com/r/sinovate).[Instagram](https://www.instagram.com/sinovatechain/).
 
