@@ -3250,7 +3250,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             if(!fTurnOffMasternode) {
                 mnodeman.ProcessMessage(pfrom, strCommand, vRecv, *connman);
                 mnpayments.ProcessMessage(pfrom, strCommand, vRecv, *connman);
-                instantsend.ProcessMessage(pfrom, strCommand, vRecv, *connman);
                 sporkManager.ProcessSpork(pfrom, strCommand, vRecv, *connman);
                 masternodeSync.ProcessMessage(pfrom, strCommand, vRecv);
             }
