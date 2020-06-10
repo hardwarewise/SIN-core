@@ -35,7 +35,7 @@ Drag SIN Core to your applications folder, and then run SIN Core.
 
 * See the documentation at the [https://sinovate.io/documents/)
 for help and more information.
-* Ask for help on [SIN Discord server https://discord.gg/8rxutDv).
+* Ask for help on [SIN Discord server https://discordapp.com/invite/CWbnW5y).
 * Ask for help on the [BitcoinTalk](https://bitcointalk.org/index.php?topic=5147827.new#new)
 Building
 ---------------------
