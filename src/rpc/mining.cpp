@@ -31,6 +31,10 @@
 #include <masternode-sync.h>
 //
 
+// SIN
+#include <infinitynodeman.h>
+#include <infinitynode.h>
+
 #include <memory>
 #include <stdint.h>
 
@@ -468,15 +472,6 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     if (IsInitialBlockDownload())
         throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "SIN is downloading blocks...");
 
-    // Dash
-    // when enforcement is on we need information about a masternode payee or otherwise our block is going to be orphaned by the network
-    //sintype
-    CScript payee;
-    if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)
-        && !masternodeSync.IsWinnersListSynced()
-        && !mnpayments.GetBlockPayee(chainActive.Height() + 1, 1,  payee))
-            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Dash Core is downloading masternode winners...");
-
     static unsigned int nTransactionsUpdatedLast;
 
     if (!lpval.isNull())
@@ -563,6 +558,22 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     assert(pindexPrev);
     CBlock* pblock = &pblocktemplate->block; // pointer for convenience
     const Consensus::Params& consensusParams = Params().GetConsensus();
+
+    // Dash
+    // when enforcement is on we need information about a masternode payee or otherwise our block is going to be orphaned by the network
+    //sintype
+    if (pindexPrev->nHeight + 1 <= Params().GetConsensus().nNewDevfeeAddress) {
+        CScript payee;
+        if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT) && !masternodeSync.IsWinnersListSynced() && !mnpayments.GetBlockPayee(chainActive.Height() + 1, 1,  payee)) {
+                throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "SIN Core is downloading masternode winners...");
+        }
+    } else {
+        CInfinitynode infinitynode;
+        int SINType = 0;
+        if (!infnodeman.deterministicRewardAtHeight(pindexPrev->nHeight + 1, SINType, infinitynode)) {
+            throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "SIN Core isn't able to calculate node winners!");
+        }
+    }
 
     // Update nTime
     UpdateTime(pblock, consensusParams, pindexPrev);
