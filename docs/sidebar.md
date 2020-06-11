@@ -1,7 +1,7 @@
 - **Introduction**
 - [Community contributions](/)
 - **Documentation**
-- [SINOVATE Whitepaper V2 Light](SINOVATE_Whitepaper_V_2_Light)
+- [SINOVATE Whitepaper Light](SINOVATE_Whitepaper_V_2_Light)
 - [Infinity Node setup](infinity_node_setup_guide)
 - [Inf. Node Guide with setUP](infinity_node_guide_with_setup)
 - [Bootstrap](bootstrap)
@@ -14,7 +14,7 @@
 - [SIN WebTool](sin_webtool_guide)
 - [WIN Wallet Backup & Upgrade](windows_wallet_backup_and_upgrade)
 - [MAC Wallet Backup & Upgrade](mac_wallet_backup_and_upgrade)
-- [Vps Wallet Update Guide](update_vps_wallet_update)
+- [Vps Wallet Update Guide](vps_wallet_update)
 - **Articles**
 - [Decentralized Cloud](decentralized_cloud)
 - [Proof-of-Burn](proof_of_burn)
