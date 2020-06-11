@@ -6,7 +6,7 @@
 ## install unzip package
 ``sudo apt update && sudo apt install unzip``
 
-## remove old files and folders
+## remove old files and folders (Write this entire code on one line.)
 ``rm -rf ~/.sin/{blocks,chainstate,debug.log,mnpayments.dat,mncache.dat,banlist.dat,peers.dat,netfulfilled.dat,governance.dat,fee_estimates.dat}``
 
 ## download latest bootstrap archive
