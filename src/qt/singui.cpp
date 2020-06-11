@@ -425,7 +425,6 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     connect(ResourcesWebsite5, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot5()));
     connect(ResourcesWebsite6, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot6()));
     connect(ResourcesWebsite7, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot7()));
-    connect(ResourcesWebsite8, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot8()));
     connect(ResourcesWebsite9, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot9()));
     connect(ResourcesWebsite10, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot10()));
 
@@ -733,7 +732,6 @@ void SINGUI::createActions()
     ResourcesWebsite5 = new QAction(QIcon(":/icons/info"), tr("&Wallets"), this);
     ResourcesWebsite6 = new QAction(QIcon(":/icons/explorer1"), tr("&Explorer"), this);
     ResourcesWebsite7 = new QAction(QIcon(":/icons/info"), tr("&SIN WebTool"), this);
-    ResourcesWebsite8 = new QAction(QIcon(":/icons/info"), tr("&Infinitynode Setup Guide"), this);
     ResourcesWebsite9 = new QAction(QIcon(":/icons/cmc"), tr("&Exchanges"), this);
     ResourcesWebsite10 = new QAction(QIcon(":/icons/info"), tr("&Social Media Channels"), this);
 
@@ -843,8 +841,7 @@ void SINGUI::createMenuBar()
         hyperlinks3->addAction(ResourcesWebsite5);
         hyperlinks3->addAction(ResourcesWebsite6);
         hyperlinks3->addAction(ResourcesWebsite7);
-        hyperlinks3->addAction(ResourcesWebsite8);
-        
+                
     }
     //end Resources Links
 
@@ -1144,7 +1141,6 @@ void SINGUI::createTrayIconMenu()
     trayIconMenu->addAction(ResourcesWebsite5);
     trayIconMenu->addAction(ResourcesWebsite6);
     trayIconMenu->addAction(ResourcesWebsite7);
-    trayIconMenu->addAction(ResourcesWebsite8);
     trayIconMenu->addAction(statsPageAction);
     trayIconMenu->addAction(faqPageAction);
 
