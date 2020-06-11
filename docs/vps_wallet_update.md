@@ -1,30 +1,30 @@
-## SINOVATE InfinityNode Update And Sync Guide
+# SINOVATE InfinityNode Update And Sync Guide
 
-# If running Infinity Node, stop it.
-sudo systemctl stop sinovate.service
+## If running Infinity Node, stop it.
+``sudo systemctl stop sinovate.service``
 
-# install unzip package
-sudo apt update && sudo apt install unzip
+## install unzip package
+``sudo apt update && sudo apt install unzip``
 
-# remove old files and folders
-rm -rf ~/.sin/{blocks,chainstate,debug.log,mnpayments.dat,mncache.dat,banlist.dat,peers.dat,netfulfilled.dat,governance.dat,fee_estimates.dat}
+## remove old files and folders
+``rm -rf ~/.sin/{blocks,chainstate,debug.log,mnpayments.dat,mncache.dat,banlist.dat,peers.dat,netfulfilled.dat,governance.dat,fee_estimates.dat}``
 
-# download latest bootstrap archive
-wget -O ~/bootstrap.zip https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstrap.zip
+## download latest bootstrap archive
+``wget -O ~/bootstrap.zip https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstrap.zip``
 
-# unzip the bootstrap archive
-unzip ~/bootstrap.zip
+## unzip the bootstrap archive
+``unzip ~/bootstrap.zip``
 
-# move bootstrap files
-mv -t ~/.sin ~/bootstrap/blocks ~/bootstrap/chainstate
+## move bootstrap files
+``mv -t ~/.sin ~/bootstrap/blocks ~/bootstrap/chainstate``
 
-# remove unnecessary files
-rm -rf ~/{bootstrap,bootstrap.zip}
+## remove unnecessary files
+``rm -rf ~/{bootstrap,bootstrap.zip}``
 
-# Update Latest Wallet
-wget -O daemon.tar.gz https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/daemon.tar.gz
-tar -xzvf daemon.tar.gz
-# Check Version
-./sin-cli -version
-# reboot infinitynode
-sudo reboot
+## Update Latest Wallet
+``wget -O daemon.tar.gz https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/daemon.tar.gz``
+``tar -xzvf daemon.tar.gz``
+## Check Version
+``./sin-cli -version``
+## reboot infinitynode
+``sudo reboot``
