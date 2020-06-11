@@ -14,7 +14,7 @@
 - [SIN WebTool](sin_webtool_guide)
 - [WIN Wallet Backup & Upgrade](windows_wallet_backup_and_upgrade)
 - [MAC Wallet Backup & Upgrade](mac_wallet_backup_and_upgrade)
-
+- [Vps Wallet Update Guide](update_vps_wallet_update)
 - **Articles**
 - [Decentralized Cloud](decentralized_cloud)
 - [Proof-of-Burn](proof_of_burn)
