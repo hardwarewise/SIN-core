@@ -202,9 +202,15 @@ UniValue infinitynode(const JSONRPCRequest& request)
     if (strCommand == "show-infos")
     {
         std::map<COutPoint, CInfinitynode> mapInfinitynodes = infnodeman.GetFullInfinitynodeMap();
+        std::map<std::string, CMetadata> mapInfMetadata = infnodemeta.GetFullNodeMetadata();
         for (auto& infpair : mapInfinitynodes) {
             std::string strOutpoint = infpair.first.ToStringShort();
             CInfinitynode inf = infpair.second;
+            CMetadata meta = mapInfMetadata[inf.getMetaID()];
+            std::string nodeAddress = "NodeAddress";
+
+            if (meta.getMetaPublicKey() != "") nodeAddress = meta.getMetaPublicKey();
+
                 std::ostringstream streamInfo;
                 streamInfo << std::setw(8) <<
                                inf.getCollateralAddress() << " " <<
@@ -216,7 +222,9 @@ UniValue infinitynode(const JSONRPCRequest& request)
                                inf.getLastRewardHeight() << " " <<
                                inf.getRank() << " " << 
                                infnodeman.getLastStatementSize(inf.getSINType()) << " " <<
-                               inf.getMetaID()
+                               inf.getMetaID() << " " <<
+                               nodeAddress << " " <<
+                               meta.getService().ToString()
                                ;
                 std::string strInfo = streamInfo.str();
                 obj.push_back(Pair(strOutpoint, strInfo));
