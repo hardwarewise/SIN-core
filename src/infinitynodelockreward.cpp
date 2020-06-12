@@ -16,6 +16,10 @@
 #include <secp256k1_musig.h>
 #include <base58.h>
 
+#include <primitives/block.h>
+#include <primitives/transaction.h>
+#include <script/script.h>
+
 #include <consensus/validation.h>
 #include <wallet/coincontrol.h>
 #include <utilmoneystr.h>
@@ -1575,7 +1579,7 @@ bool CInfinityNodeLockReward::AutoResigterLockReward(std::string sLockReward, st
     std::vector<std::vector<unsigned char> > vSolutions;
     txnouttype whichType;
     if (!Solver(scriptPubKeyBurnAddress, whichType, vSolutions)){
-        strErrorRet = strprintf("Intenal Fatal Error!");
+        strErrorRet = strprintf("Internal Fatal Error!");
         return false;
     }
     CKeyID keyid = CKeyID(uint160(vSolutions[0]));
@@ -1733,6 +1737,39 @@ bool CInfinityNodeLockReward::CheckLockRewardRegisterInfo(std::string sLockRewar
 
     return true;
 }
+
+/*
+ * Takes a block as argument, returns if it contains a valid LR commitment or not.
+ */
+bool LockRewardValidation(const CBlock& block)
+{
+    for (const CTransactionRef& tx : block.vtx) {
+        // Avoid checking coinbase payments as LR commitments won't be there
+        if (!tx->IsCoinBase()) {
+            for (unsigned int i = 0; i < tx->vout.size(); i++) {
+                
+                const CTxOut& out = tx->vout[i];
+                std::vector<std::vector<unsigned char>> vSolutions;
+                txnouttype whichType;
+                const CScript& prevScript = out.scriptPubKey;
+                Solver(prevScript, whichType, vSolutions);
+
+                if (whichType == TX_BURN_DATA && Params().GetConsensus().cLockRewardAddress == EncodeDestination(CKeyID(uint160(vSolutions[0])))) {
+                    if (vSolutions.size() == 2) {
+                        std::string sErrorCheck = "";
+                        std::string stringLRCommitment(vSolutions[1].begin(), vSolutions[1].end());
+                        CInfinityNodeLockReward lockreward;
+                        if (lockreward.CheckLockRewardRegisterInfo(stringLRCommitment, sErrorCheck)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
 /*
  * Connect to group Signer
  */

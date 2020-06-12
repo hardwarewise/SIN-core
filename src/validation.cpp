@@ -48,6 +48,7 @@
 #include <instantx.h>
 #include <masternodeman.h>
 #include <masternode-payments.h>
+#include <infinitynodelockreward.h>
 
 #include <future>
 #include <sstream>
@@ -2252,8 +2253,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
     if (block.vtx[0]->vout[1].nValue < GetDevCoin(pindex->nHeight, blockReward))
         return state.DoS(100, error("ConnectBlock(): coinbase does not pay enough to the dev fund address."), REJECT_INVALID, "bad-cb-dev-fee");
     //Legacy IN payee validation
-    if (pindex->nHeight > chainparams.GetConsensus().nINActivationHeight)
-    {
+    if (pindex->nHeight > chainparams.GetConsensus().nINActivationHeight && pindex->nHeight <= chainparams.GetConsensus().nNewDevfeeAddress) {
 		if (!IsBlockPayeeValid(block.vtx[0], pindex->nHeight, block.vtx[0]->GetValueOut(), pindex->GetBlockHeader())) {
 			mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
 			LogPrintf("IsBlockPayeeValid -- disconnect block!\n");
@@ -2262,7 +2262,13 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
 					REJECT_INVALID, "bad-cb-payee");
 			}
    		}
-	}
+	} else {
+        if (!LockRewardValidation(block)) {
+            mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
+            LogPrintf("LockRewardValidation -- disconnect block!\n");
+            return state.DoS(0, error("ConnectBlock(SIN): couldn't find valid LockReward"), REJECT_INVALID, "bad-lockreward");
+        }
+    }
 
     if (!control.Wait())
         return state.DoS(100, error("%s: CheckQueue failed", __func__), REJECT_INVALID, "block-validation-failed");

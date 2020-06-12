@@ -164,14 +164,12 @@ private:
     QAction* ResourcesWebsite5;
     QAction* ResourcesWebsite6;
     QAction* ResourcesWebsite7;
-    QAction* ResourcesWebsite8;
     QAction* ResourcesWebsite9;
     QAction* ResourcesWebsite10;
 /// end Resources Web Links
 
 
-    QAction *showSpecsHelpAction;
-
+    
     QLabel *mainIcon;
     
     QLabel *m_wallet_selector_label = nullptr;
@@ -348,8 +346,7 @@ private Q_SLOTS:
 
     /** Show help message dialog */
     void showHelpMessageClicked();
-    void showSpecsHelpClicked();
-#ifndef Q_OS_MAC
+    #ifndef Q_OS_MAC
     /** Handle tray icon clicked */
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
 #else

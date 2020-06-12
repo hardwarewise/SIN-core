@@ -239,9 +239,13 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
 
     int nLastPaidScanDeepth = max(Params().GetConsensus().nLimitSINNODE_1, max(Params().GetConsensus().nLimitSINNODE_5, Params().GetConsensus().nLimitSINNODE_10));
     //at fork heigh, scan limit will change to 800 - each tier of SIN network will never go to this limit
-    if (nBlockHeight >= 350000){nLastPaidScanDeepth=800;}
+    if (nBlockHeight >= 350000) {
+        nLastPaidScanDeepth = 800;
+    }
     //at begin of network
-    if (nLastPaidScanDeepth > nBlockHeight) {nLastPaidScanDeepth = nBlockHeight - 1;}
+    if (nLastPaidScanDeepth > nBlockHeight) {
+        nLastPaidScanDeepth = nBlockHeight - 1;
+    }
 
     while (prevBlockIndex->nHeight >= nLowHeight)
     {
@@ -314,10 +318,12 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
                             if (out.nValue == Params().GetConsensus().nInfinityNodeVoteValue * COIN){
                                 if (vSolutions.size() == 2){
                                     std::string voteOpinion(vSolutions[1].begin(), vSolutions[1].end());
-                                    if(voteOpinion.length() == 9){
+                                    if (voteOpinion.length() == 9) {
                                         std::string proposalID = voteOpinion.substr(0, 8);
                                         bool opinion = false;
-                                        if( voteOpinion.substr(8, 1) == "1" ){opinion = true;}
+                                        if (voteOpinion.substr(8, 1) == "1" ) {
+                                            opinion = true;
+                                        }
                                         //Address payee: we known that there is only 1 input
                                         const CTxIn& txin = tx->vin[0];
                                         int index = txin.prevout.n;
@@ -386,9 +392,8 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
                         if (whichType == TX_BURN_DATA && Params().GetConsensus().cMetadataAddress == EncodeDestination(CKeyID(uint160(vSolutions[0]))))
                         {
                             //Amount for UpdateMeta
-                            if ( (Params().GetConsensus().nInfinityNodeUpdateMeta - 1) * COIN <= out.nValue
-                                 && out.nValue <= (Params().GetConsensus().nInfinityNodeUpdateMeta) * COIN){
-                                if (vSolutions.size() == 2){
+                            if ((Params().GetConsensus().nInfinityNodeUpdateMeta - 1) * COIN <= out.nValue && out.nValue <= (Params().GetConsensus().nInfinityNodeUpdateMeta) * COIN) {
+                                if (vSolutions.size() == 2) {
                                     std::string metadata(vSolutions[1].begin(), vSolutions[1].end());
                                     string s;
                                     stringstream ss(metadata);
@@ -406,7 +411,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
                                             CPubKey decodePubKey(tx_data.begin(), tx_data.end());
                                             if (decodePubKey.IsValid()) {check++;}
                                         }
-                                        if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+                                        if (Params().NetworkIDString() != CBaseChainParams::REGTEST) {
                                             //2nd position: Node IP
                                             if (i==1 && Lookup(s.c_str(), service, 0, false)) {
                                                 check++;
@@ -415,7 +420,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
                                             //lets INs run on 127.0.0.1 only on REGTEST
                                             check++;
                                         }
-                                        //3th position: 12 character from Infinitynode BurnTx
+                                        //3th position: 16 character from Infinitynode BurnTx
                                         if (i==2 && s.length() >= 16) {
                                             check++;
                                             burnTxID = s.substr(0, 16);
@@ -457,8 +462,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
                         if (whichType == TX_BURN_DATA && Params().GetConsensus().cNotifyAddress == EncodeDestination(CKeyID(uint160(vSolutions[0]))))
                         {
                             //Amount for UpdateMeta
-                            if ( (Params().GetConsensus().nInfinityNodeNotificationValue - 1) * COIN <= out.nValue
-                                 && out.nValue <= (Params().GetConsensus().nInfinityNodeNotificationValue) * COIN){
+                            if ( (Params().GetConsensus().nInfinityNodeNotificationValue - 1) * COIN <= out.nValue && out.nValue <= (Params().GetConsensus().nInfinityNodeNotificationValue) * COIN){
                                 if (vSolutions.size() == 2){
                                     std::string metadata(vSolutions[1].begin(), vSolutions[1].end());
                                     string s;

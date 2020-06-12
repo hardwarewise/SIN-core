@@ -318,6 +318,8 @@ public:
     //call in dsnotificationinterface.cpp when node connect a new block
     void UpdatedBlockTip(const CBlockIndex *pindex, CConnman& connman);
 };
+// validation
+bool LockRewardValidation(const CBlock& block);
 
 class ECCMusigHandle
 {
