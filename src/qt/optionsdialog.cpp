@@ -37,6 +37,9 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
 {
     ui->setupUi(this);
 
+    //Hide OpenConfigurationFileButton//
+    ui->openSINConfButton->hide();
+
 
     #if defined(Q_OS_WIN)
 
