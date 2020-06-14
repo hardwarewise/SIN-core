@@ -56,6 +56,12 @@ void OptionsModel::Init(bool resetSettings)
 
     // These are Qt-only settings:
 
+    
+    //InfinityNode Tab Set default Enable
+     if (!settings.contains("fShowMasternodesTab"))
+        settings.setValue("fShowMasternodesTab", true);
+    
+    
     // Window
     if (!settings.contains("fHideTrayIcon"))
         settings.setValue("fHideTrayIcon", false);
