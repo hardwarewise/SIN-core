@@ -113,8 +113,10 @@ public:
         consensus.nLimitSINNODE_5=375;
         consensus.nLimitSINNODE_10=375;
         consensus.nInstantSendKeepLock = 24;
-        consensus.nInfinityNodeBeginHeight=160000;
-        consensus.nInfinityNodeGenesisStatement=250000;
+        consensus.nInfinityNodeBeginHeight=160000; //masternode code
+        consensus.nInfinityNodeGenesisStatement=250000; // begin point for new reward algo
+        consensus.nInfinityNodeForkHeight=1000000; //infinitynode code -wait for active
+
         consensus.nInfinityNodeUpdateMeta=25;
         consensus.nInfinityNodeVoteValue=100;
         consensus.nInfinityNodeNotificationValue=1;
@@ -261,6 +263,8 @@ public:
         consensus.nInstantSendKeepLock = 24;
         consensus.nInfinityNodeBeginHeight=100;
         consensus.nInfinityNodeGenesisStatement=110;
+        consensus.nInfinityNodeForkHeight=100000; //infinitynode code -wait for active
+
         consensus.nInfinityNodeUpdateMeta=5;
         consensus.nInfinityNodeNotificationValue=1;
         consensus.nInfinityNodeCallLockRewardDeepth=12;
@@ -399,6 +403,8 @@ public:
         consensus.nInstantSendKeepLock = 24;
         consensus.nInfinityNodeBeginHeight=100;
         consensus.nInfinityNodeGenesisStatement=110;
+        consensus.nInfinityNodeForkHeight=100000; //infinitynode code -wait for active
+
         consensus.nInfinityNodeUpdateMeta=5;
         consensus.nInfinityNodeNotificationValue=1;
         consensus.nInfinityNodeCallLockRewardDeepth=5;
@@ -528,6 +534,8 @@ public:
         consensus.nSubsidyHalvingInterval = 150;
         consensus.nInfinityNodeBeginHeight=100;
         consensus.nInfinityNodeGenesisStatement=110;
+        consensus.nInfinityNodeForkHeight=100000; //infinitynode code -wait for active
+
         consensus.nInfinityNodeUpdateMeta=5;
         consensus.nInfinityNodeNotificationValue=1;
         consensus.nInfinityNodeCallLockRewardDeepth=5;

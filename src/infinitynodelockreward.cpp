@@ -1741,8 +1741,12 @@ bool CInfinityNodeLockReward::CheckLockRewardRegisterInfo(std::string sLockRewar
 /*
  * Takes a block as argument, returns if it contains a valid LR commitment or not.
  */
-bool LockRewardValidation(const CBlock& block)
+bool LockRewardValidation(const int nBlockHeight, const CBlock& block)
 {
+    if(nBlockHeight < Params().GetConsensus().nInfinityNodeForkHeight) return true;
+
+    /*TODO: read back limit reorg blocks and verify that there are 3 LockReward for 3 candidates of this block*/
+
     for (const CTransactionRef& tx : block.vtx) {
         // Avoid checking coinbase payments as LR commitments won't be there
         if (!tx->IsCoinBase()) {

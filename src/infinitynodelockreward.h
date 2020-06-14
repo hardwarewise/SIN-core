@@ -319,7 +319,7 @@ public:
     void UpdatedBlockTip(const CBlockIndex *pindex, CConnman& connman);
 };
 // validation
-bool LockRewardValidation(const CBlock& block);
+bool LockRewardValidation(const int nBlockHeight, const CBlock& block);
 
 class ECCMusigHandle
 {

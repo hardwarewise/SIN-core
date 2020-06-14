@@ -69,6 +69,7 @@ struct Params {
     int nLimitSINNODE_10;// integer
     int nInfinityNodeBeginHeight;// integer
     int nInfinityNodeGenesisStatement;// integer
+    int nInfinityNodeForkHeight; //integer
     int nInfinityNodeUpdateMeta;// integer
     int nInfinityNodeVoteValue; // in coins
     int nInfinityNodeNotificationValue; // in coins
