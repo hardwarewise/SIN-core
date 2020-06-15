@@ -175,9 +175,12 @@ void CInfinitynodePeer::ManageStateInitial(CConnman& connman)
 
     if (Params().NetworkIDString() != CBaseChainParams::REGTEST) {
         bool fConnected = false;
+
         SOCKET hSocket = CreateSocket(service);
         if (hSocket != INVALID_SOCKET) {
+            LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateInitial -- Socket created\n");
             fConnected = ConnectSocketDirectly(service, hSocket, nConnectTimeout, true) && IsSelectableSocket(hSocket);
+            LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateInitial -- Connecttion: %d\n", fConnected);
             CloseSocket(hSocket);
         }
 
@@ -188,6 +191,10 @@ void CInfinitynodePeer::ManageStateInitial(CConnman& connman)
             return;
         }
     }
+
+    //All check OK
+    nState = INFINITYNODE_PEER_STARTED;
+    strNotCapableReason = "Is possible Infinitynode!";
 
     // Default to REMOTE
     eType = INFINITYNODE_REMOTE;
