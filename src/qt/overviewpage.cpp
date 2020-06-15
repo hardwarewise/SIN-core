@@ -156,9 +156,6 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     pricingTimerBTC = new QTimer();
     networkManagerBTC = new QNetworkAccessManager();
     requestBTC = new QNetworkRequest();
-    versionTimer = new QTimer();
-    networkManagerVersion = new QNetworkAccessManager();
-    requestVersion = new QNetworkRequest();
     ui->setupUi(this);
 
     // ++ Explorer Stats
@@ -168,32 +165,6 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onResult(QNetworkReply*)));
     getStatistics();
     // --
-    
-               
-   // Set the Latest Version information
- // Network request code 
-        QObject::connect(networkManagerVersion, &QNetworkAccessManager::finished,
-                         this, [=](QNetworkReply *replyVersion) {  
-                         
-                    if (replyVersion->error()) {
-                        // to do
-                        //ui->labelLatestVersion->setText("");
-                        qDebug() << replyVersion->errorString();
-                        return;
-                    }
-                    // Get the data from the network request
-                    QString answerVersion = replyVersion->readAll();                                
-                    //to do 
-                    //ui->labelLatestVersion->setText("<a style=\"color:#000000;\" href=\"https://github.com/SINOVATEblockchain/SIN-core/releases\">"+ answerVersion +"</a>");
-                }
-                );
-   // End Latest Version information
-         
-         // Create the version timer
-        connect(versionTimer, SIGNAL(timeout()), this, SLOT(getVersionInfo()));
-        versionTimer->start(300000);
-        getVersionInfo();
-        /** version timer END */
 
     // Set the USD pricing information
        
@@ -307,7 +278,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     
         // Create the timer
         connect(pricingTimerBTC, SIGNAL(timeout()), this, SLOT(getPriceInfoBTC()));
-        pricingTimerBTC->start(300000);
+        pricingTimerBTC->start(1800000);
         getPriceInfoBTC();
         /** pricing BTC END */
 
@@ -395,7 +366,7 @@ void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
 
      // Create the timer
         connect(pricingTimer, SIGNAL(timeout()), this, SLOT(getPriceInfo()));
-        pricingTimer->start(300000);
+        pricingTimer->start(1800000);
         getPriceInfo();
         /** pricing USD END */
 
@@ -549,14 +520,6 @@ void OverviewPage::getPriceInfoBTC()
         requestBTC->setUrl(QUrl("https://sinovate.io/priceBTC.php"));
     
     networkManagerBTC->get(*requestBTC);
-}
-
-
-void OverviewPage::getVersionInfo()
-{
-        requestVersion->setUrl(QUrl("https://sinovate.io/getLatestVersion.php"));
-    
-    networkManagerVersion->get(*requestVersion);
 }
 
 // ++ Explorer Stats
