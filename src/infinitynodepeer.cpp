@@ -192,20 +192,16 @@ void CInfinitynodePeer::ManageStateInitial(CConnman& connman)
         }
     }
 
-    //All check OK
-    nState = INFINITYNODE_PEER_STARTED;
-    strNotCapableReason = "Is possible Infinitynode!";
-
     // Default to REMOTE
     eType = INFINITYNODE_REMOTE;
 
-    LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateInitial -- End status = %s, type = %s, pinger enabled = %d\n", GetStatus(), GetTypeString(), fPingerEnabled);
+    LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateInitial -- End type = %s, pinger enabled = %d\n", GetTypeString(), fPingerEnabled);
 }
 
 void CInfinitynodePeer::ManageStateRemote()
 {
-    LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateRemote -- Start status = %s, type = %s, pinger enabled = %d, pubKeyInfinitynode.GetID() = %s\n", 
-             GetStatus(), GetTypeString(), fPingerEnabled, pubKeyInfinitynode.GetID().ToString());
+    LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateRemote -- Type = %s, pinger enabled = %d, pubKeyInfinitynode.GetID() = %s\n", 
+             GetTypeString(), fPingerEnabled, pubKeyInfinitynode.GetID().ToString());
 
     infinitynode_info_t infoInf;
     if(infnodeman.GetInfinitynodeInfo(EncodeBase64(pubKeyInfinitynode.begin(), pubKeyInfinitynode.size()), infoInf)) {
