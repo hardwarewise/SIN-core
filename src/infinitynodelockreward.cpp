@@ -1786,7 +1786,7 @@ void CInfinityNodeLockReward::TryConnectToMySigners(int rewardHeight, CConnman& 
     int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType;
 
     std::map<int, CInfinitynode> mapInfinityNodeRank = infnodeman.calculInfinityNodeRank(rewardHeight, nSINtypeCanLockReward, false, true);
-    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessBlock -- Try connect to %d TopNode. Map rank: %d\n",
+    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::TryConnectToMySigners -- Try connect to %d TopNode. Map rank: %d\n",
               Params().GetConsensus().nInfinityNodeLockRewardTop, mapInfinityNodeRank.size());
 
     for (std::pair<int, CInfinitynode> s : mapInfinityNodeRank){
@@ -1795,7 +1795,7 @@ void CInfinityNodeLockReward::TryConnectToMySigners(int rewardHeight, CConnman& 
             std::string connectionType = "";
 
             if(metaTopNode.getMetadataHeight() == 0){
-                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessBlock -- Cannot find metadata of TopNode rank: %d, id: %s\n",
+                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::TryConnectToMySigners -- Cannot find metadata of TopNode rank: %d, id: %s\n",
                                  s.first, s.second.getBurntxOutPoint().ToStringShort());
                 continue;
             }
@@ -1809,9 +1809,10 @@ void CInfinityNodeLockReward::TryConnectToMySigners(int rewardHeight, CConnman& 
                 for (auto* pnode : vNodesCopy)
                 {
                     if (pnode->addr.ToStringIP() == add.ToStringIP()){
+
                         fconnected = true;
-                        connectionType = strprintf("connection exist(%d)", pnode->GetId());
-                        continue;
+                        connectionType = strprintf("connection exist(%d - %s)", pnode->GetId(), add.ToStringIP());
+                        break;
                     }
                 }
                 // looped through all nodes, release them
@@ -1824,20 +1825,20 @@ void CInfinityNodeLockReward::TryConnectToMySigners(int rewardHeight, CConnman& 
             if(!fconnected){
                 CNode* pnode = connman.OpenNetworkConnection(add, false, nullptr, NULL, false, false, false, true);
                 if(pnode == NULL) {
-                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessBlock -- can't connect to node to verify it, addr=%s\n", addr.ToString());
+                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::TryConnectToMySigners -- can't connect to node to verify it, addr=%s\n", addr.ToString());
                     continue;
                 } else {
                     fconnected = true;
-                    connectionType = "new connection";
+                    connectionType = strprintf("new connection(%s)", add.ToStringIP());
                     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                 }
             }
 
             if(fconnected){
-                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessBlock -- %s TopNode rank: %d, id: %s\n",
+                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::TryConnectToMySigners -- %s TopNode rank: %d, id: %s\n",
                                  connectionType, s.first, s.second.getBurntxOutPoint().ToStringShort());
             } else {
-                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessBlock -- Cannot try to connect TopNode rank: %d, id: %s.\n",
+                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::TryConnectToMySigners -- Cannot try to connect TopNode rank: %d, id: %s.\n",
                                  s.first, s.second.getBurntxOutPoint().ToStringShort());
             }
         }
