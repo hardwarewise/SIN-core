@@ -94,7 +94,7 @@ background-color: #1A000000;
 }
 
 QMessageBox {
-background-color: #FFFFFF;
+background-color: #d6dce5;
 }
 
 /*******************************************************/
@@ -153,7 +153,7 @@ font-size:16px;
 }
 
 .QValidatedLineEdit:disabled, .QLineEdit:disabled {
-background-color: #FFFFFF;
+background-color: #d6dce5;
 }
 
 /***** BUTTONS *****/
@@ -297,21 +297,21 @@ border-color:#bababa;
 border: 1px solid #2E3191;
 border-radius:0px;
 padding: 3px 5px 3px 5px;
-background:#ffffff;
+background:#90caf9;
 min-height:25px;
 color:#333333;
-background-color:#ffffff;
+background-color:#90caf9;
 
 
 }
 
 QComboBox:checked {
-background:#ffffff;
+background:#90caf9;
 
 }
 
 QComboBox:editable {
-background: #ffffff;
+background: #90caf9;
 color:#bababa;
 border:0px solid transparent;
 }
@@ -329,7 +329,7 @@ border-image: url(':/images/downArrow') 0 0 0 0 stretch stretch;
 QComboBox QListView {
 border:1px solid #bababa;
 color:#333333;
-background-color:#ffffff;
+background-color:#90caf9;
 padding-right:1px;
 padding-left:1px;
 }
@@ -337,14 +337,14 @@ padding-left:1px;
 QComboBox QAbstractItemView::item { margin:4px; }
 
 QComboBox::item {
-color:#ffffff;
+color:#90caf9;
 }
 
-QComboBox::item:alternate { background:#fff;}
+QComboBox::item:alternate { background:#90caf9;}
 
 QComboBox::item:selected {
 border:0px solid transparent;
-background:#f2f2f2;
+background:#90caf9;
 }
 
 QComboBox::indicator {
@@ -533,7 +533,7 @@ QDialog .QTabWidget QTabBar::tab:selected {
  }
 
 QDialog .QTabWidget .QWidget {
-background-color: #FFFFFF;
+background-color: #d6dce5;
 color:#fff;
 }
 
@@ -562,7 +562,7 @@ outline: 0;
 
 /* Dialog: Open URI */
 QDialog#OpenURIDialog {
-background-color: #ffffff;
+background-color: #d6dce5;
 }
 
 QDialog#OpenURIDialog QLabel#label { /* URI Label */
@@ -603,7 +603,7 @@ QDialog#OpenURIDialog QLabel#label_2 { /* Open payment request from URI or file 
 
 /* Dialog: Sign / Verify Message */
 QDialog#SignVerifyMessageDialog {
-background-color: #FFFFFF;
+background-color: #d6dce5;
 }
 
 QDialog#SignVerifyMessageDialog QPushButton#addressBookButton_SM { /* Address Book Button */
@@ -681,12 +681,12 @@ QDialog#SignVerifyMessageDialog QLabel#infoLabel_VM {
 
 /* Dialog: Send and Receive */
 QWidget#AddressBookPage {
-background-color: #FFFFFF;
+background-color: #d6dce5;
 }
 
 
 QWidget#AddressBookPage QTableView { /* Address Listing */
-background-color: #FFFFFF;
+background-color: #d6dce5;
 font-size:14px;
 color: #000000;
 }
@@ -701,7 +701,7 @@ min-width:260px;
 
 /* Encrypt Wallet and Change Passphrase Dialog */
 QDialog#AskPassphraseDialog {
-background-color: #FFFFFF;
+background-color: #d6dce5;
 }
 
 QDialog#AskPassphraseDialog QLabel#passLabel1, QDialog#AskPassphraseDialog QLabel#passLabel2, QDialog#AskPassphraseDialog QLabel#passLabel3 {
@@ -730,7 +730,7 @@ QDialog#OptionsDialog QGroupBox {
 }
 
 QDialog#OptionsDialog {
-background-color: #FFFFFF;
+background-color: #d6dce5;
 }
 
   QDialog#OptionsDialog QSpinBox {
@@ -908,7 +908,7 @@ QDialog#OptionsDialog QPushButton#resetButton:pressed {
 /* TOOLS MENU */
 
 QWidget#RPCConsole QTabWidget {
-background-color: #FFFFFF;
+background-color: #d6dce5;
 }
 
 
@@ -916,7 +916,7 @@ background-color: #FFFFFF;
 
 /* Command Line Options Dialog */
 QDialog#HelpMessageDialog {
-  background-color: #FFFFFF;
+  background-color: #d6dce5;
   }
 
   QTextEdit#helpMessage {
@@ -927,7 +927,7 @@ QDialog#HelpMessageDialog {
   }
 
 QDialog#HelpMessageDialog QScrollArea#scrollArea {
-	background-color: #FFFFFF;
+	background-color: #d6dce5;
 }
 
 QDialog#HelpMessageDialog QScrollBar:vertical,
@@ -937,7 +937,7 @@ QDialog#HelpMessageDialog QScrollBar:horizontal {
 
 /* About SIN Dialog */
 QDialog#AboutDialog {
-background-color: #FFFFFF;
+background-color: #d6dce5;
 color : #333333;
 }
 
@@ -946,23 +946,23 @@ margin-left:10px;
 }
 
 QDialog#AboutDialog QLabel#label_2 { /* Margin for About Sinovate text */
-background-color: #FFFFFF;
+background-color: #d6dce5;
 margin-right:10px;
 }
 
 QDialog#HelpMessageDialog QLabel#aboutMessage { /* Margin for About Sinovate text */
-background-color: #FFFFFF;
+background-color: #d6dce5;
 margin-right:10px;
 }
 
 QDialog#HelpMessageDialog QWidget#scrollAreaWidgetContents { /* Margin for About Sinovate text */
-background-color: #FFFFFF;
+background-color: #d6dce5;
 
 }
 
 /* Edit Address Dialog */
 QDialog#EditAddressDialog {
-background-color: #FFFFFF;
+background-color: #d6dce5;
 }
 
 QDialog#EditAddressDialog QLabel {
@@ -976,7 +976,7 @@ padding-right:5px;
 /* MODAL OVERLAY */
 
   QWidget#bgWidget { /* The 'frame' overlaying the overview-page */
-    background-color: #FFFFFF;
+    background-color: #d6dce5;
       color:#ffffff;
       padding-left:10px;
       padding-right:10px;
@@ -1474,7 +1474,7 @@ border:  1px solid #0e1163;
 
 /**************************** RECEIVE COINS DIALOG **************************************/
 QDialog#ReceiveRequestDialog {
-  background-color: #FFFFFF;
+  background-color: #d6dce5;
 }
 
 QDialog#ReceiveRequestDialog QTextEdit {
@@ -1548,7 +1548,7 @@ font-size: 16px;
 
 
 QDialog#TransactionDescDialog QTextEdit {
-background-color: #FFFFFF;background-color: #FFFFFF;
+background-color: #d6dce5;
 border:1px solid #d7d7d7;
 color: #333;
 }
