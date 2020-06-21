@@ -1321,6 +1321,7 @@ void ThreadCheckInfinityNode(CConnman& connman)
             if(fInfinityNode && infinitynodePeer.nState != INFINITYNODE_PEER_STARTED)
             {
                 infinitynodePeer.ManageState(connman);
+                mnodeman.ProcessMasternodeConnections(connman);
             }
         }
         if(nTickDIN % (60 * 5) == 0) {

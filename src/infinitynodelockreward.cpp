@@ -529,8 +529,17 @@ bool CInfinityNodeLockReward::CheckMyPeerAndSendVerifyRequest(CNode* pfrom, cons
     if(!fconnected){
         CNode* pnode = connman.OpenNetworkConnection(add, false, nullptr, NULL, false, false, false, true);
         if(pnode == NULL) {
-            LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMyPeerAndSendVerifyRequest -- can't connect to node to verify it, addr=%s\n", addr.ToString());
-            return false;
+            //TODO: dont send commitment when we can not verify node
+            //we comeback in next version
+            //LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMyPeerAndSendVerifyRequest -- can't connect to node to verify it, addr=%s\n", addr.ToString());
+            LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMyPeerAndSendVerifyRequest -- can't connect to node to verify it, addr=%s. Relay commitment!\n", addr.ToString());
+            int nRewardHeight = lockRewardRequestRet.nRewardHeight;
+            uint256 hashLR = lockRewardRequestRet.GetHash();
+            //step 3.3 send commitment
+            if(!SendCommitment(hashLR, nRewardHeight, connman)){
+                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMyPeerAndSendVerifyRequest -- Cannot send commitment\n");
+                return false;
+            }
         }
         fconnected = true;
         pnodeCandidate = pnode;
@@ -736,7 +745,7 @@ bool CInfinityNodeLockReward::CheckVerifyReply(CNode* pnode, CVerifyRequest& vre
     int nRewardHeight = vrequest.nBlockHeight;
     //step 3.3 send commitment
     if(!SendCommitment(vrequest.nHashRequest, nRewardHeight, connman)){
-        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckVerifyReply -- Cannot send commitment\n", strError);
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckVerifyReply -- Cannot send commitment\n");
         return false;
     }
 
@@ -1793,6 +1802,7 @@ void CInfinityNodeLockReward::TryConnectToMySigners(int rewardHeight, CConnman& 
     if(fLiteMode || !fInfinityNode) return;
 
     AssertLockHeld(cs);
+    LOCK(cs_main);
 
     int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType;
 
@@ -1838,7 +1848,6 @@ void CInfinityNodeLockReward::TryConnectToMySigners(int rewardHeight, CConnman& 
                 for (auto* pnode : vNodesCopy)
                 {
                     if (pnode->addr.ToStringIP() == add.ToStringIP()){
-
                         fconnected = true;
                         connectionType = strprintf("connection exist(%d - %s)", pnode->GetId(), add.ToStringIP());
                         break;
@@ -1854,13 +1863,9 @@ void CInfinityNodeLockReward::TryConnectToMySigners(int rewardHeight, CConnman& 
             if(!fconnected){
                 CNode* pnode = connman.OpenNetworkConnection(add, false, nullptr, NULL, false, false, false, true);
                 if(pnode == NULL) {
-                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::TryConnectToMySigners -- can't connect to node to verify it, addr=%s\n", addr.ToString());
-                    score++;
-                    continue;
                 } else {
                     fconnected = true;
                     connectionType = strprintf("new connection(%s)", add.ToStringIP());
-                    //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                 }
             }
 
