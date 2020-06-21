@@ -69,7 +69,6 @@ struct Params {
     int nLimitSINNODE_10;// integer
     int nInfinityNodeBeginHeight;// integer
     int nInfinityNodeGenesisStatement;// integer
-    int nInfinityNodeForkHeight; //integer
     int nInfinityNodeUpdateMeta;// integer
     int nInfinityNodeVoteValue; // in coins
     int nInfinityNodeNotificationValue; // in coins
@@ -79,7 +78,7 @@ struct Params {
     int nInfinityNodeLockRewardSigners; //in number
     int nInfinityNodeLockRewardSINType; //in number
     int nSchnorrActivationHeight; // block height (int)
-    int nNewDevfeeAddress; // block height (int)
+    int nNewDevfeeAddress; // block height (int) - DIN switch height
 
     // these params were once hardcoded in validation.cpp
     int nINActivationHeight; // block height (int)

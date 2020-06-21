@@ -300,8 +300,10 @@ public:
     //register LockReward by send tx
     bool AutoResigterLockReward(std::string sLR, std::string& strErrorRet);
 
-    //Check CheckLockRewardRegisterInfo
-    bool CheckLockRewardRegisterInfo(std::string sLR, std::string& strErrorRet);
+    //Check CheckLockRewardRegisterInfo for candidate is OK or KO
+    bool CheckLockRewardRegisterInfo(std::string sLR, std::string& strErrorRet, const COutPoint& infCheck);
+
+    bool FillRewardNode(CMutableTransaction& txNew, int nBlockHeight, CAmount blockReward, std::vector<CTxOut>& txoutInfinitynodeRet);
 
     //remove unused data to avoid memory issue
     //call int init.cpp
@@ -320,6 +322,8 @@ public:
 };
 // validation
 bool LockRewardValidation(const int nBlockHeight, const CBlock& block);
+// miner
+void FillBlock(CMutableTransaction& txNew, int nBlockHeight, CAmount blockReward, std::vector<CTxOut>& txoutInfinitynodeRet);
 
 class ECCMusigHandle
 {

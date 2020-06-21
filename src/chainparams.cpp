@@ -115,8 +115,6 @@ public:
         consensus.nInstantSendKeepLock = 24;
         consensus.nInfinityNodeBeginHeight=160000; //masternode code
         consensus.nInfinityNodeGenesisStatement=250000; // begin point for new reward algo
-        consensus.nInfinityNodeForkHeight=1000000; //infinitynode code -wait for active
-
         consensus.nInfinityNodeUpdateMeta=25;
         consensus.nInfinityNodeVoteValue=100;
         consensus.nInfinityNodeNotificationValue=1;
@@ -263,8 +261,6 @@ public:
         consensus.nInstantSendKeepLock = 24;
         consensus.nInfinityNodeBeginHeight=100;
         consensus.nInfinityNodeGenesisStatement=110;
-        consensus.nInfinityNodeForkHeight=100000; //infinitynode code -wait for active
-
         consensus.nInfinityNodeUpdateMeta=5;
         consensus.nInfinityNodeNotificationValue=1;
         consensus.nInfinityNodeCallLockRewardDeepth=12;
@@ -375,7 +371,7 @@ public:
 
         /* enable fallback fee on testnet */
         m_fallback_fee_enabled = true;
-        nMaxReorganizationDepth = 5; // 5 at 2 minute block timespan is +/- 10 minutes.
+        nMaxReorganizationDepth = 14; // 5 at 2 minute block timespan is +/- 10 minutes.
         nMinReorganizationPeers = 3;
 
         consensus.lwmaStartHeight = 150;
@@ -403,8 +399,6 @@ public:
         consensus.nInstantSendKeepLock = 24;
         consensus.nInfinityNodeBeginHeight=100;
         consensus.nInfinityNodeGenesisStatement=110;
-        consensus.nInfinityNodeForkHeight=100000; //infinitynode code -wait for active
-
         consensus.nInfinityNodeUpdateMeta=5;
         consensus.nInfinityNodeNotificationValue=1;
         consensus.nInfinityNodeCallLockRewardDeepth=5;
@@ -534,8 +528,6 @@ public:
         consensus.nSubsidyHalvingInterval = 150;
         consensus.nInfinityNodeBeginHeight=100;
         consensus.nInfinityNodeGenesisStatement=110;
-        consensus.nInfinityNodeForkHeight=100000; //infinitynode code -wait for active
-
         consensus.nInfinityNodeUpdateMeta=5;
         consensus.nInfinityNodeNotificationValue=1;
         consensus.nInfinityNodeCallLockRewardDeepth=5;

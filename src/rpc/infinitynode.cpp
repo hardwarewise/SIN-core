@@ -53,6 +53,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
                                     && strCommand != "scan-vote" && strCommand != "show-proposals" && strCommand != "keypair"
                                     && strCommand != "mypeerinfo" && strCommand != "checkkey" && strCommand != "scan-metadata"
                                     && strCommand != "show-metadata" && strCommand != "memory-lockreward"
+                                    && strCommand != "show-lockreward"
         ))
             throw std::runtime_error(
                 "infinitynode \"command\"...\n"
@@ -61,6 +62,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
                 "1. \"command\"        (string or set of strings, required) The command to execute\n"
                 "\nAvailable commands:\n"
                 "  keypair                     - Generation the compressed key pair\n"
+                "  checkkey                    - Get info about a privateKey\n"
                 "  mypeerinfo                  - Get status of Peer if this node is Infinitynode\n"
                 "  build-list                  - Build list of all infinitynode from block height 165000 to last block\n"
                 "  build-stm                   - Build statement list from genesis parameter\n"
@@ -71,6 +73,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
                 "  show-metadata               - Show the list of metadata\n"
                 "  show-candidate nHeight      - Show candidata of reward at Height\n"
                 "  scan-vote                   - Build list voted\n"
+                "  show-lockreward             - LockReward infos for curren Height\n"
                 "  scan-metadata               - Build/update list metadata\n"
                 "  memory-lockreward           - show the size used by LockReward feature\n"
                 );
@@ -340,6 +343,20 @@ UniValue infinitynode(const JSONRPCRequest& request)
         obj.push_back(Pair("LockReward", inflockreward.GetMemorySize()));
         return obj;
     }
+
+    if (strCommand == "show-lockreward")
+    {
+        CBlockIndex* pindex = NULL;
+        {
+                LOCK(cs_main);
+                pindex = chainActive.Tip();
+        }
+
+        std::string result = infnodeman.getLRForHeight();
+        obj.push_back(Pair("Result", result));
+        return obj;
+    }
+
     return NullUniValue;
 }
 

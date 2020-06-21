@@ -21,7 +21,8 @@ class CInfinitynodeMan
 public:
     typedef std::pair<arith_uint256, CInfinitynode*> score_pair_t;
     typedef std::vector<score_pair_t> score_pair_vec_t;
-
+    typedef std::pair<CScript, std::string> lockreward_pair_t; //how send LR and signature string
+    typedef std::vector<lockreward_pair_t> lockreward_pair_vec_t;
 private:
     static const std::string SERIALIZATION_VERSION_STRING;
 
@@ -134,14 +135,17 @@ public:
     std::map<CScript, int> GetFullLastPaidMap() { return mapLastPaid; }
     int64_t getLastScan(){return nLastScanHeight;}
     int64_t getLastScanWithLimit(){return nLastScanHeight/* + INF_MATURED_LIMIT*/;} // We'll need to move this to functions who actually use it and match it with our max reorg depth
-
-
+    //DIN map
     bool buildInfinitynodeList(int nBlockHeight, int nLowHeight = 0); /* init this to zero for better compat with regtest/testnet/devnets */
     bool buildInfinitynodeListRPC(int nBlockHeight, int nLowHeight = 0); /* exposes cs to RPC indirectly */
     bool buildListForBlock(int nBlockHeight);
     void updateLastPaid();
     bool updateInfinitynodeList(int fromHeight);//call in init.cppp
     bool initialInfinitynodeList(int fromHeight);//call in init.cpp
+
+    //LR read back
+    bool ExtractLockReward(int nBlockHeight, int depth, lockreward_pair_vec_t& vecLRRet);
+    std::string getLRForHeight();
 
     //this function build the map of STM from genesis
     bool deterministicRewardStatement(int nSinType);
@@ -155,6 +159,8 @@ public:
     int isPossibleForLockReward(std::string nodeOwner);
     bool getScoreVector(const uint256& nBlockHash, int nSinType, int nBlockHeight, CInfinitynodeMan::score_pair_vec_t& vecScoresRet);
     bool getNodeScoreAtHeight(const COutPoint& outpoint, int nSinType, int nBlockHeight, int& nRankRet);
+    bool getTopNodeScoreAtHeight(int nSinType, int nBlockHeight, int nTop, std::vector<CInfinitynode>& vecInfRet);
+
     std::string getVectorNodeRankAtHeight(const std::vector<COutPoint>  &vOutpoint, int nSinType, int nBlockHeight);
 
     //this function update lastStm and size from UpdatedBlockTip and map
