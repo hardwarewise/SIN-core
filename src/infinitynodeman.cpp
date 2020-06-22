@@ -555,7 +555,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
 /*
  * LOCK (cs_main) before call this function
  */
-bool CInfinitynodeMan::ExtractLockReward(int nBlockHeight, int depth, lockreward_pair_vec_t& vecLRRet)
+bool CInfinitynodeMan::ExtractLockReward(int nBlockHeight, int depth, std::vector<CLockRewardExtractInfo>& vecLRRet)
 {
     vecLRRet.clear();
 
@@ -593,7 +593,7 @@ bool CInfinitynodeMan::ExtractLockReward(int nBlockHeight, int depth, lockreward
                         Solver(prevScript, whichType, vSolutions);
 
                         if (whichType == TX_BURN_DATA && Params().GetConsensus().cLockRewardAddress == EncodeDestination(CKeyID(uint160(vSolutions[0])))) {
-                            LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::ExtractLockReward -- %d: %d.\n", prevBlockIndex->nHeight, (int)vSolutions.size());
+                            LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::ExtractLockReward -- block Height: %d, info size: %d\n", prevBlockIndex->nHeight, (int)vSolutions.size());
                             if (vSolutions.size() != 2) {continue;}
                             std::string stringLRRegister(vSolutions[1].begin(), vSolutions[1].end());
 
@@ -618,8 +618,9 @@ bool CInfinitynodeMan::ExtractLockReward(int nBlockHeight, int depth, lockreward
                                 }
                                 i++;
                             }
-                            LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::ExtractLockReward -- %s.\n", stringLRRegister);
-                            if(nRewardHeight != nBlockHeight){continue;}
+
+                            LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::ExtractLockReward -- LR: %s.\n", stringLRRegister);
+                            //if(nRewardHeight != nBlockHeight){continue;}
 
                             //veryfy who send this registration, our candidate ?
                             const CTxIn& txin = tx->vin[0];
@@ -632,7 +633,9 @@ bool CInfinitynodeMan::ExtractLockReward(int nBlockHeight, int depth, lockreward
                                 return false;
                             }
 
-                            vecLRRet.push_back(std::make_pair(prevtx->vout[index].scriptPubKey, stringLRRegister));
+                            CLockRewardExtractInfo lrinfo(prevBlockIndex->nHeight, nSINtype, nRewardHeight, prevtx->vout[index].scriptPubKey, stringLRRegister);
+
+                            vecLRRet.push_back(lrinfo);
                         }
                     }
                 }
@@ -647,22 +650,12 @@ bool CInfinitynodeMan::ExtractLockReward(int nBlockHeight, int depth, lockreward
     return true;
 }
 
-std::string CInfinitynodeMan::getLRForHeight()
+bool CInfinitynodeMan::getLRForHeight(int height, std::vector<CLockRewardExtractInfo>& vecLockRewardRet)
 {
-    std::string ret="";
+    vecLockRewardRet.clear();
     LOCK(cs_main);
-    lockreward_pair_vec_t vecLockRewardRet;
-    if(!ExtractLockReward(nCachedBlockHeight, Params().GetConsensus().nInfinityNodeCallLockRewardDeepth * 2, vecLockRewardRet)){
-        ret = "Can not extract from blockchain";
-        return ret;
-    }
-
-    std::vector<std::pair<CScript, std::string> >::iterator it = vecLockRewardRet.begin();
-    while(it != vecLockRewardRet.end()) {
-        ret = strprintf("%s / %s - %s", ret, it->first.ToString(), it->second);
-        ++it;
-    }
-    return ret;
+    ExtractLockReward(height, Params().GetConsensus().nInfinityNodeCallLockRewardDeepth * 3, vecLockRewardRet);
+    return true;
 }
 
 bool CInfinitynodeMan::GetInfinitynodeInfo(std::string nodePublicKey, infinitynode_info_t& infInfoRet)

@@ -352,9 +352,27 @@ UniValue infinitynode(const JSONRPCRequest& request)
                 pindex = chainActive.Tip();
         }
 
-        std::string result = infnodeman.getLRForHeight();
-        obj.push_back(Pair("Result", result));
-        return obj;
+        std::vector<CLockRewardExtractInfo> vecLockRewardRet;
+        if(infnodeman.getLRForHeight(pindex->nHeight, vecLockRewardRet)){
+            obj.push_back(Pair("Result", (int)vecLockRewardRet.size()));
+            obj.push_back(Pair("Current height", pindex->nHeight));
+            for (auto& v : vecLockRewardRet) {
+                std::ostringstream streamInfo;
+                CTxDestination address;
+                bool fValidAddress = ExtractDestination(v.scriptPubKey, address);
+
+                std::string owner = "Unknow";
+                if(fValidAddress) owner = EncodeDestination(address);
+
+                streamInfo << std::setw(1) <<
+                               v.nSINtype << " " <<
+                               owner  << " " <<
+                               v.sLRInfo;
+                std::string strInfo = streamInfo.str();
+                obj.push_back(Pair(strprintf("%d",v.nBlockHeight), strInfo));
+            }
+            return obj;
+        }
     }
 
     return NullUniValue;

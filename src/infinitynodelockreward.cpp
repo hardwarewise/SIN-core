@@ -1042,13 +1042,27 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
     int nSigner=0, nCommitment=0, myIndex = -1;
     while (getline(ss, s,';')) {
         int Id = atoi(s);
-        if(Id <= Params().GetConsensus().nInfinityNodeLockRewardTop){
+        {
             //find publicKey
             CInfinitynode infSigner = mapInfinityNodeRank[Id];
             CMetadata metaSigner = infnodemeta.Find(infSigner.getMetaID());
             if(metaSigner.getMetadataHeight() == 0){
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- Cannot get metadata of candidate %s\n", infSigner.getBurntxOutPoint().ToStringShort());
                 continue;
+            }
+
+            int nScore;
+            int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType; //mypeer must be this SINtype, if not, score is NULL
+
+            if(!infnodeman.getNodeScoreAtHeight(infSigner.getBurntxOutPoint(), nSINtypeCanLockReward, gsigners.nRewardHeight - 101, nScore)) {
+                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- Can't calculate score signer Rank %d\n",Id);
+                return false;
+            }
+
+            if(nScore > Params().GetConsensus().nInfinityNodeLockRewardTop){
+                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- signer Rank %d is not Top Node: %d(%d)\n",
+                         Id, Params().GetConsensus().nInfinityNodeLockRewardTop, nScore);
+                return false;
             }
 
             std::string metaPublicKey = metaSigner.getMetaPublicKey();
@@ -1089,7 +1103,7 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
                     nCommitment++;
                 }
             }
-        }//end if
+        }
     }
 
     LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- found signers: %d, commitments: %d, myIndex: %d\n", nSigner, nCommitment, myIndex);
@@ -1582,7 +1596,7 @@ bool CInfinityNodeLockReward::AutoResigterLockReward(std::string sLockReward, st
     }
 
     //chang address
-    coin_control.destChange = GetDestinationForKey(infinitynodePeer.pubKeyInfinitynode, DEFAULT_ADDRESS_TYPE);
+    coin_control.destChange = DecodeDestination(infinitynodePeer.pubKeyInfinitynode.GetID().ToString());
 
     //CRecipient
     std::string strFail = "";

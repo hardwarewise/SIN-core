@@ -12,9 +12,29 @@
 using namespace std;
 
 class CInfinitynodeMan;
+class CLockRewardExtractInfo;
 class CConnman;
 
 extern CInfinitynodeMan infnodeman;
+
+class CLockRewardExtractInfo
+{
+public:
+    int nSINtype{0};
+    int nBlockHeight{0}; //blockHeight read
+    int nRewardHeight{0};
+    CScript scriptPubKey{};
+    std::string sLRInfo="";
+
+    CLockRewardExtractInfo() = default;
+    CLockRewardExtractInfo(int nBlockHeightIn, int nSINtypeIn, int nRewardHeightIn, CScript nPayee, std::string sInfo):
+    nBlockHeight(nBlockHeightIn),
+    nSINtype(nSINtypeIn),
+    nRewardHeight(nRewardHeightIn),
+    scriptPubKey(nPayee),
+    sLRInfo(sInfo)
+    {}
+};
 
 class CInfinitynodeMan
 {
@@ -144,8 +164,8 @@ public:
     bool initialInfinitynodeList(int fromHeight);//call in init.cpp
 
     //LR read back
-    bool ExtractLockReward(int nBlockHeight, int depth, lockreward_pair_vec_t& vecLRRet);
-    std::string getLRForHeight();
+    bool ExtractLockReward(int nBlockHeight, int depth, std::vector<CLockRewardExtractInfo>& vecLRRet);
+    bool getLRForHeight(int height, std::vector<CLockRewardExtractInfo>& vecLockRewardRet);
 
     //this function build the map of STM from genesis
     bool deterministicRewardStatement(int nSinType);

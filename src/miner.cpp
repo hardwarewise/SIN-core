@@ -126,7 +126,7 @@ int64_t UpdateTime(CBlock* pblock, const Consensus::Params& consensusParams, con
                 CScript DINPayee;
                 CInfinitynode infinitynode;
                 int SINType = 0;
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i <= 2; i++) {
                     //choose tier value
                     if (i == 0) {
                         SINType = 10;
