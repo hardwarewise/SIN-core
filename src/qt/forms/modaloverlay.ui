@@ -160,7 +160,7 @@ color: #707070;
                 </font>
                </property>
                <property name="text">
-                <string>Attempting to spend sins that are affected by not-yet-displayed transactions will not be accepted by the network.</string>
+                <string>Attempting to spend SIN that are affected by not-yet-displayed transactions will not be accepted by the network.</string>
                </property>
                <property name="textFormat">
                 <enum>Qt::RichText</enum>
