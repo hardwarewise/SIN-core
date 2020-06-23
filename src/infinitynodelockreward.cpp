@@ -1383,22 +1383,36 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
             int nSigner=0, nCommitment=0;
             while (getline(ss, s,';')) {
                 int Id = atoi(s);
-                if(Id <= Params().GetConsensus().nInfinityNodeLockRewardTop){
+                {//open
                     //find publicKey
                     CInfinitynode infSigner = mapInfinityNodeRank[Id];
                     CMetadata metaSigner = infnodemeta.Find(infSigner.getMetaID());
                     if(metaSigner.getMetadataHeight() == 0){
-                        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- Cannot get metadata of candidate %s\n", infSigner.getBurntxOutPoint().ToStringShort());
+                        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Cannot get metadata of candidate %s\n", infSigner.getBurntxOutPoint().ToStringShort());
                         continue;
+                    }
+
+                    int nScore;
+                    int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType; //mypeer must be this SINtype, if not, score is NULL
+
+                    if(!infnodeman.getNodeScoreAtHeight(infSigner.getBurntxOutPoint(), nSINtypeCanLockReward, mapLockRewardRequest[nHashLockRequest].nRewardHeight - 101, nScore)) {
+                        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Can't calculate score signer Rank %d\n",Id);
+                        return false;
+                    }
+
+                    if(nScore > Params().GetConsensus().nInfinityNodeLockRewardTop){
+                        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- signer Rank %d is not Top Node: %d(%d)\n",
+                                 Id, Params().GetConsensus().nInfinityNodeLockRewardTop, nScore);
+                        return false;
                     }
 
                     std::string metaPublicKey = metaSigner.getMetaPublicKey();
                     std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
                     CPubKey pubKey(tx_data.begin(), tx_data.end());
-                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- Metadata of signer %d, Index: %d pubkeyId: %s\n",nSigner, Id, pubKey.GetID().ToString());
+                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Metadata of signer %d, Index: %d pubkeyId: %s\n",nSigner, Id, pubKey.GetID().ToString());
 
                     if (!secp256k1_ec_pubkey_parse(secp256k1_context_musig, &pubkeys[nSigner], pubKey.data(), pubKey.size())) {
-                        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- cannot parse publicKey\n");
+                        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- cannot parse publicKey\n");
                         continue;
                     }
 
@@ -1412,7 +1426,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                     for (auto& pair : mapLockRewardCommitment) {
                         if(pair.second.nHashRequest == nHashLockRequest && pair.second.vin.prevout == infSigner.getBurntxOutPoint()){
                             if (!secp256k1_ec_pubkey_parse(secp256k1_context_musig, &commitmentpk[nCommitment], pair.second.pubkeyR.data(), pair.second.pubkeyR.size())) {
-                                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- cannot parse publicKey\n");
+                                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- cannot parse publicKey\n");
                                 continue;
                             }
 
@@ -1423,7 +1437,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                             nCommitment++;
                         }
                     }
-                }//end if
+                }//end open
             }//end while
 
             //build shared publick key
