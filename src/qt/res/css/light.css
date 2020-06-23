@@ -268,6 +268,7 @@ border:0px;
 #transactionView,
 #tableWidgetMyMasternodes,
 #tableWidgetMasternodes,
+#dinTable,
 #tabSignMessage  {
 	/* Table - has to be selected as a class otherwise it throws off QCalendarWidget */
 	background: transparent;
