@@ -1610,7 +1610,8 @@ bool CInfinityNodeLockReward::AutoResigterLockReward(std::string sLockReward, st
     }
 
     //chang address
-    coin_control.destChange = DecodeDestination(infinitynodePeer.pubKeyInfinitynode.GetID().ToString());
+    //coin_control.destChange = DecodeDestination(infinitynodePeer.pubKeyInfinitynode.GetID().ToString());
+    coin_control.destChange = GetDestinationForKey(infinitynodePeer.pubKeyInfinitynode, OutputType::LEGACY);
 
     //CRecipient
     std::string strFail = "";
