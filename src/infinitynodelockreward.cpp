@@ -1725,19 +1725,32 @@ bool CInfinityNodeLockReward::CheckLockRewardRegisterInfo(std::string sLockRewar
               Params().GetConsensus().nInfinityNodeLockRewardTop, mapInfinityNodeRank.size());
 
     int nSignerFound = 0;
-    for (std::pair<int, CInfinitynode> s : mapInfinityNodeRank){
-        if(s.first <= Params().GetConsensus().nInfinityNodeLockRewardTop){
-            CMetadata metaTopNode = infnodemeta.Find(s.second.getMetaID());
-            std::string connectionType = "";
-
-            if(metaTopNode.getMetadataHeight() == 0){
-                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Cannot find metadata of TopNode rank: %d, id: %s\n",
-                                 s.first, s.second.getBurntxOutPoint().ToStringShort());
-                continue;
-            }
-
+        {
             for(int i=0; i < N_SIGNERS; i++){
-                if(s.first == signerIndexes[i]){
+                CInfinitynode sInfNode = mapInfinityNodeRank[signerIndexes[i]];
+
+                CMetadata metaTopNode = infnodemeta.Find(sInfNode.getMetaID());
+                if(metaTopNode.getMetadataHeight() == 0){
+                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Cannot find metadata of TopNode rank: %d, id: %s\n",
+                                 signerIndexes[i], sInfNode.getBurntxOutPoint().ToStringShort());
+                    return false;
+                }
+
+                int nScore;
+                int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType; //mypeer must be this SINtype, if not, score is NULL
+
+                if(!infnodeman.getNodeScoreAtHeight(sInfNode.getBurntxOutPoint(), nSINtypeCanLockReward, nRewardHeight - 101, nScore)) {
+                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Can't calculate score signer Rank %d\n",signerIndexes[i]);
+                    return false;
+                }
+
+                if(nScore > Params().GetConsensus().nInfinityNodeLockRewardTop){
+                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- signer Rank %d is not Top Node: %d(%d)\n",
+                                 signerIndexes[i], Params().GetConsensus().nInfinityNodeLockRewardTop, nScore);
+                    return false;
+                }
+
+                {
                     std::string metaPublicKey = metaTopNode.getMetaPublicKey();
                     std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
                     CPubKey pubKey(tx_data.begin(), tx_data.end());
@@ -1748,8 +1761,7 @@ bool CInfinityNodeLockReward::CheckLockRewardRegisterInfo(std::string sLockRewar
                     nSignerFound++;
                 }
             }
-        }
-    }
+        }//end open
 
     if(nSignerFound != N_SIGNERS){
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Find %d signers. Consensus is %d signers.\n", nSignerFound, N_SIGNERS);
