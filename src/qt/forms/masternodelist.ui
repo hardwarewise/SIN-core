@@ -721,16 +721,16 @@ width: 150px;
          <property name="geometry">
           <rect>
            <x>470</x>
-           <y>70</y>
+           <y>60</y>
            <width>241</width>
-           <height>101</height>
+           <height>111</height>
           </rect>
          </property>
          <widget class="QWidget" name="gridLayoutWidget_2">
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-1</y>
+            <y>0</y>
             <width>241</width>
             <height>101</height>
            </rect>
@@ -831,7 +831,7 @@ width: 150px;
          <property name="geometry">
           <rect>
            <x>470</x>
-           <y>40</y>
+           <y>30</y>
            <width>242</width>
            <height>31</height>
           </rect>

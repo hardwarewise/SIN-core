@@ -99,7 +99,7 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     updateNodeList();
 
     // node setup
-    NODESETUP_ENDPOINT = QString::fromStdString(gArgs.GetArg("-nodesetupurl", "https://setup.sinovate.io/includes/api/basic.php"));
+    NODESETUP_ENDPOINT = QString::fromStdString(gArgs.GetArg("-nodesetupurl", "https://setup2dev.sinovate.io/includes/api/basic.php"));
     nodeSetupInitialize();
 }
 
@@ -601,7 +601,10 @@ void MasternodeList::on_btnSetup_clicked()
     QString strBillingCycle = QString::fromStdString(billingOptions[ui->comboBilling->currentData().toInt()]);
 
 //LogPrintf("place order %d, %s ", mClientid, strBillingCycle);
-    mOrderid = nodeSetupAPIAddOrder( mClientid, strBillingCycle, mProductIds, mInvoiceid, strError );
+    if ( ! (mOrderid > 0 && mInvoiceid > 0) ) {     // place new order if there is none already
+        mOrderid = nodeSetupAPIAddOrder( mClientid, strBillingCycle, mProductIds, mInvoiceid, strError );
+    }
+
     if ( mOrderid > 0 && mInvoiceid > 0) {
         nodeSetupSetOrderId( mOrderid, mInvoiceid, mProductIds );
         nodeSetupEnableOrderUI(true, mOrderid, mInvoiceid);
@@ -610,20 +613,33 @@ void MasternodeList::on_btnSetup_clicked()
         // get invoice data and do payment
         QString strAmount, strStatus, paymentAddress;
         nodeSetupAPIGetInvoice( mInvoiceid, strAmount, strStatus, paymentAddress, strError );
-        CAmount invoiceAmount = strAmount.toDouble() * COIN;
-ui->labelMessage->setText(QString::fromStdString(strprintf("Check for invoice amount #%d", invoiceAmount)));
-        if ( nodeSetupCheckFunds( invoiceAmount ) ) {
-            nodeSetupStep( "setupWait", "Paying invoice");
+        CAmount invoiceAmount = strAmount.toDouble();
+ui->labelMessage->setText(QString::fromStdString(strprintf("Invoice amount %f SIN", invoiceAmount)));
+
+        if ( strStatus == "Cancelled" || strStatus == "Refunded" )  {  // reset and call again
+            mOrderid = 0;
+            mInvoiceid = 0;
+            on_btnSetup_clicked();
         }
-        else {
-            nodeSetupStep( "setupKo", "Process stopped");
+
+        if ( strStatus == "Unpaid" )  {
+            if ( nodeSetupCheckFunds( invoiceAmount ) ) {
+                nodeSetupStep( "setupWait", "Paying invoice");
+            }
+            else {
+                nodeSetupStep( "setupKo", "Process stopped");
+            }
         }
-        currentStep++;
+
+        if ( strStatus == "Paid" )  {
+            nodeSetupStep( "setupWait", "Checking for confirmations");
+        }
     }
     else    {
         ui->labelMessage->setText(strError);
     }
 }
+
 
 
 void MasternodeList::on_btnLogin_clicked()
@@ -974,23 +990,32 @@ LogPrintf("nodeSetup::GetInvoice -- %s\n", url.toString().toStdString());
 
     QByteArray data = reply->readAll();
     QJsonDocument json = QJsonDocument::fromJson(data);
+    QJsonObject root = json.object();
 
-    if ( json.object().contains("result") ) {
-        if ( json.object()["result"]=="success" ) {
-            if ( json.object().contains("description") ) {
-                strAmount = json.object()["description"].toString();
+    if ( root.contains("result") ) {
+        if ( root["result"]=="success" && root.contains("transactions") ) {
+// LogPrintf("nodeSetup::GetInvoice result \n" );
+            if ( root.contains("status") ) {
+                strStatus = root["status"].toString();
+                LogPrintf("nodeSetup::GetInvoice contains status %s \n", strStatus.toStdString() );
             }
-            if ( json.object().contains("status") ) {
-                strStatus = json.object()["status"].toString();
+
+            QJsonArray jsonArray = root["transactions"].toObject()["transaction"].toArray();
+            QJsonObject tx = jsonArray.first().toObject();
+            if ( tx.contains("description") ) {
+                strAmount = tx["description"].toString();
+               //LogPrintf("nodeSetup::GetInvoice contains description %s \n", strAmount.toStdString() );
             }
-            if ( json.object().contains("transid") ) {
-                paymentAddress = json.object()["transid"].toInt();
+
+            if ( tx.contains("transid") ) {
+                paymentAddress = tx["transid"].toString();
+               // LogPrintf("nodeSetup::GetInvoice contains transId %s \n", paymentAddress.toStdString() );
             }
             ret = true;
         }
         else    {
-            if ( json.object().contains("message") )    {
-                strError = json.object()["message"].toString();
+            if ( root.contains("message") )    {
+                strError = root["message"].toString();
             }
         }
     }
