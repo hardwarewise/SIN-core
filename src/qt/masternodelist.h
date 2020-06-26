@@ -87,8 +87,11 @@ public Q_SLOTS:
     void nodeSetupEnableClientId( int clientId );
     int  nodeSetupGetOrderId( int& invoiceid, QString& mProductIds );
     void nodeSetupSetOrderId( int orderid , int invoiceid, QString strProductIds );
+    QString nodeSetupGetPaymentTx( );
+    void nodeSetupSetPaymentTx( QString txHash )  {
     void nodeSetupResetClientId( );
     void nodeSetupResetOrderId( );
+    QString nodeSetupCheckInvoiceStatus();
 
 Q_SIGNALS:
 
@@ -107,9 +110,11 @@ private:
     QString strCurrentFilter;
 
     // nodeSetup
+    QTimer *invoiceTimer;
     QNetworkAccessManager *ConnectionManager;
     QString NODESETUP_ENDPOINT;
     int mClientid, mOrderid, mInvoiceid;
+    QString mPaymentTx;
     QString mProductIds;
     std::string billingOptions[3] = {"Monthly", "Semiannually", "Annually"};
 

@@ -100,6 +100,9 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
 
     // node setup
     NODESETUP_ENDPOINT = QString::fromStdString(gArgs.GetArg("-nodesetupurl", "https://setup2dev.sinovate.io/includes/api/basic.php"));
+    invoiceTimer = new QTimer(this);
+    connect(invoiceTimer, SIGNAL(timeout()), this, SLOT(nodeSetupCheckInvoiceStatus()));
+
     nodeSetupInitialize();
 }
 
@@ -612,35 +615,71 @@ void MasternodeList::on_btnSetup_clicked()
 
         // get invoice data and do payment
         QString strAmount, strStatus, paymentAddress;
+        strStatus = nodeSetupCheckInvoiceStatus();
         nodeSetupAPIGetInvoice( mInvoiceid, strAmount, strStatus, paymentAddress, strError );
-        CAmount invoiceAmount = strAmount.toDouble();
-ui->labelMessage->setText(QString::fromStdString(strprintf("Invoice amount %f SIN", invoiceAmount)));
 
-        if ( strStatus == "Cancelled" || strStatus == "Refunded" )  {  // reset and call again
-            mOrderid = 0;
-            mInvoiceid = 0;
-            on_btnSetup_clicked();
-        }
-
-        if ( strStatus == "Unpaid" )  {
-            if ( nodeSetupCheckFunds( invoiceAmount ) ) {
-                nodeSetupStep( "setupWait", "Paying invoice");
-            }
-            else {
-                nodeSetupStep( "setupKo", "Process stopped");
-            }
-        }
-
-        if ( strStatus == "Paid" )  {
-            nodeSetupStep( "setupWait", "Checking for confirmations");
-        }
     }
     else    {
         ui->labelMessage->setText(strError);
     }
 }
 
+QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
+    QString strAmount, strStatus, paymentAddress;
+    nodeSetupAPIGetInvoice( mInvoiceid, strAmount, strStatus, paymentAddress, strError );
 
+    CAmount invoiceAmount = strAmount.toDouble();
+ui->labelMessage->setText(QString::fromStdString(strprintf("Invoice amount %f SIN", invoiceAmount)));
+
+    if ( strStatus == "Cancelled" || strStatus == "Refunded" )  {  // reset and call again
+        invoiceTimer->stop();
+        nodeSetupResetOrderId();
+        on_btnSetup_clicked();
+    }
+
+    if ( strStatus == "Unpaid" )  {
+        if ( nodeSetupCheckFunds( invoiceAmount ) ) {
+            nodeSetupStep( "setupWait", "Paying invoice");
+            if ( !invoiceTimer->IsActive() )  {
+                invoiceTimer->start(60000);
+            }
+        }
+        else {
+            nodeSetupStep( "setupKo", "Process stopped");
+        }
+    }
+
+    if ( strStatus == "Paid" )  {
+        invoiceTimer->stop();
+        // launch node setup (RPC)
+        nodeSetupStep( "setupWait", "Checking for confirmations");
+    }
+
+    QMessageBox::warning(this, "Invoice timer", "invoice timer", QMessageBox::Ok, QMessageBox::Ok);
+    return strStatus;
+}
+
+/*
+ * To setup DIN node, we do by RPC command. We need Qt to replace RPC command
+RPC steps :
+infinitynodeburnfund your_Burn_Address Amount Your_Backup_Address
+    Sample for MINI
+    infinitynodeburnfund SQ5Qnpf3mWituuXtQrEknKYDaKUtinvMzT 100000 SWyHHvnPNaH18TcfszAzWfKyojmTqtZQqy
+infinitynode keypair
+Sample Output￼
+  "PrivateKey": "VNrgVRMdbzwo4Q6FeFaDAQBgu5hHJ93zJ3HaL3CZkCTNsJ1fmCZk",
+  "PublicKey": "AmBDwey14KGI/8kx7pX9xCftZiXHX9DXFEFON99D5Cuh",
+  "DecodePublicKey": "576910b18666f70108f771483b115b622fbef96f",
+  "Address": "SXW5DaQ3iJP4Tv8qyKtjZfLEfes24b2guJ",
+  "isCompressed": true
+infinitynodeupdatemeta Your_Burn_Address Your_Public_Key Your_VPS_IP:Port Your_Burn_TX_First_16Cha
+￼Sample
+infinitynodeupdatemeta SQ5Qnpf3mWituuXtQrEknKYDaKUtinvMzT AmBDwey14KGI/8kx7pX9xCftZiXHX9DXFEFON99D5Cuh [2a03:b0c0:2:f0::33f:5001]:20980 cc8d78e0918c9925
+Sample Output￼
+  "Metadata": "AmBDwey14KGI/8kx7pX9xCftZiXHX9DXFEFON99D5Cuh;159.146.31.53:20980;cc8d78e0918c9925"
+
+ *
+ */
 
 void MasternodeList::on_btnLogin_clicked()
 {
@@ -725,6 +764,7 @@ void MasternodeList::nodeSetupInitialize()   {
     if ( mOrderid > 0 )    {
         ui->labelMessage->setText(QString::fromStdString(strprintf("There is an order ongoing (#%d). Press 'Continue' or 'Reset' order.", mOrderid)));
         nodeSetupEnableOrderUI(true, mOrderid, mInvoiceid);
+        mPaymentTx = nodeSetupGetPaymentTx();
     }
     else    {
         nodeSetupEnableOrderUI(false);
@@ -776,6 +816,7 @@ void MasternodeList::nodeSetupResetOrderId( )   {
     ui->btnCheck->setEnabled(true);
     ui->labelMessage->setText("Select a node Tier and then press 'Check' to verify if you meet the prerequisites");
     mOrderid = mInvoiceid = 0;
+    mTxPayment = "";
 }
 
 void MasternodeList::nodeSetupEnableClientId( int clientId )  {
@@ -887,6 +928,20 @@ void MasternodeList::nodeSetupSetOrderId( int orderid , int invoiceid, QString p
     settings.setValue("nodeSetupProductIds", productids);
 }
 
+QString MasternodeList::nodeSetupGetPaymentTx( )  {
+    QString ret = 0;
+    QSettings settings;
+
+    if (settings.contains("nodeSetupPaymentTx"))
+        ret = settings.value("nodeSetupPaymentTx").toString();
+
+    return ret;
+}
+
+void MasternodeList::nodeSetupSetPaymentTx( QString txHash )  {
+    QSettings settings;
+    settings.setValue("nodeSetupPaymentTx", txHash);
+}
 
 int MasternodeList::nodeSetupAPIAddClient( QString firstName, QString lastName, QString email, QString password, QString& strError )  {
     int ret = 0;
