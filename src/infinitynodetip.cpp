@@ -40,6 +40,7 @@ void CInfinitynodeTip::UpdatedBlockTip(const CBlockIndex *pindexNew, bool fIniti
             bool updateStm = infnodeman.deterministicRewardStatement(10) &&
                              infnodeman.deterministicRewardStatement(5) &&
                              infnodeman.deterministicRewardStatement(1);
+            LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- Build stm maps status: %d\n", updateStm);
             if (updateStm) infnodeman.calculAllInfinityNodesRankAtLastStm();
         }
         // We must be at the tip already

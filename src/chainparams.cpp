@@ -271,8 +271,8 @@ public:
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         /*Previously used as simple constants in validation */
-        consensus.nINActivationHeight = 170000; // Activation of IN payment enforcement, should also be the same as nSinHeightMainnet in primitives/block.cpp
-        consensus.nINEnforcementHeight = 178000; // Enforcement of IN payments
+        consensus.nINActivationHeight = 100; // Activation of IN 0.1 in primitives/block.cpp
+        consensus.nINEnforcementHeight = 120; // Enforcement of IN payments
 
         consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
 

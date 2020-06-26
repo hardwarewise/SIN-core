@@ -2253,8 +2253,13 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
     LogPrintf("Miner -- Dev fee paid: %d, Calcul dev fee %d\n", block.vtx[0]->vout[1].nValue, GetDevCoin(pindex->nHeight, blockReward));
     if (block.vtx[0]->vout[1].nValue < GetDevCoin(pindex->nHeight, blockReward))
         return state.DoS(100, error("ConnectBlock(): coinbase does not pay enough to the dev fund address."), REJECT_INVALID, "bad-cb-dev-fee");
-    //Legacy IN payee validation
-    if (pindex->nHeight > chainparams.GetConsensus().nINActivationHeight && pindex->nHeight <= chainparams.GetConsensus().nNewDevfeeAddress) {
+    //Legacy SINOVATE validation
+    if (pindex->nHeight <= chainparams.GetConsensus().nINActivationHeight) {
+        //POW mode: do nothing
+        LogPrintf("Validation -- POW\n");
+    } else if (pindex->nHeight > chainparams.GetConsensus().nINActivationHeight && pindex->nHeight <= chainparams.GetConsensus().nNewDevfeeAddress) {
+        //Masternode mode: check payment
+        LogPrintf("Validation -- POW + Masternode\n");
         if (!IsBlockPayeeValid(block.vtx[0], pindex->nHeight, block.vtx[0]->GetValueOut(), pindex->GetBlockHeader())) {
             mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
             LogPrintf("IsBlockPayeeValid -- disconnect block!\n");
@@ -2264,6 +2269,8 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
             }
         }
     } else {
+        //Infinitynode mode: validation LR
+        LogPrintf("Validation -- POW + Infinitynode\n");
         if (!LockRewardValidation(pindex->nHeight, block)) {
             mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
             LogPrintf("LockRewardValidation -- disconnect block!\n");

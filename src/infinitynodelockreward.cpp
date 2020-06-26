@@ -1592,15 +1592,22 @@ bool CInfinityNodeLockReward::AutoResigterLockReward(std::string sLockReward, st
     CAmount curBalance = pwallet->GetBalance();
 
     CAmount nAmountRegister = 0.001 * COIN;
-    CAmount nAmountToSelect = 0.1 * COIN;
+    CAmount nAmountToSelect = 0.05 * COIN;
 
-    //select coin
+    CTxDestination nodeDest = GetDestinationForKey(infinitynodePeer.pubKeyInfinitynode, OutputType::LEGACY);
+    CScript nodeScript = GetScriptForDestination(nodeDest);
+
+    //select coin from Node Address, accept only this address
     CAmount selected = 0;
     for (COutput& out : vPossibleCoins) {
         if(selected >= nAmountToSelect) break;
         if(out.nDepth >= 2 && selected < nAmountToSelect){
-            coin_control.Select(COutPoint(out.tx->GetHash(), out.i));
-            selected += out.tx->tx->vout[out.i].nValue;
+            CScript pubScript;
+            pubScript = out.tx->tx->vout[out.i].scriptPubKey;
+            if(pubScript == nodeScript){
+                coin_control.Select(COutPoint(out.tx->GetHash(), out.i));
+                selected += out.tx->tx->vout[out.i].nValue;
+            }
         }
     }
 
@@ -1610,8 +1617,7 @@ bool CInfinityNodeLockReward::AutoResigterLockReward(std::string sLockReward, st
     }
 
     //chang address
-    //coin_control.destChange = DecodeDestination(infinitynodePeer.pubKeyInfinitynode.GetID().ToString());
-    coin_control.destChange = GetDestinationForKey(infinitynodePeer.pubKeyInfinitynode, OutputType::LEGACY);
+    coin_control.destChange = nodeDest;
 
     //CRecipient
     std::string strFail = "";
@@ -1928,11 +1934,20 @@ void CInfinityNodeLockReward::TryConnectToMySigners(int rewardHeight, CConnman& 
  */
 bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
 {
-    if(fLiteMode || !fInfinityNode) return false;
+    if(fLiteMode || !fInfinityNode){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessBlock -- Lite mode or not Infinitynode\n");
+        return false;
+    }
     //DIN must be built before begin the process
-    if(infnodeman.getMapStatus() == false) return false;
+    if(infnodeman.getMapStatus() == false){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessBlock -- DIN map was not built\n");
+        return false;
+    }
     //mypeer must have status STARTED
-    if(infinitynodePeer.nState != INFINITYNODE_PEER_STARTED) return false;
+    if(infinitynodePeer.nState != INFINITYNODE_PEER_STARTED){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessBlock -- Node is not started! Can not process block\n");
+        return false;
+    }
 
     //step 0.1: Check if this InfinitynodePeer is a candidate at nBlockHeight
     CInfinitynode infRet;

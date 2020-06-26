@@ -87,60 +87,117 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
 
 bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount blockReward, CBlockHeader pblock)
 {
-    if(!masternodeSync.IsSynced()) {
-        //there is no budget data to use to check anything, let's just accept the longest chain
-        if(fDebug) LogPrintf("IsBlockPayeeValid -- WARNING: Client not synced, skipping block payee checks\n");
-        return true;
-    }
-
-    // we are still using budgets, but we have no data about them anymore,
-    // we can only check masternode payments
-
-    const Consensus::Params& consensusParams = Params().GetConsensus();
-
-    if(nBlockHeight < consensusParams.nSuperblockStartBlock) {
-        LogPrintf("IsBlockPayeeValid -- Superblock is not started\n");
-        if(mnpayments.IsTransactionValid(txNew, nBlockHeight)) {
-            LogPrintf("IsBlockPayeeValid -- Valid masternode payment at height %d: %s\n", nBlockHeight, txNew->ToString());
+    if (Params().NetworkIDString() == CBaseChainParams::MAIN) {
+        if(!masternodeSync.IsSynced()) {
+            //there is no budget data to use to check anything, let's just accept the longest chain
+            if(fDebug) LogPrintf("IsBlockPayeeValid -- WARNING: Client not synced, skipping block payee checks\n");
             return true;
         }
 
-        int nOffset = nBlockHeight % consensusParams.nBudgetPaymentsCycleBlocks;
-        if(nBlockHeight >= consensusParams.nBudgetPaymentsStartBlock &&
-            nOffset < consensusParams.nBudgetPaymentsWindowBlocks) {
-            if(!sporkManager.IsSporkActive(SPORK_13_OLD_SUPERBLOCK_FLAG)) {
-                // no budget blocks should be accepted here, if SPORK_13_OLD_SUPERBLOCK_FLAG is disabled
-                LogPrintf("IsBlockPayeeValid -- ERROR: Client synced but budget spork is disabled and masternode payment is invalid\n");
-                return false;
+
+        // we are still using budgets, but we have no data about them anymore,
+        // we can only check masternode payments
+
+        const Consensus::Params& consensusParams = Params().GetConsensus();
+
+        if(nBlockHeight < consensusParams.nSuperblockStartBlock) {
+            LogPrintf("IsBlockPayeeValid -- Superblock is not started\n");
+            if(mnpayments.IsTransactionValid(txNew, nBlockHeight)) {
+                LogPrintf("IsBlockPayeeValid -- Valid masternode payment at height %d: %s\n", nBlockHeight, txNew->ToString());
+                return true;
             }
-            // NOTE: this should never happen in real, SPORK_13_OLD_SUPERBLOCK_FLAG MUST be disabled when 12.1 starts to go live
-            LogPrintf("IsBlockPayeeValid -- WARNING: Probably valid budget block, have no data, accepting\n");
-            // TODO: reprocess blocks to make sure they are legit?
+
+            int nOffset = nBlockHeight % consensusParams.nBudgetPaymentsCycleBlocks;
+            if(nBlockHeight >= consensusParams.nBudgetPaymentsStartBlock &&
+                nOffset < consensusParams.nBudgetPaymentsWindowBlocks) {
+                if(!sporkManager.IsSporkActive(SPORK_13_OLD_SUPERBLOCK_FLAG)) {
+                    // no budget blocks should be accepted here, if SPORK_13_OLD_SUPERBLOCK_FLAG is disabled
+                    LogPrintf("IsBlockPayeeValid -- ERROR: Client synced but budget spork is disabled and masternode payment is invalid\n");
+                    return false;
+                }
+                // NOTE: this should never happen in real, SPORK_13_OLD_SUPERBLOCK_FLAG MUST be disabled when 12.1 starts to go live
+                LogPrintf("IsBlockPayeeValid -- WARNING: Probably valid budget block, have no data, accepting\n");
+                // TODO: reprocess blocks to make sure they are legit?
+                return true;
+            }
+
+            if(sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)) {
+                    LogPrintf("IsBlockPayeeValid -- ERROR: Invalid masternode payment detected at height %d: %s\n", nBlockHeight, txNew->ToString());
+                    return false;
+            }
+
+            LogPrintf("IsBlockPayeeValid -- WARNING: Masternode payment enforcement is disabled, accepting any payee\n");
+            return true;
+        }
+
+        // IF THIS ISN'T A SUPERBLOCK OR SUPERBLOCK IS INVALID, IT SHOULD PAY A MASTERNODE DIRECTLY
+        if(mnpayments.IsTransactionValid(txNew, nBlockHeight)) {
+            LogPrint(BCLog::MNPAYMENTS, "IsBlockPayeeValid -- Valid masternode payment at height %d: %s\n", nBlockHeight, txNew->ToString());
             return true;
         }
 
         if(sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)) {
-                LogPrintf("IsBlockPayeeValid -- ERROR: Invalid masternode payment detected at height %d: %s\n", nBlockHeight, txNew->ToString());
-                return false;
+            LogPrintf("IsBlockPayeeValid -- ERROR: Invalid masternode payment detected at height %d: %s\n", nBlockHeight, txNew->ToString());
+            return false;
         }
 
         LogPrintf("IsBlockPayeeValid -- WARNING: Masternode payment enforcement is disabled, accepting any payee\n");
         return true;
-    }
+    } else {
+        //not mainnet
+        int counterNodePayment = 0;
+        CScript burnfundScript;
+        burnfundScript << OP_DUP << OP_HASH160 << ParseHex(Params().GetConsensus().cBurnAddressPubKey) << OP_EQUALVERIFY << OP_CHECKSIG;
 
-    // IF THIS ISN'T A SUPERBLOCK OR SUPERBLOCK IS INVALID, IT SHOULD PAY A MASTERNODE DIRECTLY
-    if(mnpayments.IsTransactionValid(txNew, nBlockHeight)) {
-        LogPrint(BCLog::MNPAYMENTS, "IsBlockPayeeValid -- Valid masternode payment at height %d: %s\n", nBlockHeight, txNew->ToString());
-        return true;
-    }
+        //extract LockReward
+        std::vector<CLockRewardExtractInfo> vecLockRewardRet;
+        infnodeman.getLRForHeight(nBlockHeight-1, vecLockRewardRet);
+        LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- LR size: %d\n", (int) vecLockRewardRet.size());
 
-    if(sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)) {
-        LogPrintf("IsBlockPayeeValid -- ERROR: Invalid masternode payment detected at height %d: %s\n", nBlockHeight, txNew->ToString());
-        return false;
-    }
+        int txIndex = 0;
+        for (auto txout : txNew->vout) {
+            txIndex ++;
+            if (3 <= txIndex && txIndex <=5) {
+                if ( txout.scriptPubKey == burnfundScript ) {
+                    counterNodePayment ++;
+                } else {
+                    //BEGIN
+                    CScript DINPayee;
+                    CInfinitynode infOwner;
+                    int SINType = 0;
+                    //choose tier value
+                    if (txIndex == 3) {
+                        SINType = 10;
+                    } else if (txIndex == 4) {
+                        SINType = 5;
+                    } else {
+                        SINType = 1;
+                    }
 
-    LogPrintf("IsBlockPayeeValid -- WARNING: Masternode payment enforcement is disabled, accepting any payee\n");
-    return true;
+                    CAmount InfPaymentOwner = 0;
+                    InfPaymentOwner = GetMasternodePayment(nBlockHeight, SINType);
+
+                    for (auto& v : vecLockRewardRet) {
+                        if(v.nSINtype == SINType && v.nRewardHeight == nBlockHeight /*&& v.scriptPubKey == txout.scriptPubKey*/ && txout.nValue == InfPaymentOwner){
+                            //TODO: check schnorr musig
+                            CTxDestination addressTxDIN;
+                            ExtractDestination(txout.scriptPubKey, addressTxDIN);
+                            std::string addressTxDIN2 = EncodeDestination(addressTxDIN);
+                            LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- VALID SINtype: %d, address: %d\n", SINType, addressTxDIN2);
+                            counterNodePayment ++;
+                        }
+                    }
+                }
+            }
+        }//end loop output
+        if ( counterNodePayment == 3 ) {
+            LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- 3 payments are validated\n");
+            return true;
+        } else {
+            LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- ERROR: Missing required payment\n");
+            return false;
+        }
+    }
 }
 
 void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blockReward, std::vector<CTxOut>& txoutMasternodeRet, std::vector<CTxOut>& voutSuperblockRet)
@@ -164,7 +221,7 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
     } else {
         //not mainnet
         std::vector<CLockRewardExtractInfo> vecLockRewardRet;
-        infnodeman.getLRForHeight(nBlockHeight, vecLockRewardRet);
+        infnodeman.getLRForHeight(nBlockHeight - 1, vecLockRewardRet);
 
         CScript DINPayee;
         CInfinitynode infOwner;
@@ -186,7 +243,7 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
             if (infnodeman.deterministicRewardAtHeight(nBlockHeight, SINType, infOwner)){
                 DINPayee = infOwner.GetInfo().scriptPubKey;
                 for (auto& v : vecLockRewardRet) {
-                    if(v.nSINtype == SINType && v.nRewardHeight == nBlockHeight && v.scriptPubKey == DINPayee){
+                    if(v.nSINtype == SINType && v.nRewardHeight == nBlockHeight /*&& v.scriptPubKey == DINPayee*/){
                         //TODO: check schnorr musig
                         fFoundLockReward = true;
                         break;
@@ -194,12 +251,15 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
                 }
 
                 if(fFoundLockReward){
+                    LogPrintf("FillBlockPayments -- TESTNET LockReward ADD Payment\n");
                     txNew.vout[0].nValue -= InfPaymentOwner;
                     txNew.vout.push_back(CTxOut(InfPaymentOwner, DINPayee));
                 }else{
                     fBurnRewardOwner=true;
+                    LogPrintf("FillBlockPayments -- TESTNET LockReward NOT FOUND => Burn\n");
                 }
             } else {
+                LogPrintf("FillBlockPayments -- TESTNET SINtype: %d, No candidate found\n", SINType);
                 fBurnRewardOwner=true;
             }
 
@@ -658,10 +718,6 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransactionRef txNew)
     CScript burnfundScript;
     burnfundScript << OP_DUP << OP_HASH160 << ParseHex(Params().GetConsensus().cBurnAddressPubKey) << OP_EQUALVERIFY << OP_CHECKSIG;
 
-    //extract LockReward
-    std::vector<CLockRewardExtractInfo> vecLockRewardRet;
-    infnodeman.getLRForHeight(nBlockHeight, vecLockRewardRet);
-
     int txIndex = 0;
     for (auto txout : txNew->vout) {
         txIndex ++;
@@ -685,30 +741,6 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransactionRef txNew)
                             strPayeesPossible = strprintf("%s(%d)",address2, payee.GetSinType());
                         } else {
                             strPayeesPossible = strprintf("%s,%s(%d)",strPayeesPossible, address2, payee.GetSinType());
-                        }
-                    }
-                } else {
-                    //not mainnet
-                    //BEGIN
-                    CScript DINPayee;
-                    CInfinitynode infOwner;
-                    int SINType = 0;
-                    //choose tier value
-                    if (txIndex == 3) {
-                        SINType = 10;
-                    } else if (txIndex == 4) {
-                        SINType = 5;
-                    } else {
-                        SINType = 1;
-                    }
-
-                    CAmount InfPaymentOwner = 0;
-                    InfPaymentOwner = GetMasternodePayment(nBlockHeight, SINType);
-
-                    for (auto& v : vecLockRewardRet) {
-                        if(v.nSINtype == SINType && v.nRewardHeight == nBlockHeight && v.scriptPubKey == txout.scriptPubKey && txout.nValue == InfPaymentOwner){
-                            //TODO: check schnorr musig
-                            counterNodePayment ++;
                         }
                     }
                 }
