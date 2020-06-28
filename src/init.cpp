@@ -1324,11 +1324,13 @@ void ThreadCheckInfinityNode(CConnman& connman)
             }
         }
         if(nTickDIN % (60 * 5) == 0) {
-            ENTER_CRITICAL_SECTION(cs_main);
+            if(infnodeman.isReachedLastBlock()){
+                ENTER_CRITICAL_SECTION(cs_main);
                 //call buildInfinitynodeList and deterministicRewardStatement(nSINtype)
-                infnodeman.CheckAndRemove(connman);
+                //infnodeman.CheckAndRemove(connman);
                 inflockreward.CheckAndRemove(connman);
-            LEAVE_CRITICAL_SECTION(cs_main);
+                LEAVE_CRITICAL_SECTION(cs_main);
+            }
         }
         if(!fTurnOffMasternode) {
             // try to sync from all available nodes, one step at a time

@@ -15,9 +15,11 @@ CInfinitynodeTip::CInfinitynodeTip()
 : fFinished(false)
 {}
 
+/*
+ * each block (event when sync from block 0), when reached fReachedBestHeader => update stm and node rank
+ */
 void CInfinitynodeTip::UpdatedBlockTip(const CBlockIndex *pindexNew, bool fInitialDownload, CConnman& connman)
 {
-    LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- pindexNew->nHeight: %d fInitialDownload=%d\n", pindexNew->nHeight, fInitialDownload);
     if (fInitialDownload) {return;}
 
     static bool fReachedBestHeader = false;
@@ -33,16 +35,25 @@ void CInfinitynodeTip::UpdatedBlockTip(const CBlockIndex *pindexNew, bool fIniti
     LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- pindexNew->nHeight: %d pindexBestHeader->nHeight: %d fInitialDownload=%d fReachedBestHeader=%d\n",
                 pindexNew->nHeight, pindexBestHeader->nHeight, fInitialDownload, fReachedBestHeader);
 
-    if (fReachedBestHeader) {
-        // lock main here
-        LOCK(cs_main);
-        if (infnodeman.updateInfinitynodeList(pindexBestHeader->nHeight)){
+    // lock main here
+    // update our DIN info for each new block
+    LOCK(cs_main);
+    if (infnodeman.updateInfinitynodeList(pindexNew->nHeight)){
             bool updateStm = infnodeman.deterministicRewardStatement(10) &&
                              infnodeman.deterministicRewardStatement(5) &&
                              infnodeman.deterministicRewardStatement(1);
-            LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- Build stm maps status: %d\n", updateStm);
-            if (updateStm) infnodeman.calculAllInfinityNodesRankAtLastStm();
-        }
+            if (updateStm){
+                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm status: %d\n",updateStm);
+                infnodeman.calculAllInfinityNodesRankAtLastStm();
+            } else {
+                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm false\n");
+            }
+    } else {
+        LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- Cannot update DIN info\n");
+    }
+
+    if (fReachedBestHeader) {
+        infnodeman.setSyncStatus(true);
         // We must be at the tip already
         fFinished = true;
     }

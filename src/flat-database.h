@@ -69,7 +69,7 @@ private:
         fileout.fclose();
 
         LogPrintf("Written info to %s  %dms\n", strFilename, GetTimeMillis() - nStart);
-        LogPrintf("     %s\n", objToSave.ToString());
+        //LogPrintf("     %s\n", objToSave.ToString());
 
         return true;
     }
@@ -154,11 +154,11 @@ private:
         }
 
         LogPrintf("Loaded info from %s  %dms\n", strFilename, GetTimeMillis() - nStart);
-        LogPrintf("     %s\n", objToLoad.ToString());
+        //LogPrintf("     %s\n", objToLoad.ToString());
         if(!fDryRun) {
             LogPrintf("%s: Cleaning....\n", __func__);
             objToLoad.CheckAndRemove();
-            LogPrintf("     %s\n", objToLoad.ToString());
+            //LogPrintf("     %s\n", objToLoad.ToString());
         }
 
         return Ok;

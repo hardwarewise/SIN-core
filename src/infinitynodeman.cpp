@@ -182,6 +182,9 @@ int CInfinitynodeMan::getRoi(int nSinType, int totalNode)
     return (int) roi;
 }
 
+/*
+ * call in init.cpp
+ */
 bool CInfinitynodeMan::initialInfinitynodeList(int nBlockHeight)
 {
     LOCK(cs); // cs_main needs to be called by the parent function
@@ -235,7 +238,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
 
     uint256 blockHash;
     if(!GetBlockHash(blockHash, nBlockHeight)) {
-        LogPrint(BCLog::INFINITYNODE, "CInfinitynodeMan::buildInfinitynodeList -- can not read block hash\n");
+        LogPrint(BCLog::INFINITYNODE, "CInfinitynodeMan::buildInfinitynodeList -- can not get block hash at %d\n", nBlockHeight);
         return false;
     }
 
@@ -1172,8 +1175,12 @@ std::string CInfinitynodeMan::getVectorNodeRankAtHeight(const std::vector<COutPo
 
 void CInfinitynodeMan::UpdatedBlockTip(const CBlockIndex *pindex)
 {
-    nCachedBlockHeight = pindex->nHeight;
-    updateLastStmHeightAndSize(nCachedBlockHeight, 10);
-    updateLastStmHeightAndSize(nCachedBlockHeight, 5);
-    updateLastStmHeightAndSize(nCachedBlockHeight, 1);
+    //update the last Stm when new block connected
+    {
+        nCachedBlockHeight = pindex->nHeight;
+        LogPrint(BCLog::INFINITYLOCK,"CInfinitynodeMan::UpdatedBlockTip -- nCachedBlockHeight=%d\n", nCachedBlockHeight);
+        updateLastStmHeightAndSize(nCachedBlockHeight, 10);
+        updateLastStmHeightAndSize(nCachedBlockHeight, 5);
+        updateLastStmHeightAndSize(nCachedBlockHeight, 1);
+    }
 }

@@ -50,6 +50,8 @@ private:
     mutable CCriticalSection cs;
     // Keep track of current block height and first download block
     int nCachedBlockHeight;
+    //
+    bool fReachedLastBlock = false;
     bool fMapInfinitynodeUpdated = false;
 
     // map to hold all INFs
@@ -151,6 +153,9 @@ public:
         if(nSinType == 5) return nMIDLastStmSize;
         if(nSinType == 1) return nLILLastStmSize;
     }
+
+    void setSyncStatus(bool flag){LOCK(cs); fReachedLastBlock=flag;}
+    bool isReachedLastBlock(){LOCK(cs); return fReachedLastBlock;}
 
     std::map<CScript, int> GetFullLastPaidMap() { return mapLastPaid; }
     int64_t getLastScan(){return nLastScanHeight;}

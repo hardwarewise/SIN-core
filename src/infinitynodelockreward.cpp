@@ -2027,6 +2027,9 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
 {
     if(fLiteMode) return; // disable all SIN specific functionality
 
+    //if we are downloading blocks, do nothing
+    if(!infnodeman.isReachedLastBlock()){return;}
+
     if (strCommand == NetMsgType::INFLOCKREWARDINIT) {
         CLockRewardRequest lockReq;
         vRecv >> lockReq;
@@ -2137,12 +2140,15 @@ void CInfinityNodeLockReward::UpdatedBlockTip(const CBlockIndex *pindex, CConnma
     if(!pindex) return;
 
     nCachedBlockHeight = pindex->nHeight;
-    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::UpdatedBlockTip -- nCachedBlockHeight=%d\n", nCachedBlockHeight);
-
-    int nFutureBlock = nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardDeepth;
 
     //CheckPreviousBlockVotes(nFutureBlock);
-    ProcessBlock(nFutureBlock, connman);
+    if(infnodeman.isReachedLastBlock()){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::UpdatedBlockTip -- nCachedBlockHeight=%d\n", nCachedBlockHeight);
+        int nFutureBlock = nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardDeepth;
+        ProcessBlock(nFutureBlock, connman);
+    } else {
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::UpdatedBlockTip -- nCachedBlockHeight=%d. BUT ReachedLastBlock is FALSE => do nothing!\n", nCachedBlockHeight);
+    }
 }
 
 

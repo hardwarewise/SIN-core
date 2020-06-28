@@ -145,6 +145,12 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
         return true;
     } else {
         //not mainnet
+        // accept all block inferieur than 91610
+        if(nBlockHeight < 91610){
+            LogPrintf("IsBlockPayeeValid -- accept all Coinbase Tx before simulation hardfork\n");
+            return true;
+        }
+
         int counterNodePayment = 0;
         CScript burnfundScript;
         burnfundScript << OP_DUP << OP_HASH160 << ParseHex(Params().GetConsensus().cBurnAddressPubKey) << OP_EQUALVERIFY << OP_CHECKSIG;
@@ -152,7 +158,7 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
         //extract LockReward
         std::vector<CLockRewardExtractInfo> vecLockRewardRet;
         infnodeman.getLRForHeight(nBlockHeight-1, vecLockRewardRet);
-        LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- LR size: %d\n", (int) vecLockRewardRet.size());
+        LogPrintf("IsBlockPayeeValid -- LR size: %d\n", (int) vecLockRewardRet.size());
 
         int txIndex = 0;
         for (auto txout : txNew->vout) {
@@ -177,24 +183,28 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
                     CAmount InfPaymentOwner = 0;
                     InfPaymentOwner = GetMasternodePayment(nBlockHeight, SINType);
 
+                    //check if exist a LR for candidate: Yes: Must pay for him with exact Amount; No: Burn
+                    bool fCandidateValid = false;
                     for (auto& v : vecLockRewardRet) {
                         if(v.nSINtype == SINType && v.nRewardHeight == nBlockHeight /*&& v.scriptPubKey == txout.scriptPubKey*/ && txout.nValue == InfPaymentOwner){
                             //TODO: check schnorr musig
                             CTxDestination addressTxDIN;
                             ExtractDestination(txout.scriptPubKey, addressTxDIN);
                             std::string addressTxDIN2 = EncodeDestination(addressTxDIN);
-                            LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- VALID SINtype: %d, address: %d\n", SINType, addressTxDIN2);
+                            LogPrintf("IsBlockPayeeValid -- VALID SINtype: %d, address: %d\n", SINType, addressTxDIN2);
                             counterNodePayment ++;
                         }
                     }
+
                 }
             }
         }//end loop output
+
         if ( counterNodePayment == 3 ) {
-            LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- 3 payments are validated\n");
+            LogPrintf("IsBlockPayeeValid -- 3 payments are validated\n");
             return true;
         } else {
-            LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- ERROR: Missing required payment\n");
+            LogPrintf("IsBlockPayeeValid -- ERROR: Missing required payment\n");
             return false;
         }
     }

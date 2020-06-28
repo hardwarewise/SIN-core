@@ -83,17 +83,14 @@ bool CInfinitynodeMeta::metaScan(int nBlockHeight)
 
     LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::metaScan -- Cleared map. Size is %d at height: %d\n", (int)mapNodeMetadata.size(), nBlockHeight);
     if (nBlockHeight <= Params().GetConsensus().nInfinityNodeGenesisStatement) return false;
-    LogPrintf("CInfinitynodeMeta:: 1");
     uint256 blockHash;
     if(!GetBlockHash(blockHash, nBlockHeight)) {
         LogPrint(BCLog::INFINITYNODE, "CInfinitynodeMeta::metaScan -- can not read block hash\n");
         return false;
     }
-    LogPrintf("CInfinitynodeMeta:: 2");
     CBlockIndex* pindex;
     pindex = LookupBlockIndex(blockHash);
     CBlockIndex* prevBlockIndex = pindex;
-    LogPrintf("CInfinitynodeMeta:: 3");
     while (prevBlockIndex->nHeight >= Params().GetConsensus().nInfinityNodeGenesisStatement)
     {
         CBlock blockReadFromDisk;
@@ -177,11 +174,8 @@ bool CInfinitynodeMeta::metaScan(int nBlockHeight)
                                                          streamInfo.str(), publicKeyString, service.ToString(), prevBlockIndex->nHeight);
                                             int avtiveBK = 0;
                                             int nHeight = prevBlockIndex->nHeight;
-											    LogPrintf("CInfinitynodeMeta:: 4");
                                             CMetadata meta = CMetadata(streamInfo.str(), publicKeyString, service, nHeight, avtiveBK);
-											    LogPrintf("CInfinitynodeMeta:: 5");
                                             Add(meta);
-											    LogPrintf("CInfinitynodeMeta:: 6");
                                         }
                                         i++;
                                     }
