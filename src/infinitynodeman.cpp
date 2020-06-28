@@ -625,7 +625,7 @@ bool CInfinitynodeMan::ExtractLockReward(int nBlockHeight, int depth, std::vecto
                             LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::ExtractLockReward -- LR: %s.\n", stringLRRegister);
                             //if(nRewardHeight != nBlockHeight){continue;}
 
-                            //veryfy who send this registration, our candidate ?
+                            //veryfy who send this registration, our candidate ???
                             const CTxIn& txin = tx->vin[0];
                             int index = txin.prevout.n;
 
@@ -942,6 +942,12 @@ bool CInfinitynodeMan::deterministicRewardAtHeight(int nBlockHeight, int nSinTyp
                 //at end of loop
                 //we are near the end of current Stm and
                 //we try LR in next stm, but deterministicRewardStatement is not call, dont wait and try to update here
+                fUpdateStm = true;
+                nNextStmHeight = stm.first + stm.second;
+            }
+        } else if(nBlockHeight > stm.first && nDelta == (nBlockHeight -stm.first)){
+            if (loop == mapStatementSinType.size()){
+                //at end of loop
                 fUpdateStm = true;
                 nNextStmHeight = stm.first + stm.second;
             }

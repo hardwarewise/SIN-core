@@ -145,7 +145,7 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
         return true;
     } else {
         //not mainnet
-        // accept all block inferieur than 91610
+        // accept all block inferieur than 91610 = fork height in testnet
         if(nBlockHeight < 91610){
             LogPrintf("IsBlockPayeeValid -- accept all Coinbase Tx before simulation hardfork\n");
             return true;
@@ -164,38 +164,61 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
         for (auto txout : txNew->vout) {
             txIndex ++;
             if (3 <= txIndex && txIndex <=5) {
-                if ( txout.scriptPubKey == burnfundScript ) {
-                    counterNodePayment ++;
+                //BEGIN
+                CScript DINPayee;
+
+                int SINType = 0;
+                //choose tier value
+                if (txIndex == 3) {
+                    SINType = 10;
+                } else if (txIndex == 4) {
+                    SINType = 5;
                 } else {
-                    //BEGIN
-                    CScript DINPayee;
-                    CInfinitynode infOwner;
-                    int SINType = 0;
-                    //choose tier value
-                    if (txIndex == 3) {
-                        SINType = 10;
-                    } else if (txIndex == 4) {
-                        SINType = 5;
-                    } else {
-                        SINType = 1;
-                    }
+                    SINType = 1;
+                }
+                //candidate for this Height
+                //check if exist a LR for candidate: Yes: Must pay for him with exact Amount; No: Burn
+                CInfinitynode infOwner;
+                if (infnodeman.deterministicRewardAtHeight(nBlockHeight, SINType, infOwner)){
 
                     CAmount InfPaymentOwner = 0;
                     InfPaymentOwner = GetMasternodePayment(nBlockHeight, SINType);
 
-                    //check if exist a LR for candidate: Yes: Must pay for him with exact Amount; No: Burn
                     bool fCandidateValid = false;
+                    CTxDestination addressTxDIN;
+                    std::string addressTxDIN2 = "";
+                    ExtractDestination(txout.scriptPubKey, addressTxDIN);
+                    addressTxDIN2 = EncodeDestination(addressTxDIN);
+
                     for (auto& v : vecLockRewardRet) {
-                        if(v.nSINtype == SINType && v.nRewardHeight == nBlockHeight /*&& v.scriptPubKey == txout.scriptPubKey*/ && txout.nValue == InfPaymentOwner){
-                            //TODO: check schnorr musig
-                            CTxDestination addressTxDIN;
-                            ExtractDestination(txout.scriptPubKey, addressTxDIN);
-                            std::string addressTxDIN2 = EncodeDestination(addressTxDIN);
-                            LogPrintf("IsBlockPayeeValid -- VALID SINtype: %d, address: %d\n", SINType, addressTxDIN2);
-                            counterNodePayment ++;
+                        if(v.nSINtype == SINType && v.nRewardHeight == nBlockHeight && txout.nValue == InfPaymentOwner){
+                            //TODO: check schnorr musig to make sure that candidate is valid [Optional: and LR was sent from good metadata: v.scriptPubKey]
+                            LogPrintf("IsBlockPayeeValid -- VALID tx out: %d, LockReward for SINtype: %d, address: %d\n", txIndex, SINType, addressTxDIN2);
+                            fCandidateValid = true;
                         }
                     }
 
+                    //LR and amount of reward is valid, check script to make sure that destination is candidate
+                    if(fCandidateValid){
+                        if (txout.scriptPubKey == infOwner.GetInfo().scriptPubKey){
+                            LogPrintf("IsBlockPayeeValid -- VALID tx out: %d, Payment for SINtype: %d, address: %d\n", txIndex, SINType, addressTxDIN2);
+                            counterNodePayment ++;
+                        }
+                    }
+                    //No LR found for candidate => payment is correct if reward is burnt
+                    else {
+                        if (txout.scriptPubKey == burnfundScript){
+                            LogPrintf("IsBlockPayeeValid -- VALID tx out: %d, No LR for SINtype: %d, burnd it: %d.\n", txIndex, SINType, addressTxDIN2);
+                            counterNodePayment ++;
+                        }
+                    }
+                }
+                //Not found candidate, payment is correct if reward is burnt
+                else {
+                    if (txout.scriptPubKey == burnfundScript){
+                        LogPrintf("IsBlockPayeeValid -- VALID tx out: %d, No Candiate found for SINtype: %d.\n", txIndex, SINType);
+                        counterNodePayment ++;
+                    }
                 }
             }
         }//end loop output
