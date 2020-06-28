@@ -88,7 +88,7 @@ public Q_SLOTS:
     int  nodeSetupGetOrderId( int& invoiceid, QString& mProductIds );
     void nodeSetupSetOrderId( int orderid , int invoiceid, QString strProductIds );
     QString nodeSetupGetPaymentTx( );
-    void nodeSetupSetPaymentTx( QString txHash )  {
+    void nodeSetupSetPaymentTx( QString txHash );
     void nodeSetupResetClientId( );
     void nodeSetupResetOrderId( );
     QString nodeSetupCheckInvoiceStatus();

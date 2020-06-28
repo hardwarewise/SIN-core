@@ -30,6 +30,10 @@
 #include <QStyleFactory>
 
 // begin nodeSetup
+#include <boost/algorithm/string.hpp>
+#include "rpc/server.h"
+#include "rpc/client.h"
+
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -38,6 +42,8 @@
 #include <QUrl>
 #include <QUrlQuery>
 #include <QNetworkReply>
+
+UniValue nodeSetupCallRPC(std::string args);
 // end nodeSetup
 
 int GetOffsetFromUtc()
@@ -616,8 +622,6 @@ void MasternodeList::on_btnSetup_clicked()
         // get invoice data and do payment
         QString strAmount, strStatus, paymentAddress;
         strStatus = nodeSetupCheckInvoiceStatus();
-        nodeSetupAPIGetInvoice( mInvoiceid, strAmount, strStatus, paymentAddress, strError );
-
     }
     else    {
         ui->labelMessage->setText(strError);
@@ -625,37 +629,70 @@ void MasternodeList::on_btnSetup_clicked()
 }
 
 QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
-    QString strAmount, strStatus, paymentAddress;
+    QString strAmount, strStatus, paymentAddress, strError;
     nodeSetupAPIGetInvoice( mInvoiceid, strAmount, strStatus, paymentAddress, strError );
 
     CAmount invoiceAmount = strAmount.toDouble();
 ui->labelMessage->setText(QString::fromStdString(strprintf("Invoice amount %f SIN", invoiceAmount)));
-
+//LogPrintf("nodeSetupCheckInvoiceStatus %s, %s, %f\n", strStatus.toStdString(), paymentAddress.toStdString(), invoiceAmount );
     if ( strStatus == "Cancelled" || strStatus == "Refunded" )  {  // reset and call again
+        nodeSetupStep( "setupWait", "Order cancelled or refunded, creating a new order");
         invoiceTimer->stop();
         nodeSetupResetOrderId();
         on_btnSetup_clicked();
     }
 
     if ( strStatus == "Unpaid" )  {
-        if ( nodeSetupCheckFunds( invoiceAmount ) ) {
-            nodeSetupStep( "setupWait", "Paying invoice");
-            if ( !invoiceTimer->IsActive() )  {
-                invoiceTimer->start(60000);
-            }
+        if ( mPaymentTx != "" ) {   // already paid, waiting confirmations
+LogPrintf("nodeSetupCheckInvoiceStatus %s \n", mPaymentTx.toStdString() );
+            nodeSetupStep( "setupWait", "Invoice paid, waiting for confirmation");
+            ui->btnSetup->setEnabled(false);
+            ui->btnSetupReset->setEnabled(false);
         }
-        else {
-            nodeSetupStep( "setupKo", "Process stopped");
+        else    {
+LogPrintf("nodeSetupCheckInvoiceStatus no txID \n");
+
+            if ( nodeSetupCheckFunds( invoiceAmount ) ) {
+                nodeSetupStep( "setupWait", "Paying invoice");
+                std::ostringstream cmd;
+                try {
+                    cmd.str("");
+                    cmd << "sendtoaddress " << paymentAddress.toUtf8().constData() << " " << invoiceAmount;
+                    UniValue jsonVal = nodeSetupCallRPC( cmd.str() );
+                    if ( jsonVal.type() == UniValue::VSTR )       // tx id returned
+                    {
+                        mPaymentTx = QString::fromStdString(jsonVal.get_str());
+                        nodeSetupSetPaymentTx(mPaymentTx);
+                        ui->labelMessage->setText( "Payment finished, please wait until platform confirms payment to proceed to node creation." );
+                        ui->btnSetup->setEnabled(false);
+                        ui->btnSetupReset->setEnabled(false);
+                        if ( !invoiceTimer->isActive() )  {
+                            invoiceTimer->start(60000);
+                        }
+                    }
+                } catch (UniValue& objError ) {
+                    QString errMessage = QString::fromStdString(find_value(objError, "message").get_str());
+                    if ( errMessage.contains("walletpassphrase") )  {
+                        QMessageBox::warning(this, "Please Unlock Wallet", "In order to pay the invoice, please unlock your wallet and retry", QMessageBox::Ok, QMessageBox::Ok);
+                    }
+
+                    ui->labelMessage->setText( QString::fromStdString(find_value(objError, "message").get_str()) );
+                }
+            }
+            else {
+                nodeSetupStep( "setupKo", "Process stopped");
+            }
         }
     }
 
     if ( strStatus == "Paid" )  {
         invoiceTimer->stop();
         // launch node setup (RPC)
-        nodeSetupStep( "setupWait", "Checking for confirmations");
+LogPrintf("nodeSetupCheckInvoiceStatus Invoice Paid \n");
+
+        nodeSetupStep( "setupWait", "Ready for setup");
     }
 
-    QMessageBox::warning(this, "Invoice timer", "invoice timer", QMessageBox::Ok, QMessageBox::Ok);
     return strStatus;
 }
 
@@ -690,7 +727,6 @@ void MasternodeList::on_btnLogin_clicked()
     }
     else {      // create/login
         int clientId = nodeSetupAPIAddClient( ui->txtFirstName->text(), ui->txtLastName->text(), ui->txtEmail->text(), ui->txtPassword->text(), strError );
-LogPrintf("nodeSetup API client id %d\n", clientId);
         if ( strError != "" )  {
             ui->labelMessage->setText( strError );
         }
@@ -816,7 +852,7 @@ void MasternodeList::nodeSetupResetOrderId( )   {
     ui->btnCheck->setEnabled(true);
     ui->labelMessage->setText("Select a node Tier and then press 'Check' to verify if you meet the prerequisites");
     mOrderid = mInvoiceid = 0;
-    mTxPayment = "";
+    mPaymentTx = "";
 }
 
 void MasternodeList::nodeSetupEnableClientId( int clientId )  {
@@ -1098,3 +1134,21 @@ void MasternodeList::nodeSetupCleanProgress()   {
     currentStep = 0;
 }
 
+// RPC helper
+UniValue nodeSetupCallRPC(string args)
+{
+    vector<string> vArgs;
+    string uri;
+
+    boost::split(vArgs, args, boost::is_any_of(" \t"));
+    string strMethod = vArgs[0];
+    vArgs.erase(vArgs.begin());
+    //Array params = RPCConvertValues(strMethod, vArgs);
+    UniValue params = RPCConvertValues(strMethod, vArgs );
+
+    JSONRPCRequest req;
+    req.params = params;
+    req.strMethod = strMethod;
+    req.URI = uri;
+    return ::tableRPC.execute(req);
+}
