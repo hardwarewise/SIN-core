@@ -210,7 +210,7 @@ bool CInfinitynodeMan::buildInfinitynodeListRPC(int nBlockHeight, int nLowHeight
     return buildInfinitynodeList(nBlockHeight, nLowHeight);
 }
 
-bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
+bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight, bool fWriteDisk)
 {
     if(nBlockHeight < Params().GetConsensus().nInfinityNodeBeginHeight){
         Clear();
@@ -542,14 +542,16 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
 
     fMapInfinitynodeUpdated = true;
 
-    CFlatDB<CInfinitynodeMan> flatdb5("infinitynode.dat", "magicInfinityNodeCache");
-    flatdb5.Dump(infnodeman);
+    if(fWriteDisk){
+        CFlatDB<CInfinitynodeMan> flatdb5("infinitynode.dat", "magicInfinityNodeCache");
+        flatdb5.Dump(infnodeman);
 
-    CFlatDB<CInfinitynodersv> flatdb6("infinitynodersv.dat", "magicInfinityRSV");
-    flatdb6.Dump(infnodersv);
+        CFlatDB<CInfinitynodersv> flatdb6("infinitynodersv.dat", "magicInfinityRSV");
+        flatdb6.Dump(infnodersv);
 
-    CFlatDB<CInfinitynodeMeta> flatdb7("infinitynodemeta.dat", "magicInfinityMeta");
-    flatdb7.Dump(infnodemeta);
+        CFlatDB<CInfinitynodeMeta> flatdb7("infinitynodemeta.dat", "magicInfinityMeta");
+        flatdb7.Dump(infnodemeta);
+    }
 
     LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::buildInfinitynodeList -- list infinity node was built from blockchain at Height: %s\n", nBlockHeight);
     return true;
@@ -1185,8 +1187,5 @@ void CInfinitynodeMan::UpdatedBlockTip(const CBlockIndex *pindex)
     {
         nCachedBlockHeight = pindex->nHeight;
         LogPrint(BCLog::INFINITYLOCK,"CInfinitynodeMan::UpdatedBlockTip -- nCachedBlockHeight=%d\n", nCachedBlockHeight);
-        updateLastStmHeightAndSize(nCachedBlockHeight, 10);
-        updateLastStmHeightAndSize(nCachedBlockHeight, 5);
-        updateLastStmHeightAndSize(nCachedBlockHeight, 1);
     }
 }

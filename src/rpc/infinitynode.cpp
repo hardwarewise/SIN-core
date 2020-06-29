@@ -153,9 +153,22 @@ UniValue infinitynode(const JSONRPCRequest& request)
 
     if (strCommand == "build-stm")
     {
-            return infnodeman.deterministicRewardStatement(10) &&
-                   infnodeman.deterministicRewardStatement(5) &&
-                   infnodeman.deterministicRewardStatement(1);
+        CBlockIndex* pindex = NULL;
+        {
+                LOCK(cs_main);
+                pindex = chainActive.Tip();
+        }
+        bool updateStm = false;
+        LOCK(cs_main);
+        infnodeman.UpdatedBlockTip(pindex);
+        if (infnodeman.updateInfinitynodeList(pindex->nHeight)){
+            updateStm = infnodeman.deterministicRewardStatement(10) &&
+                             infnodeman.deterministicRewardStatement(5) &&
+                             infnodeman.deterministicRewardStatement(1);
+        }
+        obj.push_back(Pair("Height", pindex->nHeight));
+        obj.push_back(Pair("Result", updateStm));
+        return obj;
     }
 
     if (strCommand == "show-stm")

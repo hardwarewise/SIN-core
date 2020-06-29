@@ -1957,6 +1957,8 @@ bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
     }
 
     int nRewardHeight = infnodeman.isPossibleForLockReward(infRet.getCollateralAddress());
+
+    LOCK(cs);
     if(nRewardHeight == 0 || (nRewardHeight < (nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardLoop))){
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessBlock -- Try to LockReward false at height %d\n", nBlockHeight);
         mapSigners.clear();
@@ -1971,7 +1973,6 @@ bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
     int loop = (Params().GetConsensus().nInfinityNodeCallLockRewardDeepth / (nRewardHeight - nCachedBlockHeight)) - 1;
     CLockRewardRequest newRequest(nRewardHeight, infRet.getBurntxOutPoint(), infRet.getSINType(), loop);
     if (newRequest.Sign(infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode)) {
-        LOCK(cs);
         if (AddLockRewardRequest(newRequest)) {
             //step 0.3 identify all TopNode at nRewardHeight and try make a connection with them ( it is an optimisation )
             TryConnectToMySigners(nRewardHeight, connman);
