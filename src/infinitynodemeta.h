@@ -92,7 +92,11 @@ public:
     int getFlagActiveBackupAddress(){return activeBackupAddress;}
     std::string getMetaID(){return metaID;}
 
+    void setMetadataHeight(int inHeight){nMetadataHeight = inHeight;};
+    void setMetaPublicKey(std::string inKey){metadataPublicKey = inKey;};
+    void setService(CService inService){metadataService = inService;};
     void setBackupAddress(int nActive){activeBackupAddress = nActive;};
+    void addHisto(CMetahisto inHisTo){vHisto.push_back(inHisTo);}
 };
 
 class CInfinitynodeMeta

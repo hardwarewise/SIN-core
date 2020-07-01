@@ -36,8 +36,22 @@ bool CInfinitynodeMeta::Add(CMetadata &meta)
         CMetadata m = it->second;
         if(m.getMetaID() == meta.getMetaID() && meta.getMetadataHeight() >  m.getMetadataHeight()){
             LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::new metadata from higher height %s\n", meta.getMetaID());
-            mapNodeMetadata.erase(meta.getMetaID());
-            mapNodeMetadata[meta.getMetaID()] = meta;
+            //mapNodeMetadata.erase(meta.getMetaID());
+            //mapNodeMetadata[meta.getMetaID()] = meta;
+            int nHeight = meta.getMetadataHeight();
+            std::string sPublicKey = meta.getMetaPublicKey();
+            CService cService = meta.getService();
+            if(nHeight < m.getMetadataHeight() + Params().MaxReorganizationDepth() * 3 ){
+                int nWait = m.getMetadataHeight() + Params().MaxReorganizationDepth() * 3 - nHeight;
+                LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::Can not update metadata now. Please update after %d blocks\n", nWait);
+                return false;
+            }
+            CMetahisto histo(nHeight, sPublicKey, cService);
+            mapNodeMetadata[meta.getMetaID()].addHisto(histo);
+            mapNodeMetadata[meta.getMetaID()].setMetadataHeight(nHeight);
+            mapNodeMetadata[meta.getMetaID()].setMetaPublicKey(sPublicKey);
+            mapNodeMetadata[meta.getMetaID()].setService(cService);
+
             return true;
         }else{
             LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::nHeight is lower than current height %d\n", m.getMetadataHeight());
