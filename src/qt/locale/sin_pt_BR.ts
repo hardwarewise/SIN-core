@@ -3669,4 +3669,340 @@ Diretório de blocos especificados "%s" não existe.</translation>
         <translation>Erro</translation>
     </message>
 </context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Pending</source>
+        <translation>Pendentes</translation>
+    </message>
+    <message>
+        <source>Immature</source>
+        <translation>Chegando</translation>
+    </message>
+    <message>
+        <source>Available SIN</source>
+        <translation>SIN Disponiveis</translation>
+    </message>
+    <message>
+        <source>Available USD</source>
+        <translation>Dolar Disponiveis</translation>
+    </message>
+    <message>
+        <source>Total Addresses</source>
+        <translation>Endereços Totais</translation>
+    </message>
+    <message>
+        <source>Circulating Supply</source>
+        <translation>Saldo Total Circulante</translation>
+    </message>
+    <message>
+        <source>Total Infinity Nodes</source>
+        <translation>Total Nodes Infinity</translation>
+    </message>
+    <message>
+        <source>Value USD</source>
+        <translation>Valor em Dolar</translation>
+    </message>
+    <message>
+        <source>Value BTC</source>
+        <translation>Valor em Bitcoin</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Total</translation>
+    </message>
+    </context>
+    <context>
+    <name>SendCoinsDialog</name>
+    <message>
+        <source>Send SIN Coins</source>
+        <translation>EnViar Sin</translation>
+    </message>
+    <message>
+        <source>Coin Control</source>
+        <translation>Controle de Moedas</translation>
+    </message>
+    <message>
+        <source> Automatically selected</source>
+        <translation>Selecionar Automaticamente</translation>
+    </message>
+    <message>
+        <source> Insufficient funds!</source>
+        <translation>Fundos Insuficientes!</translation>
+    </message>
+    <message>
+        <source>Warning: Fee estimation is currently not possible.</source>
+        <translation>Não Consigo Estimar a Comissão</translation>
+    </message>
+    <message>
+        <source>Per kilobyte</source>
+        <translation>Por Kilobyte</translation>
+    </message>
+    <message>
+        <source>Enable Replace-By-Fee</source>
+        <translation>Ativar Substituir por Taxa</translation>
+    </message>
+    <message>
+        <source>Customize Fee</source>
+        <translation>Definir Comissão</translation>
+    </message>
+    <message>
+        <source>[Read the tooltip]</source>
+        <translation>[Leia as Dicas de Ferramenta]</translation>
+    </message>
+    <message>
+        <source>Minimize</source>
+        <translation>Minimizar</translation>
+    </message>
+    </context>
+    <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Select SIN Coins to Send</source>
+        <translation>Selecionar Moedas para o Envio</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Etiqueta</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Endereço</translation>
+    </message>
+    <message>
+        <source>Select all</source>
+        <translation>Selecionar Tudo</translation>
+    </message>
+    <message>
+        <source>Lock-Unlock All</source>
+        <translation>Bloquear/Desbloquear Tudo</translation>
+    </message>
+    <message>
+        <source>Ages</source>
+        <translation>Epocas</translation>
+    </message>
+    <message>
+        <source>After Fee: </source>
+        <translation>depois da comissão:</translation>
+    </message>
+    </context>
+    <context>
+    <name>DepositCoinsDialog</name>
+    <message>
+        <source>&amp;EARN</source>
+        <translation>&amp;Ganhar</translation>
+    </message>
+    <message>
+        <source>HCO-Hodl Coin Offering. Lock SIN to EARN.</source>
+        <translation>HCO-Hodl Coin Offering. Bloquear para Ganhar Sin</translation>
+    </message>
+    <message>
+        <source>Balance:</source>
+        <translation>Saldo:</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Situação</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Montante</translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation>Começar</translation>
+    </message>
+    <message>
+        <source>End</source>
+        <translation>Terminar</translation>
+    </message>
+    <message>
+        <source>Lock time</source>
+        <translation>Bloqueio Temporal</translation>
+    </message>
+    </context>
+    <context>
+    <name>SendCoinsEntry</name>
+    <message>
+        <source>Blocks</source>
+        <translation>Blocos</translation>
+    </message>
+    <message>
+        <source>Add address label</source>
+        <translation>Adicionae Etiqueta no Endereço</translation>
+    </message>
+    <message>
+        <source>For:</source>
+        <translation>Para:</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>Mês</translation>
+    </message>
+    </context>
+    <context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>Receive SIN Coins</source>
+        <translation>Receber Moedas Sin</translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;Etiqueta</translation>
+    </message>
+    <message>
+        <source>&amp;Message</source>
+        <translation>&amp;Mensagem</translation>
+    </message>
+    <message>
+        <source>Generate native segwit (Bech32) address</source>
+        <translation>Criar Endereço Original Segwit (Bech32)</translation>
+    </message>
+    <message>
+        <source>&amp;Amount</source>
+        <translation>&amp;Montante</translation>
+    </message>
+    </context>
+    <context>
+    <name>MasternodeList</name>
+    <message>
+        <source>My Infinitynodes</source>
+        <translation>Meu Nó Infinity</translation>
+    </message>
+    <message>
+        <source>My Peers DIN</source>
+        <translation>Minhas Conexões Externas DIN</translation>
+    </message>
+    <message>
+        <source>Alias</source>
+        <translation>Alias</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Endereço</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>Protocolo</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Status</translation>
+    </message>
+    <message>
+        <source>Active</source>
+        <translation>Ativo</translation>
+    </message>
+    <message>
+        <source>Last Seen</source>
+        <translation>Ultima Visualização</translation>
+    </message>
+    <message>
+        <source>Payee</source>
+        <translation>Beneficiario</translation>
+    </message>
+    <message>
+        <source>S&amp;tart alias</source>
+        <translation>I&amp;niciar Alias</translation>
+    </message>
+    <message>
+        <source>Start &amp;all</source>
+        <translation>Partir &amp;Tudo</translation>
+    </message>
+    <message>
+        <source>&amp;Update status</source>
+        <translation>&amp;Atualizar Status</translation>
+    </message>
+    <message>
+        <source>Status will be updated automatically in (sec):</source>
+        <translation>Status vai se Atualizar em (sec):</translation>
+    </message>
+    <message>
+        <source>Owner address</source>
+        <translation>Endereço Proprietario</translation>
+    </message>
+    <message>
+        <source>Begin</source>
+        <translation>Começo</translation>
+    </message>
+    <message>
+        <source>Expire</source>
+        <translation>Termino</translation>
+    </message>
+    <message>
+        <source>Peer address</source>
+        <translation>Endereço Peer</translation>
+    </message>
+    <message>
+        <source>Peer address</source>
+        <translation>Endereço Peer</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>Bloqueado</translation>
+    </message>
+    <message>
+        <source>Backup address</source>
+        <translation>Endereço de Reserva</translation>
+    </message>
+    <message>
+        <source>Next reward</source>
+        <translation>Proxima Recompensa</translation>
+    </message>
+    </context>
+    <context>
+   <name>StatsPage</name>
+   <message>
+        <source>Hashrate:</source>
+        <translation>Hashrate:</translation>
+    </message>
+    <message>
+        <source>Difficulty:</source>
+        <translation>Dificuldade:</translation>
+    </message>
+    <message>
+        <source>Last Price:</source>
+        <translation>Ultimo Preço Peer:</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>Altura:</translation>
+    </message>
+    <message>
+        <source>Burnt Fees:</source>
+        <translation>Comissões Queimadas:</translation>
+    </message>
+    <message>
+        <source>Burnt Nodes:</source>
+        <translation>Nós Queimados:</translation>
+    </message>
+    <message>
+        <source>Total Burnts:</source>
+        <translation>Total Queimado:</translation>
+    </message>
+    <message>
+        <source>Total Supply:</source>
+        <translation>Saldo Circulante:</translation>
+    </message>
+    <message>
+        <source>Addresses:</source>
+        <translation>Endereços:</translation>
+    </message>
+    <message>
+        <source>Active:</source>
+        <translation>Ativo:</translation>
+    </message>
+    <message>
+        <source>Top 10:</source>
+        <translation>Top 10</translation>
+    </message>
+    <message>
+        <source>Top 50:</source>
+        <translation>Top 50</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Total:</translation>
+    </message>
+    </context>
 </TS>

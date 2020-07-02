@@ -195,8 +195,11 @@ public:
         int& num_blocks,
         int64_t& adjusted_time) = 0;
 
-    //! Retrieve current term deposit stats
-    virtual std::vector<COutput> GetTermDepositInfo() = 0;
+    //! Retrieve current timelock stats
+    virtual std::vector<COutput> GetTimeLockInfo() = 0;
+
+    //! Retrieve current Onchain data info
+    virtual std::map<COutPoint, std::string> GetOnchainDataInfo() = 0;
 
     //! Get transaction details.
     virtual WalletTx getWalletTxDetails(const uint256& txid,
@@ -341,7 +344,8 @@ struct WalletBalances
     CAmount watch_only_balance = 0;
     CAmount unconfirmed_watch_only_balance = 0;
     CAmount immature_watch_only_balance = 0;
-    std::vector<COutput> term_deposit_info;
+    std::vector<COutput> timelock_info;
+    std::map<COutPoint, std::string> onchaindata_info;
 
     bool balanceChanged(const WalletBalances& prev) const
     {

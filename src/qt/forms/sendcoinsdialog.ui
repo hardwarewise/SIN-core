@@ -99,6 +99,9 @@
           <property name="text">
            <string>FlashSend</string>
           </property>
+          <property name="checkable">
+           <bool>false</bool>
+          </property>
          </widget>
         </item>
         <item>
@@ -1218,15 +1221,15 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of &quot;100 satos
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QValidatedLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>qt/qvalidatedlineedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>SINAmountField</class>
    <extends>QLineEdit</extends>
    <header>qt/sinamountfield.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QValidatedLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>qt/qvalidatedlineedit.h</header>
   </customwidget>
  </customwidgets>
  <resources>

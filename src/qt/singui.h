@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_BITCOINGUI_H
-#define BITCOIN_QT_BITCOINGUI_H
+#ifndef BITCOIN_QT_SINGUI_H
+#define BITCOIN_QT_SINGUI_H
 
 #if defined(HAVE_CONFIG_H)
 #include <config/sin-config.h>
@@ -35,6 +35,7 @@ class ModalOverlay;
 class MasternodeList;
 class InstaSwap;
 class StatsPage;
+class FaqPage;
 
 namespace interfaces {
 class Handler;
@@ -46,21 +47,22 @@ class QAction;
 class QComboBox;
 class QProgressBar;
 class QProgressDialog;
+class QPushButton;
 QT_END_NAMESPACE
 
 /**
   Bitcoin GUI main class. This class represents the main window of the Bitcoin UI. It communicates with both the client and
   wallet models to give the user an up-to-date view of the current core state.
 */
-class BitcoinGUI : public QMainWindow
+class SINGUI : public QMainWindow
 {
     Q_OBJECT
 
 public:
     static const std::string DEFAULT_UIPLATFORM;
 
-    explicit BitcoinGUI(interfaces::Node& node, const PlatformStyle *platformStyle, const NetworkStyle *networkStyle, QWidget *parent = 0);
-    ~BitcoinGUI();
+    explicit SINGUI(interfaces::Node& node, const PlatformStyle *platformStyle, const NetworkStyle *networkStyle, QWidget *parent = 0);
+    ~SINGUI();
 
     /** Set the client model.
         The client model represents the part of the core that communicates with the P2P network, and is wallet-agnostic.
@@ -102,7 +104,7 @@ private:
     QLabel* progressBarLabel = nullptr;
     QProgressBar* progressBar = nullptr;
     QProgressDialog* progressDialog = nullptr;
-
+    QPushButton *topThemeButton = nullptr;
     QMenuBar* appMenuBar = nullptr;
     QMenuBar* subMenu = nullptr;
     QToolBar* appToolBar = nullptr;
@@ -117,6 +119,10 @@ private:
     
     // StatsPage
     QAction *statsPageAction;
+    //
+
+    // FaqPage
+    QAction *faqPageAction;
     //
 
     QAction* quitAction = nullptr;
@@ -158,14 +164,12 @@ private:
     QAction* ResourcesWebsite5;
     QAction* ResourcesWebsite6;
     QAction* ResourcesWebsite7;
-    QAction* ResourcesWebsite8;
     QAction* ResourcesWebsite9;
     QAction* ResourcesWebsite10;
 /// end Resources Web Links
 
 
-    QAction *showSpecsHelpAction;
-
+    
     QLabel *mainIcon;
     
     QLabel *m_wallet_selector_label = nullptr;
@@ -176,6 +180,7 @@ private:
     Notificator* notificator = nullptr;
     RPCConsole* rpcConsole = nullptr;
     StatsPage  *statsWindow;
+    FaqPage  *faqWindow;
     //HelpMessageDialog* helpMessageDialog = nullptr;
     HelpMessageDialog *helpMessageDialog;
 
@@ -291,6 +296,11 @@ private Q_SLOTS:
     void gotoStatsPage(); 
     //
 
+    //FaqPage
+    /** Switch to FAQ Page */
+    void gotoFaqPage(); 
+    //
+
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
@@ -306,6 +316,8 @@ private Q_SLOTS:
     /** Show open dialog */
     void openClicked();
 #endif // ENABLE_WALLET
+    /** toggle Theme */
+    void onThemeClicked();
     /** Show configuration dialog */
     void optionsClicked();
     /** Show about dialog */
@@ -334,8 +346,7 @@ private Q_SLOTS:
 
     /** Show help message dialog */
     void showHelpMessageClicked();
-    void showSpecsHelpClicked();
-#ifndef Q_OS_MAC
+    #ifndef Q_OS_MAC
     /** Handle tray icon clicked */
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
 #else
@@ -392,4 +403,4 @@ private Q_SLOTS:
     void onMenuSelection(QAction* action);
 };
 
-#endif // BITCOIN_QT_BITCOINGUI_H
+#endif // BITCOIN_QT_SINGUI_H

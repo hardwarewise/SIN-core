@@ -20,10 +20,14 @@
 #include <qt/statspage.h>
 //
 
+// StatsPage
+#include <qt/faqpage.h>
+//
+
 
 #include <QStackedWidget>
 
-class BitcoinGUI;
+class SINGUI;
 class ClientModel;
 class OverviewPage;
 class PlatformStyle;
@@ -35,6 +39,7 @@ class TransactionView;
 class WalletModel;
 class AddressBookPage;
 class StatsPage;
+class FaqPage;
 
 
 QT_BEGIN_NAMESPACE
@@ -57,7 +62,7 @@ public:
     explicit WalletView(const PlatformStyle *platformStyle, QWidget *parent);
     ~WalletView();
 
-    void setBitcoinGUI(BitcoinGUI *gui);
+    void setSINGUI(SINGUI *gui);
     /** Set the client model.
         The client model represents the part of the core that communicates with the P2P network, and is wallet-agnostic.
     */
@@ -97,6 +102,10 @@ private:
     StatsPage *statsWindow;
     //
 
+    // FaqPage
+    FaqPage *faqWindow;
+    //
+
     TransactionView *transactionView;
 
     QProgressDialog *progressDialog;
@@ -122,6 +131,11 @@ public Q_SLOTS:
     // Stats
     /** Switch to stats page */
     void gotoStatsPage();
+    //
+
+    // FAQ
+    /** Switch to faq page */
+    void gotoFaqPage();
     //
 
     /** Switch to receive coins page */

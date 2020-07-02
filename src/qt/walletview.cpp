@@ -23,6 +23,7 @@
 #include <qt/transactionview.h>
 #include <qt/walletmodel.h>
 #include "statspage.h"
+#include "faqpage.h"
 
 #include <interfaces/node.h>
 #include <ui_interface.h>
@@ -109,6 +110,12 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     addWidget(statsWindow);
     //
 
+
+     //FAQPage
+    faqWindow = new FaqPage(platformStyle);
+    addWidget(faqWindow);
+    //
+
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
     connect(overviewPage, SIGNAL(outOfSyncWarningClicked()), this, SLOT(requestedSyncWarningInfo()));
@@ -136,7 +143,7 @@ WalletView::~WalletView()
 {
 }
 
-void WalletView::setBitcoinGUI(BitcoinGUI *gui)
+void WalletView::setSINGUI(SINGUI *gui)
 {
     if (gui)
     {
@@ -166,6 +173,7 @@ void WalletView::setClientModel(ClientModel *_clientModel)
 
     overviewPage->setClientModel(_clientModel);
     sendCoinsPage->setClientModel(_clientModel);
+    depositCoinsPage->setClientModel(_clientModel);
 
     // Dash
     QSettings settings;
@@ -280,6 +288,14 @@ void WalletView::gotoStatsPage()
     setCurrentWidget(statsWindow);
 }
 //
+
+// FAQPage
+void WalletView::gotoFaqPage()
+{
+    setCurrentWidget(faqWindow);
+}
+//
+
 
 void WalletView::gotoReceiveCoinsPage()
 {

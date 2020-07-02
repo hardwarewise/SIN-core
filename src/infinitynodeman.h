@@ -12,16 +12,37 @@
 using namespace std;
 
 class CInfinitynodeMan;
+class CLockRewardExtractInfo;
 class CConnman;
 
 extern CInfinitynodeMan infnodeman;
+
+class CLockRewardExtractInfo
+{
+public:
+    int nSINtype{0};
+    int nBlockHeight{0}; //blockHeight read
+    int nRewardHeight{0};
+    CScript scriptPubKey{};
+    std::string sLRInfo="";
+
+    CLockRewardExtractInfo() = default;
+    CLockRewardExtractInfo(int nBlockHeightIn, int nSINtypeIn, int nRewardHeightIn, CScript nPayee, std::string sInfo):
+    nBlockHeight(nBlockHeightIn),
+    nSINtype(nSINtypeIn),
+    nRewardHeight(nRewardHeightIn),
+    scriptPubKey(nPayee),
+    sLRInfo(sInfo)
+    {}
+};
 
 class CInfinitynodeMan
 {
 public:
     typedef std::pair<arith_uint256, CInfinitynode*> score_pair_t;
     typedef std::vector<score_pair_t> score_pair_vec_t;
-
+    typedef std::pair<CScript, std::string> lockreward_pair_t; //how send LR and signature string
+    typedef std::vector<lockreward_pair_t> lockreward_pair_vec_t;
 private:
     static const std::string SERIALIZATION_VERSION_STRING;
 
@@ -29,10 +50,9 @@ private:
     mutable CCriticalSection cs;
     // Keep track of current block height and first download block
     int nCachedBlockHeight;
+    //
+    bool fReachedLastBlock = false;
     bool fMapInfinitynodeUpdated = false;
-
-    //make sure that this value is sup than chain reorg limit. After this depth, situation of MAP is matured
-    static const int INF_MATURED_LIMIT = 55;
 
     // map to hold all INFs
     std::map<COutPoint, CInfinitynode> mapInfinitynodes;
@@ -134,15 +154,23 @@ public:
         if(nSinType == 1) return nLILLastStmSize;
     }
 
+    void setSyncStatus(bool flag){LOCK(cs); fReachedLastBlock=flag;}
+    bool isReachedLastBlock(){LOCK(cs); return fReachedLastBlock;}
+
     std::map<CScript, int> GetFullLastPaidMap() { return mapLastPaid; }
     int64_t getLastScan(){return nLastScanHeight;}
-    int64_t getLastScanWithLimit(){return nLastScanHeight + INF_MATURED_LIMIT;}
-
-    bool buildInfinitynodeList(int nBlockHeight, int nLowHeight = 165000);
+    int64_t getLastScanWithLimit(){return nLastScanHeight/* + INF_MATURED_LIMIT*/;} // We'll need to move this to functions who actually use it and match it with our max reorg depth
+    //DIN map
+    bool buildInfinitynodeList(int nBlockHeight, int nLowHeight = 0, bool fWriteDisk = false); /* init this to zero for better compat with regtest/testnet/devnets */
+    bool buildInfinitynodeListRPC(int nBlockHeight, int nLowHeight = 0); /* exposes cs to RPC indirectly */
     bool buildListForBlock(int nBlockHeight);
     void updateLastPaid();
     bool updateInfinitynodeList(int fromHeight);//call in init.cppp
     bool initialInfinitynodeList(int fromHeight);//call in init.cpp
+
+    //LR read back
+    bool ExtractLockReward(int nBlockHeight, int depth, std::vector<CLockRewardExtractInfo>& vecLRRet);
+    bool getLRForHeight(int height, std::vector<CLockRewardExtractInfo>& vecLockRewardRet);
 
     //this function build the map of STM from genesis
     bool deterministicRewardStatement(int nSinType);
@@ -156,6 +184,8 @@ public:
     int isPossibleForLockReward(std::string nodeOwner);
     bool getScoreVector(const uint256& nBlockHash, int nSinType, int nBlockHeight, CInfinitynodeMan::score_pair_vec_t& vecScoresRet);
     bool getNodeScoreAtHeight(const COutPoint& outpoint, int nSinType, int nBlockHeight, int& nRankRet);
+    bool getTopNodeScoreAtHeight(int nSinType, int nBlockHeight, int nTop, std::vector<CInfinitynode>& vecInfRet);
+
     std::string getVectorNodeRankAtHeight(const std::vector<COutPoint>  &vOutpoint, int nSinType, int nBlockHeight);
 
     //this function update lastStm and size from UpdatedBlockTip and map

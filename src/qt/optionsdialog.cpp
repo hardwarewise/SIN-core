@@ -27,6 +27,7 @@
 #include <QLocale>
 #include <QMessageBox>
 #include <QTimer>
+#include <QStyleFactory>
 
 OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     QDialog(parent),
@@ -35,6 +36,17 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     mapper(0)
 {
     ui->setupUi(this);
+
+    //Hide OpenConfigurationFileButton//
+    ui->openSINConfButton->hide();
+
+
+    #if defined(Q_OS_WIN)
+
+    #else
+        ui->lang->setStyle(QStyleFactory::create("Windows"));
+        ui->unit->setStyle(QStyleFactory::create("Windows"));
+    #endif
 
     /* Main elements init */
     ui->databaseCache->setMinimum(nMinDbCache);
@@ -52,6 +64,11 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
 
     ui->pruneSize->setEnabled(false);
     connect(ui->prune, SIGNAL(toggled(bool)), ui->pruneSize, SLOT(setEnabled(bool)));
+
+    // Hide Prune
+    ui->prune->hide();
+    ui->pruneSize->hide();
+    //
 
     /* Network elements init */
 #ifndef USE_UPNP

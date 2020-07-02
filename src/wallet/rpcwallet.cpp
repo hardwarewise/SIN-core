@@ -810,7 +810,7 @@ static UniValue sendwithlockedtoaddress(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid SIN address");
 
     // Amount
-    CAmount nAmount = AmountFromValue(request.params[2]);
+    CAmount nAmount = AmountFromValue(atoi(request.params[2].get_str()));
 
     // Term Deposit
     int nBlockLocked;
@@ -834,7 +834,7 @@ static UniValue sendwithlockedtoaddress(const JSONRPCRequest& request)
     return tx->GetHash().GetHex();
 }
 
-static UniValue listnotification(const JSONRPCRequest& request)
+static UniValue listonchaindata(const JSONRPCRequest& request)
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     CWallet* const pwallet = wallet.get();
@@ -850,20 +850,20 @@ static UniValue listnotification(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 0)
         throw std::runtime_error(
-            "listnotification \n"
+            "listonchaindata \n"
             + HelpRequiringPassphrase(pwallet) + "\n"
             "\nArguments:\n"
             "Result:\n"
             "\"all message \"  (string array)\n"
             "\nExamples:\n"
-            + HelpExampleCli("listnotification", "")
-            + HelpExampleRpc("listnotification", "")
+            + HelpExampleCli("listonchaindata", "")
+            + HelpExampleRpc("listonchaindata", "")
         );
 
     LOCK2(cs_main, pwallet->cs_wallet);
     UniValue ret(UniValue::VARR);
 
-    std::map<COutPoint, std::string> mapCopy = pwallet->GetOnchainData();
+    std::map<COutPoint, std::string> mapCopy = pwallet->GetOnchainDataInfo();
     for (auto& info : mapCopy){
         UniValue entry(UniValue::VOBJ);
 
@@ -903,7 +903,7 @@ static UniValue listlockedcoins(const JSONRPCRequest& request)
     LOCK2(cs_main, pwallet->cs_wallet);
     UniValue ret(UniValue::VARR);
     std::string strAccount = LabelFromValue(request.params[0]);
-    std::vector<COutput> termDepositInfo = pwallet->GetTermDepositInfo(strAccount);
+    std::vector<COutput> termDepositInfo = pwallet->GetTimeLockInfo(strAccount);
 
     for(unsigned int i=0; i < termDepositInfo.size(); i++)
     {
@@ -911,7 +911,7 @@ static UniValue listlockedcoins(const JSONRPCRequest& request)
 	CTxOut termDeposit = ctermDeposit.tx->tx->vout[ctermDeposit.i];
         int curHeight = chainActive.Height();
         int lockHeight = curHeight - ctermDeposit.nDepth;
-        int releaseBlock = termDeposit.scriptPubKey.GetTermDepositReleaseBlock();
+        int releaseBlock = termDeposit.scriptPubKey.GetTimeLockReleaseBlock();
         int term = releaseBlock - lockHeight;
         int blocksRemaining = releaseBlock - curHeight;
 	CAmount withInterest = termDeposit.GetValueWithInterest(lockHeight,(curHeight<releaseBlock?curHeight:releaseBlock));
@@ -5467,7 +5467,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "infinitynodenotifydata",           &infinitynodenotifydata,        {"amount"} },
     { "wallet",             "decryptAES",                       &decryptAES,                    {"text","passphrase","vSalt","nDeriveIterations"} },
     { "wallet",             "exportaddressnewpass",             &exportaddressnewpass,          {"address","passphrase"} },
-    { "wallet",             "listnotification",                 &listnotification,              {} },
+    { "wallet",             "listonchaindata",                  &listonchaindata,               {} },
 
     /** Account functions (deprecated) */
     { "wallet",             "getaccountaddress",                &getaccountaddress,             {"account"} },

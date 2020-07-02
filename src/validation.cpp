@@ -48,6 +48,7 @@
 #include <instantx.h>
 #include <masternodeman.h>
 #include <masternode-payments.h>
+#include <infinitynodelockreward.h>
 
 #include <future>
 #include <sstream>
@@ -2248,24 +2249,34 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
         if (block.vtx[0]->vout[1].scriptPubKey != devScript2)
             return state.DoS(100, error("ConnectBlock(): coinbase does not pay to the dev fund address."), REJECT_INVALID, "bad-cb-dev-fee");
     }
-	LogPrintf("Miner -- Dev fee paid: %d, Calcul dev fee %d\n", block.vtx[0]->vout[1].nValue, GetDevCoin(pindex->nHeight, blockReward));
+
+    LogPrintf("Miner -- Dev fee paid: %d, Calcul dev fee %d\n", block.vtx[0]->vout[1].nValue, GetDevCoin(pindex->nHeight, blockReward));
     if (block.vtx[0]->vout[1].nValue < GetDevCoin(pindex->nHeight, blockReward))
         return state.DoS(100, error("ConnectBlock(): coinbase does not pay enough to the dev fund address."), REJECT_INVALID, "bad-cb-dev-fee");
-
-    // Basic testing to ensure pays go to correct sinnode tiers
-	int forkInfinityNode = 170000;
-    int enforceHeight = 178000;
-    if (pindex->nHeight > forkInfinityNode)
-    {
-		if (!IsBlockPayeeValid(block.vtx[0], pindex->nHeight, block.vtx[0]->GetValueOut(), pindex->GetBlockHeader())) {
-			mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
-			LogPrintf("IsBlockPayeeValid -- disconnect block!\n");
-			if (pindex->nHeight >= enforceHeight) {
-				return state.DoS(0, error("ConnectBlock(DASH): couldn't find masternode or superblock payments"),
-					REJECT_INVALID, "bad-cb-payee");
-			}
-   		}
-	}
+    //Legacy SINOVATE validation
+    if (pindex->nHeight <= chainparams.GetConsensus().nINActivationHeight) {
+        //POW mode: do nothing
+        LogPrintf("Validation -- POW\n");
+    } else if (pindex->nHeight > chainparams.GetConsensus().nINActivationHeight && pindex->nHeight <= chainparams.GetConsensus().nNewDevfeeAddress) {
+        //Masternode mode: check payment
+        LogPrintf("Validation -- POW + Masternode\n");
+        if (!IsBlockPayeeValid(block.vtx[0], pindex->nHeight, block.vtx[0]->GetValueOut(), pindex->GetBlockHeader())) {
+            mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
+            LogPrintf("IsBlockPayeeValid -- disconnect block!\n");
+            if (pindex->nHeight >= chainparams.GetConsensus().nINEnforcementHeight) {
+                return state.DoS(0, error("ConnectBlock(SIN): couldn't find masternode or superblock payments"),
+                    REJECT_INVALID, "bad-cb-payee");
+            }
+        }
+    } else {
+        //Infinitynode mode: validation LR
+        LogPrintf("Validation -- POW + Infinitynode\n");
+        if (!LockRewardValidation(pindex->nHeight, block)) {
+            mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
+            LogPrintf("LockRewardValidation -- disconnect block!\n");
+            return state.DoS(0, error("ConnectBlock(SIN): couldn't find valid LockReward"), REJECT_INVALID, "bad-lockreward");
+        }
+    }
 
     if (!control.Wait())
         return state.DoS(100, error("%s: CheckQueue failed", __func__), REJECT_INVALID, "block-validation-failed");

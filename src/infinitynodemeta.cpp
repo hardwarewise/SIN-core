@@ -36,8 +36,22 @@ bool CInfinitynodeMeta::Add(CMetadata &meta)
         CMetadata m = it->second;
         if(m.getMetaID() == meta.getMetaID() && meta.getMetadataHeight() >  m.getMetadataHeight()){
             LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::new metadata from higher height %s\n", meta.getMetaID());
-            mapNodeMetadata.erase(meta.getMetaID());
-            mapNodeMetadata[meta.getMetaID()] = meta;
+            //mapNodeMetadata.erase(meta.getMetaID());
+            //mapNodeMetadata[meta.getMetaID()] = meta;
+            int nHeight = meta.getMetadataHeight();
+            std::string sPublicKey = meta.getMetaPublicKey();
+            CService cService = meta.getService();
+            if(nHeight < m.getMetadataHeight() + Params().MaxReorganizationDepth() * 3 ){
+                int nWait = m.getMetadataHeight() + Params().MaxReorganizationDepth() * 3 - nHeight;
+                LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::Can not update metadata now. Please update after %d blocks\n", nWait);
+                return false;
+            }
+            CMetahisto histo(nHeight, sPublicKey, cService);
+            mapNodeMetadata[meta.getMetaID()].addHisto(histo);
+            mapNodeMetadata[meta.getMetaID()].setMetadataHeight(nHeight);
+            mapNodeMetadata[meta.getMetaID()].setMetaPublicKey(sPublicKey);
+            mapNodeMetadata[meta.getMetaID()].setService(cService);
+
             return true;
         }else{
             LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::nHeight is lower than current height %d\n", m.getMetadataHeight());
@@ -78,18 +92,19 @@ bool CInfinitynodeMeta::Get(std::string  nodePublicKey, CMetadata& meta)
 bool CInfinitynodeMeta::metaScan(int nBlockHeight)
 {
     Clear();
-    LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::metaScan -- Cleared map. Size is %d\n", (int)mapNodeMetadata.size());
+
+    LOCK(cs_main);
+
+    LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::metaScan -- Cleared map. Size is %d at height: %d\n", (int)mapNodeMetadata.size(), nBlockHeight);
     if (nBlockHeight <= Params().GetConsensus().nInfinityNodeGenesisStatement) return false;
     uint256 blockHash;
     if(!GetBlockHash(blockHash, nBlockHeight)) {
         LogPrint(BCLog::INFINITYNODE, "CInfinitynodeMeta::metaScan -- can not read block hash\n");
         return false;
     }
-
     CBlockIndex* pindex;
     pindex = LookupBlockIndex(blockHash);
     CBlockIndex* prevBlockIndex = pindex;
-
     while (prevBlockIndex->nHeight >= Params().GetConsensus().nInfinityNodeGenesisStatement)
     {
         CBlock blockReadFromDisk;
@@ -134,10 +149,15 @@ bool CInfinitynodeMeta::metaScan(int nBlockHeight)
                                             }
                                         }
                                         //2nd position: Node IP
-                                        if (i==1 && Lookup(s.c_str(), service, 0, false)) {
-                                            check++;
+                                        if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+                                            if (i==1 && Lookup(s.c_str(), service, 0, false)) {
+                                                check++;
+                                            }
+                                        } else {
+                                            //lets INs run on 127.0.0.1 only on regtest
+                                            check ++;
                                         }
-                                        //3th position: 12 character from Infinitynode BurnTx
+                                        //3th position: 16 character from Infinitynode BurnTx
                                         if (i==2 && s.length() >= 16) {
                                             check++;
                                             burnTxID = s.substr(0, 16);

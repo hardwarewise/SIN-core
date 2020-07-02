@@ -95,6 +95,7 @@ const int64_t nStartupTime = GetTime();
 bool fMasterNode = false;
 bool fLiteMode = false;
 bool fInfinityNode = false;
+bool fTurnOffMasternode=false;
 /**
     nWalletBackups:
         1..10   - number of automatic backups to keep

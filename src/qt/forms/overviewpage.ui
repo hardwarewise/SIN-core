@@ -229,6 +229,9 @@
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_7">
+             <property name="rightMargin">
+              <number>20</number>
+             </property>
              <property name="bottomMargin">
               <number>9</number>
              </property>
@@ -241,7 +244,7 @@
                 <number>0</number>
                </property>
                <property name="rightMargin">
-                <number>30</number>
+                <number>20</number>
                </property>
                <item>
                 <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -395,7 +398,7 @@ border:none;</string>
                  <number>0</number>
                 </property>
                 <property name="leftMargin">
-                 <number>30</number>
+                 <number>20</number>
                 </property>
                 <property name="topMargin">
                  <number>0</number>
@@ -522,43 +525,267 @@ color:#000000;</string>
             </layout>
            </item>
            <item>
-            <spacer name="horizontalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>150</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
-             <property name="bottomMargin">
-              <number>9</number>
-             </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
              <item>
-              <layout class="QVBoxLayout" name="nodeStatsLayout">
+              <layout class="QHBoxLayout" name="horizontalLayout_4">
                <property name="spacing">
-                <number>0</number>
+                <number>6</number>
                </property>
                <property name="leftMargin">
-                <number>0</number>
+                <number>10</number>
+               </property>
+               <property name="rightMargin">
+                <number>20</number>
                </property>
                <property name="bottomMargin">
-                <number>0</number>
+                <number>9</number>
                </property>
                <item>
-                <layout class="QVBoxLayout" name="verticalLayout">
+                <widget class="QLabel" name="label_8">
+                 <property name="minimumSize">
+                  <size>
+                   <width>1</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>1</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color:black;
+padding:0px;
+border:none;</string>
+                 </property>
+                 <property name="text">
+                  <string>TextLabel</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QVBoxLayout" name="nodeStatsLayout">
+                 <property name="spacing">
+                  <number>0</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
                  <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_2">
+                  <layout class="QVBoxLayout" name="verticalLayout">
                    <item>
-                    <widget class="QLabel" name="label_2">
+                    <layout class="QVBoxLayout" name="verticalLayout_2">
+                     <item>
+                      <widget class="QLabel" name="label_2">
+                       <property name="font">
+                        <font>
+                         <pointsize>-1</pointsize>
+                         <weight>75</weight>
+                         <bold>true</bold>
+                        </font>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">font-size:16px;
+color:#000000;</string>
+                       </property>
+                       <property name="text">
+                        <string>Total Addresses</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="addressesValueLabel">
+                       <property name="styleSheet">
+                        <string notr="true">font-size:18px;
+color:#00B4B8;</string>
+                       </property>
+                       <property name="text">
+                        <string>0</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="label_3">
+                       <property name="font">
+                        <font>
+                         <pointsize>-1</pointsize>
+                         <weight>75</weight>
+                         <bold>true</bold>
+                        </font>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">font-size:16px;
+color:#000000;</string>
+                       </property>
+                       <property name="text">
+                        <string>Circulating Supply</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="totalSupplyValueLabel">
+                       <property name="font">
+                        <font>
+                         <pointsize>-1</pointsize>
+                         <weight>50</weight>
+                         <bold>false</bold>
+                        </font>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">font-size:18px;
+color:#00B4B8;</string>
+                       </property>
+                       <property name="text">
+                        <string>0</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_10">
+                 <property name="minimumSize">
+                  <size>
+                   <width>1</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>1</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color:black;
+padding:0px;
+border:none;</string>
+                 </property>
+                 <property name="text">
+                  <string>TextLabel</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_5">
+                 <property name="leftMargin">
+                  <number>15</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>9</number>
+                 </property>
+                 <item>
+                  <layout class="QGridLayout" name="gridLayout">
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label_7">
+                     <property name="styleSheet">
+                      <string notr="true">font-size:16px;
+color:#000000;</string>
+                     </property>
+                     <property name="text">
+                      <string>Total</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_6">
+                     <property name="styleSheet">
+                      <string notr="true">font-size:16px;
+color: #2E3191;</string>
+                     </property>
+                     <property name="text">
+                      <string>MINI</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_4">
+                     <property name="styleSheet">
+                      <string notr="true">font-size:16px;
+color:#000000;</string>
+                     </property>
+                     <property name="text">
+                      <string>BIG</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_5">
+                     <property name="styleSheet">
+                      <string notr="true">font-size:16px;
+color: grey;</string>
+                     </property>
+                     <property name="text">
+                      <string>MID</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QLabel" name="bigValueLabel">
+                     <property name="styleSheet">
+                      <string notr="true">font-size:16px;
+color:#00B4B8;</string>
+                     </property>
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QLabel" name="midValueLabel">
+                     <property name="styleSheet">
+                      <string notr="true">font-size:16px;
+color: grey;</string>
+                     </property>
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QLabel" name="lilValueLabel">
+                     <property name="styleSheet">
+                      <string notr="true">font-size:16px;
+color: #2E3191;</string>
+                     </property>
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QLabel" name="totalValueLabel">
+                     <property name="styleSheet">
+                      <string notr="true">font-size:16px;
+color:#00B4B8;</string>
+                     </property>
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0" colspan="2">
+                    <widget class="QLabel" name="label">
                      <property name="font">
                       <font>
                        <pointsize>-1</pointsize>
@@ -574,58 +801,7 @@ color:#000000;</string>
                       <string>Total Infinity Nodes</string>
                      </property>
                      <property name="alignment">
-                      <set>Qt::AlignCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="totalValueLabel">
-                     <property name="styleSheet">
-                      <string notr="true">font-size:28px;
-font-weight:bold;
-color:#00B4B8;</string>
-                     </property>
-                     <property name="text">
-                      <string>0</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="label_3">
-                     <property name="font">
-                      <font>
-                       <pointsize>-1</pointsize>
-                       <weight>75</weight>
-                       <bold>true</bold>
-                      </font>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">font-size:16px;
-color:#000000;</string>
-                     </property>
-                     <property name="text">
-                      <string>Total Circulating Supply</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="totalSupplyValueLabel">
-                     <property name="styleSheet">
-                      <string notr="true">font-size:16px;
-font-weight:bold;
-color:#00B4B8;</string>
-                     </property>
-                     <property name="text">
-                      <string>0</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignCenter</set>
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
@@ -636,22 +812,6 @@ color:#00B4B8;</string>
               </layout>
              </item>
             </layout>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>30</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
            </item>
           </layout>
          </widget>
@@ -850,12 +1010,15 @@ background-color: transparent;</string>
          <number>0</number>
         </property>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="52,0,0,45">
+         <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="52,0,45">
           <item>
            <widget class="QListView" name="listTransactions">
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
             <property name="styleSheet">
              <string notr="true">QListView {
-/*background: #D6DCE5; */
+background: transparent;
  alternate-background-color: #D6D7D8;
 font-weight: lighter;
 font-size:14px;
@@ -890,45 +1053,12 @@ margin-bottom: 9px;
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="verticalLineLabel">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>1</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>1</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color:black;
-padding:0px;
-border:none;
-margin-bottom: 35px;</string>
-            </property>
-            <property name="text">
-             <string>TextLabel</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QFrame" name="frame_5">
             <property name="styleSheet">
              <string notr="true">background-image: url(':/images/sinbg');
 background-repeat:none;
-background-position: right bottom;</string>
+background-position: right bottom;
+background-size: 440px 412px;</string>
             </property>
             <property name="frameShape">
              <enum>QFrame::WinPanel</enum>

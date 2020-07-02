@@ -73,6 +73,7 @@ public Q_SLOTS:
     void updateMyMasternodeInfo(QString strAlias, QString strAddr, const COutPoint& outpoint);
     void updateMyNodeList(bool fForce = false);
     void updateNodeList();
+    void updateDINList();
 
     void nodeSetupInitialize();
     void nodeSetupCleanProgress();

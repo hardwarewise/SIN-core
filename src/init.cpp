@@ -464,6 +464,10 @@ void SetupServerArgs()
     gArgs.AddArg("-mnconflock=<n>", strprintf("Lock masternodes from masternode configuration file"), false, OptionsCategory::OPTIONS);
     gArgs.AddArg("-masternodeprivkey=<n>","Set the masternode private key", false, OptionsCategory::OPTIONS);
 
+    //SIN
+    gArgs.AddArg("-infinitynode=<n>", strprintf("Enable the client to act as an infinitynode (0-1)"), false, OptionsCategory::OPTIONS);
+    gArgs.AddArg("-infinitynodeprivkey=<n>","Set the infinitynode private key", false, OptionsCategory::OPTIONS);
+
     gArgs.AddArg("-addnode=<ip>", "Add a node to connect to and attempt to keep the connection open (see the `addnode` RPC command help for more info). This option can be specified multiple times to add multiple nodes.", false, OptionsCategory::CONNECTION);
     gArgs.AddArg("-banscore=<n>", strprintf("Threshold for disconnecting misbehaving peers (default: %u)", DEFAULT_BANSCORE_THRESHOLD), false, OptionsCategory::CONNECTION);
     gArgs.AddArg("-bantime=<n>", strprintf("Number of seconds to keep misbehaving peers from reconnecting (default: %u)", DEFAULT_MISBEHAVING_BANTIME), false, OptionsCategory::CONNECTION);
@@ -1303,6 +1307,7 @@ void ThreadCheckInfinityNode(CConnman& connman)
     fOneThread = true;
     RenameThread("sinovate-ps");
     unsigned int nTick = 0;
+    unsigned int nTickDIN = 0;
     //if this node is an Infinitynode peer, so verify the state
     if(fInfinityNode) {
         infinitynodePeer.ManageState(connman);
@@ -1310,33 +1315,47 @@ void ThreadCheckInfinityNode(CConnman& connman)
     while (true)
     {
         MilliSleep(1000);
-        // try to sync from all available nodes, one step at a time
-        masternodeSync.ProcessTick(connman);
-        if(masternodeSync.IsBlockchainSynced() && !ShutdownRequested() && masternodeSync.IsSynced()) {
-            nTick++;
-            // make sure to check all masternodes first
-            mnodeman.Check();
-            // check if we should activate or ping every few minutes,
-            // slightly postpone first run to give net thread a chance to connect to some peers
-            if(nTick % MASTERNODE_MIN_MNP_SECONDS == 15)
-                activeMasternode.ManageState(connman);
-            if(nTick % 60 == 0) {
-                netfulfilledman.CheckAndRemove();
-                mnodeman.ProcessMasternodeConnections(connman);
-                mnodeman.CheckAndRemove(connman);
-                mnpayments.CheckAndRemove();
-                instantsend.CheckAndRemove();
-                if(fInfinityNode && infinitynodePeer.nState != INFINITYNODE_PEER_STARTED)
-                {
-                    infinitynodePeer.ManageState(connman);
+
+        nTickDIN++;
+        if(nTickDIN % 60 == 0) {
+            if(fInfinityNode && infinitynodePeer.nState != INFINITYNODE_PEER_STARTED)
+            {
+                infinitynodePeer.ManageState(connman);
+            }
+        }
+        if(nTickDIN % (60 * 5) == 0) {
+            if(infnodeman.isReachedLastBlock()){
+                ENTER_CRITICAL_SECTION(cs_main);
+                //call buildInfinitynodeList and deterministicRewardStatement(nSINtype)
+                //infnodeman.CheckAndRemove(connman);
+                inflockreward.CheckAndRemove(connman);
+                LEAVE_CRITICAL_SECTION(cs_main);
+            }
+        }
+        if(!fTurnOffMasternode) {
+            // try to sync from all available nodes, one step at a time
+            masternodeSync.ProcessTick(connman);
+            if(masternodeSync.IsBlockchainSynced() && !ShutdownRequested() && masternodeSync.IsSynced()) {
+                nTick++;
+                // make sure to check all masternodes first
+                mnodeman.Check();
+                // check if we should activate or ping every few minutes,
+                // slightly postpone first run to give net thread a chance to connect to some peers
+                if(nTick % MASTERNODE_MIN_MNP_SECONDS == 15)
+                    activeMasternode.ManageState(connman);
+                if(nTick % 60 == 0) {
+                    netfulfilledman.CheckAndRemove();
+                    mnodeman.ProcessMasternodeConnections(connman);
+                    mnodeman.CheckAndRemove(connman);
+                    mnpayments.CheckAndRemove();
+                    instantsend.CheckAndRemove();
                 }
-            }
-            if(fMasterNode && (nTick % (60 * 5) == 0)) {
-                mnodeman.DoFullVerificationStep(connman);
-            }
-            if(nTick % (60 * 5) == 0) {
-                infnodeman.CheckAndRemove(connman);
-                mnodeman.CheckAndRemoveBurnFundNotUniqueNode(connman);
+                if(fMasterNode && (nTick % (60 * 5) == 0)) {
+                    mnodeman.DoFullVerificationStep(connman);
+                }
+                if(nTick % (60 * 5) == 0) {
+                    mnodeman.CheckAndRemoveBurnFundNotUniqueNode(connman);
+                }
             }
         }
     }
@@ -1851,12 +1870,14 @@ bool AppInitMain()
 
     // SIN
     fInfinityNode = gArgs.GetBoolArg("-infinitynode", false);
+    fTurnOffMasternode = gArgs.GetBoolArg("-turnoffmasternode", false);
     if(fInfinityNode) {
         std::string strInfinityNodePrivKey = gArgs.GetArg("-infinitynodeprivkey", "");
         if(!strInfinityNodePrivKey.empty()) {
             if(!CMessageSigner::GetKeysFromSecret(strInfinityNodePrivKey, infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode))
                 return InitError(_("Invalid masternodeprivkey. Please see documentation."));
-            LogPrintf("  pubKeyInfinitynode: %s\n", infinitynodePeer.pubKeyInfinitynode.GetID().ToString());
+            CTxDestination dest = GetDestinationForKey(infinitynodePeer.pubKeyInfinitynode, OutputType::LEGACY);
+            LogPrintf("PubKeyInfinitynode: %s, address: %s\n", infinitynodePeer.pubKeyInfinitynode.GetID().ToString(), EncodeDestination(dest));
             infinitynodePeer.ManageState(connman);
         } else {
             return InitError(_("You must specify a infinitynodeprivkey in the configuration. Please see documentation for help."));
@@ -1986,11 +2007,15 @@ bool AppInitMain()
     LogPrintf("InfinityNode last scan height: %d and active Height: %d\n", infnodeman.getLastScan(), chainActive.Height());
     if (infnodeman.getLastScan() == 0){
         uiInterface.InitMessage(_("Initial on-chain infinitynode list..."));
+        // lock main here
+        LOCK(cs_main);
         if ( chainActive.Height() < Params().GetConsensus().nInfinityNodeBeginHeight || infnodeman.initialInfinitynodeList(chainActive.Height()) == false){
             LogPrintf("InfinityNode does not begin or error in initial list of node:\n");
         }
     } else {
         uiInterface.InitMessage(_("Update on-chain infinitynode list..."));
+        // lock main here
+        LOCK(cs_main);
         if ( chainActive.Height() < infnodeman.getLastScan() || infnodeman.updateInfinitynodeList(chainActive.Height()) == false){
             LogPrintf("Lastscan is higher than chainActive or error in update list of node:\n");
         }

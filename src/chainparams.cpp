@@ -113,8 +113,8 @@ public:
         consensus.nLimitSINNODE_5=375;
         consensus.nLimitSINNODE_10=375;
         consensus.nInstantSendKeepLock = 24;
-        consensus.nInfinityNodeBeginHeight=160000;
-        consensus.nInfinityNodeGenesisStatement=250000;
+        consensus.nInfinityNodeBeginHeight=160000; //masternode code
+        consensus.nInfinityNodeGenesisStatement=250000; // begin point for new reward algo
         consensus.nInfinityNodeUpdateMeta=25;
         consensus.nInfinityNodeVoteValue=100;
         consensus.nInfinityNodeNotificationValue=1;
@@ -124,6 +124,11 @@ public:
         consensus.nInfinityNodeLockRewardSigners=5; //in number
         consensus.nInfinityNodeLockRewardSINType=10; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
+
+        /*Previously used as simple constants in validation */
+        consensus.nINActivationHeight = 170000; // Activation of IN payments, should also be the same as nSinHeightMainnet in primitives/block.cpp
+        consensus.nINEnforcementHeight = 178000; // Enforcement of IN payments
+
         consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440 * 5; // 1 common year
@@ -264,6 +269,11 @@ public:
         consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
         consensus.nInfinityNodeLockRewardSINType=1; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
+
+        /*Previously used as simple constants in validation */
+        consensus.nINActivationHeight = 100; // Activation of IN 0.1 in primitives/block.cpp
+        consensus.nINEnforcementHeight = 120; // Enforcement of IN payments
+
         consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
@@ -294,6 +304,7 @@ public:
         consensus.cBurnAddressPubKey = "ebaf5ec74cb2e2342dfda0229111738ff4dc742d";
         consensus.cMetadataAddress = "SinBurnAddressForMetadataXXXXEU2mj";
         consensus.cNotifyAddress = "SinBurnAddressForNotifyXXXXXc42TcT";
+        consensus.cLockRewardAddress = "SinBurnAddressForLockRewardXTbeffB";
         consensus.cGovernanceAddress = "SinBurnAddressGovernanceVoteba5vkQ";
         strSporkPubKey = "0454E1B43ECCAC17E50402370477455BE34593E272CA9AE0DF04F6F3D423D1366D017822C77990A3D8DD980C60D3692C9B6D7DFD75F683F7056C1E97E82BD94DBE";
 
@@ -360,7 +371,7 @@ public:
 
         /* enable fallback fee on testnet */
         m_fallback_fee_enabled = true;
-        nMaxReorganizationDepth = 5; // 5 at 2 minute block timespan is +/- 10 minutes.
+        nMaxReorganizationDepth = 14; // 5 at 2 minute block timespan is +/- 10 minutes.
         nMinReorganizationPeers = 3;
 
         consensus.lwmaStartHeight = 150;
@@ -396,6 +407,11 @@ public:
         consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
         consensus.nInfinityNodeLockRewardSINType=1; //in number
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
+
+        /*Previously used as simple constants in validation */
+        consensus.nINActivationHeight = 170000; // Activation of IN payment enforcement, should also be the same as nSinHeightMainnet in primitives/block.cpp
+        consensus.nINEnforcementHeight = 178000; // Enforcement of IN payments
+        
         consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
@@ -426,6 +442,7 @@ public:
         consensus.cBurnAddressPubKey = "ebaf5ec74cb2e2342dfda0229111738ff4dc742d";
         consensus.cMetadataAddress = "SinBurnAddressForMetadataXXXXEU2mj";
         consensus.cNotifyAddress = "SinBurnAddressForNotifyXXXXXc42TcT";
+        consensus.cLockRewardAddress = "SinBurnAddressForLockRewardXTbeffB";
         consensus.cGovernanceAddress = "SinBurnAddressGovernanceVoteba5vkQ";
         strSporkPubKey = "0454E1B43ECCAC17E50402370477455BE34593E272CA9AE0DF04F6F3D423D1366D017822C77990A3D8DD980C60D3692C9B6D7DFD75F683F7056C1E97E82BD94DBE";
 
@@ -507,6 +524,7 @@ class CRegTestParams : public CChainParams {
 public:
     CRegTestParams() {
         strNetworkID = "regtest";
+        consensus.nMasternodeMinimumConfirmations = 15;
         consensus.nSubsidyHalvingInterval = 150;
         consensus.nInfinityNodeBeginHeight=100;
         consensus.nInfinityNodeGenesisStatement=110;
@@ -522,7 +540,12 @@ public:
         consensus.nMasternodeBurnSINNODE_5 = 500000;
         consensus.nMasternodeBurnSINNODE_10 = 1000000;
         consensus.nMasternodeCollateralMinimum = 10000;
-        consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
+
+        /*Previously used as simple constants in validation */
+        consensus.nINActivationHeight = 5000; // Activation of IN payment enforcement, should also be the same as nSinHeightMainnet in primitives/block.cpp
+        consensus.nINEnforcementHeight = 5500; // Enforcement of IN payments
+        
+        consensus.nNewDevfeeAddress = 60000000; // Placeholder, need to choose a fork block.
 
         consensus.BIP16Exception = uint256();
         consensus.BIP34Height = 100000000;
@@ -544,6 +567,7 @@ public:
         consensus.cBurnAddress = "mjX1AbMEHU14PmHjG2wtSvoydnJ6RxYwC2";
         consensus.cMetadataAddress = "mueP7L3nMXdshqPEMZ3L5wJumKqhq5dFpm";
         consensus.cNotifyAddress = "mobk9h9A3QLYKsKw9xWSC4bqYSUsqEwnpk";
+        consensus.cLockRewardAddress = "n3NZ5A6WKiKRMZWu4b1WiHxJjgjza1RMRk";
         consensus.cGovernanceAddress = "mgmp6o3V4z3kU83QFbNrdtRKGFS6T9yQyB";
         strSporkPubKey = "0454E1B43ECCAC17E50402370477455BE34593E272CA9AE0DF04F6F3D423D1366D017822C77990A3D8DD980C60D3692C9B6D7DFD75F683F7056C1E97E82BD94DBE";
 

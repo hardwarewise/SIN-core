@@ -12,8 +12,8 @@
 #include <masternode-sync.h>
 #include <masternodeman.h>
 #include <netfulfilledman.h>
-#include <infinitynodeman.h>
 #include <netmessagemaker.h>
+#include <sync.h>
 #include <spork.h>
 #include <ui_interface.h>
 #include <util.h>
@@ -151,16 +151,18 @@ void CMasternodeSync::ProcessTick(CConnman& connman)
     static int nTick = 0;
     if(nTick++ % MASTERNODE_SYNC_TICK_SECONDS != 0) return;
 
-    // reset the sync process if the last call to this function was more than 60 minutes ago (client was in sleep mode)
-    static int64_t nTimeLastProcess = GetTime();
-    if(GetTime() - nTimeLastProcess > 60*60) {
-        LogPrintf("CMasternodeSync::HasSyncFailures -- WARNING: no actions for too long, restarting sync...\n");
-        Reset();
-        SwitchToNextAsset(connman);
-        nTimeLastProcess = GetTime();
-        return;
-    }
+    if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+        // reset the sync process if the last call to this function was more than 60 minutes ago (client was in sleep mode)
+        static int64_t nTimeLastProcess = GetTime();
+        if(GetTime() - nTimeLastProcess > 60*60) {
+            LogPrintf("CMasternodeSync::HasSyncFailures -- WARNING: no actions for too long, restarting sync...\n");
+            Reset();
+            SwitchToNextAsset(connman);
+            nTimeLastProcess = GetTime();
+            return;
+        }
     nTimeLastProcess = GetTime();
+    }
 
     // reset sync status in case of any other sync failure
     if(IsFailed()) {
@@ -388,12 +390,6 @@ void CMasternodeSync::UpdatedBlockTip(const CBlockIndex *pindexNew, bool fInitia
 
     if (!IsBlockchainSynced() && fReachedBestHeader) {
         // Reached best header while being in initial mode.
-        if (infnodeman.updateInfinitynodeList(pindexBestHeader->nHeight)){
-            bool updateStm = infnodeman.deterministicRewardStatement(10) &&
-                             infnodeman.deterministicRewardStatement(5) &&
-                             infnodeman.deterministicRewardStatement(1);
-            if (updateStm) infnodeman.calculAllInfinityNodesRankAtLastStm();
-        }
         // We must be at the tip already, let's move to the next asset.
         LogPrintf("CMasternodeSync::UpdatedBlockTip -- SwitchToNextAsset at height %d\n", pindexNew->nHeight);
         SwitchToNextAsset(connman);

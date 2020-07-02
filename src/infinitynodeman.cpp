@@ -132,10 +132,16 @@ std::string CInfinitynodeMan::ToString() const
 
 void CInfinitynodeMan::CheckAndRemove(CConnman& connman)
 {
-    /*this function is called in InfinityNode thread and after sync of node*/
-    LOCK2(cs, cs_main); //Make sure we also lock main
+    /*this function is called in InfinityNode thread*/
+    LOCK(cs); //cs_main needs to be called by the parent function
 
-    LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::CheckAndRemove -- at Height: %d, last build height: %d nodes\n", nCachedBlockHeight, nLastScanHeight);
+    LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::CheckAndRemove -- At Height: %d, last build height: %d nodes\n", nCachedBlockHeight, nLastScanHeight);
+
+    if(nCachedBlockHeight == 0){
+        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::CheckAndRemove -- Node is just retarted. Waiting for new block\n");
+        return;
+    }
+
     //first scan -- normaly, list is built in init.cpp
     if (nLastScanHeight == 0 && nCachedBlockHeight > Params().GetConsensus().nInfinityNodeBeginHeight) {
         buildInfinitynodeList(nCachedBlockHeight, Params().GetConsensus().nInfinityNodeBeginHeight);
@@ -150,13 +156,13 @@ void CInfinitynodeMan::CheckAndRemove(CConnman& connman)
         buildInfinitynodeList(nCachedBlockHeight, nLastScanHeight);
     }
 
-    if (nBIGLastStmHeight + nBIGLastStmSize - nCachedBlockHeight < INF_MATURED_LIMIT){
+    if (nBIGLastStmHeight + nBIGLastStmSize - nCachedBlockHeight < Params().MaxReorganizationDepth()){
         deterministicRewardStatement(10);
     }
-    if (nMIDLastStmHeight + nMIDLastStmSize - nCachedBlockHeight < INF_MATURED_LIMIT){
+    if (nMIDLastStmHeight + nMIDLastStmSize - nCachedBlockHeight < Params().MaxReorganizationDepth()){
         deterministicRewardStatement(5);
     }
-    if (nLILLastStmHeight + nLILLastStmSize - nCachedBlockHeight < INF_MATURED_LIMIT){
+    if (nLILLastStmHeight + nLILLastStmSize - nCachedBlockHeight < Params().MaxReorganizationDepth()){
         deterministicRewardStatement(1);
     }
 
@@ -165,20 +171,23 @@ void CInfinitynodeMan::CheckAndRemove(CConnman& connman)
 
 int CInfinitynodeMan::getRoi(int nSinType, int totalNode)
 {
-     LOCK(cs);
-     int nBurnAmount = 0;
-     if (nSinType == 10) nBurnAmount = Params().GetConsensus().nMasternodeBurnSINNODE_10;
-     if (nSinType == 5) nBurnAmount = Params().GetConsensus().nMasternodeBurnSINNODE_5;
-     if (nSinType == 1) nBurnAmount = Params().GetConsensus().nMasternodeBurnSINNODE_1;
+    LOCK(cs);
+    int nBurnAmount = 0;
+    if (nSinType == 10) nBurnAmount = Params().GetConsensus().nMasternodeBurnSINNODE_10;
+    if (nSinType == 5) nBurnAmount = Params().GetConsensus().nMasternodeBurnSINNODE_5;
+    if (nSinType == 1) nBurnAmount = Params().GetConsensus().nMasternodeBurnSINNODE_1;
 
-     float nReward = GetMasternodePayment(nCachedBlockHeight, nSinType) / COIN;
-     float roi = nBurnAmount / ((720 / (float)totalNode) * nReward) ;
-     return (int) roi;
+    float nReward = GetMasternodePayment(nCachedBlockHeight, nSinType) / COIN;
+    float roi = nBurnAmount / ((720 / (float)totalNode) * nReward) ;
+    return (int) roi;
 }
 
+/*
+ * call in init.cpp
+ */
 bool CInfinitynodeMan::initialInfinitynodeList(int nBlockHeight)
 {
-    LOCK2(cs, cs_main); //Make sure we also lock main
+    LOCK(cs); // cs_main needs to be called by the parent function
     if(nBlockHeight < Params().GetConsensus().nInfinityNodeBeginHeight) return false;
     LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::initialInfinitynodeList -- initial at height: %d, last scan height: %d\n", nBlockHeight, nLastScanHeight);
     return buildInfinitynodeList(nBlockHeight, Params().GetConsensus().nInfinityNodeBeginHeight);
@@ -186,7 +195,7 @@ bool CInfinitynodeMan::initialInfinitynodeList(int nBlockHeight)
 
 bool CInfinitynodeMan::updateInfinitynodeList(int nBlockHeight)
 {
-    LOCK2(cs, cs_main); //Make sure we also lock main
+    LOCK(cs); // cs_main needs to be called by the parent function
     if (nLastScanHeight == 0) {
         LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinitynodeList -- update list for 1st scan at Height %d\n",nBlockHeight); 
         return buildInfinitynodeList(nBlockHeight, Params().GetConsensus().nInfinityNodeBeginHeight);
@@ -195,7 +204,13 @@ bool CInfinitynodeMan::updateInfinitynodeList(int nBlockHeight)
     return buildInfinitynodeList(nBlockHeight, nLastScanHeight);
 }
 
-bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
+bool CInfinitynodeMan::buildInfinitynodeListRPC(int nBlockHeight, int nLowHeight)
+{
+    LOCK(cs); //cs_main needs to be called by the parent function
+    return buildInfinitynodeList(nBlockHeight, nLowHeight);
+}
+
+bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight, bool fWriteDisk)
 {
     if(nBlockHeight < Params().GetConsensus().nInfinityNodeBeginHeight){
         Clear();
@@ -207,18 +222,23 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
     mapInfinitynodesNonMatured.clear();
 
     //first run, make sure that all variable is clear
-    if (nLowHeight == Params().GetConsensus().nInfinityNodeBeginHeight){
+    if (nLowHeight == Params().GetConsensus().nInfinityNodeBeginHeight) {
         Clear();
         infnodersv.Clear();
         //first run in testnet, scan to block number 1
-        if (Params().NetworkIDString() == CBaseChainParams::TESTNET) {nLowHeight = 1;}
+        if (Params().NetworkIDString() == CBaseChainParams::TESTNET) {
+            nLowHeight = 1;
+        }
+    } else if (Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+        //on regtest, always scan from block number 1, as startup scans may be inconsistent and we may have never scanned before while going over IN fork block
+        nLowHeight = 1;
     } else {
         nLowHeight = nLastScanHeight;
     }
 
     uint256 blockHash;
     if(!GetBlockHash(blockHash, nBlockHeight)) {
-        LogPrint(BCLog::INFINITYNODE, "CInfinitynodeMan::buildInfinitynodeList -- can not read block hash\n");
+        LogPrint(BCLog::INFINITYNODE, "CInfinitynodeMan::buildInfinitynodeList -- can not get block hash at %d\n", nBlockHeight);
         return false;
     }
 
@@ -228,9 +248,13 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
 
     int nLastPaidScanDeepth = max(Params().GetConsensus().nLimitSINNODE_1, max(Params().GetConsensus().nLimitSINNODE_5, Params().GetConsensus().nLimitSINNODE_10));
     //at fork heigh, scan limit will change to 800 - each tier of SIN network will never go to this limit
-    if (nBlockHeight >= 350000){nLastPaidScanDeepth=800;}
+    if (nBlockHeight >= 350000) {
+        nLastPaidScanDeepth = 800;
+    }
     //at begin of network
-    if (nLastPaidScanDeepth > nBlockHeight) {nLastPaidScanDeepth = nBlockHeight - 1;}
+    if (nLastPaidScanDeepth > nBlockHeight) {
+        nLastPaidScanDeepth = nBlockHeight - 1;
+    }
 
     while (prevBlockIndex->nHeight >= nLowHeight)
     {
@@ -291,7 +315,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
                                 inf.setScriptPublicKey(prevtx->vout[index].scriptPubKey);
 
                                 //we have all infos. Then add in map
-                                if(prevBlockIndex->nHeight < pindex->nHeight - INF_MATURED_LIMIT) {
+                                if(prevBlockIndex->nHeight < pindex->nHeight - Params().MaxReorganizationDepth()) {
                                     //matured
                                     Add(inf);
                                 } else {
@@ -303,10 +327,12 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
                             if (out.nValue == Params().GetConsensus().nInfinityNodeVoteValue * COIN){
                                 if (vSolutions.size() == 2){
                                     std::string voteOpinion(vSolutions[1].begin(), vSolutions[1].end());
-                                    if(voteOpinion.length() == 9){
+                                    if (voteOpinion.length() == 9) {
                                         std::string proposalID = voteOpinion.substr(0, 8);
                                         bool opinion = false;
-                                        if( voteOpinion.substr(8, 1) == "1" ){opinion = true;}
+                                        if (voteOpinion.substr(8, 1) == "1" ) {
+                                            opinion = true;
+                                        }
                                         //Address payee: we known that there is only 1 input
                                         const CTxIn& txin = tx->vin[0];
                                         int index = txin.prevout.n;
@@ -358,7 +384,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
                                             return false;
                                         }
                                         //we have all infos. Then add in map
-                                        if(prevBlockIndex->nHeight < pindex->nHeight - INF_MATURED_LIMIT) {
+                                        if(prevBlockIndex->nHeight < pindex->nHeight - Params().MaxReorganizationDepth()) {
                                             //matured
 	                                        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- Voter: %s, proposal: %s.\n", EncodeDestination(addressBurnFund), voteOpinion);
                                             CVote vote = CVote(proposalID, prevtx->vout[index].scriptPubKey, prevBlockIndex->nHeight, opinion);
@@ -375,9 +401,8 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
                         if (whichType == TX_BURN_DATA && Params().GetConsensus().cMetadataAddress == EncodeDestination(CKeyID(uint160(vSolutions[0]))))
                         {
                             //Amount for UpdateMeta
-                            if ( (Params().GetConsensus().nInfinityNodeUpdateMeta - 1) * COIN <= out.nValue
-                                 && out.nValue <= (Params().GetConsensus().nInfinityNodeUpdateMeta) * COIN){
-                                if (vSolutions.size() == 2){
+                            if ((Params().GetConsensus().nInfinityNodeUpdateMeta - 1) * COIN <= out.nValue && out.nValue <= (Params().GetConsensus().nInfinityNodeUpdateMeta) * COIN) {
+                                if (vSolutions.size() == 2) {
                                     std::string metadata(vSolutions[1].begin(), vSolutions[1].end());
                                     string s;
                                     stringstream ss(metadata);
@@ -395,11 +420,16 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
                                             CPubKey decodePubKey(tx_data.begin(), tx_data.end());
                                             if (decodePubKey.IsValid()) {check++;}
                                         }
-                                        //2nd position: Node IP
-                                        if (i==1 && Lookup(s.c_str(), service, 0, false)) {
+                                        if (Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+                                            //2nd position: Node IP
+                                            if (i==1 && Lookup(s.c_str(), service, 0, false)) {
+                                                check++;
+                                            }
+                                        } else {
+                                            //lets INs run on 127.0.0.1 only on REGTEST
                                             check++;
                                         }
-                                        //3th position: 12 character from Infinitynode BurnTx
+                                        //3th position: 16 character from Infinitynode BurnTx
                                         if (i==2 && s.length() >= 16) {
                                             check++;
                                             burnTxID = s.substr(0, 16);
@@ -441,8 +471,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
                         if (whichType == TX_BURN_DATA && Params().GetConsensus().cNotifyAddress == EncodeDestination(CKeyID(uint160(vSolutions[0]))))
                         {
                             //Amount for UpdateMeta
-                            if ( (Params().GetConsensus().nInfinityNodeNotificationValue - 1) * COIN <= out.nValue
-                                 && out.nValue <= (Params().GetConsensus().nInfinityNodeNotificationValue) * COIN){
+                            if ( (Params().GetConsensus().nInfinityNodeNotificationValue - 1) * COIN <= out.nValue && out.nValue <= (Params().GetConsensus().nInfinityNodeNotificationValue) * COIN){
                                 if (vSolutions.size() == 2){
                                     std::string metadata(vSolutions[1].begin(), vSolutions[1].end());
                                     string s;
@@ -508,21 +537,129 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight)
         prevBlockIndex = prevBlockIndex->pprev;
     }
 
-    nLastScanHeight = nBlockHeight - INF_MATURED_LIMIT;
+    nLastScanHeight = nBlockHeight - Params().MaxReorganizationDepth();
     updateLastPaid();
 
     fMapInfinitynodeUpdated = true;
 
-    CFlatDB<CInfinitynodeMan> flatdb5("infinitynode.dat", "magicInfinityNodeCache");
-    flatdb5.Dump(infnodeman);
+    if(fWriteDisk){
+        CFlatDB<CInfinitynodeMan> flatdb5("infinitynode.dat", "magicInfinityNodeCache");
+        flatdb5.Dump(infnodeman);
 
-    CFlatDB<CInfinitynodersv> flatdb6("infinitynodersv.dat", "magicInfinityRSV");
-    flatdb6.Dump(infnodersv);
+        CFlatDB<CInfinitynodersv> flatdb6("infinitynodersv.dat", "magicInfinityRSV");
+        flatdb6.Dump(infnodersv);
 
-    CFlatDB<CInfinitynodeMeta> flatdb7("infinitynodemeta.dat", "magicInfinityMeta");
-    flatdb7.Dump(infnodemeta);
+        CFlatDB<CInfinitynodeMeta> flatdb7("infinitynodemeta.dat", "magicInfinityMeta");
+        flatdb7.Dump(infnodemeta);
+    }
 
     LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::buildInfinitynodeList -- list infinity node was built from blockchain at Height: %s\n", nBlockHeight);
+    return true;
+}
+
+/*
+ * LOCK (cs_main) before call this function
+ */
+bool CInfinitynodeMan::ExtractLockReward(int nBlockHeight, int depth, std::vector<CLockRewardExtractInfo>& vecLRRet)
+{
+    vecLRRet.clear();
+
+    if(nBlockHeight < Params().GetConsensus().nInfinityNodeBeginHeight){
+        return true;
+    }
+
+    LOCK(cs);
+    AssertLockHeld(cs_main);
+
+    uint256 blockHash;
+    if(!GetBlockHash(blockHash, nBlockHeight)) {
+        LogPrint(BCLog::INFINITYNODE, "CInfinityNodeLockReward::ExtractLockReward -- can not read block hash\n");
+        return false;
+    }
+
+    CBlockIndex* pindex;
+    pindex = LookupBlockIndex(blockHash);
+    CBlockIndex* prevBlockIndex = pindex;
+
+    //read back 55 blocks and find lockreward for height
+    while (prevBlockIndex->nHeight >= (nBlockHeight - depth))
+    {
+        CBlock blockReadFromDisk;
+        if (ReadBlockFromDisk(blockReadFromDisk, prevBlockIndex, Params().GetConsensus()))
+        {
+            for (const CTransactionRef& tx : blockReadFromDisk.vtx) {
+                //Not coinbase
+                if (!tx->IsCoinBase()) {
+                    for (unsigned int i = 0; i < tx->vout.size(); i++) {
+                        const CTxOut& out = tx->vout[i];
+                        std::vector<std::vector<unsigned char>> vSolutions;
+                        txnouttype whichType;
+                        const CScript& prevScript = out.scriptPubKey;
+                        Solver(prevScript, whichType, vSolutions);
+
+                        if (whichType == TX_BURN_DATA && Params().GetConsensus().cLockRewardAddress == EncodeDestination(CKeyID(uint160(vSolutions[0])))) {
+                            LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::ExtractLockReward -- block Height: %d, info size: %d\n", prevBlockIndex->nHeight, (int)vSolutions.size());
+                            if (vSolutions.size() != 2) {continue;}
+                            std::string stringLRRegister(vSolutions[1].begin(), vSolutions[1].end());
+
+                            std::string s;
+                            stringstream ss(stringLRRegister);
+                            //verify the height of registration info
+                            int i=0;
+                            int nRewardHeight = 0;
+                            int nSINtype = 0;
+                            std::string signature = "";
+                            int *signerIndexes;
+                            size_t N_SIGNERS = (size_t)Params().GetConsensus().nInfinityNodeLockRewardSigners;
+                            int registerNbInfos = Params().GetConsensus().nInfinityNodeLockRewardSigners + 3;
+                            signerIndexes = (int*) malloc(Params().GetConsensus().nInfinityNodeLockRewardSigners * sizeof(int));
+
+                            while (getline(ss, s,';')) {
+                                if(i==0){nRewardHeight = atoi(s);}
+                                if(i==1){nSINtype = atoi(s);}
+                                if(i==2){signature = s;}
+                                if(i>=3 && i < registerNbInfos){
+                                    signerIndexes[i-3] = atoi(s);
+                                }
+                                i++;
+                            }
+
+                            LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::ExtractLockReward -- LR: %s.\n", stringLRRegister);
+                            //if(nRewardHeight != nBlockHeight){continue;}
+
+                            //veryfy who send this registration, our candidate ???
+                            const CTxIn& txin = tx->vin[0];
+                            int index = txin.prevout.n;
+
+                            CTransactionRef prevtx;
+                            uint256 hashblock;
+                            if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false)) {
+                                LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::ExtractLockReward -- PrevBurnFund tx is not in block.\n");
+                                return false;
+                            }
+
+                            CLockRewardExtractInfo lrinfo(prevBlockIndex->nHeight, nSINtype, nRewardHeight, prevtx->vout[index].scriptPubKey, stringLRRegister);
+
+                            vecLRRet.push_back(lrinfo);
+                        }
+                    }
+                }
+            }
+        } else {
+            LogPrint(BCLog::INFINITYNODE, "CInfinitynodeMan::ExtractLockReward -- can not read block from disk\n");
+            return false;
+        }
+        // continue with previous block
+        prevBlockIndex = prevBlockIndex->pprev;
+    }
+    return true;
+}
+
+bool CInfinitynodeMan::getLRForHeight(int height, std::vector<CLockRewardExtractInfo>& vecLockRewardRet)
+{
+    vecLockRewardRet.clear();
+    LOCK(cs_main);
+    ExtractLockReward(height, Params().GetConsensus().nInfinityNodeCallLockRewardDeepth * 3, vecLockRewardRet);
     return true;
 }
 
@@ -594,7 +731,7 @@ bool CInfinitynodeMan::deterministicRewardStatement(int nSinType)
         //loop
         stm_height_temp = stm_height_temp + totalSinType;
         //we will out of loop this next step, but we can calculate the next STM now
-        if(nCachedBlockHeight <=  stm_height_temp && stm_height_temp < nCachedBlockHeight + INF_MATURED_LIMIT){
+        if(nCachedBlockHeight <=  stm_height_temp && stm_height_temp < nCachedBlockHeight + Params().MaxReorganizationDepth()){
             int totalSinTypeNextStm = 0;
             for (auto& infpair : mapInfinitynodes) {
                 if (infpair.second.getSINType() == nSinType && infpair.second.getHeight() < stm_height_temp && stm_height_temp <= infpair.second.getExpireHeight()){
@@ -771,15 +908,25 @@ int CInfinitynodeMan::isPossibleForLockReward(std::string nodeOwner)
 
 bool CInfinitynodeMan::deterministicRewardAtHeight(int nBlockHeight, int nSinType, CInfinitynode& infinitynodeRet)
 {
-    if(nBlockHeight < Params().GetConsensus().nInfinityNodeGenesisStatement) return false;
+    if(nBlockHeight < Params().GetConsensus().nInfinityNodeGenesisStatement){
+        return false;
+    }
     //step1: copy mapStatement for nSinType
     std::map<int, int> mapStatementSinType = getStatementMap(nSinType);
 
+    if(mapStatementSinType.size() == 0){
+        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::deterministicRewardAtHeight -- we've just start node. map of Stm is not built yet\n");
+        return false;
+    }
+
     LOCK(cs);
-    //step2: find last Statement for nBlockHeight;
+    //step2: find last Statement for nBlockHeight (user can enter nBlockHeight, so it may be in past, current or future)
     int nDelta = 1000; //big enough > number of 
     int lastStatement = 0;
     int lastStatementSize = 0;
+    bool fUpdateStm = false;
+    int nNextStmHeight = 0;
+    int loop = 1;
     for(auto& stm : mapStatementSinType)
     {
         if (nBlockHeight == stm.first)
@@ -793,19 +940,56 @@ bool CInfinitynodeMan::deterministicRewardAtHeight(int nBlockHeight, int nSinTyp
             if(nDelta <= stm.second){
                 lastStatement = stm.first;
                 lastStatementSize = stm.second;
+            } else if (loop == mapStatementSinType.size() && nDelta > stm.second && (nDelta - stm.second) <= Params().MaxReorganizationDepth()) {
+                //at end of loop
+                //we are near the end of current Stm and
+                //we try LR in next stm, but deterministicRewardStatement is not call, dont wait and try to update here
+                fUpdateStm = true;
+                nNextStmHeight = stm.first + stm.second;
+            }
+        } else if(nBlockHeight > stm.first && nDelta == (nBlockHeight -stm.first)){
+            if (loop == mapStatementSinType.size()){
+                //at end of loop
+                fUpdateStm = true;
+                nNextStmHeight = stm.first + stm.second;
             }
         }
+        loop++;
+        if(lastStatement > 0 || fUpdateStm == true){
+            LogPrintf("CInfinitynodeMan::deterministicRewardAtHeight -- Height: %s, Stm height: %d, stm size: %d, Delta: %d, Need update:%d\n", nBlockHeight, stm.first, stm.second, nDelta, fUpdateStm);
+        }
     }
+
+    //receive update flag
+    if(fUpdateStm){
+        int totalSinTypeNextStm = 0;
+        for (auto& infpair : mapInfinitynodes) {
+            if (infpair.second.getSINType() == nSinType && infpair.second.getHeight() < nNextStmHeight && nNextStmHeight <= infpair.second.getExpireHeight()){
+                totalSinTypeNextStm = totalSinTypeNextStm + 1;
+            }
+        }
+
+        if (nSinType == 10){mapStatementBIG[nNextStmHeight] = totalSinTypeNextStm;}
+        if (nSinType == 5){mapStatementMID[nNextStmHeight] = totalSinTypeNextStm;}
+        if (nSinType == 1){mapStatementLIL[nNextStmHeight] = totalSinTypeNextStm;}
+
+        lastStatement = nNextStmHeight;
+        lastStatementSize = totalSinTypeNextStm;
+    }
+
     //return false if not found statement
-    if (lastStatement == 0) return false;
+    if (lastStatement == 0){
+        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::deterministicRewardAtHeight -- lastStatement not found: %d\n", lastStatement);
+        return false;
+    }
 
     std::map<int, CInfinitynode> rankOfStatement = calculInfinityNodeRank(lastStatement, nSinType, false);
     if(rankOfStatement.empty()){
-        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::deterministicRewardAtHeight -- can not calcul rank at %d\n", lastStatement);
+        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::deterministicRewardAtHeight -- can not calculate rank at %d\n", lastStatement);
         return false;
     }
     if((nBlockHeight < lastStatement) || (rankOfStatement.size() < (nBlockHeight - lastStatement + 1))){
-        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::deterministicRewardAtHeight -- out of rang at %d\n", lastStatement);
+        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::deterministicRewardAtHeight -- out of range at %d\n", lastStatement);
         return false;
     }
     infinitynodeRet = rankOfStatement[nBlockHeight - lastStatement + 1];
@@ -868,6 +1052,9 @@ void CInfinitynodeMan::updateLastStmHeightAndSize(int nBlockHeight, int nSinType
 
 }
 
+/*
+ * get Vector score of all NON EXPIRED SINtype for given nBlockHash
+ */
 bool CInfinitynodeMan::getScoreVector(const uint256& nBlockHash, int nSinType, int nBlockHeight, CInfinitynodeMan::score_pair_vec_t& vecScoresRet)
 {
     vecScoresRet.clear();
@@ -889,6 +1076,9 @@ bool CInfinitynodeMan::getScoreVector(const uint256& nBlockHash, int nSinType, i
     return !vecScoresRet.empty();
 }
 
+/*
+ * get score classement of given NODE SINtype
+ */
 bool CInfinitynodeMan::getNodeScoreAtHeight(const COutPoint& outpoint, int nSinType, int nBlockHeight, int& nScoreRet)
 {
     nScoreRet = -1;
@@ -918,6 +1108,37 @@ bool CInfinitynodeMan::getNodeScoreAtHeight(const COutPoint& outpoint, int nSinT
     return false;
 }
 
+bool CInfinitynodeMan::getTopNodeScoreAtHeight(int nSinType, int nBlockHeight, int nTop, std::vector<CInfinitynode>& vecInfRet)
+{
+    vecInfRet.clear();
+
+    LOCK(cs);
+
+    uint256 nBlockHash = uint256();
+    if (!GetBlockHash(nBlockHash, nBlockHeight)) {
+        LogPrint(BCLog::INFINITYMAN,"CMasternodeMan::%s -- ERROR: GetBlockHash() failed at nBlockHeight %d\n", __func__, nBlockHeight);
+        return false;
+    }
+
+    score_pair_vec_t vecScores;
+
+    if (!getScoreVector(nBlockHash, nSinType, nBlockHeight, vecScores))
+        return false;
+
+    int count=0;
+    for (auto& scorePair : vecScores) {
+        if(count < nTop){
+            vecInfRet.push_back(*scorePair.second);
+        }
+        count++;
+    }
+
+    return true;
+}
+
+/*
+ * get Rank classement of a Vector of Node at given Height
+ */
 std::string CInfinitynodeMan::getVectorNodeRankAtHeight(const std::vector<COutPoint>  &vOutpoint, int nSinType, int nBlockHeight)
 {
     std::string ret="";
@@ -962,8 +1183,9 @@ std::string CInfinitynodeMan::getVectorNodeRankAtHeight(const std::vector<COutPo
 
 void CInfinitynodeMan::UpdatedBlockTip(const CBlockIndex *pindex)
 {
-    nCachedBlockHeight = pindex->nHeight;
-    updateLastStmHeightAndSize(nCachedBlockHeight, 10);
-    updateLastStmHeightAndSize(nCachedBlockHeight, 5);
-    updateLastStmHeightAndSize(nCachedBlockHeight, 1);
+    //update the last Stm when new block connected
+    {
+        nCachedBlockHeight = pindex->nHeight;
+        LogPrint(BCLog::INFINITYLOCK,"CInfinitynodeMan::UpdatedBlockTip -- nCachedBlockHeight=%d\n", nCachedBlockHeight);
+    }
 }

@@ -242,12 +242,12 @@ image:url(':/images/downArrow_small');
 
 QHeaderView { /* Table Header */
 background-color:transparent;
-font-weight: bold;
+
 }
 
 QHeaderView::section { /* Table Header Sections */
-background-color: transparent;
-color: #2E3191;
+background-color: #2E3191;
+color: #ffffff;
 min-height:30px;
 font-size: 14px;
 border: 0;
@@ -268,6 +268,7 @@ border:0px;
 #transactionView,
 #tableWidgetMyMasternodes,
 #tableWidgetMasternodes,
+#dinTable,
 #tabSignMessage  {
 	/* Table - has to be selected as a class otherwise it throws off QCalendarWidget */
 	background: transparent;
@@ -297,21 +298,21 @@ border-color:#bababa;
 border: 1px solid #2E3191;
 border-radius:0px;
 padding: 3px 5px 3px 5px;
-background:#ffffff;
+background:#90caf9;
 min-height:25px;
 color:#333333;
-background-color:#ffffff;
+background-color:#90caf9;
 
 
 }
 
 QComboBox:checked {
-background:#ffffff;
+background:#90caf9;
 
 }
 
 QComboBox:editable {
-background: #ffffff;
+background: #90caf9;
 color:#bababa;
 border:0px solid transparent;
 }
@@ -329,7 +330,7 @@ border-image: url(':/images/downArrow') 0 0 0 0 stretch stretch;
 QComboBox QListView {
 border:1px solid #bababa;
 color:#333333;
-background-color:#ffffff;
+background-color:#90caf9;
 padding-right:1px;
 padding-left:1px;
 }
@@ -337,14 +338,14 @@ padding-left:1px;
 QComboBox QAbstractItemView::item { margin:4px; }
 
 QComboBox::item {
-color:#ffffff;
+color:#90caf9;
 }
 
-QComboBox::item:alternate { background:#fff;}
+QComboBox::item:alternate { background:#90caf9;}
 
 QComboBox::item:selected {
 border:0px solid transparent;
-background:#f2f2f2;
+background:#90caf9;
 }
 
 QComboBox::indicator {
@@ -510,6 +511,7 @@ padding-left:12px;
 padding-right:12px;
 padding-top:5px;
 padding-bottom:5px;
+height: 30px;
 border-top-color:transparent;
 border-left-color:transparent;
 border-right-color:transparent;
@@ -1221,7 +1223,6 @@ QStackedWidget#SendCoinsEntry .QLineEdit#addAsLabel { /* Pay To Input Field */
 background-color:transparent;
 border-color:#45515D;
 font-size:14px;
-font-weight:bold;
 color:#000000;
 }
 
@@ -1229,7 +1230,7 @@ color:#000000;
 /* DEPOSIT COINS (EARN) PAGE */
 
 QDialog#DepositCoinsDialog .QLabel#label_3 { /* Deposit Title Label */
-background-color:#00B4B8;
+background-color:#2E3191;
 color: #ffffff;
 font-size:18px;
 border-radius: 5px;

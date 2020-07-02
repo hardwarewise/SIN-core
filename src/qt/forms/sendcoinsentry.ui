@@ -143,6 +143,18 @@
       </item>
       <item>
        <widget class="QLineEdit" name="addAsLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>380</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="toolTip">
          <string>Enter a label for this address to add it to the list of used addresses</string>
         </property>
@@ -194,37 +206,28 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QLineEdit" name="lockperiod">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
+         <widget class="QComboBox" name="lockperiod">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>80</horstretch>
+            <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="minimumSize">
-           <size>
-            <width>80</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="maxLength">
-           <number>6</number>
-          </property>
+          <item>
+           <property name="text">
+            <string>3</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>6</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>12</string>
+           </property>
+          </item>
          </widget>
         </item>
         <item>
@@ -237,7 +240,7 @@
           </property>
           <item>
            <property name="text">
-            <string>Blocks</string>
+            <string>Months</string>
            </property>
           </item>
          </widget>
@@ -466,8 +469,7 @@
         </color>
        </brush>
       </colorrole>
-      
-     </active>
+    </active>
      <inactive>
       <colorrole role="WindowText">
        <brush brushstyle="SolidPattern">
@@ -604,7 +606,6 @@
         </color>
        </brush>
       </colorrole>
-      
      </inactive>
      <disabled>
       <colorrole role="WindowText">
@@ -742,7 +743,6 @@
         </color>
        </brush>
       </colorrole>
-     
      </disabled>
     </palette>
    </property>
@@ -980,8 +980,7 @@
         </color>
        </brush>
       </colorrole>
-      
-     </active>
+    </active>
      <inactive>
       <colorrole role="WindowText">
        <brush brushstyle="SolidPattern">
@@ -1127,8 +1126,7 @@
         </color>
        </brush>
       </colorrole>
-      
-     </inactive>
+    </inactive>
      <disabled>
       <colorrole role="WindowText">
        <brush brushstyle="SolidPattern">
@@ -1274,8 +1272,7 @@
         </color>
        </brush>
       </colorrole>
-      
-     </disabled>
+    </disabled>
     </palette>
    </property>
    <property name="toolTip">

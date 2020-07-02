@@ -93,9 +93,11 @@ std::string CInfinitynodePeer::GetMyPeerInfo() const
 
 bool CInfinitynodePeer::AutoCheck(CConnman& connman)
 {
-    if(!fPingerEnabled) {
-        LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::AutoCheck -- %s: infinitynode ping service is disabled, skipping...\n", GetStateString());
-        return false;
+    if (Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+        if(!fPingerEnabled) {
+            LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::AutoCheck -- %s: infinitynode ping service is disabled, skipping...\n", GetStateString());
+            return false;
+        }
     }
 
     infinitynode_info_t infoInf;
@@ -171,30 +173,35 @@ void CInfinitynodePeer::ManageStateInitial(CConnman& connman)
 
     LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateInitial -- Checking inbound connection to '%s'\n", service.ToString());
 
-    bool fConnected = false;
-    SOCKET hSocket = CreateSocket(service);
-    if (hSocket != INVALID_SOCKET) {
-        fConnected = ConnectSocketDirectly(service, hSocket, nConnectTimeout, true) && IsSelectableSocket(hSocket);
-        CloseSocket(hSocket);
-    }
+    if (Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+        bool fConnected = false;
 
-    if (!fConnected) {
-        nState = INFINITYNODE_PEER_NOT_CAPABLE;
-        strNotCapableReason = "Could not connect to " + service.ToString();
-        LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateInitial -- %s: %s\n", GetStateString(), strNotCapableReason);
-        return;
+        SOCKET hSocket = CreateSocket(service);
+        if (hSocket != INVALID_SOCKET) {
+            LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateInitial -- Socket created\n");
+            fConnected = ConnectSocketDirectly(service, hSocket, nConnectTimeout, true) && IsSelectableSocket(hSocket);
+            LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateInitial -- Connecttion: %d\n", fConnected);
+            CloseSocket(hSocket);
+        }
+
+        if (!fConnected) {
+            nState = INFINITYNODE_PEER_NOT_CAPABLE;
+            strNotCapableReason = "Could not connect to " + service.ToString();
+            LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateInitial -- %s: %s\n", GetStateString(), strNotCapableReason);
+            return;
+        }
     }
 
     // Default to REMOTE
     eType = INFINITYNODE_REMOTE;
 
-    LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateInitial -- End status = %s, type = %s, pinger enabled = %d\n", GetStatus(), GetTypeString(), fPingerEnabled);
+    LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateInitial -- End type = %s, pinger enabled = %d\n", GetTypeString(), fPingerEnabled);
 }
 
 void CInfinitynodePeer::ManageStateRemote()
 {
-    LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateRemote -- Start status = %s, type = %s, pinger enabled = %d, pubKeyInfinitynode.GetID() = %s\n", 
-             GetStatus(), GetTypeString(), fPingerEnabled, pubKeyInfinitynode.GetID().ToString());
+    LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateRemote -- Type = %s, pinger enabled = %d, pubKeyInfinitynode.GetID() = %s\n", 
+             GetTypeString(), fPingerEnabled, pubKeyInfinitynode.GetID().ToString());
 
     infinitynode_info_t infoInf;
     if(infnodeman.GetInfinitynodeInfo(EncodeBase64(pubKeyInfinitynode.begin(), pubKeyInfinitynode.size()), infoInf)) {
@@ -228,8 +235,7 @@ void CInfinitynodePeer::ManageStateRemote()
             nSINType = infoInf.nSINType;
             nState = INFINITYNODE_PEER_STARTED;
         }
-    }
-    else {
+    } else {
         nState = INFINITYNODE_PEER_NOT_CAPABLE;
         strNotCapableReason = "Infinitynode is not in Deterministic Infinitynode list";
         LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateRemote -- %s: %s\n", GetStateString(), strNotCapableReason);

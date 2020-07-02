@@ -113,6 +113,7 @@ QT_FORMS_UI = \
   qt/forms/sendcoinsentry.ui \
   qt/forms/signverifymessagedialog.ui \
   qt/forms/statspage.ui \
+  qt/forms/faqpage.ui \
   qt/forms/transactiondescdialog.ui
 
 # Dash
@@ -172,8 +173,8 @@ QT_MOC_CPP = \
   qt/moc_utilitydialog.cpp \
   qt/moc_walletframe.cpp \
   qt/moc_statspage.cpp \
+  qt/moc_faqpage.cpp \
   qt/moc_walletmodel.cpp \
-  qt/moc_statspage.cpp \
   qt/moc_walletview.cpp
 
 # Dash
@@ -213,6 +214,7 @@ BITCOIN_QT_H = \
   qt/askpassphrasedialog.h \
   qt/bantablemodel.h \
   qt/statspage.h \
+  qt/faqpage.h \
   qt/sinaddressvalidator.h \
   qt/sinamountfield.h \
   qt/singui.h \
@@ -396,6 +398,7 @@ BITCOIN_QT_WALLET_CPP = \
   qt/walletframe.cpp \
   qt/walletmodel.cpp \
   qt/statspage.cpp \
+  qt/faqpage.cpp \
   qt/walletmodeltransaction.cpp \
   qt/walletview.cpp
 
