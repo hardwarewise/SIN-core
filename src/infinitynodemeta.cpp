@@ -41,7 +41,7 @@ bool CInfinitynodeMeta::Add(CMetadata &meta)
             int nHeight = meta.getMetadataHeight();
             std::string sPublicKey = meta.getMetaPublicKey();
             CService cService = meta.getService();
-            if(nHeight < m.getMetadataHeight() + Params().MaxReorganizationDepth() * 2 ){
+            if(nHeight < m.getMetadataHeight() + Params().MaxReorganizationDepth() * 2){
                 int nWait = m.getMetadataHeight() + Params().MaxReorganizationDepth() * 2 - nHeight;
                 LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::Can not update metadata now. Please update after %d blocks\n", nWait);
                 return false;
