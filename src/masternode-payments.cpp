@@ -146,7 +146,7 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
     } else {
         //not mainnet
         // accept all block inferieur than 91610 = fork height in testnet
-        if(nBlockHeight < 91610){
+        if(nBlockHeight < 93000){
             LogPrintf("IsBlockPayeeValid -- accept all Coinbase Tx before simulation hardfork\n");
             return true;
         }
