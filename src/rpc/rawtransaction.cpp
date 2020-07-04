@@ -27,8 +27,6 @@
 #include <txmempool.h>
 #include <uint256.h>
 #include <utilstrencodings.h>
-/*SIN*/
-#include <instantx.h>
 #ifdef ENABLE_WALLET
 #include <wallet/rpcwallet.h>
 #endif
@@ -1094,13 +1092,12 @@ static UniValue sendrawtransaction(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 3)
         throw std::runtime_error(
-            "sendrawtransaction \"hexstring\" ( allowhighfees instantsend)\n"
+            "sendrawtransaction \"hexstring\" ( allowhighfees )\n"
             "\nSubmits raw transaction (serialized, hex-encoded) to local node and network.\n"
             "\nAlso see createrawtransaction and signrawtransaction calls.\n"
             "\nArguments:\n"
             "1. \"hexstring\"    (string, required) The hex string of the raw transaction)\n"
             "2. allowhighfees    (boolean, optional, default=false) Allow high fees\n"
-            "3. instantsend    (boolean, optional, default=false) Use InstantSend to send this transaction\n"
             "\nResult:\n"
             "\"hex\"             (string) The transaction hash in hex\n"
             "\nExamples:\n"
@@ -1129,10 +1126,6 @@ static UniValue sendrawtransaction(const JSONRPCRequest& request)
     if (!request.params[1].isNull() && request.params[1].get_bool())
         nMaxRawTxFee = 0;
 
-    bool fInstantSend = false;
-    if (request.params.size() > 2)
-        fInstantSend = request.params[2].get_bool();
-
     { // cs_main scope
     LOCK(cs_main);
     CCoinsViewCache &view = *pcoinsTip;
@@ -1143,11 +1136,6 @@ static UniValue sendrawtransaction(const JSONRPCRequest& request)
     }
     bool fHaveMempool = mempool.exists(hashTx);
     if (!fHaveMempool && !fHaveChain) {
-        /*SIN*/
-        // push to local node and sync with wallets
-        if (fInstantSend && !instantsend.ProcessTxLockRequest(*tx, *g_connman)) {
-            throw JSONRPCError(RPC_TRANSACTION_ERROR, "Not a valid InstantSend transaction, see debug.log for more info");
-        }
         // push to local node and sync with wallets
         CValidationState state;
         bool fMissingInputs;
