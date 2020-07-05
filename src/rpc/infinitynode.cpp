@@ -319,7 +319,20 @@ UniValue infinitynode(const JSONRPCRequest& request)
                                infpair.second.getService().ToString() << " " <<
                                infpair.second.getMetadataHeight();
                 std::string strInfo = streamInfo.str();
+
+            UniValue metaHisto(UniValue::VARR);
+            for(auto& v : infpair.second.getHistory()){
+                 std::ostringstream vHistoMeta;
+                 vHistoMeta << std::setw(4) <<
+                     v.nHeightHisto  << " " <<
+                     v.pubkeyHisto << " " <<
+                     v.serviceHisto.ToString();
+                 std::string strHistoMeta = vHistoMeta.str();
+                 metaHisto.push_back(strHistoMeta);
+            }
             obj.push_back(Pair(infpair.first, strInfo));
+            std::string metaHistStr = strprintf("History %s", infpair.first);
+            obj.push_back(Pair(metaHistStr, metaHisto));
         }
         return obj;
     }
@@ -610,6 +623,15 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
         burnfundTxID = request.params[3].get_str();
     } else {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "node BurnFundTx ID is invalid. Please enter first 16 characters of BurnFundTx");
+    }
+
+    std::string metaID = strprintf("%s-%s", strOwnerAddress, burnfundTxID);
+    CMetadata myMeta = infnodemeta.Find(metaID);
+    int nCurrentHeight = (int)chainActive.Height();
+    if(myMeta.getMetadataHeight() > 0 && nCurrentHeight < myMeta.getMetadataHeight() + Params().MaxReorganizationDepth() * 2){
+        int nWait = myMeta.getMetadataHeight() + Params().MaxReorganizationDepth() * 2 - nCurrentHeight;
+        std::string strError = strprintf("Error: Please wait %d blocks and try to update again.", nWait);
+        throw JSONRPCError(RPC_TYPE_ERROR, strError);
     }
 
     EnsureWalletIsUnlocked(pwallet);

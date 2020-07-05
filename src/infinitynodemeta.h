@@ -91,6 +91,7 @@ public:
     int getMetadataHeight(){return nMetadataHeight;}
     int getFlagActiveBackupAddress(){return activeBackupAddress;}
     std::string getMetaID(){return metaID;}
+    std::vector<CMetahisto> getHistory(){return vHisto;}
 
     void setMetadataHeight(int inHeight){nMetadataHeight = inHeight;};
     void setMetaPublicKey(std::string inKey){metadataPublicKey = inKey;};

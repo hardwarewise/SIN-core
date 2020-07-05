@@ -101,6 +101,12 @@ bool CLockRewardRequest::IsValid(CNode* pnode, int nValidationHeight, std::strin
 
     int nDos = 0;
     CMetadata meta = infnodemeta.Find(inf.getMetaID());
+    if(meta.getMetadataHeight() == 0){
+        strError = strprintf("Metadata of my peer is not found: %d\n", inf.getMetaID());
+        return false;
+    }
+    //dont check nHeight of metadata here. Candidate can be paid event the metadata is not ready for Musig. Because his signature is not onchain
+
     std::string metaPublicKey = meta.getMetaPublicKey();
     std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
     CPubKey pubKey(tx_data.begin(), tx_data.end());
@@ -165,8 +171,7 @@ bool CLockRewardCommitment::CheckSignature(CPubKey& pubKeyInfinitynode, int &nDo
 
     if(!CMessageSigner::VerifyMessage(pubKeyInfinitynode, vchSig, strMessage, strError)) {
         LogPrint(BCLog::INFINITYLOCK,"CLockRewardCommitment::CheckSignature -- Got bad Infinitynode LockReward signature, error: %s\n", strError);
-        /*TODO: set ban value befor release*/
-        nDos = 0;
+        nDos = 10;
         return false;
     }
     return true;
@@ -222,8 +227,7 @@ bool CGroupSigners::CheckSignature(CPubKey& pubKeyInfinitynode, int &nDos)
 
     if(!CMessageSigner::VerifyMessage(pubKeyInfinitynode, vchSig, strMessage, strError)) {
         LogPrint(BCLog::INFINITYLOCK,"CGroupSigners::CheckSignature -- Got bad Infinitynode CGroupSigners signature, error: %s\n", strError);
-        /*TODO: set ban value befor release*/
-        nDos = 0;
+        nDos = 10;
         return false;
     }
     return true;
@@ -278,8 +282,7 @@ bool CMusigPartialSignLR::CheckSignature(CPubKey& pubKeyInfinitynode, int &nDos)
 
     if(!CMessageSigner::VerifyMessage(pubKeyInfinitynode, vchSig, strMessage, strError)) {
         LogPrint(BCLog::INFINITYLOCK,"CMusigPartialSignLR::CheckSignature -- Got bad Infinitynode CGroupSigners signature, error: %s\n", strError);
-        /*TODO: set ban value befor release*/
-        nDos = 0;
+        nDos = 10;
         return false;
     }
     return true;
@@ -478,6 +481,12 @@ bool CInfinityNodeLockReward::CheckMyPeerAndSendVerifyRequest(CNode* pfrom, cons
         return false;
     }
 
+    if(lockRewardRequestRet.nRewardHeight < metaCandidate.getMetadataHeight() + Params().MaxReorganizationDepth() * 2){
+        int nWait = metaCandidate.getMetadataHeight() + Params().MaxReorganizationDepth() * 2 - lockRewardRequestRet.nRewardHeight;
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMyPeerAndSendVerifyRequest -- metadata is not ready for Musig(wait %d blocks).\n", nWait);
+        return false;
+    }
+
     //step 1.2.1: chech if mypeer is good candidate to make Musig
     CInfinitynode infRet;
     if(!infnodeman.Get(infinitynodePeer.burntx, infRet)){
@@ -633,6 +642,12 @@ bool CInfinityNodeLockReward::SendVerifyReply(CNode* pnode, CVerifyRequest& vreq
         return false;
     }
 
+    if(vrequest.nBlockHeight < metaSender.getMetadataHeight() + Params().MaxReorganizationDepth() * 2){
+        int nWait = metaSender.getMetadataHeight() + Params().MaxReorganizationDepth() * 2 - vrequest.nBlockHeight;
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::SendVerifyReply -- metadata of sender is not ready for Musig (wait %d blocks).\n", nWait);
+        return false;
+    }
+
     std::string metaPublicKey = metaSender.getMetaPublicKey();
     std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
     CPubKey pubKey(tx_data.begin(), tx_data.end());
@@ -732,6 +747,7 @@ bool CInfinityNodeLockReward::CheckVerifyReply(CNode* pnode, CVerifyRequest& vre
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckVerifyReply -- Cannot find sender from list %s\n");
         return false;
     }
+    //dont check nHeight of metadata here. Candidate can be paid event the metadata is not ready for Musig. Because his signature is not onchain
 
     std::string metaPublicKey = metaCandidate.getMetaPublicKey();
     std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
@@ -821,6 +837,12 @@ bool CInfinityNodeLockReward::CheckCommitment(CNode* pnode, const CLockRewardCom
     if (metaSender.getMetadataHeight() == 0){
         //for some reason, metadata is not updated, do nothing
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckCommitment -- Cannot find sender from list %s\n");
+        return false;
+    }
+
+    if(commitment.nRewardHeight < metaSender.getMetadataHeight() + Params().MaxReorganizationDepth() * 2){
+        int nWait = metaSender.getMetadataHeight() + Params().MaxReorganizationDepth() * 2 - commitment.nRewardHeight;
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckCommitment -- metadata of sender is not ready for Musig (wait %d blocks).\n", nWait);
         return false;
     }
 
@@ -992,6 +1014,7 @@ bool CInfinityNodeLockReward::CheckGroupSigner(CNode* pnode, const CGroupSigners
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckGroupSigner -- Cannot find sender from list %s\n");
         return false;
     }
+    //dont check nHeight of metadata here. Candidate can be paid event the metadata is not ready for Musig. Because his signature is not onchain
 
     std::string metaPublicKey = metaSender.getMetaPublicKey();
     std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
@@ -1049,6 +1072,12 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
             if(metaSigner.getMetadataHeight() == 0){
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- Cannot get metadata of candidate %s\n", infSigner.getBurntxOutPoint().ToStringShort());
                 continue;
+            }
+
+            if(gsigners.nRewardHeight < metaSigner.getMetadataHeight() + Params().MaxReorganizationDepth() * 2){
+                int nWait = metaSigner.getMetadataHeight() + Params().MaxReorganizationDepth() * 2 - gsigners.nRewardHeight;
+                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- metadata of signer is not ready for Musig(wait %d blocks).\n", nWait);
+                return false;
             }
 
             int nScore;
@@ -1246,6 +1275,12 @@ bool CInfinityNodeLockReward::CheckMusigPartialSignLR(CNode* pnode, const CMusig
     if (metaSender.getMetadataHeight() == 0){
         //for some reason, metadata is not updated, do nothing
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMusigPartialSignLR -- Cannot find sender from list %s\n");
+        return false;
+    }
+
+    if(ps.nRewardHeight < metaSender.getMetadataHeight() + Params().MaxReorganizationDepth() * 2){
+        int nWait = metaSender.getMetadataHeight() + Params().MaxReorganizationDepth() * 2 - ps.nRewardHeight;
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMyPeerAndSendVerifyRequest -- metadata is not ready for Musig (wait %d blocks).\n", nWait);
         return false;
     }
 
@@ -1740,6 +1775,12 @@ bool CInfinityNodeLockReward::CheckLockRewardRegisterInfo(std::string sLockRewar
                 if(metaTopNode.getMetadataHeight() == 0){
                     LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Cannot find metadata of TopNode rank: %d, id: %s\n",
                                  signerIndexes[i], sInfNode.getBurntxOutPoint().ToStringShort());
+                    return false;
+                }
+
+                if(nRewardHeight < metaTopNode.getMetadataHeight() + Params().MaxReorganizationDepth() * 2){
+                    int nWait = metaTopNode.getMetadataHeight() + Params().MaxReorganizationDepth() * 2 - nRewardHeight;
+                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- metadata is not ready for Musig(wait %d blocks).\n", nWait);
                     return false;
                 }
 

@@ -35,16 +35,19 @@ bool CInfinitynodeMeta::Add(CMetadata &meta)
     } else {
         CMetadata m = it->second;
         if(m.getMetaID() == meta.getMetaID() && meta.getMetadataHeight() >  m.getMetadataHeight()){
-            LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::new metadata from higher height %s\n", meta.getMetaID());
+            LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::new metadata from higher height %s, %d\n", meta.getMetaID(),  meta.getMetadataHeight());
             //mapNodeMetadata.erase(meta.getMetaID());
             //mapNodeMetadata[meta.getMetaID()] = meta;
             int nHeight = meta.getMetadataHeight();
             std::string sPublicKey = meta.getMetaPublicKey();
             CService cService = meta.getService();
-            if(nHeight < m.getMetadataHeight() + Params().MaxReorganizationDepth() * 3 ){
-                int nWait = m.getMetadataHeight() + Params().MaxReorganizationDepth() * 3 - nHeight;
+            if(nHeight < m.getMetadataHeight() + Params().MaxReorganizationDepth() * 2){
+                int nWait = m.getMetadataHeight() + Params().MaxReorganizationDepth() * 2 - nHeight;
                 LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::Can not update metadata now. Please update after %d blocks\n", nWait);
                 return false;
+            } else {
+                int nPass = nHeight - m.getMetadataHeight() - Params().MaxReorganizationDepth() * 2;
+                LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::Update metadata now. Pass %d blocks from last height(%)\n", nPass, m.getMetadataHeight());
             }
             CMetahisto histo(nHeight, sPublicKey, cService);
             mapNodeMetadata[meta.getMetaID()].addHisto(histo);
@@ -54,7 +57,7 @@ bool CInfinitynodeMeta::Add(CMetadata &meta)
 
             return true;
         }else{
-            LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::nHeight is lower than current height %d\n", m.getMetadataHeight());
+            LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::meta nHeight(%d) is lower than current height %d\n", meta.getMetadataHeight(), m.getMetadataHeight());
             return false;
         }
     }
