@@ -1,13 +1,14 @@
 ## Guide For Old SUQA Coins Conflict
 
-### 1. Go to SEND tab and open coin control
+### 1. First:
+* [x] close the wallet.
+* [x] make a wallet backup.
+
+
+### 2. 
+Go to SEND tab and open coin control
 
 ![img_01](assets/img/misc/suqa_conflict_01.png)
-
-### 2. First:
-* [x] make a wallet backup.
-* [x] close the wallet.
-
 
 ### 3. Try sending using coin control:
 
