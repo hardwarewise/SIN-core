@@ -194,12 +194,35 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
 
                     for (auto& v : vecLockRewardRet) {
                         if(v.nSINtype == SINType && v.nRewardHeight == nBlockHeight && txout.nValue == InfPaymentOwner){
-                            //TODO: [Optional: and LR was sent from good metadata: v.scriptPubKey]
+                            //and LR was sent from good metadata: v.scriptPubKey
                             if(inflockreward.CheckLockRewardRegisterInfo(v.sLRInfo, sErrorCheck, infOwner.getBurntxOutPoint())){
-                                LogPrintf("IsBlockPayeeValid -- VALID tx out: %d, LockReward for SINtype: %d, address: %d\n", txIndex, SINType, addressTxDIN2);
-                                fCandidateValid = true;
+                                CMetadata meta = infnodemeta.Find(infOwner.getMetaID());
+                                if(meta.getMetadataHeight() == 0){
+                                    LogPrintf("IsBlockPayeeValid -- Not found metadata for candidate at height: %d\n", nBlockHeight);
+                                    continue;
+                                }
+
+                                bool fLRSenderCheck = false;
+
+                                for(auto& vhisto : meta.getHistory()){
+                                    std::vector<unsigned char> tx_data = DecodeBase64(vhisto.pubkeyHisto.c_str());
+                                    CPubKey pubKey(tx_data.begin(), tx_data.end());
+                                    CTxDestination nodeDest = GetDestinationForKey(pubKey, OutputType::LEGACY);
+                                    CScript senderScript = GetScriptForDestination(nodeDest);
+                                    if(v.scriptPubKey == senderScript){
+                                        fLRSenderCheck = true;
+                                        break;
+                                    }
+                                }
+
+                                if(fLRSenderCheck){
+                                    LogPrintf("IsBlockPayeeValid -- VALID tx out: %d, LockReward for SINtype: %d, address: %d\n", txIndex, SINType, addressTxDIN2);
+                                    fCandidateValid = true;
+                                } else {
+                                    LogPrintf("IsBlockPayeeValid -- Found LR, but sender is NOT VALID\n");
+                                }
                             } else {
-                                LogPrintf("IsBlockPayeeValid -- LR found for height but NOT VALID\n");
+                                LogPrintf("IsBlockPayeeValid -- LR found for height but NOT VALID: %s\n", sErrorCheck);
                             }
                         }
                     }
@@ -278,14 +301,41 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
             bool fFoundLockReward = false;
             CAmount InfPaymentOwner = 0;
             InfPaymentOwner = GetMasternodePayment(nBlockHeight, SINType);
+            std::string sErrorCheck = "";
 
             if (infnodeman.deterministicRewardAtHeight(nBlockHeight, SINType, infOwner)){
                 DINPayee = infOwner.GetInfo().scriptPubKey;
                 for (auto& v : vecLockRewardRet) {
-                    if(v.nSINtype == SINType && v.nRewardHeight == nBlockHeight /*&& v.scriptPubKey == DINPayee*/){
-                        //TODO: check schnorr musig
-                        fFoundLockReward = true;
-                        break;
+                    if(v.nSINtype == SINType && v.nRewardHeight == nBlockHeight){
+                        //check schnorr musig
+                        if(inflockreward.CheckLockRewardRegisterInfo(v.sLRInfo, sErrorCheck, infOwner.getBurntxOutPoint())){
+                                CMetadata meta = infnodemeta.Find(infOwner.getMetaID());
+                                if(meta.getMetadataHeight() == 0){
+                                    LogPrintf("IsBlockPayeeValid -- Not found metadata for candidate at height: %d\n", nBlockHeight);
+                                    continue;
+                                }
+
+                                bool fLRSenderCheck = false;
+
+                                for(auto& vHisto : meta.getHistory()){
+                                    std::vector<unsigned char> tx_data = DecodeBase64(vHisto.pubkeyHisto.c_str());
+                                    CPubKey pubKey(tx_data.begin(), tx_data.end());
+                                    CTxDestination nodeDest = GetDestinationForKey(pubKey, OutputType::LEGACY);
+                                    CScript senderScript = GetScriptForDestination(nodeDest);
+                                    if(v.scriptPubKey == senderScript){
+                                        fLRSenderCheck = true;
+                                        break;
+                                    }
+                                }
+
+                                if(fLRSenderCheck){
+                                    LogPrintf("FillBlockPayments -- LockReward for SINtype: %d is VALID\n", SINType);
+                                    fFoundLockReward = true;
+                                    break;
+                                } else {
+                                    LogPrintf("FillBlockPayments -- Found LR, but sender is NOT VALID\n");
+                                }
+                        }
                     }
                 }
 
@@ -295,7 +345,7 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
                     txNew.vout.push_back(CTxOut(InfPaymentOwner, DINPayee));
                 }else{
                     fBurnRewardOwner=true;
-                    LogPrintf("FillBlockPayments -- TESTNET LockReward NOT FOUND => Burn\n");
+                    LogPrintf("FillBlockPayments -- TESTNET LockReward NOT FOUND or NOT Valid (%s) => Burn\n", sErrorCheck);
                 }
             } else {
                 LogPrintf("FillBlockPayments -- TESTNET SINtype: %d, No candidate found\n", SINType);

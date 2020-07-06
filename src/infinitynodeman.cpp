@@ -627,7 +627,6 @@ bool CInfinitynodeMan::ExtractLockReward(int nBlockHeight, int depth, std::vecto
                             LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::ExtractLockReward -- LR: %s.\n", stringLRRegister);
                             //if(nRewardHeight != nBlockHeight){continue;}
 
-                            //veryfy who send this registration, our candidate ???
                             const CTxIn& txin = tx->vin[0];
                             int index = txin.prevout.n;
 
