@@ -576,8 +576,10 @@ bool CInfinityNodeLockReward::CheckMyPeerAndSendVerifyRequest(CNode* pfrom, cons
     }
 
     //1.2.6 send verify request
-    //if(fconnected && pnodeCandidate->GetSendVersion() >= MIN_INFINITYNODE_PAYMENT_PROTO_VERSION){
-    if(fconnected) {
+    //connection can be openned but, immediately close because full slot by client.
+    //so, we need to check version to make sure that connection is OK
+    if(fconnected && pnodeCandidate->GetSendVersion() >= MIN_INFINITYNODE_PAYMENT_PROTO_VERSION){
+    //if(fconnected) {
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMyPeerAndSendVerifyRequest -- verifying node use %s nVersion: %d, addr=%s, Sig1 :%d\n",
                     connectionType, pnodeCandidate->GetSendVersion(), addr.ToString(), vrequest.vchSig1.size());
         connman.PushMessage(pnodeCandidate, CNetMsgMaker(pnodeCandidate->GetSendVersion()).Make(NetMsgType::INFVERIFY, vrequest));
@@ -1427,6 +1429,12 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                         continue;
                     }
 
+                    if(mapLockRewardRequest[nHashLockRequest].nRewardHeight < metaSigner.getMetadataHeight() + Params().MaxReorganizationDepth() * 2){
+                        int nWait = metaSigner.getMetadataHeight() + Params().MaxReorganizationDepth() * 2 - mapLockRewardRequest[nHashLockRequest].nRewardHeight;
+                        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- metadata of signer is not ready for Musig (wait %d blocks).\n", nWait);
+                        return false;
+                    }
+
                     int nScore;
                     int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType; //mypeer must be this SINtype, if not, score is NULL
 
@@ -1778,10 +1786,26 @@ bool CInfinityNodeLockReward::CheckLockRewardRegisterInfo(std::string sLockRewar
                     return false;
                 }
 
+                //check metadata use with nRewardHeight of reward
+                bool fFindMetaHisto = false;
+                std::string pubkeyMetaHisto = "";
+                int nBestDistant = 10000000; //blocks
                 if(nRewardHeight < metaTopNode.getMetadataHeight() + Params().MaxReorganizationDepth() * 2){
-                    int nWait = metaTopNode.getMetadataHeight() + Params().MaxReorganizationDepth() * 2 - nRewardHeight;
-                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- metadata is not ready for Musig(wait %d blocks).\n", nWait);
-                    return false;
+                    //height of current metadata is KO for Musig => find in history to get good metadata info
+                    for(auto& v : metaTopNode.getHistory()){
+                        int metaHistoMature = v.nHeightHisto + Params().MaxReorganizationDepth() * 2;
+                        if(nRewardHeight < metaHistoMature) {continue;}
+                        if(nBestDistant > (nRewardHeight - metaHistoMature)){
+                            nBestDistant = nRewardHeight - metaHistoMature;
+                            pubkeyMetaHisto = v.pubkeyHisto;
+                            fFindMetaHisto = true;
+                        }
+                    }
+
+                    if(!fFindMetaHisto){
+                        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- current metadata height is OK. But can not found in history\n");
+                        return false;
+                    }
                 }
 
                 int nScore;
@@ -1841,6 +1865,9 @@ bool CInfinityNodeLockReward::CheckLockRewardRegisterInfo(std::string sLockRewar
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Check register info FAILED\n");
         return false;
     }
+
+    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- LockReward is valid for height: %d, SINtype: %d, Outpoint: %s\n",
+              nRewardHeight, nSINtype, infCheck.ToStringShort());
 
     return true;
 }

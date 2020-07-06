@@ -18,6 +18,7 @@
 
 #include <infinitynodeman.h>
 #include <infinitynodemeta.h>
+#include <infinitynodelockreward.h>
 #include <outputtype.h>
 
 #include <boost/lexical_cast.hpp>
@@ -145,7 +146,7 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
         return true;
     } else {
         //not mainnet
-        // accept all block inferieur than 91610 = fork height in testnet
+        // accept all block inferieur than 93000 = fork height in testnet
         if(nBlockHeight < 93000){
             LogPrintf("IsBlockPayeeValid -- accept all Coinbase Tx before simulation hardfork\n");
             return true;
@@ -179,6 +180,7 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
                 //candidate for this Height
                 //check if exist a LR for candidate: Yes: Must pay for him with exact Amount; No: Burn
                 CInfinitynode infOwner;
+                std::string sErrorCheck = "";
                 if (infnodeman.deterministicRewardAtHeight(nBlockHeight, SINType, infOwner)){
 
                     CAmount InfPaymentOwner = 0;
@@ -192,9 +194,13 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
 
                     for (auto& v : vecLockRewardRet) {
                         if(v.nSINtype == SINType && v.nRewardHeight == nBlockHeight && txout.nValue == InfPaymentOwner){
-                            //TODO: check schnorr musig to make sure that candidate is valid [Optional: and LR was sent from good metadata: v.scriptPubKey]
-                            LogPrintf("IsBlockPayeeValid -- VALID tx out: %d, LockReward for SINtype: %d, address: %d\n", txIndex, SINType, addressTxDIN2);
-                            fCandidateValid = true;
+                            //TODO: [Optional: and LR was sent from good metadata: v.scriptPubKey]
+                            if(inflockreward.CheckLockRewardRegisterInfo(v.sLRInfo, sErrorCheck, infOwner.getBurntxOutPoint())){
+                                LogPrintf("IsBlockPayeeValid -- VALID tx out: %d, LockReward for SINtype: %d, address: %d\n", txIndex, SINType, addressTxDIN2);
+                                fCandidateValid = true;
+                            } else {
+                                LogPrintf("IsBlockPayeeValid -- LR found for height but NOT VALID\n");
+                            }
                         }
                     }
 
@@ -308,22 +314,12 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
     /*pay small reward for Node address of Infinitynode*/
     CScript DINPayeeNode;
     CInfinitynode infinitynode;
-    int SINType = 0;
-    for (int i = 0; i <= 2; i++) {
-            //choose tier value
-            if (i == 0) {
-                SINType = 10;
-            } else if (i == 1) {
-                SINType = 5;
-            } else {
-                SINType = 1;
-            }
+    int SINType = Params().GetConsensus().nInfinityNodeLockRewardSINType;
+    bool fBurnRewardNode = false;
 
-            bool fBurnRewardNode = false;
-
-            CAmount InfPayment = 0;
-            InfPayment = Params().GetConsensus().nMasternodeBurnSINNODE_10;
-
+    CAmount InfPayment = 0;
+    InfPayment = Params().GetConsensus().nMasternodeBurnSINNODE_10;
+    {
             if (infnodeman.deterministicRewardAtHeight(nBlockHeight, SINType, infinitynode)){
 
                 LogPrint(BCLog::MNPAYMENTS, "FillBlockPayments -- candidate %d at height %d: %s\n", SINType, nBlockHeight, infinitynode.getCollateralAddress());
@@ -332,6 +328,7 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
                     LogPrint(BCLog::MNPAYMENTS, "FillBlockPayments -- can not get metadata of node\n");
                     fBurnRewardNode=true;
                 }
+                //payment to the last metadata info, so do not do further check
 
                 if(!fBurnRewardNode){
                     std::string metaPublicKey = metaSender.getMetaPublicKey();
@@ -345,7 +342,6 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
                         DINPayeeNode = GetScriptForDestination(dest);
                         txNew.vout[0].nValue -= InfPayment;
                         txNew.vout.push_back(CTxOut(InfPayment, DINPayeeNode));
-                        continue;
                     }else{
                         fBurnRewardNode=true;
                     }
