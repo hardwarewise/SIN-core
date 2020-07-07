@@ -568,7 +568,6 @@ bool CInfinitynodeMan::ExtractLockReward(int nBlockHeight, int depth, std::vecto
         return true;
     }
 
-    LOCK(cs);
     AssertLockHeld(cs_main);
 
     uint256 blockHash;
@@ -654,10 +653,10 @@ bool CInfinitynodeMan::ExtractLockReward(int nBlockHeight, int depth, std::vecto
     return true;
 }
 
+/*make sure that LOCK sc_main before call this function*/
 bool CInfinitynodeMan::getLRForHeight(int height, std::vector<CLockRewardExtractInfo>& vecLockRewardRet)
 {
     vecLockRewardRet.clear();
-    LOCK(cs_main);
     ExtractLockReward(height, Params().GetConsensus().nInfinityNodeCallLockRewardDeepth * 3, vecLockRewardRet);
     return true;
 }

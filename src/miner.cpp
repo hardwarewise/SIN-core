@@ -311,12 +311,12 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
             }
         }
     }
-	// Burn Tx Fee
-	coinbaseTx.vout[0].nValue -= nFees;
-	CTxDestination burnDestination =  DecodeDestination(Params().GetConsensus().cBurnAddress);
+    // Burn Tx Fee
+    coinbaseTx.vout[0].nValue -= nFees;
+    CTxDestination burnDestination =  DecodeDestination(Params().GetConsensus().cBurnAddress);
     const CKeyID *keyID = boost::get<CKeyID>(&burnDestination);
     CScript burnAddressScript = GetScriptForBurn(*keyID, "burnfee");
-	coinbaseTx.vout.push_back(CTxOut(nFees, burnAddressScript));
+    coinbaseTx.vout.push_back(CTxOut(nFees, burnAddressScript));
 
     pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
     pblocktemplate->vchCoinbaseCommitment = GenerateCoinbaseCommitment(*pblock, pindexPrev, chainparams.GetConsensus());
