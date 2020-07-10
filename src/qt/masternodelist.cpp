@@ -406,7 +406,7 @@ void MasternodeList::updateDINList()
                 }
             }
             if(infoInf.nExpireHeight < nCurrentHeight){
-                status="Expried";
+                status="Expired";
             }
             QString nodeTxId = QString::fromStdString(infoInf.collateralAddress);
             ui->dinTable->setItem(k, 0, new QTableWidgetItem(QString(nodeTxId)));
