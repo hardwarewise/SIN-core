@@ -46,8 +46,6 @@ public:
 private:
     static const std::string SERIALIZATION_VERSION_STRING;
 
-    // critical section to protect the inner data structures
-    mutable CCriticalSection cs;
     // Keep track of current block height and first download block
     int nCachedBlockHeight;
     //
@@ -77,6 +75,9 @@ private:
 public:
 
     CInfinitynodeMan();
+
+    // critical section to protect the inner data structures
+    mutable CCriticalSection cs;
 
     int64_t nLastScanHeight;//last verification from blockchain
 
