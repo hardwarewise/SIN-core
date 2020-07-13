@@ -189,6 +189,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
         }
 
         CInfinitynode infBIG, infMID, infLIL;
+        LOCK(infnodeman.cs);
         infnodeman.deterministicRewardAtHeight(nextHeight, 10, infBIG);
         infnodeman.deterministicRewardAtHeight(nextHeight, 5, infMID);
         infnodeman.deterministicRewardAtHeight(nextHeight, 1, infLIL);

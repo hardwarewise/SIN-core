@@ -181,6 +181,7 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
                 //check if exist a LR for candidate: Yes: Must pay for him with exact Amount; No: Burn
                 CInfinitynode infOwner;
                 std::string sErrorCheck = "";
+                LOCK(infnodeman.cs);
                 if (infnodeman.deterministicRewardAtHeight(nBlockHeight, SINType, infOwner)){
 
                     CAmount InfPaymentOwner = 0;
@@ -302,6 +303,7 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
             CAmount InfPaymentOwner = 0;
             InfPaymentOwner = GetMasternodePayment(nBlockHeight, SINType);
             std::string sErrorCheck = "";
+            LOCK(infnodeman.cs);
 
             if (infnodeman.deterministicRewardAtHeight(nBlockHeight, SINType, infOwner)){
                 DINPayee = infOwner.GetInfo().scriptPubKey;
@@ -370,6 +372,7 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
     CAmount InfPayment = 0;
     InfPayment = Params().GetConsensus().nMasternodeBurnSINNODE_10;
     {
+            LOCK(infnodeman.cs);
             if (infnodeman.deterministicRewardAtHeight(nBlockHeight, SINType, infinitynode)){
 
                 LogPrint(BCLog::MNPAYMENTS, "FillBlockPayments -- candidate %d at height %d: %s\n", SINType, nBlockHeight, infinitynode.getCollateralAddress());

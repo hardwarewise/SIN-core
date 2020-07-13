@@ -89,6 +89,7 @@ bool CLockRewardRequest::CheckSignature(CPubKey& pubKeyInfinitynode, int &nDos) 
 bool CLockRewardRequest::IsValid(CNode* pnode, int nValidationHeight, std::string& strError, CConnman& connman) const
 {
     CInfinitynode inf;
+    LOCK(infnodeman.cs);
     if(!infnodeman.deterministicRewardAtHeight(nRewardHeight, nSINtype, inf)){
         strError = strprintf("Cannot find candidate for Height of LockRequest: %d and SINtype: %d\n", nRewardHeight, nSINtype);
         return false;
@@ -1755,6 +1756,7 @@ bool CInfinityNodeLockReward::CheckLockRewardRegisterInfo(std::string sLockRewar
 
     //step 7.1 identify candidate
     CInfinitynode candidate;
+    LOCK(infnodeman.cs);
     if(!infnodeman.deterministicRewardAtHeight(nRewardHeight, nSINtype, candidate)){
         strErrorRet = strprintf("Cannot find candidate for Height of LockRequest: %d and SINtype: %d\n", nRewardHeight, nSINtype);
         return false;

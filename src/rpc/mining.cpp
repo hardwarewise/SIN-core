@@ -570,6 +570,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     } else {
         CInfinitynode infinitynode;
         int SINType = 0;
+        LOCK(infnodeman.cs);
         if (!infnodeman.deterministicRewardAtHeight(pindexPrev->nHeight + 1, SINType, infinitynode)) {
             throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "SIN Core isn't able to calculate node winners!");
         }
