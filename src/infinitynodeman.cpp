@@ -917,7 +917,7 @@ bool CInfinitynodeMan::deterministicRewardAtHeight(int nBlockHeight, int nSinTyp
         return false;
     }
 
-    LOCK(cs);
+    //LOCK(cs);
     //step2: find last Statement for nBlockHeight (user can enter nBlockHeight, so it may be in past, current or future)
     int nDelta = 1000; //big enough > number of 
     int lastStatement = 0;
