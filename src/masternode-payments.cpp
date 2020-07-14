@@ -303,7 +303,6 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
             CAmount InfPaymentOwner = 0;
             InfPaymentOwner = GetMasternodePayment(nBlockHeight, SINType);
             std::string sErrorCheck = "";
-            LOCK(infnodeman.cs);
 
             if (infnodeman.deterministicRewardAtHeight(nBlockHeight, SINType, infOwner)){
                 DINPayee = infOwner.GetInfo().scriptPubKey;
@@ -372,7 +371,6 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
     CAmount InfPayment = 0;
     InfPayment = Params().GetConsensus().nMasternodeBurnSINNODE_10;
     {
-            LOCK(infnodeman.cs);
             if (infnodeman.deterministicRewardAtHeight(nBlockHeight, SINType, infinitynode)){
 
                 LogPrint(BCLog::MNPAYMENTS, "FillBlockPayments -- candidate %d at height %d: %s\n", SINType, nBlockHeight, infinitynode.getCollateralAddress());
