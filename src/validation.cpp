@@ -2260,6 +2260,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
     } else if (pindex->nHeight > chainparams.GetConsensus().nINActivationHeight && pindex->nHeight <= chainparams.GetConsensus().nNewDevfeeAddress) {
         //Masternode mode: check payment
         LogPrintf("Validation -- POW + Masternode\n");
+        LOCK(infnodeman.cs);
         if (!IsBlockPayeeValid(block.vtx[0], pindex->nHeight, block.vtx[0]->GetValueOut(), pindex->GetBlockHeader())) {
             mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
             LogPrintf("IsBlockPayeeValid -- disconnect block!\n");

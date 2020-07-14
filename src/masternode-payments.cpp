@@ -181,7 +181,6 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
                 //check if exist a LR for candidate: Yes: Must pay for him with exact Amount; No: Burn
                 CInfinitynode infOwner;
                 std::string sErrorCheck = "";
-                LOCK(infnodeman.cs);
                 if (infnodeman.deterministicRewardAtHeight(nBlockHeight, SINType, infOwner)){
 
                     CAmount InfPaymentOwner = 0;
