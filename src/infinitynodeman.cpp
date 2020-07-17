@@ -1081,6 +1081,7 @@ bool CInfinitynodeMan::getNodeScoreAtHeight(const COutPoint& outpoint, int nSinT
     nScoreRet = -1;
 
     LOCK(cs);
+    AssertLockHeld(cs_main);
 
     uint256 nBlockHash = uint256();
     if (!GetBlockHash(nBlockHash, nBlockHeight)) {
