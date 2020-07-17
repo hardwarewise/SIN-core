@@ -2130,7 +2130,7 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
         uint256 nHash = commitment.GetHash();
         pfrom->setAskFor.erase(nHash);
         {
-            LOCK(cs);
+            LOCK2(cs_main,cs);
             if(mapLockRewardCommitment.count(nHash)){
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessMessage -- I had this commitment %s. End process\n", nHash.ToString());
                 return;
@@ -2156,7 +2156,7 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
         uint256 nHash = gSigners.GetHash();
         pfrom->setAskFor.erase(nHash);
         {
-            LOCK(cs);
+            LOCK2(cs_main,cs);
             if(mapLockRewardGroupSigners.count(nHash)){
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessMessage -- I had this group signer: %s. End process\n", nHash.ToString());
                 return;
@@ -2181,7 +2181,7 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
         uint256 nHash = partialSign.GetHash();
         pfrom->setAskFor.erase(nHash);
         {
-            LOCK(cs);
+            LOCK2(cs_main,cs);
             if(mapPartialSign.count(nHash)){
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessMessage -- I had this Partial Sign %s. End process\n", nHash.ToString());
                 return;
