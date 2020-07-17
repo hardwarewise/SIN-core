@@ -1792,6 +1792,8 @@ bool CInfinityNodeLockReward::CheckLockRewardRegisterInfo(std::string sLockRewar
                 int nBestDistant = 10000000; //blocks
                 if(nRewardHeight < metaTopNode.getMetadataHeight() + Params().MaxReorganizationDepth() * 2){
                     //height of current metadata is KO for Musig => find in history to get good metadata info
+                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- nRewardHeight: %d, current metadata: %d, limit: %d\n",
+                             nRewardHeight, metaTopNode.getMetadataHeight(), Params().MaxReorganizationDepth() * 2);
                     for(auto& v : metaTopNode.getHistory()){
                         int metaHistoMature = v.nHeightHisto + Params().MaxReorganizationDepth() * 2;
                         if(nRewardHeight < metaHistoMature) {continue;}
