@@ -932,11 +932,11 @@ bool CInfinityNodeLockReward::FindAndSendSignersGroup(CConnman& connman)
     AssertLockHeld(cs);
 
     int loop = Params().GetConsensus().nInfinityNodeLockRewardTop / Params().GetConsensus().nInfinityNodeLockRewardSigners;
-/*
+
     if((int)mapSigners[currentLockRequestHash].size() >= Params().GetConsensus().nInfinityNodeLockRewardSigners){
         TryConnectToMySigners(mapLockRewardRequest[currentLockRequestHash].nRewardHeight, connman);
     }
-*/
+
     for (int i=0; i <= loop; i++)
     {
         std::vector<COutPoint> signers;
@@ -1921,7 +1921,8 @@ void CInfinityNodeLockReward::TryConnectToMySigners(int rewardHeight, CConnman& 
     if(fLiteMode || !fInfinityNode) return;
 
     AssertLockHeld(cs);
-    AssertLockHeld(cs_main);
+    TRY_LOCK(cs_main, lockMain);
+    if(!lockMain) return;
 
     int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType;
 
@@ -2030,7 +2031,7 @@ bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
 
     int nRewardHeight = infnodeman.isPossibleForLockReward(infRet.getCollateralAddress());
 
-    LOCK2(cs_main,cs);
+    LOCK(cs);
     if(nRewardHeight == 0 || (nRewardHeight < (nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardLoop))){
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessBlock -- Try to LockReward false at height %d\n", nBlockHeight);
         mapSigners.clear();
@@ -2110,7 +2111,7 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
         uint256 nHash = lockReq.GetHash();
         pfrom->setAskFor.erase(nHash);
         {
-            LOCK2(cs_main,cs);
+            LOCK(cs);
             if(mapLockRewardRequest.count(nHash)){
                 LogPrintf("CInfinityNodeLockReward::ProcessMessage -- I had this LockRequest %s. End process\n", nHash.ToString());
                 return;
