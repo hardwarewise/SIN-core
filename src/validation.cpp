@@ -2966,7 +2966,7 @@ bool CChainState::ActivateBestChain(CValidationState &state, const CChainParams&
         }
 
         {
-            LOCK2(cs_main, infnodeman.cs);
+            LOCK(cs_main);
             CBlockIndex* starting_tip = chainActive.Tip();
             bool blocks_connected = false;
             do {
