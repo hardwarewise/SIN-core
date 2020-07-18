@@ -20,8 +20,8 @@ extern CInfinitynodeMan infnodeman;
 class CLockRewardExtractInfo
 {
 public:
-    int nBlockHeight{0}; //blockHeight read
     int nSINtype{0};
+    int nBlockHeight{0}; //blockHeight read
     int nRewardHeight{0};
     CScript scriptPubKey{};
     std::string sLRInfo="";
@@ -147,14 +147,12 @@ public:
         if(nSinType == 10) return nBIGLastStmHeight;
         if(nSinType == 5) return nMIDLastStmHeight;
         if(nSinType == 1) return nLILLastStmHeight;
-        return 0;
     }
     int getLastStatementSize(int nSinType){
         LOCK(cs);
         if(nSinType == 10) return nBIGLastStmSize;
         if(nSinType == 5) return nMIDLastStmSize;
         if(nSinType == 1) return nLILLastStmSize;
-        return 0;
     }
 
     void setSyncStatus(bool flag){LOCK(cs); fReachedLastBlock=flag;}

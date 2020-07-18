@@ -609,6 +609,7 @@ bool CInfinitynodeMan::ExtractLockReward(int nBlockHeight, int depth, std::vecto
                             int nSINtype = 0;
                             std::string signature = "";
                             int *signerIndexes;
+                            size_t N_SIGNERS = (size_t)Params().GetConsensus().nInfinityNodeLockRewardSigners;
                             int registerNbInfos = Params().GetConsensus().nInfinityNodeLockRewardSigners + 3;
                             signerIndexes = (int*) malloc(Params().GetConsensus().nInfinityNodeLockRewardSigners * sizeof(int));
 
@@ -937,7 +938,7 @@ bool CInfinitynodeMan::deterministicRewardAtHeight(int nBlockHeight, int nSinTyp
             if(nDelta <= stm.second){
                 lastStatement = stm.first;
                 lastStatementSize = stm.second;
-            } else if (loop == (int)mapStatementSinType.size() && nDelta > stm.second && (nDelta - stm.second) <= Params().MaxReorganizationDepth()) {
+            } else if (loop == mapStatementSinType.size() && nDelta > stm.second && (nDelta - stm.second) <= Params().MaxReorganizationDepth()) {
                 //at end of loop
                 //we are near the end of current Stm and
                 //we try LR in next stm, but deterministicRewardStatement is not call, dont wait and try to update here
@@ -945,7 +946,7 @@ bool CInfinitynodeMan::deterministicRewardAtHeight(int nBlockHeight, int nSinTyp
                 nNextStmHeight = stm.first + stm.second;
             }
         } else if(nBlockHeight > stm.first && nDelta == (nBlockHeight -stm.first)){
-            if (loop == (int)mapStatementSinType.size()){
+            if (loop == mapStatementSinType.size()){
                 //at end of loop
                 fUpdateStm = true;
                 nNextStmHeight = stm.first + stm.second;
@@ -975,7 +976,7 @@ bool CInfinitynodeMan::deterministicRewardAtHeight(int nBlockHeight, int nSinTyp
     }
 
     //return false if not found statement
-    if (lastStatement == 0 || lastStatementSize == 0){
+    if (lastStatement == 0){
         LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::deterministicRewardAtHeight -- lastStatement not found: %d\n", lastStatement);
         return false;
     }
@@ -985,7 +986,7 @@ bool CInfinitynodeMan::deterministicRewardAtHeight(int nBlockHeight, int nSinTyp
         LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::deterministicRewardAtHeight -- can not calculate rank at %d\n", lastStatement);
         return false;
     }
-    if((nBlockHeight < lastStatement) || ((int)rankOfStatement.size() < (nBlockHeight - lastStatement + 1))){
+    if((nBlockHeight < lastStatement) || (rankOfStatement.size() < (nBlockHeight - lastStatement + 1))){
         LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::deterministicRewardAtHeight -- out of range at %d\n", lastStatement);
         return false;
     }
