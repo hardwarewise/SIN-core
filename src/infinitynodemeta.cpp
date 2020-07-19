@@ -173,7 +173,7 @@ bool CInfinitynodeMeta::metaScan(int nBlockHeight)
 
                                             CTransactionRef prevtx;
                                             uint256 hashblock;
-                                            if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false)) {
+                                            if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false, nullptr, false)) {
                                                 LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::metaScan -- PrevBurnFund tx is not in block.\n");
                                                 return false;
                                             }

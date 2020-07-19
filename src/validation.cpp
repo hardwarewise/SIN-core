@@ -1086,17 +1086,21 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state, const CTransa
  * Return transaction in txOut, and if it was found inside a block, its hash is placed in hashBlock.
  * If blockIndex is provided, the transaction is fetched from the corresponding block.
  */
-bool GetTransaction(const uint256& hash, CTransactionRef& txOut, const Consensus::Params& consensusParams, uint256& hashBlock, bool fAllowSlow, CBlockIndex* blockIndex)
+bool GetTransaction(const uint256& hash, CTransactionRef& txOut, const Consensus::Params& consensusParams, uint256& hashBlock, bool fAllowSlow, CBlockIndex* blockIndex, bool fUseMempool)
 {
     CBlockIndex* pindexSlow = blockIndex;
 
     LOCK(cs_main);
 
     if (!blockIndex) {
-        CTransactionRef ptx = mempool.get(hash);
-        if (ptx) {
-            txOut = ptx;
-            return true;
+        
+        //default behaviour
+        if (fUseMempool) {
+            CTransactionRef ptx = mempool.get(hash);
+            if (ptx) {
+                txOut = ptx;
+                return true;
+            }
         }
 
         if (g_txindex) {
@@ -2260,7 +2264,6 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
     } else if (pindex->nHeight > chainparams.GetConsensus().nINActivationHeight && pindex->nHeight <= chainparams.GetConsensus().nNewDevfeeAddress) {
         //Masternode mode: check payment
         LogPrintf("Validation -- POW + Masternode\n");
-        LOCK(infnodeman.cs);
         if (!IsBlockPayeeValid(block.vtx[0], pindex->nHeight, block.vtx[0]->GetValueOut(), pindex->GetBlockHeader())) {
             mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
             LogPrintf("IsBlockPayeeValid -- disconnect block!\n");

@@ -300,7 +300,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight, b
 
                                 CTransactionRef prevtx;
                                 uint256 hashblock;
-                                if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false)) {
+                                if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false, nullptr, false)) {
                                     LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- PrevBurnFund tx is not in block.\n");
                                     return false;
                                 }
@@ -339,7 +339,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight, b
 
                                         CTransactionRef prevtx;
                                         uint256 hashblock;
-                                        if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false)) {
+                                        if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false, nullptr, false)) {
                                             LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- PrevBurnFund tx is not in block.\n");
                                             return false;
                                         }
@@ -374,7 +374,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight, b
 
                                         CTransactionRef prevtx;
                                         uint256 hashblock;
-                                        if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false)) {
+                                        if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false, nullptr, false)) {
                                             LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- PrevBurnFund tx is not in block.\n");
                                             return false;
                                         }
@@ -442,7 +442,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight, b
 
                                             CTransactionRef prevtx;
                                             uint256 hashblock;
-                                            if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false)) {
+                                            if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false, nullptr, false)) {
                                                 LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMeta::metaScan -- PrevBurnFund tx is not in block.\n");
                                                 return false;
                                             }
@@ -492,7 +492,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight, b
 
                                             CTransactionRef prevtx;
                                             uint256 hashblock;
-                                            if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false)) {
+                                            if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false, nullptr, false)) {
                                                 LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- PrevBurnFund tx is not in block.\n");
                                                 return false;
                                             }
@@ -631,7 +631,7 @@ bool CInfinitynodeMan::ExtractLockReward(int nBlockHeight, int depth, std::vecto
 
                             CTransactionRef prevtx;
                             uint256 hashblock;
-                            if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false)) {
+                            if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false, nullptr, false)) {
                                 LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::ExtractLockReward -- PrevBurnFund tx is not in block.\n");
                                 return false;
                             }

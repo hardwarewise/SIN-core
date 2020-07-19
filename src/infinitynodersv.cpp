@@ -151,7 +151,7 @@ bool CInfinitynodersv::rsvScan(int nBlockHeight)
 
                                         CTransactionRef prevtx;
                                         uint256 hashblock;
-                                        if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false)) {
+                                        if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false, nullptr, false)) {
                                             LogPrint(BCLog::INFINITYRSV,"CInfinitynodersv::rsvScan -- PrevBurnFund tx is not in block.\n");
                                             return false;
                                         }
