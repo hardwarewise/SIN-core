@@ -1919,8 +1919,6 @@ void CInfinityNodeLockReward::TryConnectToMySigners(int rewardHeight, CConnman& 
     if(fLiteMode || !fInfinityNode) return;
 
     AssertLockHeld(cs);
-    TRY_LOCK(cs_main, lockMain);
-    if(!lockMain) return;
 
     int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType;
 
@@ -2029,7 +2027,7 @@ bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
 
     int nRewardHeight = infnodeman.isPossibleForLockReward(infRet.getCollateralAddress());
 
-    LOCK(cs);
+    LOCK2(cs_main, cs);
     if(nRewardHeight == 0 || (nRewardHeight < (nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardLoop))){
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessBlock -- Try to LockReward false at height %d\n", nBlockHeight);
         mapSigners.clear();
