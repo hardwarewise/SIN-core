@@ -121,7 +121,7 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     updateDINList();
 
     // node setup
-    NODESETUP_ENDPOINT = QString::fromStdString(gArgs.GetArg("-nodesetupurl", "https://setup2dev.sinovate.io/includes/api/basic.php"));
+    NODESETUP_ENDPOINT = QString::fromStdString(gArgs.GetArg("-nodesetupurl", "https://setup2dev.sinovate.io/includes/api/nodecp.php"));
     invoiceTimer = new QTimer(this);
     connect(invoiceTimer, SIGNAL(timeout()), this, SLOT(nodeSetupCheckInvoiceStatus()));
 
@@ -657,6 +657,7 @@ LogPrintf("nodeSetupCheckInvoiceStatus Invoice Paid \n");
  * To setup DIN node, we do by RPC command. We need Qt to replace RPC command
 RPC steps :
 infinitynodeburnfund your_Burn_Address Amount Your_Backup_Address
+cBurnAddress
     Sample for MINI
     infinitynodeburnfund SQ5Qnpf3mWituuXtQrEknKYDaKUtinvMzT 100000 SWyHHvnPNaH18TcfszAzWfKyojmTqtZQqy
 infinitynode keypair
