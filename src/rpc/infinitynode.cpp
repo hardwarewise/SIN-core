@@ -189,6 +189,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
         }
 
         CInfinitynode infBIG, infMID, infLIL;
+        LOCK(infnodeman.cs);
         infnodeman.deterministicRewardAtHeight(nextHeight, 10, infBIG);
         infnodeman.deterministicRewardAtHeight(nextHeight, 5, infMID);
         infnodeman.deterministicRewardAtHeight(nextHeight, 1, infLIL);
@@ -373,10 +374,9 @@ UniValue infinitynode(const JSONRPCRequest& request)
     if (strCommand == "show-lockreward")
     {
         CBlockIndex* pindex = NULL;
-        {
-                LOCK(cs_main);
-                pindex = chainActive.Tip();
-        }
+
+        LOCK(cs_main);
+        pindex = chainActive.Tip();
 
         std::vector<CLockRewardExtractInfo> vecLockRewardRet;
         if(infnodeman.getLRForHeight(pindex->nHeight, vecLockRewardRet)){
