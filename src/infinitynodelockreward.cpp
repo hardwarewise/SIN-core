@@ -539,7 +539,6 @@ bool CInfinityNodeLockReward::CheckMyPeerAndSendVerifyRequest(CNode* pfrom, cons
     if(!fconnected){
         CNode* pnode = connman.OpenNetworkConnection(add, false, nullptr, NULL, false, false, false, true);
         if(pnode == NULL) {
-            LOCK(cs_main);
             //TODO: dont send commitment when we can not verify node
             //we comeback in next version
             //LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMyPeerAndSendVerifyRequest -- can't connect to node to verify it, addr=%s\n", addr.ToString());
@@ -1284,7 +1283,7 @@ bool CInfinityNodeLockReward::CheckMusigPartialSignLR(CNode* pnode, const CMusig
 
     if(ps.nRewardHeight < metaSender.getMetadataHeight() + Params().MaxReorganizationDepth() * 2){
         int nWait = metaSender.getMetadataHeight() + Params().MaxReorganizationDepth() * 2 - ps.nRewardHeight;
-        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMusigPartialSignLR -- metadata is not ready for Musig (wait %d blocks).\n", nWait);
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMyPeerAndSendVerifyRequest -- metadata is not ready for Musig (wait %d blocks).\n", nWait);
         return false;
     }
 
