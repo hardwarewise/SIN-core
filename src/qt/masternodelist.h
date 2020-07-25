@@ -16,6 +16,7 @@
 #include <QLabel>
 #include <QTimer>
 #include <QWidget>
+#include <univalue.h>
 
 #define MY_MASTERNODELIST_UPDATE_SECONDS                 60
 #define MASTERNODELIST_UPDATE_SECONDS                    15
@@ -29,6 +30,7 @@ class ClientModel;
 class WalletModel;
 class OptionsModel;
 class QNetworkAccessManager;
+class UniValue;
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
@@ -81,6 +83,7 @@ public Q_SLOTS:
     int nodeSetupAPIAddClient( QString firstName, QString lastName, QString email, QString password, QString& strError );
     int nodeSetupAPIAddOrder( int clientid, QString billingCycle, QString& productids, int& invoiceid, QString& strError );
     bool nodeSetupAPIGetInvoice( int invoiceid, QString& strAmount, QString& strStatus, QString& paymentAddress, QString& strError );
+    QJsonObject nodeSetupAPIInfo( int serviceid, int clientid, QString email, QString password, QString& strError )
     bool nodeSetupCheckFunds( CAmount invoiceAmount = 0 );
     void nodeSetupStep( std::string icon , std::string text );
     int  nodeSetupGetClientId( QString& email, QString& pass );
@@ -93,6 +96,14 @@ public Q_SLOTS:
     void nodeSetupResetClientId( );
     void nodeSetupResetOrderId( );
     QString nodeSetupCheckInvoiceStatus();
+    QString nodeSetupRPCBurnFund( QString collateralAddress, CAmount amount, QString backupAddress );
+    UniValue nodeSetupRPCKeyPair( );
+    QString nodeSetupRPCUpdateMeta( QString collateralAddress, QString publicKey, QString serverIP, QString burnTx16Char);
+    int nodeSetupGetBurnAmount();
+    QString nodeSetupGetNewAddress();
+    UniValue nodeSetupGetTxInfo( QString txHash, std::string attribute);
+    QString nodeSetupSendToAddress( QString strAddress, int amount, QTimer* timerConfirms );
+    QString nodeSetupCheckBurnSendConfirmations();
 
 Q_SIGNALS:
 
@@ -112,10 +123,13 @@ private:
 
     // nodeSetup
     QTimer *invoiceTimer;
+    QTimer *burnSendTimer;
     QNetworkAccessManager *ConnectionManager;
     QString NODESETUP_ENDPOINT;
-    int mClientid, mOrderid, mInvoiceid;
+    QString NODESETUP_PID;
+    int mClientid, mOrderid, mInvoiceid, mServiceId;
     QString mPaymentTx;
+    QString mBurnTx;
     QString mProductIds;
     std::string billingOptions[3] = {"Monthly", "Semiannually", "Annually"};
 
