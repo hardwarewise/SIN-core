@@ -550,6 +550,8 @@ bool CInfinityNodeLockReward::CheckMyPeerAndSendVerifyRequest(CNode* pfrom, cons
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMyPeerAndSendVerifyRequest -- Cannot send commitment\n");
                 return false;
             }
+            //return here and ignore all line bellow because pnode is NULL
+            return true;
         }
         fconnected = true;
         pnodeCandidate = pnode;
@@ -1619,6 +1621,8 @@ bool CInfinityNodeLockReward::AutoResigterLockReward(std::string sLockReward, st
 
     if(!pwallet || pwallet->IsLocked()) return false;
 
+    LOCK2(cs_main, pwallet->cs_wallet);
+
     std::string strError;
     std::vector<COutput> vPossibleCoins;
     pwallet->AvailableCoins(vPossibleCoins, true, NULL, false, ALL_COINS);
@@ -2074,7 +2078,7 @@ void CInfinityNodeLockReward::ProcessDirectMessage(CNode* pfrom, const std::stri
                      pfrom->GetId(), vrequest.vchSig1.size(), vrequest.vchSig2.size(), vrequest.GetHash().ToString());
         pfrom->setAskFor.erase(vrequest.GetHash());
         {
-            LOCK(cs);
+            LOCK2(cs_main, cs);
             if(vrequest.vchSig1.size() > 0 &&  vrequest.vchSig2.size() == 0) {
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessDirectMessage -- VerifyRequest: I am candidate. Reply the verify from: %d, hash: %s\n",
                           pfrom->GetId(), vrequest.GetHash().ToString());
