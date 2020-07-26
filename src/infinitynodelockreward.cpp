@@ -550,6 +550,8 @@ bool CInfinityNodeLockReward::CheckMyPeerAndSendVerifyRequest(CNode* pfrom, cons
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckMyPeerAndSendVerifyRequest -- Cannot send commitment\n");
                 return false;
             }
+            //return here and ignore all line bellow because pnode is NULL
+            return true;
         }
         fconnected = true;
         pnodeCandidate = pnode;
