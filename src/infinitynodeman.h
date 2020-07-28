@@ -195,5 +195,6 @@ public:
     /// This is dummy overload to be used for dumping/loading mncache.dat
     void CheckAndRemove() {}
     void UpdatedBlockTip(const CBlockIndex *pindex);
+    void UpdateChainActiveHeight(int number);
 };
 #endif // SIN_INFINITYNODEMAN_H

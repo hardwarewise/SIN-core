@@ -2255,8 +2255,10 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
     }
 
     LogPrintf("Miner -- Dev fee paid: %d, Calcul dev fee %d\n", block.vtx[0]->vout[1].nValue, GetDevCoin(pindex->nHeight, blockReward));
+
     if (block.vtx[0]->vout[1].nValue < GetDevCoin(pindex->nHeight, blockReward))
         return state.DoS(100, error("ConnectBlock(): coinbase does not pay enough to the dev fund address."), REJECT_INVALID, "bad-cb-dev-fee");
+
     //Legacy SINOVATE validation
     if (pindex->nHeight <= chainparams.GetConsensus().nINActivationHeight) {
         //POW mode: do nothing
@@ -2264,12 +2266,34 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
     } else if (pindex->nHeight > chainparams.GetConsensus().nINActivationHeight && pindex->nHeight <= chainparams.GetConsensus().nNewDevfeeAddress) {
         //Masternode mode: check payment
         LogPrintf("Validation -- POW + Masternode\n");
+        bool retryWithUpdateINF = false;
         if (!IsBlockPayeeValid(block.vtx[0], pindex->nHeight, block.vtx[0]->GetValueOut(), pindex->GetBlockHeader())) {
-            mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
-            LogPrintf("IsBlockPayeeValid -- disconnect block!\n");
-            if (pindex->nHeight >= chainparams.GetConsensus().nINEnforcementHeight) {
-                return state.DoS(0, error("ConnectBlock(SIN): couldn't find masternode or superblock payments"),
+            if(!retryWithUpdateINF){
+                LOCK(infnodeman.cs);
+                infnodeman.UpdatedBlockTip(pindex);
+                bool updateStm = infnodeman.deterministicRewardStatement(10) &&
+                             infnodeman.deterministicRewardStatement(5) &&
+                             infnodeman.deterministicRewardStatement(1);
+                if (updateStm){
+                    LogPrintf("Validation -- update Stm status: %d\n",updateStm);
+                    infnodeman.calculAllInfinityNodesRankAtLastStm();
+                    infnodeman.updateLastStmHeightAndSize(pindex->nHeight, 10);
+                    infnodeman.updateLastStmHeightAndSize(pindex->nHeight, 5);
+                    infnodeman.updateLastStmHeightAndSize(pindex->nHeight, 1);
+                    retryWithUpdateINF = true;
+                } else {
+                    LogPrintf("Validation -- update Stm false\n");
+                }
+            }
+            if(retryWithUpdateINF && IsBlockPayeeValid(block.vtx[0], pindex->nHeight, block.vtx[0]->GetValueOut(), pindex->GetBlockHeader())){
+                //retry and good. Block is valid at this step
+            } else {
+                mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
+                LogPrintf("IsBlockPayeeValid -- disconnect block!\n");
+                if (pindex->nHeight >= chainparams.GetConsensus().nINEnforcementHeight) {
+                    return state.DoS(0, error("ConnectBlock(SIN): couldn't find masternode or superblock payments"),
                     REJECT_INVALID, "bad-cb-payee");
+                }
             }
         }
     } else {

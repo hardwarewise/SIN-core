@@ -1810,6 +1810,8 @@ bool AppInitMain()
 
     LogPrintf("InfinityNode last scan height: %d and active Height: %d\n", infnodeman.getLastScan(), chainActive.Height());
     bool updateStm = false;
+    infnodeman.UpdateChainActiveHeight(chainActive.Height());
+
     if (infnodeman.getLastScan() == 0){
         uiInterface.InitMessage(_("Initial on-chain infinitynode list..."));
         // lock main here
@@ -1820,6 +1822,15 @@ bool AppInitMain()
             updateStm = infnodeman.deterministicRewardStatement(10) &&
                              infnodeman.deterministicRewardStatement(5) &&
                              infnodeman.deterministicRewardStatement(1);
+            if (updateStm){
+                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm status: %d\n",updateStm);
+                infnodeman.calculAllInfinityNodesRankAtLastStm();
+                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 10);
+                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 5);
+                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 1);
+            } else {
+                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm false\n");
+            }
         }
     } else {
         uiInterface.InitMessage(_("Update on-chain infinitynode list..."));
@@ -1831,6 +1842,15 @@ bool AppInitMain()
             updateStm = infnodeman.deterministicRewardStatement(10) &&
                              infnodeman.deterministicRewardStatement(5) &&
                              infnodeman.deterministicRewardStatement(1);
+            if (updateStm){
+                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm status: %d\n",updateStm);
+                infnodeman.calculAllInfinityNodesRankAtLastStm();
+                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 10);
+                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 5);
+                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 1);
+            } else {
+                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm false\n");
+            }
         }
     }
     LogPrintf("InfinityNode build stm status: %d\n", updateStm);
