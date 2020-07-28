@@ -1783,6 +1783,59 @@ bool AppInitMain()
         }
     }
 
+    //SIN: try load SIN cache memory before connectblock, because we need these informations for validation of block
+    boost::filesystem::path pathDB = GetDataDir();
+    std::string strDBName;
+
+    strDBName = "infinitynode.dat";
+    uiInterface.InitMessage(_("Loading on-chain infinitynode list..."));
+    CFlatDB<CInfinitynodeMan> flatdb5(strDBName, "magicInfinityNodeCache");
+    if(!flatdb5.Load(infnodeman)) {
+        return InitError(_("Failed to load infinitynode cache from") + "\n" + (pathDB / strDBName).string());
+    }
+
+    strDBName = "infinitynodersv.dat";
+    uiInterface.InitMessage(_("Loading infinitynode RSV..."));
+    CFlatDB<CInfinitynodersv> flatdb6(strDBName, "magicInfinityRSV");
+    if(!flatdb6.Load(infnodersv)) {
+        return InitError(_("Failed to load RSV vote cache from") + "\n" + (pathDB / strDBName).string());
+    }
+
+    strDBName = "infinitynodemeta.dat";
+    uiInterface.InitMessage(_("Loading infinitynode Meta..."));
+    CFlatDB<CInfinitynodeMeta> flatdb7(strDBName, "magicInfinityMeta");
+    if(!flatdb7.Load(infnodemeta)) {
+        return InitError(_("Failed to load Metatdata cache from") + "\n" + (pathDB / strDBName).string());
+    }
+
+    LogPrintf("InfinityNode last scan height: %d and active Height: %d\n", infnodeman.getLastScan(), chainActive.Height());
+    bool updateStm = false;
+    if (infnodeman.getLastScan() == 0){
+        uiInterface.InitMessage(_("Initial on-chain infinitynode list..."));
+        // lock main here
+        LOCK(cs_main);
+        if ( chainActive.Height() < Params().GetConsensus().nInfinityNodeBeginHeight || infnodeman.initialInfinitynodeList(chainActive.Height()) == false){
+            LogPrintf("InfinityNode does not begin or error in initial list of node:\n");
+        } else {
+            updateStm = infnodeman.deterministicRewardStatement(10) &&
+                             infnodeman.deterministicRewardStatement(5) &&
+                             infnodeman.deterministicRewardStatement(1);
+        }
+    } else {
+        uiInterface.InitMessage(_("Update on-chain infinitynode list..."));
+        // lock main here
+        LOCK(cs_main);
+        if ( chainActive.Height() < infnodeman.getLastScan() || infnodeman.updateInfinitynodeList(chainActive.Height()) == false){
+            LogPrintf("Lastscan is higher than chainActive or error in update list of node:\n");
+        } else {
+            updateStm = infnodeman.deterministicRewardStatement(10) &&
+                             infnodeman.deterministicRewardStatement(5) &&
+                             infnodeman.deterministicRewardStatement(1);
+        }
+    }
+    LogPrintf("InfinityNode build stm status: %d\n", updateStm);
+    //END SIN
+
     // As LoadBlockIndex can take several minutes, it's possible the user
     // requested to kill the GUI during the last operation. If so, exit.
     // As the program has not fully started yet, Shutdown() is possibly overkill.
@@ -1954,10 +2007,6 @@ bool AppInitMain()
     // ********************************************************* Step 11b: Load cache data
 
     // LOAD SERIALIZED DAT FILES INTO DATA CACHES FOR INTERNAL USE
-
-    boost::filesystem::path pathDB = GetDataDir();
-    std::string strDBName;
-
     strDBName = "mncache.dat";
     uiInterface.InitMessage(_("Loading masternode cache..."));
     CFlatDB<CMasternodeMan> flatdb1(strDBName, "magicMasternodeCache");
@@ -1981,44 +2030,6 @@ bool AppInitMain()
     CFlatDB<CNetFulfilledRequestManager> flatdb4(strDBName, "magicFulfilledCache");
     if(!flatdb4.Load(netfulfilledman)) {
         return InitError(_("Failed to load fulfilled requests cache from") + "\n" + (pathDB / strDBName).string());
-    }
-
-    strDBName = "infinitynode.dat";
-    uiInterface.InitMessage(_("Loading on-chain infinitynode list..."));
-    CFlatDB<CInfinitynodeMan> flatdb5(strDBName, "magicInfinityNodeCache");
-    if(!flatdb5.Load(infnodeman)) {
-        return InitError(_("Failed to load infinitynode cache from") + "\n" + (pathDB / strDBName).string());
-    }
-
-    strDBName = "infinitynodersv.dat";
-    uiInterface.InitMessage(_("Loading infinitynode RSV..."));
-    CFlatDB<CInfinitynodersv> flatdb6(strDBName, "magicInfinityRSV");
-    if(!flatdb6.Load(infnodersv)) {
-        return InitError(_("Failed to load RSV vote cache from") + "\n" + (pathDB / strDBName).string());
-    }
-
-    strDBName = "infinitynodemeta.dat";
-    uiInterface.InitMessage(_("Loading infinitynode Meta..."));
-    CFlatDB<CInfinitynodeMeta> flatdb7(strDBName, "magicInfinityMeta");
-    if(!flatdb7.Load(infnodemeta)) {
-        return InitError(_("Failed to load Metatdata cache from") + "\n" + (pathDB / strDBName).string());
-    }
-
-    LogPrintf("InfinityNode last scan height: %d and active Height: %d\n", infnodeman.getLastScan(), chainActive.Height());
-    if (infnodeman.getLastScan() == 0){
-        uiInterface.InitMessage(_("Initial on-chain infinitynode list..."));
-        // lock main here
-        LOCK(cs_main);
-        if ( chainActive.Height() < Params().GetConsensus().nInfinityNodeBeginHeight || infnodeman.initialInfinitynodeList(chainActive.Height()) == false){
-            LogPrintf("InfinityNode does not begin or error in initial list of node:\n");
-        }
-    } else {
-        uiInterface.InitMessage(_("Update on-chain infinitynode list..."));
-        // lock main here
-        LOCK(cs_main);
-        if ( chainActive.Height() < infnodeman.getLastScan() || infnodeman.updateInfinitynodeList(chainActive.Height()) == false){
-            LogPrintf("Lastscan is higher than chainActive or error in update list of node:\n");
-        }
     }
 
     // ********************************************************* Step 11b1: init and load data
