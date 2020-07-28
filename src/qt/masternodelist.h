@@ -65,6 +65,7 @@ public:
 
 private:
     QMenu *contextMenu;
+    QMenu *contextDINMenu;
     int64_t nTimeFilterUpdated;
     bool fFilterUpdated;
 
@@ -78,6 +79,7 @@ public Q_SLOTS:
     void updateNodeList();
     void updateDINList();
 
+    // node setup functions
     void nodeSetupInitialize();
     void nodeSetupCleanProgress();
     void nodeSetupEnableOrderUI( bool bEnable, int orderID = 0, int invoiceID = 0 );
@@ -85,6 +87,8 @@ public Q_SLOTS:
     int nodeSetupAPIAddOrder( int clientid, QString billingCycle, QString& productids, int& invoiceid, QString& strError );
     bool nodeSetupAPIGetInvoice( int invoiceid, QString& strAmount, QString& strStatus, QString& paymentAddress, QString& strError );
     QJsonObject nodeSetupAPIInfo( int serviceid, int clientid, QString email, QString password, QString& strError );
+    QJsonObject nodeSetupAPINodeInfo( int serviceid, int clientId, QString email, QString pass, QString& strError  );
+    bool nodeSetupAPINodeList( QString email, QString pass, QString& strError  );
     bool nodeSetupCheckFunds( CAmount invoiceAmount = 0 );
     void nodeSetupStep( std::string icon , std::string text );
     int  nodeSetupGetClientId( QString& email, QString& pass );
@@ -96,6 +100,8 @@ public Q_SLOTS:
     void nodeSetupSetBurnTx( QString strBurnTx );
     QString nodeSetupGetPaymentTx( );
     void nodeSetupSetPaymentTx( QString txHash );
+    int nodeSetupGetServiceForNodeAddress( QString nodeAdress );
+    void nodeSetupSetServiceForNodeAddress( QString nodeAdress, int serviceId );
     void nodeSetupResetClientId( );
     void nodeSetupResetOrderId( );
     QString nodeSetupCheckInvoiceStatus();
@@ -122,6 +128,7 @@ private:
     CCriticalSection cs_mymnlist;
 
     QString strCurrentFilter;
+    bool bDINNodeAPIUpdate = false;
 
     // nodeSetup
     QTimer *invoiceTimer;
@@ -143,12 +150,14 @@ private:
 
 private Q_SLOTS:
     void showContextMenu(const QPoint &);
+    void showContextDINMenu(const QPoint &);
     void on_filterLineEdit_textChanged(const QString &strFilterIn);
     void on_startButton_clicked();
     void on_startAllButton_clicked();
     //void on_startAutoSINButton_clicked();
     void on_tableWidgetMyMasternodes_itemSelectionChanged();
     void on_UpdateButton_clicked();
+    void on_checkDINNode();
 
     // node setup
     void on_btnSetup_clicked();

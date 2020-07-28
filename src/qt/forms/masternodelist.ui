@@ -52,7 +52,7 @@ width: 150px;
      <item>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>3</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tabMyMasternodes">
         <attribute name="title">
@@ -320,6 +320,9 @@ width: 150px;
            <property name="alternatingRowColors">
             <bool>true</bool>
            </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
            <attribute name="horizontalHeaderDefaultSectionSize">
             <number>100</number>
            </attribute>
@@ -357,6 +360,11 @@ width: 150px;
            </column>
            <column>
             <property name="text">
+             <string>IP</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
              <string>Peer address</string>
             </property>
             <property name="textAlignment">
@@ -385,6 +393,16 @@ width: 150px;
             </property>
             <property name="textAlignment">
              <set>AlignLeading|AlignVCenter</set>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Node blockcount</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Node status</string>
             </property>
            </column>
           </widget>
@@ -528,7 +546,7 @@ width: 150px;
            <x>60</x>
            <y>260</y>
            <width>651</width>
-           <height>151</height>
+           <height>180</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -596,7 +614,7 @@ width: 150px;
            <x>20</x>
            <y>259</y>
            <width>41</width>
-           <height>151</height>
+           <height>180</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -758,7 +776,7 @@ width: 150px;
             <x>0</x>
             <y>0</y>
             <width>241</width>
-            <height>101</height>
+            <height>120</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_4">
@@ -935,7 +953,6 @@ width: 150px;
   <tabstop>UpdateButton</tabstop>
   <tabstop>filterLineEdit</tabstop>
   <tabstop>tableWidgetMasternodes</tabstop>
-  <tabstop>hodlTable</tabstop>
   <tabstop>radioLILNode</tabstop>
   <tabstop>radioMIDNode</tabstop>
   <tabstop>radioBIGNode</tabstop>

@@ -100,6 +100,8 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     ui->dinTable->setColumnWidth(5, 90);
     ui->dinTable->setColumnWidth(6, 60);
     ui->dinTable->setColumnWidth(7, 250);
+    ui->dinTable->setColumnWidth(8, 200);
+    ui->dinTable->setColumnWidth(9, 100);
 
     ui->tableWidgetMyMasternodes->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -108,6 +110,14 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     contextMenu->addAction(startAliasAction);
     connect(ui->tableWidgetMyMasternodes, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
     connect(startAliasAction, SIGNAL(triggered()), this, SLOT(on_startButton_clicked()));
+
+    ui->dinTable->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    QAction *checkNodeAction = new QAction(tr("Check node status"), this);
+    contextDINMenu = new QMenu();
+    contextDINMenu->addAction(checkNodeAction);
+    connect(ui->dinTable, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextDINMenu(const QPoint&)));
+    connect(checkNodeAction, SIGNAL(triggered()), this, SLOT(on_checkDINNode()));
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateNodeList()));
@@ -162,6 +172,14 @@ void MasternodeList::showContextMenu(const QPoint &point)
 {
     QTableWidgetItem *item = ui->tableWidgetMyMasternodes->itemAt(point);
     if(item) contextMenu->exec(QCursor::pos());
+}
+
+void MasternodeList::showContextDINMenu(const QPoint &point)
+{
+    QTableWidgetItem *item = ui->dinTable->itemAt(point);
+    if(item)    {
+        contextDINMenu->exec(QCursor::pos());
+    }
 }
 
 void MasternodeList::StartAlias(std::string strAlias)
@@ -422,10 +440,12 @@ void MasternodeList::updateDINList()
         ui->dinTable->setRowCount(mapMynode.size());
         ui->dinTable->setSortingEnabled(true);
 
+        bool bNeedToQueryAPIServiceId = false;
+        int serviceId;
         int k=0;
         for(auto &pair : mapMynode){
             infinitynode_info_t infoInf;
-            std::string status = "Unknown", sPeerAddress = "";
+            std::string status = "Unknown", sPeerAddress = "", strIP = "---";
             if(!infnodeman.GetInfinitynodeInfo(pair.first, infoInf)){
                 continue;
             }
@@ -442,6 +462,17 @@ void MasternodeList::updateDINList()
                     CTxDestination dest = GetDestinationForKey(pubKey, DEFAULT_ADDRESS_TYPE);
                     sPeerAddress = EncodeDestination(dest);
                 }
+                strIP = metadata.getService().ToString();
+                if (sPeerAddress!="")   {
+                    int serviceValue = (bDINNodeAPIUpdate) ? -1 : 0;
+                    serviceId = nodeSetupGetServiceForNodeAddress( QString::fromStdString(sPeerAddress) );
+LogPrintf("nodeSetup updateDINList %s, %d, %d\n", sPeerAddress, serviceId, serviceValue );
+
+                    if (serviceId==0 || serviceValue==0)   {   // 0 = not checked
+                        bNeedToQueryAPIServiceId = true;
+                        nodeSetupSetServiceForNodeAddress( QString::fromStdString(sPeerAddress), serviceValue );  // -1 = reset to checked, not queried
+                    }
+                }
             }
             if(infoInf.nExpireHeight < nCurrentHeight){
                 status="Expired";
@@ -451,17 +482,29 @@ void MasternodeList::updateDINList()
             ui->dinTable->setItem(k, 1, new QTableWidgetItem(QString::number(infoInf.nHeight)));
             ui->dinTable->setItem(k, 2, new QTableWidgetItem(QString::number(infoInf.nExpireHeight)));
             ui->dinTable->setItem(k, 3, new QTableWidgetItem(QString(QString::fromStdString(status))));
-            ui->dinTable->setItem(k, 4, new QTableWidgetItem(QString(QString::fromStdString(sPeerAddress))));
+            ui->dinTable->setItem(k, 4, new QTableWidgetItem(QString(QString::fromStdString(strIP))));
+            ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString(QString::fromStdString(sPeerAddress))));
             bool flocked = mapLockRewardHeight.find(sPeerAddress) != mapLockRewardHeight.end();
             if(flocked) {
-                ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString::number(mapLockRewardHeight[sPeerAddress])));
-                ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString(QString::fromStdString("Yes"))));
+                ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString::number(mapLockRewardHeight[sPeerAddress])));
+                ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString("Yes"))));
             } else {
-                ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString(QString::fromStdString(""))));
-                ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString(QString::fromStdString("No"))));
+                ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString(QString::fromStdString(""))));
+                ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString("No"))));
             }
-            ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString(pair.second))));
+            ui->dinTable->setItem(k,8, new QTableWidgetItem(QString(QString::fromStdString(pair.second))));
             k++;
+        }
+
+        bDINNodeAPIUpdate = true;
+
+        if (bNeedToQueryAPIServiceId)   {
+            QString email, pass, strError;
+            int clientId = nodeSetupGetClientId( email, pass );
+LogPrintf("nodeSetup bNeedToQueryAPIServiceId %d\n", clientId );
+            if (clientId>0) {
+                nodeSetupAPINodeList( email, pass, strError );
+            }
         }
     }
 }
@@ -547,6 +590,51 @@ void MasternodeList::on_UpdateButton_clicked()
 {
     updateMyNodeList(true);
 }
+
+void MasternodeList::on_checkDINNode()
+{
+    QItemSelectionModel* selectionModel = ui->dinTable->selectionModel();
+    QModelIndexList selected = selectionModel->selectedRows();
+    if(selected.count() == 0) return;
+
+    QModelIndex index = selected.at(0);
+    int nSelectedRow = index.row();
+    QString strAddress = ui->dinTable->item(nSelectedRow, 5)->text();
+    QString strError;
+    QString strStatus = ui->dinTable->item(nSelectedRow, 3)->text();
+    QMessageBox msg;
+
+    if ( strStatus!="Ready")    {
+        msg.setText(tr("DIN node must be in Ready status"));
+        msg.exec();
+    }
+    else    {
+        int serviceId = nodeSetupGetServiceForNodeAddress( strAddress );
+        if (serviceId > 0)    {
+            QString email, pass, strError;
+            int clientId = nodeSetupGetClientId( email, pass );
+            if (clientId>0) {
+                QJsonObject obj = nodeSetupAPINodeInfo( serviceId, mClientid , email, pass, strError );
+                if (obj.contains("Blockcount") && obj.contains("MyPeerInfo"))   {
+                    int blockCount = obj["Blockcount"].toInt();
+                    QString peerInfo = obj["MyPeerInfo"].toString();
+                    ui->dinTable->setItem(nSelectedRow, 9, new QTableWidgetItem(QString::number(blockCount)));
+                    ui->dinTable->setItem(nSelectedRow, 10, new QTableWidgetItem(peerInfo));
+                }
+            }
+            else    {
+                msg.setText("Could not recover node's client ID\nPlease log in with your user email and password in the Node Setup tab");
+                msg.exec();
+            }
+        }
+        else    {
+            msg.setText("Could not recover node's service ID\nPlease log in with your user email and password in the Node Setup tab");
+            msg.exec();
+        }
+    }
+
+}
+
 
 // nodeSetup buttons
 void MasternodeList::on_btnCheck_clicked()
@@ -778,6 +866,7 @@ LogPrintf("nodeSetupCheckBurnSendConfirmations %d, %d, %s, %s \n", mServiceId, c
                 cmd << "infinitynodeupdatemeta " << mBurnAddress.toUtf8().constData() << " " << strPublicKey.toUtf8().constData() << " " << strNodeIp.toUtf8().constData() << " " << mBurnTx.left(16).toUtf8().constData();
                 UniValue jsonVal = nodeSetupCallRPC( cmd.str() );
 
+                nodeSetupSetServiceForNodeAddress( strAddress, mServiceId); // store serviceid
                 // cleanup
                 nodeSetupResetOrderId();
                 nodeSetupSetBurnTx("");
@@ -1112,6 +1201,23 @@ void MasternodeList::nodeSetupSetBurnTx( QString strBurnTx )  {
     settings.setValue("nodeSetupBurnTx", strBurnTx);
 }
 
+int MasternodeList::nodeSetupGetServiceForNodeAddress( QString nodeAdress ) {
+    int ret = 0;
+    QSettings settings;
+    QString key = "nodeSetupService"+nodeAdress;
+
+    if (settings.contains(key))
+        ret = settings.value(key).toInt();
+
+    return ret;
+}
+
+void MasternodeList::nodeSetupSetServiceForNodeAddress( QString nodeAdress, int serviceId )  {
+    QSettings settings;
+    QString key = "nodeSetupService"+nodeAdress;
+
+    settings.setValue(key, serviceId);
+}
 
 QString MasternodeList::nodeSetupGetPaymentTx( )  {
     QString ret = 0;
@@ -1295,6 +1401,89 @@ LogPrintf("nodeSetup::Info -- %s\n", url.toString().toStdString());
 
     return root;
 }
+
+bool MasternodeList::nodeSetupAPINodeList( QString email, QString password, QString& strError  )  {
+    bool ret = false;
+
+    QString Service = QString::fromStdString("nodelist");
+    QUrl url( MasternodeList::NODESETUP_ENDPOINT_BASIC );
+    QUrlQuery urlQuery( url );
+    urlQuery.addQueryItem("action", Service);
+    urlQuery.addQueryItem("email", email);
+    urlQuery.addQueryItem("password2", password);
+    url.setQuery( urlQuery );
+
+    QNetworkRequest request( url );
+LogPrintf("nodeSetup::NodeList -- %s\n", url.toString().toStdString());
+    QNetworkReply *reply = ConnectionManager->get(request);
+    QEventLoop loop;
+
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+
+    QByteArray data = reply->readAll();
+    QJsonDocument json = QJsonDocument::fromJson(data);
+    QJsonObject root = json.object();
+    int serviceId;
+    QString strAddress;
+
+    if ( root.contains("result") && root["result"]=="success" && root.contains("products") ) {
+        QJsonArray jsonArray = root["products"].toObject()["product"].toArray();
+        for (const QJsonValue & value : jsonArray) {
+            QJsonObject obj = value.toObject();
+            serviceId = obj["id"].toInt();
+            if ( obj.contains("customfields") )   {
+                QJsonArray customfieldsArray = obj["customfields"].toObject()["customfield"].toArray();
+                for (const QJsonValue & customfield : customfieldsArray) {
+                    QJsonObject field = customfield.toObject();
+                    if ( field["name"].toString() == "Address" )    {
+                        nodeSetupSetServiceForNodeAddress( field["value"].toString(), serviceId );
+                        ret = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    else    {
+        if ( root.contains("message") )    {
+            strError = root["message"].toString();
+        }
+        else    {
+            strError = "ERROR reading NodeList from API";
+        }
+    }
+    return ret;
+}
+
+QJsonObject MasternodeList::nodeSetupAPINodeInfo( int serviceid, int clientid, QString email, QString password, QString& strError )  {
+    QJsonObject ret;
+
+    QString Service = QString::fromStdString("nodeinfo");
+    QUrl url( MasternodeList::NODESETUP_ENDPOINT_NODE );
+    QUrlQuery urlQuery( url );
+    urlQuery.addQueryItem("action", Service);
+    urlQuery.addQueryItem("serviceid", QString::number(serviceid));
+    urlQuery.addQueryItem("clientid", QString::number(clientid));
+    urlQuery.addQueryItem("email", email);
+    urlQuery.addQueryItem("password", password);
+    url.setQuery( urlQuery );
+
+    QNetworkRequest request( url );
+LogPrintf("nodeSetup::Info -- %s\n", url.toString().toStdString());
+    QNetworkReply *reply = ConnectionManager->get(request);
+    QEventLoop loop;
+
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+
+    QByteArray data = reply->readAll();
+    QJsonDocument json = QJsonDocument::fromJson(data);
+    QJsonObject root = json.object();
+
+    return root;
+}
+
 
 void MasternodeList::nodeSetupStep( std::string icon , std::string text )   {
 
