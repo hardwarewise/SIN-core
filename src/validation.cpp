@@ -2266,34 +2266,12 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
     } else if (pindex->nHeight > chainparams.GetConsensus().nINActivationHeight && pindex->nHeight <= chainparams.GetConsensus().nNewDevfeeAddress) {
         //Masternode mode: check payment
         LogPrintf("Validation -- POW + Masternode\n");
-        bool retryWithUpdateINF = false;
         if (!IsBlockPayeeValid(block.vtx[0], pindex->nHeight, block.vtx[0]->GetValueOut(), pindex->GetBlockHeader())) {
-            if(!retryWithUpdateINF){
-                LOCK(infnodeman.cs);
-                infnodeman.UpdatedBlockTip(pindex);
-                bool updateStm = infnodeman.deterministicRewardStatement(10) &&
-                             infnodeman.deterministicRewardStatement(5) &&
-                             infnodeman.deterministicRewardStatement(1);
-                if (updateStm){
-                    LogPrintf("Validation -- update Stm status: %d\n",updateStm);
-                    infnodeman.calculAllInfinityNodesRankAtLastStm();
-                    infnodeman.updateLastStmHeightAndSize(pindex->nHeight, 10);
-                    infnodeman.updateLastStmHeightAndSize(pindex->nHeight, 5);
-                    infnodeman.updateLastStmHeightAndSize(pindex->nHeight, 1);
-                    retryWithUpdateINF = true;
-                } else {
-                    LogPrintf("Validation -- update Stm false\n");
-                }
-            }
-            if(retryWithUpdateINF && IsBlockPayeeValid(block.vtx[0], pindex->nHeight, block.vtx[0]->GetValueOut(), pindex->GetBlockHeader())){
-                //retry and good. Block is valid at this step
-            } else {
-                mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
-                LogPrintf("IsBlockPayeeValid -- disconnect block!\n");
-                if (pindex->nHeight >= chainparams.GetConsensus().nINEnforcementHeight) {
-                    return state.DoS(0, error("ConnectBlock(SIN): couldn't find masternode or superblock payments"),
-                    REJECT_INVALID, "bad-cb-payee");
-                }
+            mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
+            LogPrintf("IsBlockPayeeValid -- disconnect block!\n");
+            if (pindex->nHeight >= chainparams.GetConsensus().nINEnforcementHeight) {
+                return state.DoS(0, error("ConnectBlock(SIN): couldn't find masternode or superblock payments"),
+                REJECT_INVALID, "bad-cb-payee");
             }
         }
     } else {
@@ -2714,6 +2692,7 @@ bool CChainState::ConnectTip(CValidationState& state, const CChainParams& chainp
     // Remove conflicting transactions from the mempool.;
     mempool.removeForBlock(blockConnecting.vtx, pindexNew->nHeight);
     disconnectpool.removeForBlock(blockConnecting.vtx);
+
     // Update chainActive & related variables.
     chainActive.SetTip(pindexNew);
     UpdateTip(pindexNew, chainparams);
@@ -2721,6 +2700,26 @@ bool CChainState::ConnectTip(CValidationState& state, const CChainParams& chainp
     int64_t nTime6 = GetTimeMicros(); nTimePostConnect += nTime6 - nTime5; nTimeTotal += nTime6 - nTime1;
     LogPrint(BCLog::BENCH, "  - Connect postprocess: %.2fms [%.2fs (%.2fms/blk)]\n", (nTime6 - nTime5) * MILLI, nTimePostConnect * MICRO, nTimePostConnect * MILLI / nBlocksTotal);
     LogPrint(BCLog::BENCH, "- Connect block: %.2fms [%.2fs (%.2fms/blk)]\n", (nTime6 - nTime1) * MILLI, nTimeTotal * MICRO, nTimeTotal * MILLI / nBlocksTotal);
+
+    // update our DIN info for each new block
+    LOCK(cs_main);
+    infnodeman.UpdatedBlockTip(pindexNew);
+    if (infnodeman.updateInfinitynodeList(pindexNew->nHeight)){
+            bool updateStm = infnodeman.deterministicRewardStatement(10) &&
+                             infnodeman.deterministicRewardStatement(5) &&
+                             infnodeman.deterministicRewardStatement(1);
+            if (updateStm){
+                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm status: %d\n",updateStm);
+                infnodeman.calculAllInfinityNodesRankAtLastStm();
+                infnodeman.updateLastStmHeightAndSize(pindexNew->nHeight, 10);
+                infnodeman.updateLastStmHeightAndSize(pindexNew->nHeight, 5);
+                infnodeman.updateLastStmHeightAndSize(pindexNew->nHeight, 1);
+            } else {
+                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm false\n");
+            }
+    } else {
+        LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- Cannot update DIN info\n");
+    }
 
     connectTrace.BlockConnected(pindexNew, std::move(pthisBlock));
     return true;
