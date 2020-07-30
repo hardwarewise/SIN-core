@@ -57,7 +57,7 @@
 #include <activemasternode.h>
 #include <dsnotificationinterface.h>
 #include <flat-database.h>
-#include <instantx.h>
+#include <wallet/wallet.h>
 #ifdef ENABLE_WALLET
 #include <keepass.h>
 #endif
@@ -1348,7 +1348,6 @@ void ThreadCheckInfinityNode(CConnman& connman)
                     mnodeman.ProcessMasternodeConnections(connman);
                     mnodeman.CheckAndRemove(connman);
                     mnpayments.CheckAndRemove();
-                    instantsend.CheckAndRemove();
                 }
                 if(fMasterNode && (nTick % (60 * 5) == 0)) {
                     mnodeman.DoFullVerificationStep(connman);
@@ -2011,10 +2010,6 @@ bool AppInitMain()
     }
 #endif // ENABLE_WALLET
 
-    fEnableInstantSend = gArgs.GetBoolArg("-enableinstantsend", 1);
-    nInstantSendDepth = gArgs.GetArg("-instantsenddepth", DEFAULT_INSTANTSEND_DEPTH);
-    nInstantSendDepth = std::min(std::max(nInstantSendDepth, 0), 60);
-
     //lite mode disables all Masternode and Darksend related functionality
     fLiteMode = gArgs.GetBoolArg("-litemode", false);
     if(fMasterNode && fLiteMode){
@@ -2022,7 +2017,6 @@ bool AppInitMain()
     }
 
     LogPrintf("fLiteMode %d\n", fLiteMode);
-    LogPrintf("nInstantSendDepth %d\n", nInstantSendDepth);
 
     // ********************************************************* Step 11b: Load cache data
 

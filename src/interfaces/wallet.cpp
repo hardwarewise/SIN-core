@@ -227,13 +227,12 @@ public:
         int& change_pos,
         CAmount& fee,
         std::string& fail_reason,
-        AvailableCoinsType nCoinType,
-        bool fUseInstantSend = false) override
+        AvailableCoinsType nCoinType) override
     {
         LOCK2(cs_main, m_wallet.cs_wallet);
         auto pending = MakeUnique<PendingWalletTxImpl>(m_wallet);
         if (!m_wallet.CreateTransaction(recipients, pending->m_tx, pending->m_key, fee, change_pos,
-                fail_reason, coin_control, sign, nCoinType, fUseInstantSend)) {
+                fail_reason, coin_control, sign, nCoinType)) {
             return {};
         }
         return std::move(pending);
