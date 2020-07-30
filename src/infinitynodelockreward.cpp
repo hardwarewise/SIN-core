@@ -1631,7 +1631,6 @@ bool CInfinityNodeLockReward::AutoResigterLockReward(std::string sLockReward, st
     CAmount nFeeRet = 0;
     mapValue_t mapValue;
     bool fSubtractFeeFromAmount = false;
-    bool fUseInstantSend=false;
     int nChangePosRet = -1;
     CReserveKey reservekey(pwallet);
     CAmount nFeeRequired;
@@ -1686,7 +1685,7 @@ bool CInfinityNodeLockReward::AutoResigterLockReward(std::string sLockReward, st
 
     //Transaction
     CTransactionRef tx;
-    if (!pwallet->CreateTransaction(vecSend, tx, reservekey, nFeeRequired, nChangePosRet, strError, coin_control, true, ALL_COINS, fUseInstantSend)) {
+    if (!pwallet->CreateTransaction(vecSend, tx, reservekey, nFeeRequired, nChangePosRet, strError, coin_control, true, ALL_COINS)) {
         if (!fSubtractFeeFromAmount && nAmountRegister + nFeeRequired > curBalance)
             strErrorRet = strprintf("Error: This transaction requires a transaction fee of at least %s", FormatMoney(nFeeRequired));
         else strErrorRet = strprintf("%s, selected coins %s", strError, FormatMoney(selected));
@@ -1695,7 +1694,7 @@ bool CInfinityNodeLockReward::AutoResigterLockReward(std::string sLockReward, st
 
     CValidationState state;
     if (!pwallet->CommitTransaction(tx, std::move(mapValue), {} /* orderForm */, {}/*fromAccount*/, reservekey, g_connman.get(),
-           state, fUseInstantSend ? NetMsgType::TXLOCKREQUEST : NetMsgType::TX)) {
+           state, NetMsgType::TX)) {
         strErrorRet = strprintf("Error: The transaction was rejected! Reason given: %s", FormatStateMessage(state));
         return false;
     }
