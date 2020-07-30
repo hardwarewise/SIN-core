@@ -999,6 +999,7 @@ bool CInfinitynodeMan::deterministicRewardAtHeight(int nBlockHeight, int nSinTyp
  */
 void CInfinitynodeMan::updateLastStmHeightAndSize(int nBlockHeight, int nSinType)
 {
+    LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateLastStmHeightAndSize -- SIN type: %d, Height: %d\n", nSinType, nBlockHeight);
     if(nBlockHeight < Params().GetConsensus().nInfinityNodeGenesisStatement) return;
     //step1: copy mapStatement for nSinType
     std::map<int, int> mapStatementSinType = getStatementMap(nSinType);
@@ -1012,7 +1013,7 @@ void CInfinitynodeMan::updateLastStmHeightAndSize(int nBlockHeight, int nSinType
     {
         if (nBlockHeight == stm.first)
         {
-                LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::isPossibleForLockReward -- SIN type: %d, switch to new Stm :%d at size: %d\n", nSinType, stm.first, stm.second);
+                LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateLastStmHeightAndSize -- SIN type: %d, switch to new Stm :%d at size: %d\n", nSinType, stm.first, stm.second);
                 //we switch to new Stm ==> update rank
                 lastStatement = stm.first;
                 lastStatementSize = stm.second;
@@ -1047,7 +1048,7 @@ void CInfinitynodeMan::updateLastStmHeightAndSize(int nBlockHeight, int nSinType
         nLILLastStmHeight = lastStatement;
         nLILLastStmSize = lastStatementSize;
     }
-
+    LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateLastStmHeightAndSize -- SIN type: %d, Last Stm: %d, Size: %d\n", nSinType, lastStatement, lastStatementSize);
 }
 
 /*
@@ -1186,4 +1187,9 @@ void CInfinitynodeMan::UpdatedBlockTip(const CBlockIndex *pindex)
         nCachedBlockHeight = pindex->nHeight;
         LogPrint(BCLog::INFINITYLOCK,"CInfinitynodeMan::UpdatedBlockTip -- nCachedBlockHeight=%d\n", nCachedBlockHeight);
     }
+}
+
+void CInfinitynodeMan::UpdateChainActiveHeight(int number)
+{
+    nCachedBlockHeight = number;
 }

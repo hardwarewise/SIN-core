@@ -2229,8 +2229,10 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
     }
 
     LogPrintf("Miner -- Dev fee paid: %d, Calcul dev fee %d\n", block.vtx[0]->vout[1].nValue, GetDevCoin(pindex->nHeight, blockReward));
+
     if (block.vtx[0]->vout[1].nValue < GetDevCoin(pindex->nHeight, blockReward))
         return state.DoS(100, error("ConnectBlock(): coinbase does not pay enough to the dev fund address."), REJECT_INVALID, "bad-cb-dev-fee");
+
     //Legacy SINOVATE validation
     if (pindex->nHeight <= chainparams.GetConsensus().nINActivationHeight) {
         //POW mode: do nothing
@@ -2243,7 +2245,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
             LogPrintf("IsBlockPayeeValid -- disconnect block!\n");
             if (pindex->nHeight >= chainparams.GetConsensus().nINEnforcementHeight) {
                 return state.DoS(0, error("ConnectBlock(SIN): couldn't find masternode or superblock payments"),
-                    REJECT_INVALID, "bad-cb-payee");
+                REJECT_INVALID, "bad-cb-payee");
             }
         }
     } else {
@@ -2664,6 +2666,7 @@ bool CChainState::ConnectTip(CValidationState& state, const CChainParams& chainp
     // Remove conflicting transactions from the mempool.;
     mempool.removeForBlock(blockConnecting.vtx, pindexNew->nHeight);
     disconnectpool.removeForBlock(blockConnecting.vtx);
+
     // Update chainActive & related variables.
     chainActive.SetTip(pindexNew);
     UpdateTip(pindexNew, chainparams);
@@ -2671,6 +2674,26 @@ bool CChainState::ConnectTip(CValidationState& state, const CChainParams& chainp
     int64_t nTime6 = GetTimeMicros(); nTimePostConnect += nTime6 - nTime5; nTimeTotal += nTime6 - nTime1;
     LogPrint(BCLog::BENCH, "  - Connect postprocess: %.2fms [%.2fs (%.2fms/blk)]\n", (nTime6 - nTime5) * MILLI, nTimePostConnect * MICRO, nTimePostConnect * MILLI / nBlocksTotal);
     LogPrint(BCLog::BENCH, "- Connect block: %.2fms [%.2fs (%.2fms/blk)]\n", (nTime6 - nTime1) * MILLI, nTimeTotal * MICRO, nTimeTotal * MILLI / nBlocksTotal);
+
+    // update our DIN info for each new block
+    LOCK(cs_main);
+    infnodeman.UpdatedBlockTip(pindexNew);
+    if (infnodeman.updateInfinitynodeList(pindexNew->nHeight)){
+            bool updateStm = infnodeman.deterministicRewardStatement(10) &&
+                             infnodeman.deterministicRewardStatement(5) &&
+                             infnodeman.deterministicRewardStatement(1);
+            if (updateStm){
+                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm status: %d\n",updateStm);
+                infnodeman.calculAllInfinityNodesRankAtLastStm();
+                infnodeman.updateLastStmHeightAndSize(pindexNew->nHeight, 10);
+                infnodeman.updateLastStmHeightAndSize(pindexNew->nHeight, 5);
+                infnodeman.updateLastStmHeightAndSize(pindexNew->nHeight, 1);
+            } else {
+                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm false\n");
+            }
+    } else {
+        LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- Cannot update DIN info\n");
+    }
 
     connectTrace.BlockConnected(pindexNew, std::move(pthisBlock));
     return true;
