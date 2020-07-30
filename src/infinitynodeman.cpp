@@ -623,8 +623,8 @@ bool CInfinitynodeMan::ExtractLockReward(int nBlockHeight, int depth, std::vecto
                                 i++;
                             }
 
+                            if(nRewardHeight != nBlockHeight +1){continue;}
                             LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::ExtractLockReward -- LR: %s.\n", stringLRRegister);
-                            //if(nRewardHeight != nBlockHeight){continue;}
 
                             const CTxIn& txin = tx->vin[0];
                             int index = txin.prevout.n;
