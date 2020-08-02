@@ -532,7 +532,6 @@ static UniValue infinitynodeburnfund(const JSONRPCRequest& request)
             // Wallet comments
             mapValue_t mapValue;
             bool fSubtractFeeFromAmount = true;
-            bool fUseInstantSend=false;
             CCoinControl coin_control;
             coin_control.Select(COutPoint(out.tx->GetHash(), out.i));
             coin_control.destChange = NodeOwnerAddress;//fund go back to NodeOwnerAddress
@@ -549,14 +548,14 @@ static UniValue infinitynodeburnfund(const JSONRPCRequest& request)
             CRecipient recipient = {script, nAmount, fSubtractFeeFromAmount};
             vecSend.push_back(recipient);
             CTransactionRef tx;
-            if (!pwallet->CreateTransaction(vecSend, tx, reservekey, nFeeRequired, nChangePosRet, strError, coin_control, true, ALL_COINS, fUseInstantSend)) {
+            if (!pwallet->CreateTransaction(vecSend, tx, reservekey, nFeeRequired, nChangePosRet, strError, coin_control, true, ALL_COINS)) {
                 if (!fSubtractFeeFromAmount && nAmount + nFeeRequired > curBalance)
                     strError = strprintf("Error: This transaction requires a transaction fee of at least %s", FormatMoney(nFeeRequired));
                 throw JSONRPCError(RPC_WALLET_ERROR, strError);
             }
             CValidationState state;
             if (!pwallet->CommitTransaction(tx, std::move(mapValue), {} /* orderForm */, {}/*fromAccount*/, reservekey, g_connman.get(),
-                            state, fUseInstantSend ? NetMsgType::TXLOCKREQUEST : NetMsgType::TX)) {
+                            state, NetMsgType::TX)) {
                 strError = strprintf("Error: The transaction was rejected! Reason given: %s", FormatStateMessage(state));
                 throw JSONRPCError(RPC_WALLET_ERROR, strError);
             }
@@ -671,7 +670,6 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
             CAmount nAmount = Params().GetConsensus().nInfinityNodeUpdateMeta*COIN;
             mapValue_t mapValue;
             bool fSubtractFeeFromAmount = true;
-            bool fUseInstantSend=false;
             CCoinControl coin_control;
             coin_control.Select(COutPoint(out.tx->GetHash(), out.i));
             coin_control.destChange = INFAddress;
@@ -694,7 +692,7 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
 
 
             CTransactionRef tx;
-            if (!pwallet->CreateTransaction(vecSend, tx, reservekey, nFeeRequired, nChangePosRet, strError, coin_control, true, ALL_COINS, fUseInstantSend)) {
+            if (!pwallet->CreateTransaction(vecSend, tx, reservekey, nFeeRequired, nChangePosRet, strError, coin_control, true, ALL_COINS)) {
                 if (!fSubtractFeeFromAmount && nAmount + nFeeRequired > curBalance)
                     strError = strprintf("Error: This transaction requires a transaction fee of at least %s", FormatMoney(nFeeRequired));
                 throw JSONRPCError(RPC_WALLET_ERROR, strError);
@@ -702,7 +700,7 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
             CValidationState state;
 
             if (!pwallet->CommitTransaction(tx, std::move(mapValue), {}, {}, reservekey, g_connman.get(),
-                            state, fUseInstantSend ? NetMsgType::TXLOCKREQUEST : NetMsgType::TX)) {
+                            state, NetMsgType::TX)) {
                 strError = strprintf("Error: The transaction was rejected! Reason given: %s", FormatStateMessage(state));
                 throw JSONRPCError(RPC_WALLET_ERROR, strError);
             }
@@ -793,7 +791,6 @@ static UniValue infinitynodevote(const JSONRPCRequest& request)
             CAmount nAmount = Params().GetConsensus().nInfinityNodeVoteValue*COIN;
             mapValue_t mapValue;
             bool fSubtractFeeFromAmount = false;
-            bool fUseInstantSend=false;
             CCoinControl coin_control;
             coin_control.Select(COutPoint(out.tx->GetHash(), out.i));
             coin_control.destChange = INFAddress;
@@ -815,7 +812,7 @@ static UniValue infinitynodevote(const JSONRPCRequest& request)
             results.push_back(Pair("Vote",streamInfo.str()));
 
             CTransactionRef tx;
-            if (!pwallet->CreateTransaction(vecSend, tx, reservekey, nFeeRequired, nChangePosRet, strError, coin_control, true, ALL_COINS, fUseInstantSend)) {
+            if (!pwallet->CreateTransaction(vecSend, tx, reservekey, nFeeRequired, nChangePosRet, strError, coin_control, true, ALL_COINS)) {
                 if (!fSubtractFeeFromAmount && nAmount + nFeeRequired > curBalance)
                     strError = strprintf("Error: This transaction requires a transaction fee of at least %s", FormatMoney(nFeeRequired));
                 throw JSONRPCError(RPC_WALLET_ERROR, strError);
@@ -823,7 +820,7 @@ static UniValue infinitynodevote(const JSONRPCRequest& request)
             CValidationState state;
 
             if (!pwallet->CommitTransaction(tx, std::move(mapValue), {}, {}, reservekey, g_connman.get(),
-                            state, fUseInstantSend ? NetMsgType::TXLOCKREQUEST : NetMsgType::TX)) {
+                            state, NetMsgType::TX)) {
                 strError = strprintf("Error: The transaction was rejected! Reason given: %s", FormatStateMessage(state));
                 throw JSONRPCError(RPC_WALLET_ERROR, strError);
             }

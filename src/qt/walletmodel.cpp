@@ -229,7 +229,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
         auto& newTx = transaction.getWtx();
 
         // Dash
-        newTx = m_wallet->createTransaction(vecSend, *coinControl, true , nChangePosRet, nFeeRequired, strFailReason, recipients[0].inputType, coinControl->fUseInstantSend);
+        newTx = m_wallet->createTransaction(vecSend, *coinControl, true , nChangePosRet, nFeeRequired, strFailReason, recipients[0].inputType);
         //
         transaction.setTransactionFee(nFeeRequired);
         if (fSubtractFeeFromAmount && newTx)
