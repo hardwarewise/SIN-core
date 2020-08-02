@@ -150,8 +150,7 @@ public:
         int& change_pos,
         CAmount& fee,
         std::string& fail_reason,
-        AvailableCoinsType nCoinType = ALL_COINS,
-        bool fUseInstantSend = false) = 0;
+        AvailableCoinsType nCoinType = ALL_COINS) = 0;
 
     //! Return whether transaction can be abandoned.
     virtual bool transactionCanBeAbandoned(const uint256& txid) = 0;

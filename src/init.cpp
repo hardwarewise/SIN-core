@@ -57,7 +57,7 @@
 #include <activemasternode.h>
 #include <dsnotificationinterface.h>
 #include <flat-database.h>
-#include <instantx.h>
+#include <wallet/wallet.h>
 #ifdef ENABLE_WALLET
 #include <keepass.h>
 #endif
@@ -1348,7 +1348,6 @@ void ThreadCheckInfinityNode(CConnman& connman)
                     mnodeman.ProcessMasternodeConnections(connman);
                     mnodeman.CheckAndRemove(connman);
                     mnpayments.CheckAndRemove();
-                    instantsend.CheckAndRemove();
                 }
                 if(fMasterNode && (nTick % (60 * 5) == 0)) {
                     mnodeman.DoFullVerificationStep(connman);
@@ -1810,6 +1809,8 @@ bool AppInitMain()
 
     LogPrintf("InfinityNode last scan height: %d and active Height: %d\n", infnodeman.getLastScan(), chainActive.Height());
     bool updateStm = false;
+    infnodeman.UpdateChainActiveHeight(chainActive.Height());
+
     if (infnodeman.getLastScan() == 0){
         uiInterface.InitMessage(_("Initial on-chain infinitynode list..."));
         // lock main here
@@ -1820,6 +1821,15 @@ bool AppInitMain()
             updateStm = infnodeman.deterministicRewardStatement(10) &&
                              infnodeman.deterministicRewardStatement(5) &&
                              infnodeman.deterministicRewardStatement(1);
+            if (updateStm){
+                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm status: %d\n",updateStm);
+                infnodeman.calculAllInfinityNodesRankAtLastStm();
+                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 10);
+                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 5);
+                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 1);
+            } else {
+                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm false\n");
+            }
         }
     } else {
         uiInterface.InitMessage(_("Update on-chain infinitynode list..."));
@@ -1831,6 +1841,15 @@ bool AppInitMain()
             updateStm = infnodeman.deterministicRewardStatement(10) &&
                              infnodeman.deterministicRewardStatement(5) &&
                              infnodeman.deterministicRewardStatement(1);
+            if (updateStm){
+                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm status: %d\n",updateStm);
+                infnodeman.calculAllInfinityNodesRankAtLastStm();
+                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 10);
+                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 5);
+                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 1);
+            } else {
+                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm false\n");
+            }
         }
     }
     LogPrintf("InfinityNode build stm status: %d\n", updateStm);
@@ -1991,10 +2010,6 @@ bool AppInitMain()
     }
 #endif // ENABLE_WALLET
 
-    fEnableInstantSend = gArgs.GetBoolArg("-enableinstantsend", 1);
-    nInstantSendDepth = gArgs.GetArg("-instantsenddepth", DEFAULT_INSTANTSEND_DEPTH);
-    nInstantSendDepth = std::min(std::max(nInstantSendDepth, 0), 60);
-
     //lite mode disables all Masternode and Darksend related functionality
     fLiteMode = gArgs.GetBoolArg("-litemode", false);
     if(fMasterNode && fLiteMode){
@@ -2002,7 +2017,6 @@ bool AppInitMain()
     }
 
     LogPrintf("fLiteMode %d\n", fLiteMode);
-    LogPrintf("nInstantSendDepth %d\n", nInstantSendDepth);
 
     // ********************************************************* Step 11b: Load cache data
 

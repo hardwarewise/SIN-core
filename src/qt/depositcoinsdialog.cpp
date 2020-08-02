@@ -141,7 +141,6 @@ void DepositCoinsDialog::on_sendButton_clicked()
     std::string termDepositConfirmQuestion = "";
     CCoinControl coinControl;
     coinControl.m_feerate = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE * 2);
-    coinControl.fUseInstantSend = false;
 
     prepareStatus = model->prepareTransaction(currentTransaction, termDepositConfirmQuestion, termDepositBlocks, &coinControl);
 
