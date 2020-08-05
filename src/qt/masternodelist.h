@@ -86,6 +86,7 @@ public Q_SLOTS:
     int nodeSetupAPIAddClient( QString firstName, QString lastName, QString email, QString password, QString& strError );
     int nodeSetupAPIAddOrder( int clientid, QString billingCycle, QString& productids, int& invoiceid, QString& strError );
     bool nodeSetupAPIGetInvoice( int invoiceid, QString& strAmount, QString& strStatus, QString& paymentAddress, QString& strError );
+    std::map<int,std::string> nodeSetupAPIListInvoices( QString email, QString password, QString& strError );
     QJsonObject nodeSetupAPIInfo( int serviceid, int clientid, QString email, QString password, QString& strError );
     QJsonObject nodeSetupAPINodeInfo( int serviceid, int clientId, QString email, QString pass, QString& strError  );
     bool nodeSetupAPINodeList( QString email, QString pass, QString& strError  );
@@ -104,6 +105,9 @@ public Q_SLOTS:
     void nodeSetupSetServiceForNodeAddress( QString nodeAdress, int serviceId );
     void nodeSetupResetClientId( );
     void nodeSetupResetOrderId( );
+    void nodeSetupPopulateInvoicesCombo( );
+    void nodeSetupPopulateBurnTxCombo( );
+
     QString nodeSetupCheckInvoiceStatus();
     QString nodeSetupRPCBurnFund( QString collateralAddress, CAmount amount, QString backupAddress );
     int nodeSetupGetBurnAmount();
@@ -112,6 +116,8 @@ public Q_SLOTS:
     QString nodeSetupSendToAddress( QString strAddress, int amount, QTimer* timerConfirms );
     void nodeSetupCheckBurnPrepareConfirmations();
     void nodeSetupCheckBurnSendConfirmations();
+    std::map<std::string, std::string> nodeSetupGetUnusedBurnTxs( );
+    std::map<std::string, int> nodeSetupUsedBurnTxs;
 
 Q_SIGNALS:
 

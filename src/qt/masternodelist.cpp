@@ -440,6 +440,9 @@ void MasternodeList::updateDINList()
         ui->dinTable->setRowCount(mapMynode.size());
         ui->dinTable->setSortingEnabled(true);
 
+        // update used burn tx map
+        nodeSetupUsedBurnTxs.clear();
+
         bool bNeedToQueryAPIServiceId = false;
         int serviceId;
         int k=0;
@@ -466,13 +469,17 @@ void MasternodeList::updateDINList()
                 if (sPeerAddress!="")   {
                     int serviceValue = (bDINNodeAPIUpdate) ? -1 : 0;
                     serviceId = nodeSetupGetServiceForNodeAddress( QString::fromStdString(sPeerAddress) );
-LogPrintf("nodeSetup updateDINList %s, %d, %d\n", sPeerAddress, serviceId, serviceValue );
 
                     if (serviceId==0 || serviceValue==0)   {   // 0 = not checked
                         bNeedToQueryAPIServiceId = true;
                         nodeSetupSetServiceForNodeAddress( QString::fromStdString(sPeerAddress), serviceValue );  // -1 = reset to checked, not queried
                     }
                 }
+
+                // update used burn tx map
+                std::string burnfundTxId = infoInf.vinBurnFund.prevout.ToString();
+LogPrintf("nodeSetup updateDINList %s, %s \n", sPeerAddress, burnfundTxId);
+                nodeSetupUsedBurnTxs.insert( { burnfundTxId, 1  } );
             }
             if(infoInf.nExpireHeight < nCurrentHeight){
                 status="Expired";
@@ -990,6 +997,8 @@ void MasternodeList::nodeSetupInitialize()   {
 #if defined(Q_OS_WIN)
 #else
     ui->comboBilling->setStyle(QStyleFactory::create("Windows"));
+    ui->comboInvoice->setStyle(QStyleFactory::create("Windows"));
+    ui->comboBurnTx->setStyle(QStyleFactory::create("Windows"));
 #endif
 
     // buttons
@@ -1004,6 +1013,7 @@ void MasternodeList::nodeSetupInitialize()   {
     int clientId = nodeSetupGetClientId( email, pass );
     if ( clientId == 0 )    {
         ui->widgetLogin->show();
+        ui->widgetCurrent->hide();
         ui->labelClientId->setText("");
     }
     else {
@@ -1049,6 +1059,7 @@ void MasternodeList::nodeSetupEnableOrderUI( bool bEnable, int orderID , int inv
 void MasternodeList::nodeSetupResetClientId( )  {
     nodeSetupSetClientId( 0 , "", "");
     ui->widgetLogin->show();
+    ui->widgetCurrent->hide();
     ui->labelClientId->setText("");
     ui->btnLogin->setText("Create/Login");
     ui->btnCheck->setEnabled(false);
@@ -1073,12 +1084,37 @@ void MasternodeList::nodeSetupResetOrderId( )   {
 
 void MasternodeList::nodeSetupEnableClientId( int clientId )  {
     ui->widgetLogin->hide();
+    ui->widgetCurrent->show();
     ui->labelClientId->setText("#"+QString::number(clientId));
     ui->btnCheck->setEnabled(true);
     ui->labelMessage->setText("Select a node Tier and then press 'Check' to verify if you meet the prerequisites");
     mClientid = clientId;
     ui->btnLogin->setText("Logout");
+
+    nodeSetupPopulateInvoicesCombo();
+    nodeSetupPopulateBurnTxCombo();
 }
+
+void MasternodeList::nodeSetupPopulateInvoicesCombo( )  {
+    QString email, pass, strError;
+    int clientId = nodeSetupGetClientId( email, pass );
+    std::map<int, std::string> pendingInvoices = nodeSetupAPIListInvoices( email, pass, strError );
+
+    for(auto& itemPair : pendingInvoices)   {
+        ui->comboInvoice->addItem(QString::fromStdString(itemPair.second), QVariant(itemPair.first));
+    }
+}
+
+void MasternodeList::nodeSetupPopulateBurnTxCombo( )  {
+    std::map<std::string, std::string> freeBurnTxs = nodeSetupGetUnusedBurnTxs( );
+
+    ui->comboBurnTx->addItem(tr("<Create new>"),"NEW");
+
+    for(auto& itemPair : freeBurnTxs)   {
+        ui->comboBurnTx->addItem(QString::fromStdString(itemPair.second), QVariant(QString::fromStdString(itemPair.first)));
+    }
+}
+
 
 int MasternodeList::nodeSetupGetBurnAmount()    {
     int nMasternodeBurn = 0;
@@ -1374,8 +1410,57 @@ LogPrintf("nodeSetup::GetInvoice -- %s\n", url.toString().toStdString());
     return ret;
 }
 
+std::map<int,std::string> MasternodeList::nodeSetupAPIListInvoices( QString email, QString password, QString& strError )    {
+    std::map<int,std::string> ret;
+
+    QString Service = QString::fromStdString("ListInvoices");
+    QUrl url( MasternodeList::NODESETUP_ENDPOINT_BASIC );
+    QUrlQuery urlQuery( url );
+    urlQuery.addQueryItem("action", Service);
+    urlQuery.addQueryItem("email", email);
+    urlQuery.addQueryItem("password2", password);
+    url.setQuery( urlQuery );
+
+    QNetworkRequest request( url );
+LogPrintf("nodeSetup::ListInvoices %s \n", url.toString().toStdString());
+    QNetworkReply *reply = ConnectionManager->get(request);
+    QEventLoop loop;
+
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+
+    QByteArray data = reply->readAll();
+    QJsonDocument json = QJsonDocument::fromJson(data);
+    QJsonObject root = json.object();
+
+    if ( root.contains("result") && root["result"]=="success" && root.contains("invoices") ) {
+        QJsonArray jsonArray = root["invoices"].toObject()["invoice"].toArray();
+        for (const QJsonValue & value : jsonArray) {
+            QJsonObject obj = value.toObject();
+            int invoiceId = obj["id"].toInt();
+            QString status = obj["status"].toString();
+            QString total = obj["total"].toString() + " " + obj["currencycode"].toString();
+            QString duedate = obj["duedate"].toString();
+LogPrintf("nodeSetupAPIListInvoices %d, %s, %s \n",invoiceId, status.toStdString(), duedate.toStdString() );
+            if ( status == "Unpaid" )   {
+                QString description = "#" + QString::number(invoiceId) + " " + duedate + " (" + total + " )";
+                ret.insert( { invoiceId , description.toStdString() } );
+            }
+        }
+    }
+    else    {
+        if ( root.contains("message") )    {
+            strError = root["message"].toString();
+        }
+        else    {
+            strError = "ERROR API ListInvoices";
+        }
+    }
+
+    return ret;
+}
+
 QJsonObject MasternodeList::nodeSetupAPIInfo( int serviceid, int clientid, QString email, QString password, QString& strError )  {
-    QJsonObject ret;
 
     QString Service = QString::fromStdString("info");
     QUrl url( MasternodeList::NODESETUP_ENDPOINT_NODE );
@@ -1484,6 +1569,73 @@ LogPrintf("nodeSetup::Info -- %s\n", url.toString().toStdString());
     return root;
 }
 
+// facilitate reusing burn txs and migration from VPS hosting to nodeSetup hosting
+// pick only burn txs less than 1yr old, and not in use by any "ready" DIN node.
+std::map<std::string, std::string> MasternodeList::nodeSetupGetUnusedBurnTxs( ) {
+
+    std::map<std::string, std::string> ret;
+
+    CAmount nFee;
+    std::string strSentAccount;
+    std::list<COutputEntry> listReceived;
+    std::list<COutputEntry> listSent;
+    isminefilter filter = ISMINE_SPENDABLE;
+
+    std::vector<std::shared_ptr<CWallet>> wallets = GetWallets();
+    CWallet * const pwallet = (wallets.size() > 0) ? wallets[0].get() : nullptr;
+
+    if (pwallet==nullptr)   return ret;
+
+    LOCK2(cs_main, pwallet->cs_wallet);
+
+    const CWallet::TxItems & txOrdered = pwallet->wtxOrdered;
+
+    // iterate backwards until we reach >1 yr to return:
+    for (CWallet::TxItems::const_reverse_iterator it = txOrdered.rbegin(); it != txOrdered.rend(); ++it)
+    {
+        CWalletTx *const pwtx = (*it).second.first;
+        if (pwtx == nullptr)    continue;
+
+        int confirms = pwtx->GetDepthInMainChain(false);
+        if (confirms>720*365)   break;  // expired
+
+        pwtx->GetAmounts(listReceived, listSent, nFee, strSentAccount, filter);
+        for (const COutputEntry& s : listSent)
+        {
+            std::string destAddress="";
+            if (IsValidDestination(s.destination)) {
+                destAddress = EncodeDestination(s.destination);
+            }
+            std::string txHash = pwtx->GetHash().GetHex();
+LogPrintf("nodeSetupGetUnusedBurnTxs %s, %d, %s \n",destAddress,confirms, txHash);
+            if (destAddress == Params().GetConsensus().cBurnAddress && confirms<720*365 && nodeSetupUsedBurnTxs.find(txHash) == nodeSetupUsedBurnTxs.end() )  {
+
+                std::string description = "";
+                std::string strNodeType = "";
+                CAmount roundAmount = ((int)(s.amount / COIN)+1);
+
+                if ( roundAmount == Params().GetConsensus().nMasternodeBurnSINNODE_1 )  {
+                    strNodeType = "LIL";
+                }
+                else if ( roundAmount == Params().GetConsensus().nMasternodeBurnSINNODE_5 )  {
+                    strNodeType = "MID";
+                }
+                else if ( roundAmount == Params().GetConsensus().nMasternodeBurnSINNODE_10 )  {
+                    strNodeType = "BIG";
+                }
+                else    {
+                    strNodeType = "Unknown";
+                }
+
+                description = strNodeType + " " + GUIUtil::dateTimeStr(pwtx->GetTxTime()).toUtf8().constData();
+LogPrintf("nodeSetupGetUnusedBurnTxs  confirmed %s, %d, %s \n", pwtx->GetHash().GetHex(), roundAmount, description);
+                ret.insert( { txHash,  description} );
+            }
+        }
+    }
+
+    return ret;
+}
 
 void MasternodeList::nodeSetupStep( std::string icon , std::string text )   {
 

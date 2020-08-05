@@ -52,7 +52,7 @@ width: 150px;
      <item>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>3</number>
        </property>
        <widget class="QWidget" name="tabMyMasternodes">
         <attribute name="title">
@@ -776,51 +776,51 @@ width: 150px;
             <x>0</x>
             <y>0</y>
             <width>241</width>
-            <height>120</height>
+            <height>136</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_4">
-           <item row="2" column="1">
-            <widget class="QLineEdit" name="txtLastName"/>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="labelFirstName">
-             <property name="text">
-              <string>First Name</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="labelLastName">
-             <property name="text">
-              <string>Last Name</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLineEdit" name="txtFirstName"/>
-           </item>
-           <item row="4" column="1">
-            <widget class="QLineEdit" name="txtPassword">
-             <property name="echoMode">
-              <enum>QLineEdit::Password</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLineEdit" name="txtEmail"/>
-           </item>
-           <item row="3" column="0">
+           <item row="4" column="0">
             <widget class="QLabel" name="labelEmail">
              <property name="text">
               <string>Email:</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
+           <item row="5" column="0">
             <widget class="QLabel" name="labelPassword">
              <property name="text">
               <string>Passsword:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="txtLastName"/>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLineEdit" name="txtPassword">
+             <property name="echoMode">
+              <enum>QLineEdit::Password</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="txtFirstName"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="labelLastName">
+             <property name="text">
+              <string>Last Name</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="txtEmail"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelFirstName">
+             <property name="text">
+              <string>First Name</string>
              </property>
             </widget>
            </item>
@@ -876,7 +876,7 @@ width: 150px;
           <rect>
            <x>470</x>
            <y>30</y>
-           <width>242</width>
+           <width>253</width>
            <height>31</height>
           </rect>
          </property>
@@ -935,6 +935,61 @@ width: 150px;
             <property name="text">
              <string>#12</string>
             </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="horizontalLayoutWidget_5">
+         <property name="geometry">
+          <rect>
+           <x>470</x>
+           <y>60</y>
+           <width>241</width>
+           <height>111</height>
+          </rect>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <item>
+           <widget class="QWidget" name="widgetCurrent" native="true">
+            <widget class="QWidget" name="gridLayoutWidget_3">
+             <property name="geometry">
+              <rect>
+               <x>-1</x>
+               <y>-1</y>
+               <width>241</width>
+               <height>111</height>
+              </rect>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_5">
+              <item row="0" column="1">
+               <widget class="QComboBox" name="comboInvoice"/>
+              </item>
+              <item row="0" column="2">
+               <widget class="QPushButton" name="payButton">
+                <property name="text">
+                 <string>Pay</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="labelInvoicePending">
+                <property name="text">
+                 <string>Pending:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="labelBurns">
+                <property name="text">
+                 <string>Burn Txs:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1" colspan="2">
+               <widget class="QComboBox" name="comboBurnTx"/>
+              </item>
+             </layout>
+            </widget>
            </widget>
           </item>
          </layout>
