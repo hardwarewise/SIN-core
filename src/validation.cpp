@@ -48,6 +48,7 @@
 #include <masternodeman.h>
 #include <masternode-payments.h>
 #include <infinitynodelockreward.h>
+#include <infinitynodelockinfo.h>
 
 #include <future>
 #include <sstream>
@@ -2516,6 +2517,14 @@ bool CChainState::DisconnectTip(CValidationState& state, const CChainParams& cha
         assert(view.GetBestBlock() == pindexDelete->GetBlockHash());
         if (DisconnectBlock(block, pindexDelete, view) != DISCONNECT_OK)
             return error("DisconnectTip(): DisconnectBlock %s failed", pindexDelete->GetBlockHash().ToString());
+        //SIN
+        std::vector<CLockRewardExtractInfo> vecLockRewardRet;
+        infnodelrinfo.ExtractLRFromBlock(block, pindexDelete, view, chainparams, vecLockRewardRet);
+        for (auto& v : vecLockRewardRet) {
+            infnodelrinfo.Remove(v);
+        }
+        infnodeman.removeNonMaturedList(pindexDelete);
+        //
         bool flushed = view.Flush();
         assert(flushed);
     }
@@ -2644,9 +2653,23 @@ bool CChainState::ConnectTip(CValidationState& state, const CChainParams& chainp
     LogPrint(BCLog::BENCH, "  - Load block from disk: %.2fms [%.2fs]\n", (nTime2 - nTime1) * MILLI, nTimeReadFromDisk * MICRO);
     {
         CCoinsViewCache view(pcoinsTip.get());
+        //SIN
+        std::vector<CLockRewardExtractInfo> vecLockRewardRet;
+        infnodelrinfo.ExtractLRFromBlock(blockConnecting, pindexNew, view, chainparams, vecLockRewardRet);
+        infnodeman.buildNonMaturedListFromBlock(blockConnecting, pindexNew, view, chainparams);
+        //
         bool rv = ConnectBlock(blockConnecting, state, pindexNew, view, chainparams);
+        //SIN
+        if (rv) {
+            for (auto& v : vecLockRewardRet) {
+                infnodelrinfo.Add(v);
+            }
+            infnodeman.updateFinalList(pindexNew);
+        }
+        //
         GetMainSignals().BlockChecked(blockConnecting, state);
         if (!rv) {
+            infnodeman.removeNonMaturedList(pindexNew);
             if (state.IsInvalid())
                 InvalidBlockFound(pindexNew, state);
             return error("ConnectTip(): ConnectBlock %s failed", pindexNew->GetBlockHash().ToString());
@@ -2674,27 +2697,6 @@ bool CChainState::ConnectTip(CValidationState& state, const CChainParams& chainp
     int64_t nTime6 = GetTimeMicros(); nTimePostConnect += nTime6 - nTime5; nTimeTotal += nTime6 - nTime1;
     LogPrint(BCLog::BENCH, "  - Connect postprocess: %.2fms [%.2fs (%.2fms/blk)]\n", (nTime6 - nTime5) * MILLI, nTimePostConnect * MICRO, nTimePostConnect * MILLI / nBlocksTotal);
     LogPrint(BCLog::BENCH, "- Connect block: %.2fms [%.2fs (%.2fms/blk)]\n", (nTime6 - nTime1) * MILLI, nTimeTotal * MICRO, nTimeTotal * MILLI / nBlocksTotal);
-
-    // update our DIN info for each new block
-    LOCK(cs_main);
-    infnodeman.UpdatedBlockTip(pindexNew);
-    if (infnodeman.updateInfinitynodeList(pindexNew->nHeight)){
-            bool updateStm = infnodeman.deterministicRewardStatement(10) &&
-                             infnodeman.deterministicRewardStatement(5) &&
-                             infnodeman.deterministicRewardStatement(1);
-            if (updateStm){
-                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm status: %d\n",updateStm);
-                infnodeman.calculAllInfinityNodesRankAtLastStm();
-                infnodeman.updateLastStmHeightAndSize(pindexNew->nHeight, 10);
-                infnodeman.updateLastStmHeightAndSize(pindexNew->nHeight, 5);
-                infnodeman.updateLastStmHeightAndSize(pindexNew->nHeight, 1);
-            } else {
-                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm false\n");
-            }
-    } else {
-        LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- Cannot update DIN info\n");
-    }
-
     connectTrace.BlockConnected(pindexNew, std::move(pthisBlock));
     return true;
 }
