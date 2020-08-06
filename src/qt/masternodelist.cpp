@@ -113,11 +113,11 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
 
     ui->dinTable->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    QAction *checkNodeAction = new QAction(tr("Check node status"), this);
+    mCheckNodeAction = new QAction(tr("Check node status"), this);
     contextDINMenu = new QMenu();
-    contextDINMenu->addAction(checkNodeAction);
+    contextDINMenu->addAction(mCheckNodeAction);
     connect(ui->dinTable, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextDINMenu(const QPoint&)));
-    connect(checkNodeAction, SIGNAL(triggered()), this, SLOT(on_checkDINNode()));
+    connect(mCheckNodeAction, SIGNAL(triggered()), this, SLOT(on_checkDINNode()));
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateNodeList()));
@@ -152,6 +152,7 @@ MasternodeList::~MasternodeList()
 {
     delete ui;
     delete ConnectionManager;
+    delete mCheckNodeAction;
 }
 
 void MasternodeList::setClientModel(ClientModel *model)
@@ -511,6 +512,8 @@ LogPrintf("nodeSetupGetUnusedBurnTxs updateDINList %s, %s \n", sPeerAddress, bur
                 nodeSetupAPINodeList( email, pass, strError );
             }
         }
+        // use as nodeSetup combo refresh too
+        nodeSetupPopulateInvoicesCombo();
         nodeSetupPopulateBurnTxCombo();
     }
 }
@@ -615,6 +618,7 @@ void MasternodeList::on_checkDINNode()
         msg.exec();
     }
     else    {
+        mCheckNodeAction->setEnabled(false);
         int serviceId = nodeSetupGetServiceForNodeAddress( strAddress );
         if (serviceId > 0)    {
             QString email, pass, strError;
@@ -637,10 +641,9 @@ void MasternodeList::on_checkDINNode()
             msg.setText("Could not recover node's service ID\nPlease log in with your user email and password in the Node Setup tab");
             msg.exec();
         }
+        mCheckNodeAction->setEnabled(true);
     }
-
 }
-
 
 // nodeSetup buttons
 void MasternodeList::on_btnCheck_clicked()
@@ -652,7 +655,7 @@ void MasternodeList::on_btnCheck_clicked()
     }
 
     // TODO continue
-    ui->labelMessage->setText("You passed all checks. Please select a billing period and press Setup to continue.");
+    ui->labelMessage->setText("You passed all checks. Please select a billing period and press Place Order to continue.");
     ui->btnSetup->setEnabled(true);
     return;
 }
@@ -687,6 +690,23 @@ void MasternodeList::on_btnSetup_clicked()
     else    {
         ui->labelMessage->setText(strError);
     }
+}
+
+void MasternodeList::on_payButton_clicked()
+{
+     int invoiceToPay = ui->comboInvoice->currentData().toInt();
+     QString strAmount, strStatus, paymentAddress, strError;
+
+     if (invoiceToPay>0)    {
+        nodeSetupAPIGetInvoice( invoiceToPay, strAmount, strStatus, paymentAddress, strError );
+        CAmount invoiceAmount = strAmount.toDouble();
+         if ( strStatus == "Unpaid" )  {
+             QString paymentTx = nodeSetupSendToAddress( paymentAddress, invoiceAmount, NULL );
+             if ( paymentTx != "" ) {
+                 ui->labelMessage->setText( "Pending Invoice Payment finished, please wait for confirmations." );
+             }
+         }
+     }
 }
 
 QString MasternodeList::nodeSetupGetNewAddress()    {
@@ -724,7 +744,7 @@ QString MasternodeList::nodeSetupSendToAddress( QString strAddress, int amount, 
     } catch (UniValue& objError ) {
         QString errMessage = QString::fromStdString(find_value(objError, "message").get_str());
         if ( errMessage.contains("walletpassphrase") )  {
-            QMessageBox::warning(this, "Please Unlock Wallet", "In order to pay the invoice, please unlock your wallet and retry", QMessageBox::Ok, QMessageBox::Ok);
+            QMessageBox::warning(this, "Please Unlock Wallet", "In order to make payments, please unlock your wallet and retry", QMessageBox::Ok, QMessageBox::Ok);
         }
 
         ui->labelMessage->setText( QString::fromStdString(find_value(objError, "message").get_str()) );
@@ -776,6 +796,20 @@ LogPrintf("nodeSetupCheckInvoiceStatus %s \n", mPaymentTx.toStdString() );
         else    {
 LogPrintf("nodeSetupCheckInvoiceStatus no txID \n");
             nodeSetupStep( "setupWait", "Paying invoice");
+            // Display message box
+            QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm Invoice Payment"),
+                "Are you sure you want to pay " + QString::number(invoiceAmount) + " SIN?",
+                QMessageBox::Yes | QMessageBox::Cancel,
+                QMessageBox::Cancel);
+
+            if(retval != QMessageBox::Yes)  {
+                invoiceTimer->stop();
+                ui->btnSetup->setEnabled(true);
+                ui->btnSetupReset->setEnabled(true);
+                ui->labelMessage->setText( "Press Reset Order button to cancel node setup process, or Continue Order button to resume." );
+                return "cancelled";
+            }
+
             mPaymentTx = nodeSetupSendToAddress( paymentAddress, invoiceAmount, invoiceTimer );
             if ( mPaymentTx != "" ) {
                 nodeSetupSetPaymentTx(mPaymentTx);
@@ -1101,14 +1135,29 @@ void MasternodeList::nodeSetupPopulateInvoicesCombo( )  {
     int clientId = nodeSetupGetClientId( email, pass );
     std::map<int, std::string> pendingInvoices = nodeSetupAPIListInvoices( email, pass, strError );
 
+    // preserve previous selection before clearing
+    int invoiceToPay = ui->comboInvoice->currentData().toInt();
     ui->comboInvoice->clear();
+
+    // populate
     for(auto& itemPair : pendingInvoices)   {
-        ui->comboInvoice->addItem(QString::fromStdString(itemPair.second), QVariant(itemPair.first));
+        if (mInvoiceid!=itemPair.first) {       // discard current setup invoice from pending invoices combo
+            ui->comboInvoice->addItem(QString::fromStdString(itemPair.second), QVariant(itemPair.first));
+        }
+    }
+
+    // restore selection (if still exists)
+    int index = ui->comboInvoice->findData(invoiceToPay);
+    if ( index != -1 ) { // -1 for not found
+       ui->comboInvoice->setCurrentIndex(index);
     }
 }
 
 void MasternodeList::nodeSetupPopulateBurnTxCombo( )  {
     std::map<std::string, std::string> freeBurnTxs = nodeSetupGetUnusedBurnTxs( );
+
+    // preserve previous selection before clearing
+    QString burnTxSelection = ui->comboBurnTx->currentData().toString();
 
     ui->comboBurnTx->clear();
     ui->comboBurnTx->addItem(tr("<Create new>"),"NEW");
@@ -1116,6 +1165,13 @@ void MasternodeList::nodeSetupPopulateBurnTxCombo( )  {
     for(auto& itemPair : freeBurnTxs)   {
         ui->comboBurnTx->addItem(QString::fromStdString(itemPair.second), QVariant(QString::fromStdString(itemPair.first)));
     }
+
+    // restore selection (if still exists)
+    int index = ui->comboBurnTx->findData(burnTxSelection);
+    if ( index != -1 ) { // -1 for not found
+       ui->comboBurnTx->setCurrentIndex(index);
+    }
+
 }
 
 int MasternodeList::nodeSetupGetBurnAmount()    {

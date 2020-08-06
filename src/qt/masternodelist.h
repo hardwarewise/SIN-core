@@ -152,7 +152,7 @@ private:
     QString mBurnTx;
     QString mProductIds;
     std::string billingOptions[3] = {"Monthly", "Semiannually", "Annually"};
-
+    QAction *mCheckNodeAction;
 
 private Q_SLOTS:
     void showContextMenu(const QPoint &);
@@ -164,6 +164,7 @@ private Q_SLOTS:
     void on_tableWidgetMyMasternodes_itemSelectionChanged();
     void on_UpdateButton_clicked();
     void on_checkDINNode();
+    void on_payButton_clicked();
 
     // node setup
     void on_btnSetup_clicked();
