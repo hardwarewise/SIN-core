@@ -477,8 +477,8 @@ void MasternodeList::updateDINList()
                 }
 
                 // update used burn tx map
-                std::string burnfundTxId = infoInf.vinBurnFund.prevout.ToString();
-LogPrintf("nodeSetup updateDINList %s, %s \n", sPeerAddress, burnfundTxId);
+                std::string burnfundTxId = infoInf.vinBurnFund.prevout.hash.ToString().substr(0, 16);
+LogPrintf("nodeSetupGetUnusedBurnTxs updateDINList %s, %s \n", sPeerAddress, burnfundTxId);
                 nodeSetupUsedBurnTxs.insert( { burnfundTxId, 1  } );
             }
             if(infoInf.nExpireHeight < nCurrentHeight){
@@ -508,11 +508,11 @@ LogPrintf("nodeSetup updateDINList %s, %s \n", sPeerAddress, burnfundTxId);
         if (bNeedToQueryAPIServiceId)   {
             QString email, pass, strError;
             int clientId = nodeSetupGetClientId( email, pass );
-LogPrintf("nodeSetup bNeedToQueryAPIServiceId %d\n", clientId );
             if (clientId>0) {
                 nodeSetupAPINodeList( email, pass, strError );
             }
         }
+        nodeSetupPopulateBurnTxCombo();
     }
 }
 
@@ -797,6 +797,10 @@ LogPrintf("nodeSetupCheckInvoiceStatus Invoice Paid \n");
         QString strPrivateKey, strPublicKey, strDecodePublicKey, strAddress, strNodeIp;
 
         mBurnTx = nodeSetupGetBurnTx();
+        QString strSelectedBurnTx = ui->comboBurnTx->currentData().toString();
+
+        if ( mBurnTx=="" && strSelectedBurnTx!="NEW")   mBurnTx = strSelectedBurnTx;
+
         if ( mBurnTx!="" )   {   // skip to check burn tx
             if ( !burnSendTimer->isActive() )  {
                 burnSendTimer->start(20000);    // check every 20 secs
@@ -822,7 +826,6 @@ void MasternodeList::nodeSetupCheckBurnPrepareConfirmations()   {
 
     UniValue objConfirms = nodeSetupGetTxInfo( mBurnPrepareTx, "confirmations" );
     int numConfirms = objConfirms.get_int();
-LogPrintf("nodeSetupCheckBurnPrepareConfirmations waiting confirms %d \n", numConfirms);
     if ( numConfirms>NODESETUP_CONFIRMS )    {
         nodeSetupStep( "setupOk", "Sending burn transaction");
         burnPrepareTimer->stop();
@@ -852,7 +855,6 @@ void MasternodeList::nodeSetupCheckBurnSendConfirmations()   {
 
     UniValue objConfirms = nodeSetupGetTxInfo( mBurnTx, "confirmations" );
     int numConfirms = objConfirms.get_int();
-LogPrintf("nodeSetupCheckBurnSendConfirmations waiting confirms %d \n", numConfirms);
     if ( numConfirms>NODESETUP_CONFIRMS )    {
         nodeSetupStep( "setupKo", "Finishing node setup");
         burnSendTimer->stop();
@@ -1092,7 +1094,7 @@ void MasternodeList::nodeSetupEnableClientId( int clientId )  {
     ui->btnLogin->setText("Logout");
 
     nodeSetupPopulateInvoicesCombo();
-    nodeSetupPopulateBurnTxCombo();
+    ui->comboBurnTx->addItem(tr("Loading node data..."),"WAIT");
 }
 
 void MasternodeList::nodeSetupPopulateInvoicesCombo( )  {
@@ -1100,6 +1102,7 @@ void MasternodeList::nodeSetupPopulateInvoicesCombo( )  {
     int clientId = nodeSetupGetClientId( email, pass );
     std::map<int, std::string> pendingInvoices = nodeSetupAPIListInvoices( email, pass, strError );
 
+    ui->comboInvoice->clear();
     for(auto& itemPair : pendingInvoices)   {
         ui->comboInvoice->addItem(QString::fromStdString(itemPair.second), QVariant(itemPair.first));
     }
@@ -1108,6 +1111,7 @@ void MasternodeList::nodeSetupPopulateInvoicesCombo( )  {
 void MasternodeList::nodeSetupPopulateBurnTxCombo( )  {
     std::map<std::string, std::string> freeBurnTxs = nodeSetupGetUnusedBurnTxs( );
 
+    ui->comboBurnTx->clear();
     ui->comboBurnTx->addItem(tr("<Create new>"),"NEW");
 
     for(auto& itemPair : freeBurnTxs)   {
@@ -1607,8 +1611,7 @@ std::map<std::string, std::string> MasternodeList::nodeSetupGetUnusedBurnTxs( ) 
                 destAddress = EncodeDestination(s.destination);
             }
             std::string txHash = pwtx->GetHash().GetHex();
-LogPrintf("nodeSetupGetUnusedBurnTxs %s, %d, %s \n",destAddress,confirms, txHash);
-            if (destAddress == Params().GetConsensus().cBurnAddress && confirms<720*365 && nodeSetupUsedBurnTxs.find(txHash) == nodeSetupUsedBurnTxs.end() )  {
+            if (destAddress == Params().GetConsensus().cBurnAddress && confirms<720*365 && nodeSetupUsedBurnTxs.find(txHash.substr(0, 16)) == nodeSetupUsedBurnTxs.end() )  {
 
                 std::string description = "";
                 std::string strNodeType = "";
@@ -1628,7 +1631,7 @@ LogPrintf("nodeSetupGetUnusedBurnTxs %s, %d, %s \n",destAddress,confirms, txHash
                 }
 
                 description = strNodeType + " " + GUIUtil::dateTimeStr(pwtx->GetTxTime()).toUtf8().constData();
-LogPrintf("nodeSetupGetUnusedBurnTxs  confirmed %s, %d, %s \n", pwtx->GetHash().GetHex(), roundAmount, description);
+LogPrintf("nodeSetupGetUnusedBurnTxs  confirmed %s, %d, %s \n", txHash.substr(0, 16), roundAmount, description);
                 ret.insert( { txHash,  description} );
             }
         }

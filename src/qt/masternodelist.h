@@ -117,7 +117,6 @@ public Q_SLOTS:
     void nodeSetupCheckBurnPrepareConfirmations();
     void nodeSetupCheckBurnSendConfirmations();
     std::map<std::string, std::string> nodeSetupGetUnusedBurnTxs( );
-    std::map<std::string, int> nodeSetupUsedBurnTxs;
 
 Q_SIGNALS:
 
@@ -146,6 +145,7 @@ private:
     QString NODESETUP_PID;
     int NODESETUP_CONFIRMS;
     int mClientid, mOrderid, mInvoiceid, mServiceId;
+    std::map<std::string, int> nodeSetupUsedBurnTxs;
     QString mPaymentTx;
     QString mBurnPrepareTx;
     QString mBurnAddress;
