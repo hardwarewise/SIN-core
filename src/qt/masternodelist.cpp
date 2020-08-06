@@ -475,7 +475,6 @@ void MasternodeList::updateDINList()
                         nodeSetupSetServiceForNodeAddress( QString::fromStdString(sPeerAddress), serviceValue );  // -1 = reset to checked, not queried
                     }
                 }
-
                 // update used burn tx map
                 std::string burnfundTxId = infoInf.vinBurnFund.prevout.hash.ToString().substr(0, 16);
 LogPrintf("nodeSetupGetUnusedBurnTxs updateDINList %s, %s \n", sPeerAddress, burnfundTxId);
@@ -1118,7 +1117,6 @@ void MasternodeList::nodeSetupPopulateBurnTxCombo( )  {
         ui->comboBurnTx->addItem(QString::fromStdString(itemPair.second), QVariant(QString::fromStdString(itemPair.first)));
     }
 }
-
 
 int MasternodeList::nodeSetupGetBurnAmount()    {
     int nMasternodeBurn = 0;
