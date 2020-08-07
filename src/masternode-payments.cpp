@@ -147,7 +147,7 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
     } else {
         //not mainnet
         // accept all block inferieur than 93000 = fork height in testnet
-        if(nBlockHeight < 93000){
+        if(nBlockHeight < 93022){
             LogPrintf("IsBlockPayeeValid -- accept all Coinbase Tx before simulation hardfork\n");
             return true;
         }
@@ -158,7 +158,10 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
 
         //extract LockReward
         std::vector<CLockRewardExtractInfo> vecLockRewardRet;
-        infnodeman.getLRForHeight(nBlockHeight-1, vecLockRewardRet);
+        if (!infnodeman.getLRForHeight(nBlockHeight-1, vecLockRewardRet)) {
+            LogPrintf("IsBlockPayeeValid -- use externe LR database\n");
+            infnodelrinfo.getLRInfo(nBlockHeight, vecLockRewardRet);
+        }
         LogPrintf("IsBlockPayeeValid -- LR size: %d\n", (int) vecLockRewardRet.size());
 
         int txIndex = 0;
@@ -205,12 +208,12 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
                                 }
 
                                 bool fLRSenderCheck = false;
-
+                                CScript senderScript;
                                 for(auto& vhisto : meta.getHistory()){
                                     std::vector<unsigned char> tx_data = DecodeBase64(vhisto.pubkeyHisto.c_str());
                                     CPubKey pubKey(tx_data.begin(), tx_data.end());
                                     CTxDestination nodeDest = GetDestinationForKey(pubKey, OutputType::LEGACY);
-                                    CScript senderScript = GetScriptForDestination(nodeDest);
+                                    senderScript = GetScriptForDestination(nodeDest);
                                     if(v.scriptPubKey == senderScript){
                                         fLRSenderCheck = true;
                                         break;
@@ -221,6 +224,7 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
                                     LogPrintf("IsBlockPayeeValid -- VALID tx out: %d, LockReward for SINtype: %d, address: %d\n", txIndex, SINType, addressTxDIN2);
                                     fCandidateValid = true;
                                 } else {
+                                    LogPrintf("IsBlockPayeeValid -- %s <<<<>>>> %s\n", ScriptToAsmStr(v.scriptPubKey), ScriptToAsmStr(senderScript));
                                     LogPrintf("IsBlockPayeeValid -- Found LR, but sender is NOT VALID\n");
                                 }
                             } else {
@@ -285,7 +289,10 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
     } else {
         //not mainnet
         std::vector<CLockRewardExtractInfo> vecLockRewardRet;
-        infnodeman.getLRForHeight(nBlockHeight - 1, vecLockRewardRet);
+        if (!infnodeman.getLRForHeight(nBlockHeight-1, vecLockRewardRet)) {
+            LogPrintf("IsBlockPayeeValid -- use externe LR database\n");
+            infnodelrinfo.getLRInfo(nBlockHeight, vecLockRewardRet);
+        }
 
         CScript DINPayee;
         CInfinitynode infOwner;

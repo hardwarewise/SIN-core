@@ -6,17 +6,17 @@
 #define SIN_INFINITYNODEMAN_H
 
 #include <infinitynode.h>
-
+#include <infinitynodelockinfo.h>
 
 
 using namespace std;
 
 class CInfinitynodeMan;
-class CLockRewardExtractInfo;
+//class CLockRewardExtractInfo;
 class CConnman;
 
 extern CInfinitynodeMan infnodeman;
-
+/*
 class CLockRewardExtractInfo
 {
 public:
@@ -35,7 +35,7 @@ public:
     sLRInfo(sInfo)
     {}
 };
-
+*/
 class CInfinitynodeMan
 {
 public:
@@ -96,6 +96,7 @@ public:
         }
 
         READWRITE(mapInfinitynodes);
+        READWRITE(mapInfinitynodesNonMatured);
         READWRITE(mapLastPaid);
         READWRITE(nLastScanHeight);
         READWRITE(mapStatementBIG);
@@ -161,10 +162,16 @@ public:
     std::map<CScript, int> GetFullLastPaidMap() { return mapLastPaid; }
     int64_t getLastScan(){return nLastScanHeight;}
     int64_t getLastScanWithLimit(){return nLastScanHeight/* + INF_MATURED_LIMIT*/;} // We'll need to move this to functions who actually use it and match it with our max reorg depth
-    //DIN map
+    //build DIN map by scan from nBlockHeight to nLowHeight
     bool buildInfinitynodeList(int nBlockHeight, int nLowHeight = 0, bool fWriteDisk = false); /* init this to zero for better compat with regtest/testnet/devnets */
     bool buildInfinitynodeListRPC(int nBlockHeight, int nLowHeight = 0); /* exposes cs to RPC indirectly */
-    bool buildListForBlock(int nBlockHeight);
+
+    //build DIN map immediate when connect block
+    bool buildNonMaturedListFromBlock(const CBlock& block, CBlockIndex* pindex,
+                  CCoinsViewCache& view, const CChainParams& chainparams); //call in validation.cpp
+    bool updateFinalList(CBlockIndex* pindex); // call when block is valid
+    bool removeNonMaturedList(CBlockIndex* pindex); //call when block is invalid or disconnect
+
     void updateLastPaid();
     bool updateInfinitynodeList(int fromHeight);//call in init.cppp
     bool initialInfinitynodeList(int fromHeight);//call in init.cpp

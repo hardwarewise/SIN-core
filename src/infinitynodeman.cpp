@@ -182,6 +182,199 @@ int CInfinitynodeMan::getRoi(int nSinType, int totalNode)
     return (int) roi;
 }
 
+//pindex->nHeight is a new block. But we build list only for matured block (sup than limit reorg)
+bool CInfinitynodeMan::buildNonMaturedListFromBlock(const CBlock& block, CBlockIndex* pindex,
+                  CCoinsViewCache& view, const CChainParams& chainparams)
+{
+
+    if (Params().NetworkIDString() == CBaseChainParams::MAIN) {
+        if(pindex->nHeight < Params().GetConsensus().nInfinityNodeBeginHeight){
+            mapInfinitynodesNonMatured.clear();
+            return true;
+        }
+    } else {
+        if (pindex->nHeight <= 1) {
+            mapInfinitynodesNonMatured.clear();
+        }
+    }
+
+    LOCK(cs);
+
+    //update NON matured map
+    for (unsigned int i = 0; i < block.vtx.size(); i++) {
+        const CTransaction &tx = *(block.vtx[i]);
+        //Not coinbase
+        if (!tx.IsCoinBase()) {
+                for (unsigned int i = 0; i < tx.vout.size(); i++) {
+                        const CTxOut& out = tx.vout[i];
+                        std::vector<std::vector<unsigned char>> vSolutions;
+                        txnouttype whichType;
+                        const CScript& prevScript = out.scriptPubKey;
+                        Solver(prevScript, whichType, vSolutions);
+                        //Send to BurnAddress
+                        if (whichType == TX_BURN_DATA && Params().GetConsensus().cBurnAddress == EncodeDestination(CKeyID(uint160(vSolutions[0]))))
+                        {
+                            //Amount for InfnityNode
+                            if (
+                            ((Params().GetConsensus().nMasternodeBurnSINNODE_1 - 1) * COIN < out.nValue && out.nValue <= Params().GetConsensus().nMasternodeBurnSINNODE_1 * COIN) ||
+                            ((Params().GetConsensus().nMasternodeBurnSINNODE_5 - 1) * COIN < out.nValue && out.nValue <= Params().GetConsensus().nMasternodeBurnSINNODE_5 * COIN) ||
+                            ((Params().GetConsensus().nMasternodeBurnSINNODE_10 - 1) * COIN < out.nValue && out.nValue <= Params().GetConsensus().nMasternodeBurnSINNODE_10 * COIN)
+                            ) {
+                                COutPoint outpoint(tx.GetHash(), i);
+                                CInfinitynode inf(PROTOCOL_VERSION, outpoint);
+                                inf.setHeight(pindex->nHeight);
+                                inf.setBurnValue(out.nValue);
+
+                                if (vSolutions.size() == 2){
+                                    std::string backupAddress(vSolutions[1].begin(), vSolutions[1].end());
+                                    CTxDestination NodeAddress = DecodeDestination(backupAddress);
+                                    if (IsValidDestination(NodeAddress)) {
+                                        inf.setBackupAddress(backupAddress);
+                                    }
+                                }
+                                //SINType
+                                CAmount nBurnAmount = out.nValue / COIN + 1; //automaticaly round
+                                inf.setSINType(nBurnAmount / 100000);
+
+                                //Address payee: we known that there is only 1 input
+                                const Coin& coin = view.AccessCoin(tx.vin[0].prevout);
+
+                                CTxDestination addressBurnFund;
+                                if(!ExtractDestination(coin.out.scriptPubKey, addressBurnFund)){
+                                    LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- False when extract payee from BurnFund tx.\n");
+                                    return false;
+                                }
+
+                                inf.setCollateralAddress(EncodeDestination(addressBurnFund));
+                                inf.setScriptPublicKey(coin.out.scriptPubKey);
+
+                                //we have all infos. Then add in mapNonMatured
+                                if (mapInfinitynodesNonMatured.find(inf.vinBurnFund.prevout) != mapInfinitynodesNonMatured.end()) {
+                                    //exist
+                                    continue;
+                                } else {
+                                    //non existe
+                                    mapInfinitynodesNonMatured[inf.vinBurnFund.prevout] = inf;
+                                }
+                            }
+                        }
+                        //Amount to update Metadata
+                        if (whichType == TX_BURN_DATA && Params().GetConsensus().cMetadataAddress == EncodeDestination(CKeyID(uint160(vSolutions[0]))))
+                        {
+                            //Amount for UpdateMeta
+                            if ((Params().GetConsensus().nInfinityNodeUpdateMeta - 1) * COIN <= out.nValue && out.nValue <= (Params().GetConsensus().nInfinityNodeUpdateMeta) * COIN) {
+                                if (vSolutions.size() == 2) {
+                                    std::string metadata(vSolutions[1].begin(), vSolutions[1].end());
+                                    string s;
+                                    stringstream ss(metadata);
+                                    int i=0;
+                                    int check=0;
+                                    std::string publicKeyString;
+                                    CService service;
+                                    std::string burnTxID;
+                                    while (getline(ss, s,';')) {
+                                        CTxDestination NodeAddress;
+                                        //1st position: Node Address
+                                        if (i==0) {
+                                            publicKeyString = s;
+                                            std::vector<unsigned char> tx_data = DecodeBase64(publicKeyString.c_str());
+                                            CPubKey decodePubKey(tx_data.begin(), tx_data.end());
+                                            if (decodePubKey.IsValid()) {check++;}
+                                        }
+                                        if (Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+                                            //2nd position: Node IP
+                                            if (i==1 && Lookup(s.c_str(), service, 0, false)) {
+                                                check++;
+                                            }
+                                        } else {
+                                            //lets INs run on 127.0.0.1 only on REGTEST
+                                            check++;
+                                        }
+                                        //3th position: 16 character from Infinitynode BurnTx
+                                        if (i==2 && s.length() >= 16) {
+                                            check++;
+                                            burnTxID = s.substr(0, 16);
+                                        }
+                                        //Update node metadata if nHeight is bigger
+                                        if (check == 3){
+                                            //Address payee: we known that there is only 1 input
+                                            const Coin& coin = view.AccessCoin(tx.vin[0].prevout);
+
+                                            CTxDestination addressBurnFund;
+                                            if(!ExtractDestination(coin.out.scriptPubKey, addressBurnFund)){
+                                                LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMeta::metaScan -- False when extract payee from BurnFund tx.\n");
+                                                return false;
+                                            }
+
+                                            std::ostringstream streamInfo;
+                                            streamInfo << EncodeDestination(addressBurnFund) << "-" << burnTxID;
+
+                                            LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMeta:: meta update: %s, %s, %s\n", 
+                                                         streamInfo.str(), publicKeyString, service.ToString());
+                                            int avtiveBK = 0;
+                                            CMetadata meta = CMetadata(streamInfo.str(), publicKeyString, service, pindex->nHeight, avtiveBK);
+                                            infnodemeta.Add(meta);
+                                        }
+                                        i++;
+                                    }
+                                }
+                            }
+                        }
+                }
+        }
+    }
+
+    return true;
+}
+
+bool CInfinitynodeMan::updateFinalList(CBlockIndex* pindex)
+{
+    LOCK(cs);
+
+    //move matured node to final list
+    nLastScanHeight = pindex->nHeight - Params().MaxReorganizationDepth();
+
+    for (auto& infpair : mapInfinitynodesNonMatured) {
+        if(infpair.second.nHeight == nLastScanHeight) {
+            CInfinitynode inf = infpair.second;
+            Add(inf);
+        }
+    }
+
+    nCachedBlockHeight = pindex->nHeight;
+
+    bool updateStm = deterministicRewardStatement(10) && deterministicRewardStatement(5) && deterministicRewardStatement(1);
+
+    if (updateStm){
+                calculAllInfinityNodesRankAtLastStm();
+                updateLastStmHeightAndSize(pindex->nHeight, 10);
+                updateLastStmHeightAndSize(pindex->nHeight, 5);
+                updateLastStmHeightAndSize(pindex->nHeight, 1);
+                LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::buildListFromBlock -- update Stm status: %d\n",updateStm);
+    } else {
+                LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::buildListFromBlock -- update Stm false\n");
+        return false;
+    }
+    return true;
+}
+
+bool CInfinitynodeMan::removeNonMaturedList(CBlockIndex* pindex)
+{
+    LOCK(cs);
+
+    std::map<COutPoint, CInfinitynode>::iterator it =  mapInfinitynodesNonMatured.begin();
+    while(it != mapInfinitynodesNonMatured.end()) {
+        CInfinitynode inf = it->second;
+        COutPoint txOutPoint = it->first;
+        if(inf.nHeight == pindex->nHeight){
+            mapInfinitynodesNonMatured.erase(it++);
+        } else {
+            ++it;
+        }
+    }
+    return true;
+}
+
 /*
  * call in init.cpp
  */
@@ -219,7 +412,6 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight, b
     }
     AssertLockHeld(cs);
     AssertLockHeld(cs_main); //Needed for index-dependent parts
-    mapInfinitynodesNonMatured.clear();
 
     //first run, make sure that all variable is clear
     if (nLowHeight == Params().GetConsensus().nInfinityNodeBeginHeight) {
@@ -318,9 +510,6 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight, b
                                 if(prevBlockIndex->nHeight < pindex->nHeight - Params().MaxReorganizationDepth()) {
                                     //matured
                                     Add(inf);
-                                } else {
-                                    //non matured
-                                    mapInfinitynodesNonMatured[inf.vinBurnFund.prevout] = inf;
                                 }
                             }
                             //Amount for vote
@@ -657,8 +846,7 @@ bool CInfinitynodeMan::ExtractLockReward(int nBlockHeight, int depth, std::vecto
 bool CInfinitynodeMan::getLRForHeight(int height, std::vector<CLockRewardExtractInfo>& vecLockRewardRet)
 {
     vecLockRewardRet.clear();
-    ExtractLockReward(height, Params().GetConsensus().nInfinityNodeCallLockRewardDeepth * 3, vecLockRewardRet);
-    return true;
+    return ExtractLockReward(height, Params().GetConsensus().nInfinityNodeCallLockRewardDeepth * 3, vecLockRewardRet);
 }
 
 bool CInfinitynodeMan::GetInfinitynodeInfo(std::string nodePublicKey, infinitynode_info_t& infInfoRet)

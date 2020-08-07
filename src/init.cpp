@@ -276,6 +276,8 @@ void Shutdown()
     flatdb6.Dump(infnodersv);
     CFlatDB<CInfinitynodeMeta> flatdb7("infinitynodemeta.dat", "magicInfinityMeta");
     flatdb7.Dump(infnodemeta);
+    CFlatDB<CInfinitynodeLockInfo> flatdb8("infinitynodelockinfo.dat", "magicInfinityLockInfo");
+    flatdb8.Dump(infnodelrinfo);
     //
 
     if (fFeeEstimatesInitialized)
@@ -1807,52 +1809,12 @@ bool AppInitMain()
         return InitError(_("Failed to load Metatdata cache from") + "\n" + (pathDB / strDBName).string());
     }
 
-    LogPrintf("InfinityNode last scan height: %d and active Height: %d\n", infnodeman.getLastScan(), chainActive.Height());
-    bool updateStm = false;
-    infnodeman.UpdateChainActiveHeight(chainActive.Height());
-
-    if (infnodeman.getLastScan() == 0){
-        uiInterface.InitMessage(_("Initial on-chain infinitynode list..."));
-        // lock main here
-        LOCK(cs_main);
-        if ( chainActive.Height() < Params().GetConsensus().nInfinityNodeBeginHeight || infnodeman.initialInfinitynodeList(chainActive.Height()) == false){
-            LogPrintf("InfinityNode does not begin or error in initial list of node:\n");
-        } else {
-            updateStm = infnodeman.deterministicRewardStatement(10) &&
-                             infnodeman.deterministicRewardStatement(5) &&
-                             infnodeman.deterministicRewardStatement(1);
-            if (updateStm){
-                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm status: %d\n",updateStm);
-                infnodeman.calculAllInfinityNodesRankAtLastStm();
-                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 10);
-                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 5);
-                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 1);
-            } else {
-                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm false\n");
-            }
-        }
-    } else {
-        uiInterface.InitMessage(_("Update on-chain infinitynode list..."));
-        // lock main here
-        LOCK(cs_main);
-        if ( chainActive.Height() < infnodeman.getLastScan() || infnodeman.updateInfinitynodeList(chainActive.Height()) == false){
-            LogPrintf("Lastscan is higher than chainActive or error in update list of node:\n");
-        } else {
-            updateStm = infnodeman.deterministicRewardStatement(10) &&
-                             infnodeman.deterministicRewardStatement(5) &&
-                             infnodeman.deterministicRewardStatement(1);
-            if (updateStm){
-                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm status: %d\n",updateStm);
-                infnodeman.calculAllInfinityNodesRankAtLastStm();
-                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 10);
-                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 5);
-                infnodeman.updateLastStmHeightAndSize(chainActive.Height(), 1);
-            } else {
-                LogPrintf("CInfinitynodeTip::UpdatedBlockTip -- update Stm false\n");
-            }
-        }
+    strDBName = "infinitynodelockinfo.dat";
+    uiInterface.InitMessage(_("Loading infinitynode LockReward info..."));
+    CFlatDB<CInfinitynodeLockInfo> flatdb8(strDBName, "magicInfinityLockInfo");
+    if(!flatdb8.Load(infnodelrinfo)) {
+        return InitError(_("Failed to load LockReward cache from") + "\n" + (pathDB / strDBName).string());
     }
-    LogPrintf("InfinityNode build stm status: %d\n", updateStm);
     //END SIN
 
     // As LoadBlockIndex can take several minutes, it's possible the user
