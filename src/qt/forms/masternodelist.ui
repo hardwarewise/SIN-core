@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>723</width>
+    <width>731</width>
     <height>476</height>
    </rect>
   </property>
@@ -52,7 +52,7 @@ width: 150px;
      <item>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>3</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tabMyMasternodes">
         <attribute name="title">
@@ -456,10 +456,70 @@ width: 150px;
            <height>201</height>
           </rect>
          </property>
-         <layout class="QGridLayout" name="gridLayout_3" rowminimumheight="0,0,0" columnminimumwidth="0,0,0">
+         <layout class="QGridLayout" name="gridLayout_3">
           <property name="sizeConstraint">
            <enum>QLayout::SetDefaultConstraint</enum>
           </property>
+          <item row="1" column="0">
+           <widget class="QRadioButton" name="radioLILNode">
+            <property name="text">
+             <string>LIL Node</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">buttonGroup</string>
+            </attribute>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="labelBIGIcon">
+            <property name="text">
+             <string>BIG Icon</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="labelLILDesc">
+            <property name="text">
+             <string>100.000 Burn
+10.000 Collateral</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="labelMIDIcon">
+            <property name="text">
+             <string>MID Icon</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLabel" name="labelBIGDesc">
+            <property name="text">
+             <string>1.000.000 Burn
+10.000 Collateral</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelLILIcon">
+            <property name="text">
+             <string>LIL Icon</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QRadioButton" name="radioBIGNode">
+            <property name="text">
+             <string>BIG Node</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">buttonGroup</string>
+            </attribute>
+           </widget>
+          </item>
           <item row="2" column="1">
            <widget class="QLabel" name="labelMIDDesc">
             <property name="text">
@@ -476,66 +536,6 @@ width: 150px;
             <attribute name="buttonGroup">
              <string notr="true">buttonGroup</string>
             </attribute>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="labelLILDesc">
-            <property name="text">
-             <string>100.000 Burn
-10.000 Collateral</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QLabel" name="labelBIGDesc">
-            <property name="text">
-             <string>1.000.000 Burn
-10.000 Collateral</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QRadioButton" name="radioLILNode">
-            <property name="text">
-             <string>LIL Node</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">buttonGroup</string>
-            </attribute>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QRadioButton" name="radioBIGNode">
-            <property name="text">
-             <string>BIG Node</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">buttonGroup</string>
-            </attribute>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="labelLILIcon">
-            <property name="text">
-             <string>LIL Icon</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLabel" name="labelMIDIcon">
-            <property name="text">
-             <string>MID Icon</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="labelBIGIcon">
-            <property name="text">
-             <string>BIG Icon</string>
-            </property>
            </widget>
           </item>
          </layout>
@@ -761,72 +761,6 @@ width: 150px;
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="widgetLogin" native="true">
-         <property name="geometry">
-          <rect>
-           <x>470</x>
-           <y>60</y>
-           <width>241</width>
-           <height>111</height>
-          </rect>
-         </property>
-         <widget class="QWidget" name="gridLayoutWidget_2">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>241</width>
-            <height>136</height>
-           </rect>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_4">
-           <item row="4" column="0">
-            <widget class="QLabel" name="labelEmail">
-             <property name="text">
-              <string>Email:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="labelPassword">
-             <property name="text">
-              <string>Passsword:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLineEdit" name="txtLastName"/>
-           </item>
-           <item row="5" column="1">
-            <widget class="QLineEdit" name="txtPassword">
-             <property name="echoMode">
-              <enum>QLineEdit::Password</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLineEdit" name="txtFirstName"/>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="labelLastName">
-             <property name="text">
-              <string>Last Name</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QLineEdit" name="txtEmail"/>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="labelFirstName">
-             <property name="text">
-              <string>First Name</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </widget>
         <widget class="QWidget" name="horizontalLayoutWidget_2">
          <property name="geometry">
           <rect>
@@ -939,16 +873,79 @@ width: 150px;
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="horizontalLayoutWidget_5">
+        <widget class="QWidget" name="verticalLayoutWidget">
          <property name="geometry">
           <rect>
            <x>470</x>
            <y>60</y>
            <width>241</width>
-           <height>111</height>
+           <height>121</height>
           </rect>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_8">
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QWidget" name="widgetLogin" native="true">
+            <widget class="QWidget" name="gridLayoutWidget_2">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>241</width>
+               <height>136</height>
+              </rect>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_4">
+              <item row="4" column="0">
+               <widget class="QLabel" name="labelEmail">
+                <property name="text">
+                 <string>Email:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QLineEdit" name="txtPassword">
+                <property name="echoMode">
+                 <enum>QLineEdit::Password</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLineEdit" name="txtLastName"/>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="labelLastName">
+                <property name="text">
+                 <string>Last Name</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QLineEdit" name="txtEmail"/>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="txtFirstName"/>
+              </item>
+              <item row="5" column="0">
+               <widget class="QLabel" name="labelPassword">
+                <property name="text">
+                 <string>Passsword:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="labelFirstName">
+                <property name="text">
+                 <string>First Name</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
           <item>
            <widget class="QWidget" name="widgetCurrent" native="true">
             <widget class="QWidget" name="gridLayoutWidget_3">

@@ -981,6 +981,7 @@ void MasternodeList::on_btnLogin_clicked()
 LogPrintf("nodeSetup login \n");
     if ( mClientid > 0 )    {   // reset
         nodeSetupResetClientId();
+        return;
     }
 
     int clientId = nodeSetupAPIAddClient( ui->txtFirstName->text(), ui->txtLastName->text(), ui->txtEmail->text(), ui->txtPassword->text(), strError );
