@@ -1151,7 +1151,8 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
     unsigned char session_id[32];
     unsigned char nonce_commitment[32];
     unsigned char msg[32] = {'a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a'};
-    secp256k1_schnorr sig;
+    // Currently unused
+    //secp256k1_schnorr sig;
     secp256k1_scratch_space *scratch = NULL;
     secp256k1_pubkey combined_pk, nonce;
 

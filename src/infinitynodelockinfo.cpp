@@ -89,7 +89,8 @@ bool CInfinitynodeLockInfo::ExtractLRFromBlock(const CBlock& block, CBlockIndex*
                             int nSINtype = 0;
                             std::string signature = "";
                             int *signerIndexes;
-                            size_t N_SIGNERS = (size_t)Params().GetConsensus().nInfinityNodeLockRewardSigners;
+                            // Currently not used
+                            //size_t N_SIGNERS = (size_t)Params().GetConsensus().nInfinityNodeLockRewardSigners;
                             int registerNbInfos = Params().GetConsensus().nInfinityNodeLockRewardSigners + 3;
                             signerIndexes = (int*) malloc(Params().GetConsensus().nInfinityNodeLockRewardSigners * sizeof(int));
 
