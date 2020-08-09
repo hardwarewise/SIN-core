@@ -1050,6 +1050,7 @@ void MasternodeList::nodeSetupInitialize()   {
     if ( clientId == 0 )    {
         ui->widgetLogin->show();
         ui->widgetCurrent->hide();
+        ui->setupButtons->hide();
         ui->labelClientId->setText("");
     }
     else {
@@ -1096,6 +1097,7 @@ void MasternodeList::nodeSetupResetClientId( )  {
     nodeSetupSetClientId( 0 , "", "");
     ui->widgetLogin->show();
     ui->widgetCurrent->hide();
+    ui->setupButtons->hide();
     ui->labelClientId->setText("");
     ui->btnLogin->setText("Create/Login");
     ui->btnCheck->setEnabled(false);
@@ -1121,6 +1123,7 @@ void MasternodeList::nodeSetupResetOrderId( )   {
 void MasternodeList::nodeSetupEnableClientId( int clientId )  {
     ui->widgetLogin->hide();
     ui->widgetCurrent->show();
+    ui->setupButtons->show();
     ui->labelClientId->setText("#"+QString::number(clientId));
     ui->btnCheck->setEnabled(true);
     ui->labelMessage->setText("Select a node Tier and then press 'Check' to verify if you meet the prerequisites");
