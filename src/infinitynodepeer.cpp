@@ -108,6 +108,9 @@ bool CInfinitynodePeer::AutoCheck(CConnman& connman)
         LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::AutoCheck -- %s\n",  strNotCapableReason);
         return false;
     }
+
+    // we made it till here
+    return true;
 }
 
 void CInfinitynodePeer::ManageStateInitial(CConnman& connman)
