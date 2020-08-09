@@ -896,9 +896,6 @@ void CInfinitynodeMan::updateLastPaid()
 bool CInfinitynodeMan::deterministicRewardStatement(int nSinType)
 {
     int stm_height_temp = Params().GetConsensus().nInfinityNodeGenesisStatement;
-    if (nSinType == 10) mapStatementBIG.clear();
-    if (nSinType == 5) mapStatementMID.clear();
-    if (nSinType == 1) mapStatementLIL.clear();
 
     LOCK(cs);
     while (stm_height_temp < nCachedBlockHeight)
@@ -909,13 +906,36 @@ bool CInfinitynodeMan::deterministicRewardStatement(int nSinType)
                 totalSinType = totalSinType + 1;
             }
         }
-
         //if no node of this type, increase to next height
         if (totalSinType == 0){stm_height_temp = stm_height_temp + 1;}
 
-        if(nSinType == 10){mapStatementBIG[stm_height_temp] = totalSinType;}
-        if(nSinType == 5){mapStatementMID[stm_height_temp] = totalSinType;}
-        if(nSinType == 1){mapStatementLIL[stm_height_temp] = totalSinType;}
+        /* @giaki3003 - We use STL insert here, which is around 20% faster with proper hinting */
+        if (nSinType == 10) {
+            std::map<int, int>::iterator it = mapStatementBIG.upper_bound(stm_height_temp);
+            if (it == mapStatementBIG.begin() || (--it)->first < stm_height_temp) {
+                mapStatementBIG.insert(it, make_pair(stm_height_temp, totalSinType));
+            } else {
+                it->second = totalSinType;
+            }
+        }
+        
+        if (nSinType == 5) {
+            std::map<int, int>::iterator it = mapStatementMID.upper_bound(stm_height_temp);
+            if (it == mapStatementMID.begin() || (--it)->first < stm_height_temp) {
+                mapStatementMID.insert(it, make_pair(stm_height_temp, totalSinType));
+            } else {
+                it->second = totalSinType;
+            }
+        }
+        
+        if (nSinType == 1) {
+            std::map<int, int>::iterator it = mapStatementLIL.upper_bound(stm_height_temp);
+            if (it == mapStatementLIL.begin() || (--it)->first < stm_height_temp) {
+                mapStatementLIL.insert(it, make_pair(stm_height_temp, totalSinType));
+            } else {
+                it->second = totalSinType;
+            }
+        }
         //loop
         stm_height_temp = stm_height_temp + totalSinType;
         //we will out of loop this next step, but we can calculate the next STM now
@@ -926,9 +946,18 @@ bool CInfinitynodeMan::deterministicRewardStatement(int nSinType)
                     totalSinTypeNextStm = totalSinTypeNextStm + 1;
                 }
             }
-            if (nSinType == 10){mapStatementBIG[stm_height_temp] = totalSinTypeNextStm;}
-            if (nSinType == 5){mapStatementMID[stm_height_temp] = totalSinTypeNextStm;}
-            if (nSinType == 1){mapStatementLIL[stm_height_temp] = totalSinTypeNextStm;}
+
+            if (nSinType == 10) {
+                mapStatementBIG[stm_height_temp] = totalSinTypeNextStm;
+            }
+
+            if (nSinType == 5) {
+                mapStatementMID[stm_height_temp] = totalSinTypeNextStm;
+            }
+
+            if (nSinType == 1) {
+                mapStatementLIL[stm_height_temp] = totalSinTypeNextStm;
+            }
         }
     }
     return true;
