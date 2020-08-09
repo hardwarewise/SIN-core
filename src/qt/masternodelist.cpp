@@ -8,9 +8,11 @@
 #include <qt/forms/ui_masternodelist.h>
 
 #include <activemasternode.h>
+#include <qt/sinunits.h>
 #include <interfaces/wallet.h>
 #include <interfaces/node.h>
 #include <qt/clientmodel.h>
+#include <qt/optionsmodel.h>
 #include <qt/guiutil.h>
 #include <init.h>
 #include <key_io.h>
@@ -31,6 +33,23 @@
 #include <QInputDialog>
 #include <QTimer>
 #include <QMessageBox>
+#include <QStyleFactory>
+
+// begin nodeSetup
+#include <boost/algorithm/string.hpp>
+#include "rpc/server.h"
+#include "rpc/client.h"
+
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QSettings>
+#include <QNetworkAccessManager>
+#include <QUrl>
+#include <QUrlQuery>
+#include <QNetworkReply>
+
+UniValue nodeSetupCallRPC(std::string args);
+// end nodeSetup
 
 int GetOffsetFromUtc()
 {
@@ -81,6 +100,8 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     ui->dinTable->setColumnWidth(5, 90);
     ui->dinTable->setColumnWidth(6, 60);
     ui->dinTable->setColumnWidth(7, 250);
+    ui->dinTable->setColumnWidth(8, 200);
+    ui->dinTable->setColumnWidth(9, 100);
 
     ui->tableWidgetMyMasternodes->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -89,6 +110,14 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     contextMenu->addAction(startAliasAction);
     connect(ui->tableWidgetMyMasternodes, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
     connect(startAliasAction, SIGNAL(triggered()), this, SLOT(on_startButton_clicked()));
+
+    ui->dinTable->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    mCheckNodeAction = new QAction(tr("Check node status"), this);
+    contextDINMenu = new QMenu();
+    contextDINMenu->addAction(mCheckNodeAction);
+    connect(ui->dinTable, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextDINMenu(const QPoint&)));
+    connect(mCheckNodeAction, SIGNAL(triggered()), this, SLOT(on_checkDINNode()));
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateNodeList()));
@@ -99,11 +128,31 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     nTimeFilterUpdated = GetTime();
     updateNodeList();
     updateDINList();
+
+    // node setup
+    NODESETUP_ENDPOINT_NODE = QString::fromStdString(gArgs.GetArg("-nodesetupurl", "https://setup2dev.sinovate.io/includes/api/nodecp.php"));
+    NODESETUP_ENDPOINT_BASIC = QString::fromStdString(gArgs.GetArg("-nodesetupurlbasic", "https://setup2dev.sinovate.io/includes/api/basic.php"));
+    NODESETUP_PID = "1";  // "22" for prod
+    NODESETUP_CONFIRMS = 2;
+
+    // define timers
+    invoiceTimer = new QTimer(this);
+    connect(invoiceTimer, SIGNAL(timeout()), this, SLOT(nodeSetupCheckInvoiceStatus()));
+
+    burnPrepareTimer = new QTimer(this);
+    connect(burnPrepareTimer, SIGNAL(timeout()), this, SLOT(nodeSetupCheckBurnPrepareConfirmations()));
+
+    burnSendTimer = new QTimer(this);
+    connect(burnSendTimer, SIGNAL(timeout()), this, SLOT(nodeSetupCheckBurnSendConfirmations()));
+
+    nodeSetupInitialize();
 }
 
 MasternodeList::~MasternodeList()
 {
     delete ui;
+    delete ConnectionManager;
+    delete mCheckNodeAction;
 }
 
 void MasternodeList::setClientModel(ClientModel *model)
@@ -124,6 +173,14 @@ void MasternodeList::showContextMenu(const QPoint &point)
 {
     QTableWidgetItem *item = ui->tableWidgetMyMasternodes->itemAt(point);
     if(item) contextMenu->exec(QCursor::pos());
+}
+
+void MasternodeList::showContextDINMenu(const QPoint &point)
+{
+    QTableWidgetItem *item = ui->dinTable->itemAt(point);
+    if(item)    {
+        contextDINMenu->exec(QCursor::pos());
+    }
 }
 
 void MasternodeList::StartAlias(std::string strAlias)
@@ -384,10 +441,15 @@ void MasternodeList::updateDINList()
         ui->dinTable->setRowCount(mapMynode.size());
         ui->dinTable->setSortingEnabled(true);
 
+        // update used burn tx map
+        nodeSetupUsedBurnTxs.clear();
+
+        bool bNeedToQueryAPIServiceId = false;
+        int serviceId;
         int k=0;
         for(auto &pair : mapMynode){
             infinitynode_info_t infoInf;
-            std::string status = "Unknown", sPeerAddress = "";
+            std::string status = "Unknown", sPeerAddress = "", strIP = "---";
             if(!infnodeman.GetInfinitynodeInfo(pair.first, infoInf)){
                 continue;
             }
@@ -404,6 +466,20 @@ void MasternodeList::updateDINList()
                     CTxDestination dest = GetDestinationForKey(pubKey, DEFAULT_ADDRESS_TYPE);
                     sPeerAddress = EncodeDestination(dest);
                 }
+                strIP = metadata.getService().ToString();
+                if (sPeerAddress!="")   {
+                    int serviceValue = (bDINNodeAPIUpdate) ? -1 : 0;
+                    serviceId = nodeSetupGetServiceForNodeAddress( QString::fromStdString(sPeerAddress) );
+
+                    if (serviceId==0 || serviceValue==0)   {   // 0 = not checked
+                        bNeedToQueryAPIServiceId = true;
+                        nodeSetupSetServiceForNodeAddress( QString::fromStdString(sPeerAddress), serviceValue );  // -1 = reset to checked, not queried
+                    }
+                }
+                // update used burn tx map
+                std::string burnfundTxId = infoInf.vinBurnFund.prevout.hash.ToString().substr(0, 16);
+LogPrintf("nodeSetupGetUnusedBurnTxs updateDINList %s, %s \n", sPeerAddress, burnfundTxId);
+                nodeSetupUsedBurnTxs.insert( { burnfundTxId, 1  } );
             }
             if(infoInf.nExpireHeight < nCurrentHeight){
                 status="Expired";
@@ -413,18 +489,32 @@ void MasternodeList::updateDINList()
             ui->dinTable->setItem(k, 1, new QTableWidgetItem(QString::number(infoInf.nHeight)));
             ui->dinTable->setItem(k, 2, new QTableWidgetItem(QString::number(infoInf.nExpireHeight)));
             ui->dinTable->setItem(k, 3, new QTableWidgetItem(QString(QString::fromStdString(status))));
-            ui->dinTable->setItem(k, 4, new QTableWidgetItem(QString(QString::fromStdString(sPeerAddress))));
+            ui->dinTable->setItem(k, 4, new QTableWidgetItem(QString(QString::fromStdString(strIP))));
+            ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString(QString::fromStdString(sPeerAddress))));
             bool flocked = mapLockRewardHeight.find(sPeerAddress) != mapLockRewardHeight.end();
             if(flocked) {
-                ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString::number(mapLockRewardHeight[sPeerAddress])));
-                ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString(QString::fromStdString("Yes"))));
+                ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString::number(mapLockRewardHeight[sPeerAddress])));
+                ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString("Yes"))));
             } else {
-                ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString(QString::fromStdString(""))));
-                ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString(QString::fromStdString("No"))));
+                ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString(QString::fromStdString(""))));
+                ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString("No"))));
             }
-            ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString(pair.second))));
+            ui->dinTable->setItem(k,8, new QTableWidgetItem(QString(QString::fromStdString(pair.second))));
             k++;
         }
+
+        bDINNodeAPIUpdate = true;
+
+        if (bNeedToQueryAPIServiceId)   {
+            QString email, pass, strError;
+            int clientId = nodeSetupGetClientId( email, pass );
+            if (clientId>0) {
+                nodeSetupAPINodeList( email, pass, strError );
+            }
+        }
+        // use as nodeSetup combo refresh too
+        nodeSetupPopulateInvoicesCombo();
+        nodeSetupPopulateBurnTxCombo();
     }
 }
 
@@ -508,4 +598,1143 @@ void MasternodeList::on_tableWidgetMyMasternodes_itemSelectionChanged()
 void MasternodeList::on_UpdateButton_clicked()
 {
     updateMyNodeList(true);
+}
+
+void MasternodeList::on_checkDINNode()
+{
+    QItemSelectionModel* selectionModel = ui->dinTable->selectionModel();
+    QModelIndexList selected = selectionModel->selectedRows();
+    if(selected.count() == 0) return;
+
+    QModelIndex index = selected.at(0);
+    int nSelectedRow = index.row();
+    QString strAddress = ui->dinTable->item(nSelectedRow, 5)->text();
+    QString strError;
+    QString strStatus = ui->dinTable->item(nSelectedRow, 3)->text();
+    QMessageBox msg;
+
+    if ( strStatus!="Ready")    {
+        msg.setText(tr("DIN node must be in Ready status"));
+        msg.exec();
+    }
+    else    {
+        mCheckNodeAction->setEnabled(false);
+        int serviceId = nodeSetupGetServiceForNodeAddress( strAddress );
+        if (serviceId > 0)    {
+            QString email, pass, strError;
+            int clientId = nodeSetupGetClientId( email, pass );
+            if (clientId>0) {
+                QJsonObject obj = nodeSetupAPINodeInfo( serviceId, mClientid , email, pass, strError );
+                if (obj.contains("Blockcount") && obj.contains("MyPeerInfo"))   {
+                    int blockCount = obj["Blockcount"].toInt();
+                    QString peerInfo = obj["MyPeerInfo"].toString();
+                    ui->dinTable->setItem(nSelectedRow, 9, new QTableWidgetItem(QString::number(blockCount)));
+                    ui->dinTable->setItem(nSelectedRow, 10, new QTableWidgetItem(peerInfo));
+                }
+            }
+            else    {
+                msg.setText("Could not recover node's client ID\nPlease log in with your user email and password in the Node Setup tab");
+                msg.exec();
+            }
+        }
+        else    {
+            msg.setText("Could not recover node's service ID\nPlease log in with your user email and password in the Node Setup tab");
+            msg.exec();
+        }
+        mCheckNodeAction->setEnabled(true);
+    }
+}
+
+// nodeSetup buttons
+void MasternodeList::on_btnCheck_clicked()
+{
+    nodeSetupCleanProgress();
+    if ( !nodeSetupCheckFunds() )   {
+        ui->labelMessage->setText("You didn't pass the checks. Please review.");
+        return;
+    }
+
+    // TODO continue
+    ui->labelMessage->setText("You passed all checks. Please select a billing period and press Place Order to continue.");
+    ui->btnSetup->setEnabled(true);
+    return;
+}
+
+void MasternodeList::on_btnSetup_clicked()
+{
+    // check again in case they changed the tier...
+    nodeSetupCleanProgress();
+    if ( !nodeSetupCheckFunds() )   {
+        ui->labelMessage->setText("You didn't pass the funds check. Please review.");
+        return;
+    }
+
+    int orderid, invoiceid, productid;
+    QString strError;
+    QString strBillingCycle = QString::fromStdString(billingOptions[ui->comboBilling->currentData().toInt()]);
+
+//LogPrintf("place order %d, %s ", mClientid, strBillingCycle);
+    if ( ! (mOrderid > 0 && mInvoiceid > 0) ) {     // place new order if there is none already
+        mOrderid = nodeSetupAPIAddOrder( mClientid, strBillingCycle, mProductIds, mInvoiceid, strError );
+    }
+
+    if ( mOrderid > 0 && mInvoiceid > 0) {
+        nodeSetupSetOrderId( mOrderid, mInvoiceid, mProductIds );
+        nodeSetupEnableOrderUI(true, mOrderid, mInvoiceid);
+        ui->labelMessage->setText(QString::fromStdString(strprintf("Order placed successfully. Order ID #%d Invoice ID #%d", mOrderid, mInvoiceid)));
+
+        // get invoice data and do payment
+        QString strAmount, strStatus, paymentAddress;
+        strStatus = nodeSetupCheckInvoiceStatus();
+    }
+    else    {
+        ui->labelMessage->setText(strError);
+    }
+}
+
+void MasternodeList::on_payButton_clicked()
+{
+     int invoiceToPay = ui->comboInvoice->currentData().toInt();
+     QString strAmount, strStatus, paymentAddress, strError;
+
+     if (invoiceToPay>0)    {
+        nodeSetupAPIGetInvoice( invoiceToPay, strAmount, strStatus, paymentAddress, strError );
+        CAmount invoiceAmount = strAmount.toDouble();
+         if ( strStatus == "Unpaid" )  {
+             QString paymentTx = nodeSetupSendToAddress( paymentAddress, invoiceAmount, NULL );
+             if ( paymentTx != "" ) {
+                 ui->labelMessage->setText( "Pending Invoice Payment finished, please wait for confirmations." );
+             }
+         }
+     }
+}
+
+QString MasternodeList::nodeSetupGetNewAddress()    {
+
+    QString strAddress = "";
+    std::ostringstream cmd;
+    try {
+        cmd.str("");
+        cmd << "getnewaddress";
+        UniValue jsonVal = nodeSetupCallRPC( cmd.str() );
+        if ( jsonVal.type() == UniValue::VSTR )       // new address returned
+        {
+            strAddress = QString::fromStdString(jsonVal.get_str());
+        }
+    } catch (UniValue& objError ) {
+        ui->labelMessage->setText( "Error getting new wallet address" );
+    }
+    return strAddress;
+}
+
+QString MasternodeList::nodeSetupSendToAddress( QString strAddress, int amount, QTimer* timer )    {
+    QString strTxId = "";
+    std::ostringstream cmd;
+    try {
+        cmd.str("");
+        cmd << "sendtoaddress " << strAddress.toUtf8().constData() << " " << amount;
+        UniValue jsonVal = nodeSetupCallRPC( cmd.str() );
+        if ( jsonVal.type() == UniValue::VSTR )       // tx id returned
+        {
+            strTxId = QString::fromStdString(jsonVal.get_str());
+            if ( timer!=NULL && !timer->isActive() )  {
+                timer->start(20000);
+            }
+        }
+    } catch (UniValue& objError ) {
+        QString errMessage = QString::fromStdString(find_value(objError, "message").get_str());
+        if ( errMessage.contains("walletpassphrase") )  {
+            QMessageBox::warning(this, "Please Unlock Wallet", "In order to make payments, please unlock your wallet and retry", QMessageBox::Ok, QMessageBox::Ok);
+        }
+
+        ui->labelMessage->setText( QString::fromStdString(find_value(objError, "message").get_str()) );
+    }
+    return strTxId;
+}
+
+UniValue MasternodeList::nodeSetupGetTxInfo( QString txHash, std::string attribute)  {
+    UniValue ret;
+    std::ostringstream cmd;
+    try {
+        cmd.str("");
+        cmd << "gettransaction " << txHash.toUtf8().constData();
+        UniValue jsonVal = nodeSetupCallRPC( cmd.str() );
+        if ( jsonVal.type() == UniValue::VOBJ )       // object returned
+        {
+            ret = find_value(jsonVal.get_obj(), attribute);
+        }
+        else {
+            ui->labelMessage->setText( "Error calling RPC gettransaction");
+        }
+    } catch (UniValue& objError ) {
+        ui->labelMessage->setText( "Error calling RPC gettransaction");
+    }
+    return ret;
+}
+
+QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
+    QString strAmount, strStatus, paymentAddress, strError;
+    nodeSetupAPIGetInvoice( mInvoiceid, strAmount, strStatus, paymentAddress, strError );
+
+    CAmount invoiceAmount = strAmount.toDouble();
+ui->labelMessage->setText(QString::fromStdString(strprintf("Invoice amount %f SIN", invoiceAmount)));
+//LogPrintf("nodeSetupCheckInvoiceStatus %s, %s, %f\n", strStatus.toStdString(), paymentAddress.toStdString(), invoiceAmount );
+    if ( strStatus == "Cancelled" || strStatus == "Refunded" )  {  // reset and call again
+        nodeSetupStep( "setupWait", "Order cancelled or refunded, creating a new order");
+        invoiceTimer->stop();
+        nodeSetupResetOrderId();
+        on_btnSetup_clicked();
+    }
+
+    if ( strStatus == "Unpaid" )  {
+        if ( mPaymentTx != "" ) {   // already paid, waiting confirmations
+LogPrintf("nodeSetupCheckInvoiceStatus %s \n", mPaymentTx.toStdString() );
+            nodeSetupStep( "setupWait", "Invoice paid, waiting for confirmation");
+            ui->btnSetup->setEnabled(false);
+            ui->btnSetupReset->setEnabled(false);
+        }
+        else    {
+LogPrintf("nodeSetupCheckInvoiceStatus no txID \n");
+            nodeSetupStep( "setupWait", "Paying invoice");
+            // Display message box
+            QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm Invoice Payment"),
+                "Are you sure you want to pay " + QString::number(invoiceAmount) + " SIN?",
+                QMessageBox::Yes | QMessageBox::Cancel,
+                QMessageBox::Cancel);
+
+            if(retval != QMessageBox::Yes)  {
+                invoiceTimer->stop();
+                ui->btnSetup->setEnabled(true);
+                ui->btnSetupReset->setEnabled(true);
+                ui->labelMessage->setText( "Press Reset Order button to cancel node setup process, or Continue Order button to resume." );
+                return "cancelled";
+            }
+
+            mPaymentTx = nodeSetupSendToAddress( paymentAddress, invoiceAmount, invoiceTimer );
+            if ( mPaymentTx != "" ) {
+                nodeSetupSetPaymentTx(mPaymentTx);
+                ui->labelMessage->setText( "Payment finished, please wait until platform confirms payment to proceed to node creation." );
+                ui->btnSetup->setEnabled(false);
+                ui->btnSetupReset->setEnabled(false);
+                if ( !invoiceTimer->isActive() )  {
+                    invoiceTimer->start(60000);
+                }
+            }
+        }
+    }
+
+    if ( strStatus == "Paid" )  {           // launch node setup (RPC)
+LogPrintf("nodeSetupCheckInvoiceStatus Invoice Paid \n");
+        invoiceTimer->stop();
+
+        QString strPrivateKey, strPublicKey, strDecodePublicKey, strAddress, strNodeIp;
+
+        mBurnTx = nodeSetupGetBurnTx();
+        QString strSelectedBurnTx = ui->comboBurnTx->currentData().toString();
+
+        if ( mBurnTx=="" && strSelectedBurnTx!="NEW")   mBurnTx = strSelectedBurnTx;
+
+        if ( mBurnTx!="" )   {   // skip to check burn tx
+            if ( !burnSendTimer->isActive() )  {
+                burnSendTimer->start(20000);    // check every 20 secs
+            }
+        }
+        else    {   // burn tx not made yet
+            mBurnAddress = nodeSetupGetNewAddress();
+            int nMasternodeBurn = nodeSetupGetBurnAmount();
+
+            mBurnPrepareTx = nodeSetupSendToAddress( mBurnAddress, nMasternodeBurn, burnPrepareTimer );
+    LogPrintf("nodeSetupSendToAddress %s \n", mBurnPrepareTx.toStdString());
+            if ( mBurnPrepareTx=="" )  {
+               ui->labelMessage->setText( "ERROR: failed to prepare burn transaction." );
+            }
+        }
+        nodeSetupStep( "setupWait", "Preparing burn transaction");
+    }
+
+    return strStatus;
+}
+
+void MasternodeList::nodeSetupCheckBurnPrepareConfirmations()   {
+
+    UniValue objConfirms = nodeSetupGetTxInfo( mBurnPrepareTx, "confirmations" );
+    int numConfirms = objConfirms.get_int();
+    if ( numConfirms>NODESETUP_CONFIRMS )    {
+        nodeSetupStep( "setupOk", "Sending burn transaction");
+        burnPrepareTimer->stop();
+        QString strAddressBackup = nodeSetupGetNewAddress();
+        int nMasternodeBurn = nodeSetupGetBurnAmount();
+
+        mBurnTx = nodeSetupRPCBurnFund( mBurnAddress, nMasternodeBurn , strAddressBackup);
+LogPrintf("nodeSetupCheckBurnPrepareConfirmations burntx=%s \n", mBurnTx.toStdString());
+        QString metaTx = nodeSetupSendToAddress( mBurnAddress, 5 , NULL );
+        if ( mBurnTx!="" )  {
+            nodeSetupSetBurnTx(mBurnTx);
+            if ( !burnSendTimer->isActive() )  {
+                burnSendTimer->start(20000);    // check every 20 secs
+            }
+        }
+        else    {
+            ui->labelMessage->setText( "ERROR: failed to create burn transaction." );
+        }
+    }
+}
+
+void MasternodeList::nodeSetupCheckBurnSendConfirmations()   {
+
+    // recover data
+    QString email, pass, strError;
+    int clientId = nodeSetupGetClientId( email, pass );
+
+    UniValue objConfirms = nodeSetupGetTxInfo( mBurnTx, "confirmations" );
+    int numConfirms = objConfirms.get_int();
+    if ( numConfirms>NODESETUP_CONFIRMS )    {
+        nodeSetupStep( "setupKo", "Finishing node setup");
+        burnSendTimer->stop();
+
+        QJsonObject root = nodeSetupAPIInfo( mServiceId, clientId, email, pass, strError );
+LogPrintf("nodeSetupCheckBurnSendConfirmations %d, %d, %s, %s \n", mServiceId, clientId, email.toStdString(), pass.toStdString());
+        if ( root.contains("PrivateKey") ) {
+            QString strPrivateKey = root["PrivateKey"].toString();
+            QString strPublicKey = root["PublicKey"].toString();
+            QString strDecodePublicKey = root["DecodePublicKey"].toString();
+            QString strAddress = root["Address"].toString();
+            QString strNodeIp = root["Nodeip"].toString();
+
+            std::ostringstream cmd;
+
+            try {
+                cmd.str("");
+                cmd << "infinitynodeupdatemeta " << mBurnAddress.toUtf8().constData() << " " << strPublicKey.toUtf8().constData() << " " << strNodeIp.toUtf8().constData() << " " << mBurnTx.left(16).toUtf8().constData();
+                UniValue jsonVal = nodeSetupCallRPC( cmd.str() );
+
+                nodeSetupSetServiceForNodeAddress( strAddress, mServiceId); // store serviceid
+                // cleanup
+                nodeSetupResetOrderId();
+                nodeSetupSetBurnTx("");
+
+                nodeSetupStep( "setupKo", "Node setup finished");
+            }
+            catch (const UniValue& objError)
+            {
+                ui->labelMessage->setText( QString::fromStdString(find_value(objError, "message").get_str()) );
+            }
+            catch ( std::runtime_error e)
+            {
+                ui->labelMessage->setText( QString::fromStdString( "ERROR infinitynodeupdatemeta: unexpected error " ) + QString::fromStdString( e.what() ));
+            }
+        }
+        else    {
+            LogPrintf("infinitynodeupdatemeta Error while obtaining node info \n");
+            ui->labelMessage->setText( "ERROR: infinitynodeupdatemeta " );
+        }
+    }
+}
+
+/*
+ * To setup DIN node, we do by RPC command. We need Qt to replace RPC command
+RPC steps :
+infinitynodeburnfund your_Burn_Address Amount Your_Backup_Address
+cBurnAddress
+    Sample for MINI
+    infinitynodeburnfund SQ5Qnpf3mWituuXtQrEknKYDaKUtinvMzT 100000 SWyHHvnPNaH18TcfszAzWfKyojmTqtZQqy
+ *
+ */
+
+QString MasternodeList::nodeSetupRPCBurnFund( QString collateralAddress, CAmount amount, QString backupAddress ) {
+    QString burnTx = "";
+    std::ostringstream cmd;
+
+    try {
+        cmd.str("");
+        cmd << "infinitynodeburnfund " << collateralAddress.toUtf8().constData() << " " << amount << " " << backupAddress.toUtf8().constData();
+        UniValue jsonVal = nodeSetupCallRPC( cmd.str() );
+        if ( jsonVal.isStr() )       // some error happened, cannot continue
+        {
+            ui->labelMessage->setText(QString::fromStdString( "ERROR infinitynodeburnfund: " ) + QString::fromStdString(jsonVal.get_str()));
+        }
+        else if ( jsonVal.isArray() ){
+            UniValue jsonArr = jsonVal.get_array();
+            if (jsonArr.size()>0)   {
+                UniValue jsonObj = jsonArr[0].get_obj();
+                burnTx = QString::fromStdString(find_value(jsonObj, "BURNTX").get_str());
+            }
+        }
+        else {
+            ui->labelMessage->setText(QString::fromStdString( "ERROR infinitynodeburnfund: unknown response") );
+        }
+    }
+    catch (const UniValue& objError)
+    {
+        ui->labelMessage->setText( QString::fromStdString(find_value(objError, "message").get_str()) );
+    }
+    catch ( std::runtime_error e)
+    {
+        ui->labelMessage->setText( QString::fromStdString( "ERROR infinitynodeburnfund: unexpected error " ) + QString::fromStdString( e.what() ));
+    }
+    return burnTx;
+}
+
+void MasternodeList::on_btnLogin_clicked()
+{
+    QString strError = "";
+LogPrintf("nodeSetup login \n");
+    if ( mClientid > 0 )    {   // reset
+        nodeSetupResetClientId();
+        return;
+    }
+
+    int clientId = nodeSetupAPIAddClient( ui->txtFirstName->text(), ui->txtLastName->text(), ui->txtEmail->text(), ui->txtPassword->text(), strError );
+    if ( strError != "" )  {
+        ui->labelMessage->setText( strError );
+    }
+
+    if ( clientId > 0 ) {
+        nodeSetupEnableClientId( clientId );
+        nodeSetupSetClientId( clientId, ui->txtEmail->text(), ui->txtPassword->text() );
+LogPrintf("nodeSetup enable %d\n", clientId);
+    }
+}
+
+void MasternodeList::on_btnSetupReset_clicked()
+{
+    nodeSetupSetOrderId(0, 0, "");
+    nodeSetupEnableOrderUI(false);
+}
+
+// END nodeSetup buttons
+
+void MasternodeList::nodeSetupInitialize()   {
+    ConnectionManager = new QNetworkAccessManager(this);
+
+    labelPic[0] = ui->labelPic_1;
+    labelTxt[0] = ui->labelTxt_1;
+    labelPic[1] = ui->labelPic_2;
+    labelTxt[1] = ui->labelTxt_2;
+    labelPic[2] = ui->labelPic_3;
+    labelTxt[2] = ui->labelTxt_3;
+    labelPic[3] = ui->labelPic_4;
+    labelTxt[3] = ui->labelTxt_4;
+    labelPic[4] = ui->labelPic_5;
+    labelTxt[4] = ui->labelTxt_5;
+    labelPic[5] = ui->labelPic_6;
+    labelTxt[5] = ui->labelTxt_6;
+    labelPic[6] = ui->labelPic_7;
+    labelTxt[6] = ui->labelTxt_7;
+    labelPic[7] = ui->labelPic_8;
+    labelTxt[7] = ui->labelTxt_8;
+
+    // combo billing
+    for (int i=0; i<sizeof(billingOptions)/sizeof(billingOptions[0]); i++)    {
+        std::string option = billingOptions[i];
+        ui->comboBilling->addItem(QString::fromStdString(option), QVariant(i));
+    }
+
+#if defined(Q_OS_WIN)
+#else
+    ui->comboBilling->setStyle(QStyleFactory::create("Windows"));
+    ui->comboInvoice->setStyle(QStyleFactory::create("Windows"));
+    ui->comboBurnTx->setStyle(QStyleFactory::create("Windows"));
+#endif
+
+    // buttons
+    ui->btnSetup->setEnabled(false);
+
+    // progress lines
+    nodeSetupCleanProgress();
+
+    // recover data
+    QString email, pass;
+
+    int clientId = nodeSetupGetClientId( email, pass );
+    if ( clientId == 0 )    {
+        ui->widgetLogin->show();
+        ui->widgetCurrent->hide();
+        ui->setupButtons->hide();
+        ui->labelClientId->setText("");
+    }
+    else {
+        nodeSetupEnableClientId(clientId);
+    }
+
+    mOrderid = nodeSetupGetOrderId( mInvoiceid, mProductIds );
+    if ( mOrderid > 0 )    {
+        ui->labelMessage->setText(QString::fromStdString(strprintf("There is an order ongoing (#%d). Press 'Continue' or 'Reset' order.", mOrderid)));
+        nodeSetupEnableOrderUI(true, mOrderid, mInvoiceid);
+        mPaymentTx = nodeSetupGetPaymentTx();
+    }
+    else    {
+        nodeSetupEnableOrderUI(false);
+    }
+
+}
+
+void MasternodeList::nodeSetupEnableOrderUI( bool bEnable, int orderID , int invoiceID ) {
+    if (bEnable)    {
+        ui->btnCheck->setEnabled(false);
+        ui->btnSetup->setEnabled(true);
+        ui->btnSetupReset->setEnabled(true);
+        ui->labelOrder->setVisible(true);
+        ui->labelOrderID->setVisible(true);
+        ui->labelOrderID->setText(QString::fromStdString("#")+QString::number(orderID));
+        ui->btnSetup->setText(QString::fromStdString("Continue Order"));
+        ui->labelInvoice->setVisible(true);
+        ui->labelInvoiceID->setVisible(true);
+        ui->labelInvoiceID->setText(QString::fromStdString("#")+QString::number(mInvoiceid));
+    }
+    else {
+        ui->btnCheck->setEnabled(true);
+        ui->btnSetup->setEnabled(false);
+        ui->btnSetupReset->setEnabled(false);
+        ui->labelOrder->setVisible(false);
+        ui->labelOrderID->setVisible(false);
+        ui->labelInvoice->setVisible(false);
+        ui->labelInvoiceID->setVisible(false);
+    }
+}
+
+void MasternodeList::nodeSetupResetClientId( )  {
+    nodeSetupSetClientId( 0 , "", "");
+    ui->widgetLogin->show();
+    ui->widgetCurrent->hide();
+    ui->setupButtons->hide();
+    ui->labelClientId->setText("");
+    ui->btnLogin->setText("Create/Login");
+    ui->btnCheck->setEnabled(false);
+    ui->btnSetup->setEnabled(false);
+    ui->btnCheck->setEnabled(false);
+    mClientid = 0;
+    nodeSetupResetOrderId();
+    ui->labelMessage->setText("Enter your client data and create a new user or login an existing one.");
+}
+
+void MasternodeList::nodeSetupResetOrderId( )   {
+    nodeSetupSetOrderId( 0, 0, "");
+    ui->btnSetupReset->setEnabled(false);
+    ui->btnSetup->setEnabled(false);
+    ui->btnSetup->setText(QString::fromStdString("Place Order"));
+    ui->btnCheck->setEnabled(true);
+    ui->labelMessage->setText("Select a node Tier and then press 'Check' to verify if you meet the prerequisites");
+    mOrderid = mInvoiceid = mServiceId = 0;
+    mPaymentTx = "";
+    nodeSetupSetBurnTx("");
+}
+
+void MasternodeList::nodeSetupEnableClientId( int clientId )  {
+    ui->widgetLogin->hide();
+    ui->widgetCurrent->show();
+    ui->setupButtons->show();
+    ui->labelClientId->setText("#"+QString::number(clientId));
+    ui->btnCheck->setEnabled(true);
+    ui->labelMessage->setText("Select a node Tier and then press 'Check' to verify if you meet the prerequisites");
+    mClientid = clientId;
+    ui->btnLogin->setText("Logout");
+
+    nodeSetupPopulateInvoicesCombo();
+    ui->comboBurnTx->addItem(tr("Loading node data..."),"WAIT");
+}
+
+void MasternodeList::nodeSetupPopulateInvoicesCombo( )  {
+    QString email, pass, strError;
+    int clientId = nodeSetupGetClientId( email, pass );
+    std::map<int, std::string> pendingInvoices = nodeSetupAPIListInvoices( email, pass, strError );
+
+    // preserve previous selection before clearing
+    int invoiceToPay = ui->comboInvoice->currentData().toInt();
+    ui->comboInvoice->clear();
+
+    // populate
+    for(auto& itemPair : pendingInvoices)   {
+        if (mInvoiceid!=itemPair.first) {       // discard current setup invoice from pending invoices combo
+            ui->comboInvoice->addItem(QString::fromStdString(itemPair.second), QVariant(itemPair.first));
+        }
+    }
+
+    // restore selection (if still exists)
+    int index = ui->comboInvoice->findData(invoiceToPay);
+    if ( index != -1 ) { // -1 for not found
+       ui->comboInvoice->setCurrentIndex(index);
+    }
+}
+
+void MasternodeList::nodeSetupPopulateBurnTxCombo( )  {
+    std::map<std::string, std::string> freeBurnTxs = nodeSetupGetUnusedBurnTxs( );
+
+    // preserve previous selection before clearing
+    QString burnTxSelection = ui->comboBurnTx->currentData().toString();
+
+    ui->comboBurnTx->clear();
+    ui->comboBurnTx->addItem(tr("<Create new>"),"NEW");
+
+    for(auto& itemPair : freeBurnTxs)   {
+        ui->comboBurnTx->addItem(QString::fromStdString(itemPair.second), QVariant(QString::fromStdString(itemPair.first)));
+    }
+
+    // restore selection (if still exists)
+    int index = ui->comboBurnTx->findData(burnTxSelection);
+    if ( index != -1 ) { // -1 for not found
+       ui->comboBurnTx->setCurrentIndex(index);
+    }
+
+}
+
+int MasternodeList::nodeSetupGetBurnAmount()    {
+    int nMasternodeBurn = 0;
+
+    if ( ui->radioLILNode->isChecked() )    nMasternodeBurn = Params().GetConsensus().nMasternodeBurnSINNODE_1;
+    if ( ui->radioMIDNode->isChecked() )    nMasternodeBurn = Params().GetConsensus().nMasternodeBurnSINNODE_5;
+    if ( ui->radioBIGNode->isChecked() )    nMasternodeBurn = Params().GetConsensus().nMasternodeBurnSINNODE_10;
+
+    return nMasternodeBurn;
+}
+
+bool MasternodeList::nodeSetupCheckFunds( CAmount invoiceAmount )   {
+
+    bool bRet = false;
+    int nMasternodeCollateral = Params().GetConsensus().nMasternodeCollateralMinimum;
+    int nMasternodeBurn = nodeSetupGetBurnAmount();
+
+    std::string strChecking = "Checking funds";
+    nodeSetupStep( "setupWait", strChecking );
+
+    std::vector<std::shared_ptr<CWallet>> wallets = GetWallets();
+    CWallet * const pwallet = (wallets.size() > 0) ? wallets[0].get() : nullptr;
+    CAmount curBalance = pwallet->GetBalance();
+    std::ostringstream stringStream;
+    CAmount nNodeRequirement = (nMasternodeBurn + nMasternodeCollateral) * COIN ;
+
+    if ( curBalance > invoiceAmount + nNodeRequirement )  {
+        nodeSetupStep( "setupOk", strChecking + " : " + "funds available.");
+        bRet = true;
+    }
+    else    {
+        if ( curBalance > nNodeRequirement )  {
+            QString strAvailable = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), curBalance - nNodeRequirement );
+            QString strInvoiceAmount = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), invoiceAmount );
+            stringStream << strChecking << " : not enough funds to pay invoice. (you have " << strAvailable.toStdString() << " , need " << strInvoiceAmount.toStdString() << " )";
+            std::string copyOfStr = stringStream.str();
+                nodeSetupStep( "setupKo", copyOfStr);
+        }
+        else if ( curBalance > nMasternodeBurn * COIN )  {
+            QString strAvailable = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), (curBalance-(nMasternodeBurn*COIN)) );
+            QString strCollateral = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), nMasternodeCollateral*COIN );
+            stringStream << strChecking << " : not enough collateral (you have " <<  strAvailable.toStdString() << " , you need " << strCollateral.toStdString() << " )";
+            std::string copyOfStr = stringStream.str();
+            nodeSetupStep( "setupKo", copyOfStr);
+        }
+        else if ( curBalance > nNodeRequirement )  {
+            QString strAvailable = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), curBalance );
+            QString strBurnAmount = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), nMasternodeBurn*COIN );
+            stringStream << strChecking << " : not enough funds to burn. (you have " << strAvailable.toStdString() << " , need " << strBurnAmount.toStdString() << " )";
+            std::string copyOfStr = stringStream.str();
+            nodeSetupStep( "setupKo", copyOfStr);
+        }
+        else    {
+
+        }
+    }
+
+    currentStep++;
+    return bRet;
+}
+
+int MasternodeList::nodeSetupGetClientId( QString& email, QString& pass )  {
+    int ret = 0;
+    QSettings settings;
+
+    if (settings.contains("nodeSetupClientId"))
+        ret = settings.value("nodeSetupClientId").toInt();
+
+    if (settings.contains("nodeSetupEmail"))
+        email = settings.value("nodeSetupEmail").toString();
+
+    if (settings.contains("nodeSetupPassword"))
+        pass = settings.value("nodeSetupPassword").toString();
+
+    return ret;
+}
+
+void MasternodeList::nodeSetupSetClientId( int clientId, QString email, QString pass )  {
+    QSettings settings;
+    settings.setValue("nodeSetupClientId", clientId);
+    settings.setValue("nodeSetupEmail", email);
+    settings.setValue("nodeSetupPassword", pass);
+}
+
+int MasternodeList::nodeSetupGetOrderId( int& invoiceid, QString& productids )  {
+    int ret = 0;
+    QSettings settings;
+
+    if (settings.contains("nodeSetupOrderId"))
+        ret = settings.value("nodeSetupOrderId").toInt();
+
+    if (settings.contains("nodeSetupInvoiceId"))
+        invoiceid = settings.value("nodeSetupInvoiceId").toInt();
+
+    if (settings.contains("nodeSetupProductIds"))
+        productids = settings.value("nodeSetupProductIds").toString();
+
+    return ret;
+}
+
+void MasternodeList::nodeSetupSetOrderId( int orderid , int invoiceid, QString productids )  {
+    QSettings settings;
+    settings.setValue("nodeSetupOrderId", orderid);
+    settings.setValue("nodeSetupInvoiceId", invoiceid);
+    settings.setValue("nodeSetupProductIds", productids);
+}
+
+QString MasternodeList::nodeSetupGetBurnTx( )  {
+    QString ret = 0;
+    QSettings settings;
+
+    if (settings.contains("nodeSetupBurnTx"))
+        ret = settings.value("nodeSetupBurnTx").toString();
+
+    return ret;
+}
+
+void MasternodeList::nodeSetupSetBurnTx( QString strBurnTx )  {
+    QSettings settings;
+    settings.setValue("nodeSetupBurnTx", strBurnTx);
+}
+
+int MasternodeList::nodeSetupGetServiceForNodeAddress( QString nodeAdress ) {
+    int ret = 0;
+    QSettings settings;
+    QString key = "nodeSetupService"+nodeAdress;
+
+    if (settings.contains(key))
+        ret = settings.value(key).toInt();
+
+    return ret;
+}
+
+void MasternodeList::nodeSetupSetServiceForNodeAddress( QString nodeAdress, int serviceId )  {
+    QSettings settings;
+    QString key = "nodeSetupService"+nodeAdress;
+
+    settings.setValue(key, serviceId);
+}
+
+QString MasternodeList::nodeSetupGetPaymentTx( )  {
+    QString ret = 0;
+    QSettings settings;
+
+    if (settings.contains("nodeSetupPaymentTx"))
+        ret = settings.value("nodeSetupPaymentTx").toString();
+
+    return ret;
+}
+
+void MasternodeList::nodeSetupSetPaymentTx( QString txHash )  {
+    QSettings settings;
+    settings.setValue("nodeSetupPaymentTx", txHash);
+}
+
+int MasternodeList::nodeSetupAPIAddClient( QString firstName, QString lastName, QString email, QString password, QString& strError )  {
+    int ret = 0;
+
+    QString Service = QString::fromStdString("AddClient");
+    QUrl url( MasternodeList::NODESETUP_ENDPOINT_BASIC );
+    QUrlQuery urlQuery( url );
+    urlQuery.addQueryItem("action", Service);
+    urlQuery.addQueryItem("firstname", firstName);
+    urlQuery.addQueryItem("lastname", lastName);
+    urlQuery.addQueryItem("email", email);
+    urlQuery.addQueryItem("password2", password);
+    url.setQuery( urlQuery );
+
+    QNetworkRequest request( url );
+
+LogPrintf("nodeSetup::AddClient -- %s\n", url.toString().toStdString());
+    QNetworkReply *reply = ConnectionManager->get(request);
+    QEventLoop loop;
+
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+
+    QByteArray data = reply->readAll();
+    QJsonDocument json = QJsonDocument::fromJson(data);
+
+    if ( json.object().contains("clientid") )   {
+        ret = json.object()["clientid"].toInt();
+    }
+
+    if ( json.object().contains("result") && json.object()["result"]=="error" && ret == 0 && json.object().contains("message")) {
+        strError = json.object()["message"].toString();
+    }
+    return ret;
+}
+
+int MasternodeList::nodeSetupAPIAddOrder( int clientid, QString billingCycle, QString& productids, int& invoiceid, QString& strError )  {
+    int orderid = 0;
+
+    QString Service = QString::fromStdString("AddOrder");
+    QUrl url( MasternodeList::NODESETUP_ENDPOINT_BASIC );
+    QUrlQuery urlQuery( url );
+    urlQuery.addQueryItem("action", Service);
+    urlQuery.addQueryItem("clientid", QString::number(clientid));
+    urlQuery.addQueryItem("pid", NODESETUP_PID );
+    urlQuery.addQueryItem("domain", "nodeSetup.sinovate.io");
+    urlQuery.addQueryItem("billingcycle", billingCycle);
+    urlQuery.addQueryItem("paymentmethod", "sin");
+    url.setQuery( urlQuery );
+
+    QNetworkRequest request( url );
+LogPrintf("nodeSetup::AddOrder -- %s\n", url.toString().toStdString());
+    QNetworkReply *reply = ConnectionManager->get(request);
+    QEventLoop loop;
+
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+
+    QByteArray data = reply->readAll();
+    QJsonDocument json = QJsonDocument::fromJson(data);
+
+    if ( json.object().contains("result") ) {
+        if ( json.object()["result"]=="success" ) {
+            if ( json.object().contains("orderid") ) {
+                orderid = json.object()["orderid"].toInt();
+            }
+            if ( json.object().contains("productids") ) {
+                productids = json.object()["productids"].toString();
+            }
+            if ( json.object().contains("invoiceid") ) {
+                invoiceid = json.object()["invoiceid"].toInt();
+            }
+        }
+        else    {
+            if ( json.object().contains("message") )    {
+                strError = json.object()["message"].toString();
+            }
+        }
+    }
+
+    return orderid;
+}
+
+bool MasternodeList::nodeSetupAPIGetInvoice( int invoiceid, QString& strAmount, QString& strStatus, QString& paymentAddress, QString& strError )  {
+    bool ret = false;
+
+    QString Service = QString::fromStdString("GetInvoice");
+    QUrl url( MasternodeList::NODESETUP_ENDPOINT_BASIC );
+    QUrlQuery urlQuery( url );
+    urlQuery.addQueryItem("action", Service);
+    urlQuery.addQueryItem("invoiceid", QString::number(invoiceid));
+    url.setQuery( urlQuery );
+
+    QNetworkRequest request( url );
+LogPrintf("nodeSetup::GetInvoice -- %s\n", url.toString().toStdString());
+    QNetworkReply *reply = ConnectionManager->get(request);
+    QEventLoop loop;
+
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+
+    QByteArray data = reply->readAll();
+    QJsonDocument json = QJsonDocument::fromJson(data);
+    QJsonObject root = json.object();
+
+    if ( root.contains("result") ) {
+        if ( root["result"]=="success" && root.contains("transactions") ) {
+// LogPrintf("nodeSetup::GetInvoice result \n" );
+            if ( root.contains("status") ) {
+                strStatus = root["status"].toString();
+                LogPrintf("nodeSetup::GetInvoice contains status %s \n", strStatus.toStdString() );
+            }
+
+            QJsonArray jsonArray = root["transactions"].toObject()["transaction"].toArray();
+            QJsonObject tx = jsonArray.first().toObject();
+            if ( tx.contains("description") ) {
+                strAmount = tx["description"].toString();
+            }
+
+            if ( tx.contains("transid") ) {
+                paymentAddress = tx["transid"].toString();
+            }
+
+            QJsonArray jsonArray2 = root["items"].toObject()["item"].toArray();
+            QJsonObject item = jsonArray2.first().toObject();
+            if ( item.contains("relid") ) {
+                mServiceId = item["relid"].toInt();
+            }
+
+            ret = true;
+        }
+        else    {
+            if ( root.contains("message") )    {
+                strError = root["message"].toString();
+            }
+        }
+    }
+
+    return ret;
+}
+
+std::map<int,std::string> MasternodeList::nodeSetupAPIListInvoices( QString email, QString password, QString& strError )    {
+    std::map<int,std::string> ret;
+
+    QString Service = QString::fromStdString("ListInvoices");
+    QUrl url( MasternodeList::NODESETUP_ENDPOINT_BASIC );
+    QUrlQuery urlQuery( url );
+    urlQuery.addQueryItem("action", Service);
+    urlQuery.addQueryItem("email", email);
+    urlQuery.addQueryItem("password2", password);
+    url.setQuery( urlQuery );
+
+    QNetworkRequest request( url );
+LogPrintf("nodeSetup::ListInvoices %s \n", url.toString().toStdString());
+    QNetworkReply *reply = ConnectionManager->get(request);
+    QEventLoop loop;
+
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+
+    QByteArray data = reply->readAll();
+    QJsonDocument json = QJsonDocument::fromJson(data);
+    QJsonObject root = json.object();
+
+    if ( root.contains("result") && root["result"]=="success" && root.contains("invoices") ) {
+        QJsonArray jsonArray = root["invoices"].toObject()["invoice"].toArray();
+        for (const QJsonValue & value : jsonArray) {
+            QJsonObject obj = value.toObject();
+            int invoiceId = obj["id"].toInt();
+            QString status = obj["status"].toString();
+            QString total = obj["total"].toString() + " " + obj["currencycode"].toString();
+            QString duedate = obj["duedate"].toString();
+LogPrintf("nodeSetupAPIListInvoices %d, %s, %s \n",invoiceId, status.toStdString(), duedate.toStdString() );
+            if ( status == "Unpaid" )   {
+                QString description = "#" + QString::number(invoiceId) + " " + duedate + " (" + total + " )";
+                ret.insert( { invoiceId , description.toStdString() } );
+            }
+        }
+    }
+    else    {
+        if ( root.contains("message") )    {
+            strError = root["message"].toString();
+        }
+        else    {
+            strError = "ERROR API ListInvoices";
+        }
+    }
+
+    return ret;
+}
+
+QJsonObject MasternodeList::nodeSetupAPIInfo( int serviceid, int clientid, QString email, QString password, QString& strError )  {
+
+    QString Service = QString::fromStdString("info");
+    QUrl url( MasternodeList::NODESETUP_ENDPOINT_NODE );
+    QUrlQuery urlQuery( url );
+    urlQuery.addQueryItem("action", Service);
+    urlQuery.addQueryItem("serviceid", QString::number(serviceid));
+    urlQuery.addQueryItem("clientid", QString::number(clientid));
+    urlQuery.addQueryItem("email", email);
+    urlQuery.addQueryItem("password", password);
+    url.setQuery( urlQuery );
+
+    QNetworkRequest request( url );
+LogPrintf("nodeSetup::Info -- %s\n", url.toString().toStdString());
+    QNetworkReply *reply = ConnectionManager->get(request);
+    QEventLoop loop;
+
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+
+    QByteArray data = reply->readAll();
+    QJsonDocument json = QJsonDocument::fromJson(data);
+    QJsonObject root = json.object();
+
+    return root;
+}
+
+bool MasternodeList::nodeSetupAPINodeList( QString email, QString password, QString& strError  )  {
+    bool ret = false;
+
+    QString Service = QString::fromStdString("nodelist");
+    QUrl url( MasternodeList::NODESETUP_ENDPOINT_BASIC );
+    QUrlQuery urlQuery( url );
+    urlQuery.addQueryItem("action", Service);
+    urlQuery.addQueryItem("email", email);
+    urlQuery.addQueryItem("password2", password);
+    url.setQuery( urlQuery );
+
+    QNetworkRequest request( url );
+LogPrintf("nodeSetup::NodeList -- %s\n", url.toString().toStdString());
+    QNetworkReply *reply = ConnectionManager->get(request);
+    QEventLoop loop;
+
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+
+    QByteArray data = reply->readAll();
+    QJsonDocument json = QJsonDocument::fromJson(data);
+    QJsonObject root = json.object();
+    int serviceId;
+    QString strAddress;
+
+    if ( root.contains("result") && root["result"]=="success" && root.contains("products") ) {
+        QJsonArray jsonArray = root["products"].toObject()["product"].toArray();
+        for (const QJsonValue & value : jsonArray) {
+            QJsonObject obj = value.toObject();
+            serviceId = obj["id"].toInt();
+            if ( obj.contains("customfields") )   {
+                QJsonArray customfieldsArray = obj["customfields"].toObject()["customfield"].toArray();
+                for (const QJsonValue & customfield : customfieldsArray) {
+                    QJsonObject field = customfield.toObject();
+                    if ( field["name"].toString() == "Address" )    {
+                        nodeSetupSetServiceForNodeAddress( field["value"].toString(), serviceId );
+                        ret = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    else    {
+        if ( root.contains("message") )    {
+            strError = root["message"].toString();
+        }
+        else    {
+            strError = "ERROR reading NodeList from API";
+        }
+    }
+    return ret;
+}
+
+QJsonObject MasternodeList::nodeSetupAPINodeInfo( int serviceid, int clientid, QString email, QString password, QString& strError )  {
+    QJsonObject ret;
+
+    QString Service = QString::fromStdString("nodeinfo");
+    QUrl url( MasternodeList::NODESETUP_ENDPOINT_NODE );
+    QUrlQuery urlQuery( url );
+    urlQuery.addQueryItem("action", Service);
+    urlQuery.addQueryItem("serviceid", QString::number(serviceid));
+    urlQuery.addQueryItem("clientid", QString::number(clientid));
+    urlQuery.addQueryItem("email", email);
+    urlQuery.addQueryItem("password", password);
+    url.setQuery( urlQuery );
+
+    QNetworkRequest request( url );
+LogPrintf("nodeSetup::Info -- %s\n", url.toString().toStdString());
+    QNetworkReply *reply = ConnectionManager->get(request);
+    QEventLoop loop;
+
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+
+    QByteArray data = reply->readAll();
+    QJsonDocument json = QJsonDocument::fromJson(data);
+    QJsonObject root = json.object();
+
+    return root;
+}
+
+// facilitate reusing burn txs and migration from VPS hosting to nodeSetup hosting
+// pick only burn txs less than 1yr old, and not in use by any "ready" DIN node.
+std::map<std::string, std::string> MasternodeList::nodeSetupGetUnusedBurnTxs( ) {
+
+    std::map<std::string, std::string> ret;
+
+    CAmount nFee;
+    std::string strSentAccount;
+    std::list<COutputEntry> listReceived;
+    std::list<COutputEntry> listSent;
+    isminefilter filter = ISMINE_SPENDABLE;
+
+    std::vector<std::shared_ptr<CWallet>> wallets = GetWallets();
+    CWallet * const pwallet = (wallets.size() > 0) ? wallets[0].get() : nullptr;
+
+    if (pwallet==nullptr)   return ret;
+
+    LOCK2(cs_main, pwallet->cs_wallet);
+
+    const CWallet::TxItems & txOrdered = pwallet->wtxOrdered;
+
+    // iterate backwards until we reach >1 yr to return:
+    for (CWallet::TxItems::const_reverse_iterator it = txOrdered.rbegin(); it != txOrdered.rend(); ++it)
+    {
+        CWalletTx *const pwtx = (*it).second.first;
+        if (pwtx == nullptr)    continue;
+
+        int confirms = pwtx->GetDepthInMainChain(false);
+        if (confirms>720*365)   break;  // expired
+
+        pwtx->GetAmounts(listReceived, listSent, nFee, strSentAccount, filter);
+        for (const COutputEntry& s : listSent)
+        {
+            std::string destAddress="";
+            if (IsValidDestination(s.destination)) {
+                destAddress = EncodeDestination(s.destination);
+            }
+            std::string txHash = pwtx->GetHash().GetHex();
+            if (destAddress == Params().GetConsensus().cBurnAddress && confirms<720*365 && nodeSetupUsedBurnTxs.find(txHash.substr(0, 16)) == nodeSetupUsedBurnTxs.end() )  {
+
+                std::string description = "";
+                std::string strNodeType = "";
+                CAmount roundAmount = ((int)(s.amount / COIN)+1);
+
+                if ( roundAmount == Params().GetConsensus().nMasternodeBurnSINNODE_1 )  {
+                    strNodeType = "LIL";
+                }
+                else if ( roundAmount == Params().GetConsensus().nMasternodeBurnSINNODE_5 )  {
+                    strNodeType = "MID";
+                }
+                else if ( roundAmount == Params().GetConsensus().nMasternodeBurnSINNODE_10 )  {
+                    strNodeType = "BIG";
+                }
+                else    {
+                    strNodeType = "Unknown";
+                }
+
+                description = strNodeType + " " + GUIUtil::dateTimeStr(pwtx->GetTxTime()).toUtf8().constData();
+LogPrintf("nodeSetupGetUnusedBurnTxs  confirmed %s, %d, %s \n", txHash.substr(0, 16), roundAmount, description);
+                ret.insert( { txHash,  description} );
+            }
+        }
+    }
+
+    return ret;
+}
+
+void MasternodeList::nodeSetupStep( std::string icon , std::string text )   {
+
+    std::string strIcon = ":/icons/" + icon;
+
+    labelPic[currentStep]->setVisible(true);
+    labelTxt[currentStep]->setVisible(true);
+    QPixmap labelIcon ( QString::fromStdString( icon ) );
+    labelPic[currentStep]->setPixmap(labelIcon);
+    labelTxt[currentStep]->setText( QString::fromStdString( text ) );
+}
+
+void MasternodeList::nodeSetupCleanProgress()   {
+
+    for(int idx=0;idx<8;idx++) {
+        labelPic[idx]->setVisible(false);
+        labelTxt[idx]->setVisible(false);
+    }
+    currentStep = 0;
+}
+
+// RPC helper
+UniValue nodeSetupCallRPC(string args)
+{
+    vector<string> vArgs;
+    string uri;
+
+LogPrintf("nodeSetupCallRPC  %s\n", args);
+
+    boost::split(vArgs, args, boost::is_any_of(" \t"));
+    string strMethod = vArgs[0];
+    vArgs.erase(vArgs.begin());
+    //Array params = RPCConvertValues(strMethod, vArgs);
+    UniValue params = RPCConvertValues(strMethod, vArgs );
+
+    JSONRPCRequest req;
+    req.params = params;
+    req.strMethod = strMethod;
+    req.URI = uri;
+    return ::tableRPC.execute(req);
 }
