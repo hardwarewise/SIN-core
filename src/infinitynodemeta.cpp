@@ -12,6 +12,30 @@ CInfinitynodeMeta infnodemeta;
 
 const std::string CInfinitynodeMeta::SERIALIZATION_VERSION_STRING = "CInfinitynodeMeta-Version-1";
 
+void CMetadata::removeHisto(CMetahisto inHisTo)
+{
+    for(auto it = vHisto.begin(); it != vHisto.end(); ){
+        if( (*it).nHeightHisto == inHisTo.nHeightHisto && (*it).pubkeyHisto == inHisTo.pubkeyHisto && (*it).serviceHisto == inHisTo.serviceHisto ) {
+            it = vHisto.erase(it);
+        } else {
+            ++it;
+        }
+    }
+}
+
+CMetahisto CMetadata::getLastHisto()
+{
+    int v_Height = 0;
+    CMetahisto histo;
+    for(auto& v : vHisto){
+        if(v.nHeightHisto > v_Height){
+            v_Height = v.nHeightHisto;
+            histo = v;
+        }
+    }
+    return histo;
+}
+
 CInfinitynodeMeta::CInfinitynodeMeta()
 : cs(),
   mapNodeMetadata()
@@ -23,6 +47,7 @@ void CInfinitynodeMeta::Clear()
     mapNodeMetadata.clear();
 }
 
+//call in connecttip
 bool CInfinitynodeMeta::Add(CMetadata &meta)
 {
     LOCK(cs);
@@ -36,8 +61,7 @@ bool CInfinitynodeMeta::Add(CMetadata &meta)
         CMetadata m = it->second;
         if(m.getMetaID() == meta.getMetaID() && meta.getMetadataHeight() >  m.getMetadataHeight()){
             LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::new metadata from higher height %s, %d\n", meta.getMetaID(),  meta.getMetadataHeight());
-            //mapNodeMetadata.erase(meta.getMetaID());
-            //mapNodeMetadata[meta.getMetaID()] = meta;
+            //we have a new metadata. we need check the distant between 2 update befor add it in histo
             int nHeight = meta.getMetadataHeight();
             std::string sPublicKey = meta.getMetaPublicKey();
             CService cService = meta.getService();
@@ -61,6 +85,127 @@ bool CInfinitynodeMeta::Add(CMetadata &meta)
             return false;
         }
     }
+}
+
+//call in disconnecttip
+bool CInfinitynodeMeta::Remove(CMetadata &meta)
+{
+    LOCK(cs);
+    LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::remove Metadata %s %d\n", meta.getMetaID(), meta.getMetadataHeight());
+    auto it = mapNodeMetadata.find(meta.getMetaID());
+    if(it == mapNodeMetadata.end()){
+        return true;
+    } else {
+        CMetadata m = it->second;
+        if(m.getMetaID() == meta.getMetaID() && m.getHistoSize() == 1){
+            //we have only 1 entry => remove
+            mapNodeMetadata.erase(meta.getMetaID());
+            return true;
+        } else if (m.getMetaID() == meta.getMetaID() && m.getHistoSize() > 1) {
+            //check if input meta is the last
+            if(meta.getMetadataHeight() == m.getMetadataHeight() && meta.getMetaPublicKey() == m.getMetaPublicKey() && meta.getService() == m.getService())
+            {
+                int nHeight = meta.getMetadataHeight();
+                std::string sPublicKey = meta.getMetaPublicKey();
+                CService cService = meta.getService();
+                CMetahisto histo(nHeight, sPublicKey, cService);
+                mapNodeMetadata[meta.getMetaID()].removeHisto(histo);
+                CMetahisto lastHisto = mapNodeMetadata[meta.getMetaID()].getLastHisto();
+                mapNodeMetadata[meta.getMetaID()].setMetadataHeight(lastHisto.nHeightHisto);
+                mapNodeMetadata[meta.getMetaID()].setMetaPublicKey(lastHisto.pubkeyHisto);
+                mapNodeMetadata[meta.getMetaID()].setService(lastHisto.serviceHisto);
+                return true;
+            } else {
+                LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta:: input Metadata is not the last\n");
+                return false;
+            }
+        }
+    }
+}
+
+//call in disconnecttip
+bool CInfinitynodeMeta::RemoveMetaFromBlock(const CBlock& block, CBlockIndex* pindex, CCoinsViewCache& view, const CChainParams& chainparams)
+{
+    LOCK(cs);
+
+    //update NON matured map
+    for (unsigned int i = 0; i < block.vtx.size(); i++) {
+        const CTransaction &tx = *(block.vtx[i]);
+        //Not coinbase
+        if (!tx.IsCoinBase()) {
+                for (unsigned int i = 0; i < tx.vout.size(); i++) {
+                        const CTxOut& out = tx.vout[i];
+                        std::vector<std::vector<unsigned char>> vSolutions;
+                        txnouttype whichType;
+                        const CScript& prevScript = out.scriptPubKey;
+                        Solver(prevScript, whichType, vSolutions);
+                        //Amount to update Metadata
+                        if (whichType == TX_BURN_DATA && Params().GetConsensus().cMetadataAddress == EncodeDestination(CKeyID(uint160(vSolutions[0]))))
+                        {
+                            //Amount for UpdateMeta
+                            if ((Params().GetConsensus().nInfinityNodeUpdateMeta - 1) * COIN <= out.nValue && out.nValue <= (Params().GetConsensus().nInfinityNodeUpdateMeta) * COIN) {
+                                if (vSolutions.size() == 2) {
+                                    std::string metadata(vSolutions[1].begin(), vSolutions[1].end());
+                                    string s;
+                                    stringstream ss(metadata);
+                                    int i=0;
+                                    int check=0;
+                                    std::string publicKeyString;
+                                    CService service;
+                                    std::string burnTxID;
+                                    while (getline(ss, s,';')) {
+                                        CTxDestination NodeAddress;
+                                        //1st position: Node Address
+                                        if (i==0) {
+                                            publicKeyString = s;
+                                            std::vector<unsigned char> tx_data = DecodeBase64(publicKeyString.c_str());
+                                            CPubKey decodePubKey(tx_data.begin(), tx_data.end());
+                                            if (decodePubKey.IsValid()) {check++;}
+                                        }
+                                        if (Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+                                            //2nd position: Node IP
+                                            if (i==1 && Lookup(s.c_str(), service, 0, false)) {
+                                                check++;
+                                            }
+                                        } else {
+                                            //lets INs run on 127.0.0.1 only on REGTEST
+                                            check++;
+                                        }
+                                        //3th position: 16 character from Infinitynode BurnTx
+                                        if (i==2 && s.length() >= 16) {
+                                            check++;
+                                            burnTxID = s.substr(0, 16);
+                                        }
+                                        //Update node metadata if nHeight is bigger
+                                        if (check == 3){
+                                            //Address payee: we known that there is only 1 input
+                                            const Coin& coin = view.AccessCoin(tx.vin[0].prevout);
+
+                                            CTxDestination addressBurnFund;
+                                            if(!ExtractDestination(coin.out.scriptPubKey, addressBurnFund)){
+                                                LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMeta::metaScan -- False when extract payee from BurnFund tx.\n");
+                                                return false;
+                                            }
+
+                                            std::ostringstream streamInfo;
+                                            streamInfo << EncodeDestination(addressBurnFund) << "-" << burnTxID;
+
+                                            LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMeta:: meta update: %s, %s, %s\n", 
+                                                         streamInfo.str(), publicKeyString, service.ToString());
+                                            int avtiveBK = 0;
+                                            CMetadata meta = CMetadata(streamInfo.str(), publicKeyString, service, pindex->nHeight, avtiveBK);
+                                            Remove(meta);
+                                        }
+                                        i++;
+                                    }
+                                }
+                            }
+                        }
+                }
+        }
+    }
+
+    return true;
 }
 
 bool CInfinitynodeMeta::Has(std::string  metaID)
