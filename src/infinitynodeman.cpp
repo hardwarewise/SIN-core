@@ -948,15 +948,30 @@ bool CInfinitynodeMan::deterministicRewardStatement(int nSinType)
             }
 
             if (nSinType == 10) {
-                mapStatementBIG[stm_height_temp] = totalSinTypeNextStm;
+                std::map<int, int>::iterator it = mapStatementBIG.upper_bound(stm_height_temp);
+                if (it == mapStatementBIG.begin() || (--it)->first < stm_height_temp) {
+                    mapStatementBIG.insert(it, make_pair(stm_height_temp, totalSinTypeNextStm));
+                } else {
+                    it->second = totalSinTypeNextStm;
+                }
             }
 
             if (nSinType == 5) {
-                mapStatementMID[stm_height_temp] = totalSinTypeNextStm;
+                std::map<int, int>::iterator it = mapStatementMID.upper_bound(stm_height_temp);
+                if (it == mapStatementMID.begin() || (--it)->first < stm_height_temp) {
+                    mapStatementMID.insert(it, make_pair(stm_height_temp, totalSinTypeNextStm));
+                } else {
+                    it->second = totalSinTypeNextStm;
+                }
             }
 
             if (nSinType == 1) {
-                mapStatementLIL[stm_height_temp] = totalSinTypeNextStm;
+                std::map<int, int>::iterator it = mapStatementLIL.upper_bound(stm_height_temp);
+                if (it == mapStatementLIL.begin() || (--it)->first < stm_height_temp) {
+                    mapStatementLIL.insert(it, make_pair(stm_height_temp, totalSinTypeNextStm));
+                } else {
+                    it->second = totalSinTypeNextStm;
+                }
             }
         }
     }
