@@ -50,7 +50,6 @@ private:
     int nCachedBlockHeight;
     //
     bool fReachedLastBlock = false;
-    bool fMapInfinitynodeUpdated = false;
 
     // map to hold all INFs
     std::map<COutPoint, CInfinitynode> mapInfinitynodes;
@@ -115,8 +114,6 @@ public:
     }
 
     std::string ToString() const;
-
-    bool getMapStatus(){LOCK(cs);  return fMapInfinitynodeUpdated;}
 
     bool Add(CInfinitynode &inf);
     bool AddUpdateLastPaid(CScript scriptPubKey, int nHeightLastPaid);

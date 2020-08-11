@@ -2012,8 +2012,8 @@ bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
         return false;
     }
     //DIN must be built before begin the process
-    if(infnodeman.getMapStatus() == false){
-        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessBlock -- DIN map was not built\n");
+    if(infnodeman.isReachedLastBlock() == false){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessBlock -- Downloading block! wait...\n");
         return false;
     }
     //mypeer must have status STARTED

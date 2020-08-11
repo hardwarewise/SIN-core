@@ -730,8 +730,6 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight, b
     nLastScanHeight = nBlockHeight - Params().MaxReorganizationDepth();
     updateLastPaid();
 
-    fMapInfinitynodeUpdated = true;
-
     if(fWriteDisk){
         CFlatDB<CInfinitynodeMan> flatdb5("infinitynode.dat", "magicInfinityNodeCache");
         flatdb5.Dump(infnodeman);
