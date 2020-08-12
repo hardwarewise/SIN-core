@@ -374,12 +374,23 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
     /*pay small reward for Node address of Infinitynode*/
     CScript DINPayeeNode;
     CInfinitynode infinitynode;
-    int SINType = Params().GetConsensus().nInfinityNodeLockRewardSINType;
-    bool fBurnRewardNode = false;
+    int SINType = 0;
 
-    CAmount InfPayment = 0;
-    InfPayment = Params().GetConsensus().nMasternodeBurnSINNODE_10;
-    {
+    for (int i = 0; i <= 2; i++) {
+            //choose tier value
+            if (i == 0) {
+                SINType = 10;
+            } else if (i == 1) {
+                SINType = 5;
+            } else {
+                SINType = 1;
+            }
+
+        bool fBurnRewardNode = false;
+
+        CAmount InfPayment = 0;
+        InfPayment = Params().GetConsensus().nMasternodeBurnSINNODE_10;
+        {
             LOCK(infnodeman.cs);
             if (infnodeman.deterministicRewardAtHeight(nBlockHeight, SINType, infinitynode)){
 
@@ -418,6 +429,7 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
                 CScript burnAddressScript = GetScriptForDestination(burnDestination);
                 txNew.vout.push_back(CTxOut(InfPayment, burnAddressScript));
             }
+        }
     }
 }
 
