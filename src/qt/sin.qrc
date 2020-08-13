@@ -108,6 +108,9 @@
         <file alias="theme-light">res/icons/theme-light.svg</file>
         <file alias="exit">res/icons/exit.svg</file>
         <file alias="password">res/icons/password.svg</file>
+        <file alias="minilogo">res/icons/minilogo.png</file>
+        <file alias="midlogo">res/icons/midlogo.png</file>
+        <file alias="biglogo">res/icons/biglogo.png</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>
@@ -167,6 +170,8 @@
      <file alias="about">res/images/about.png</file>
      <file alias="radio_unchecked">res/images/unchecked_radio.png</file>
      <file alias="radio_checked">res/images/checked_radio.png</file>
+     <file alias="radio_unchecked1">res/images/unchecked_radio1.png</file>
+     <file alias="radio_checked1">res/images/checked_radio1.png</file>
      <file alias="nav-logo-sin">res/images/nav-logo-sin.png</file>
      <file alias="indeterminate">res/images/indeterminate.png</file>
      <file alias="close">res/images/close.png</file>
@@ -175,6 +180,7 @@
      <file alias="stats-address-header">res/images/stats-address-header.svg</file>
      <file alias="stats-network-header">res/images/stats-network-header.svg</file>
      <file alias="stats-top-header">res/images/stats-top-header.svg</file>
+     <file alias="setuplogo">res/images/setuplogo.png</file>
 
      </qresource>
      
