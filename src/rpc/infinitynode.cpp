@@ -142,7 +142,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
             CBlockIndex* pindex = NULL;
             LOCK(cs_main); // make sure this scopes until we reach the function which needs this most, buildInfinitynodeListRPC()
             pindex = chainActive.Tip();
-            return infnodeman.buildInfinitynodeListRPC(pindex->nHeight);
+            return infnodeman.buildInfinitynodeListFromGenesis(pindex->nHeight);
         }
 
         std::string strMode = request.params[1].get_str();
@@ -160,12 +160,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
         }
         bool updateStm = false;
         LOCK(cs_main);
-        infnodeman.UpdatedBlockTip(pindex);
-        if (infnodeman.updateInfinitynodeList(pindex->nHeight)){
-            updateStm = infnodeman.deterministicRewardStatement(10) &&
-                             infnodeman.deterministicRewardStatement(5) &&
-                             infnodeman.deterministicRewardStatement(1);
-        }
+        updateStm = infnodeman.buildInfinitynodeListFromGenesis(pindex->nHeight);
         obj.push_back(Pair("Height", pindex->nHeight));
         obj.push_back(Pair("Result", updateStm));
         return obj;
@@ -315,10 +310,17 @@ UniValue infinitynode(const JSONRPCRequest& request)
         obj.push_back(Pair("Metadata", (int)mapCopy.size()));
         for (auto& infpair : mapCopy) {
             std::ostringstream streamInfo;
+            std::vector<unsigned char> tx_data = DecodeBase64(infpair.second.getMetaPublicKey().c_str());
+
+                CPubKey pubKey(tx_data.begin(), tx_data.end());
+                CTxDestination nodeDest = GetDestinationForKey(pubKey, OutputType::LEGACY);
+
                 streamInfo << std::setw(8) <<
                                infpair.second.getMetaPublicKey() << " " <<
                                infpair.second.getService().ToString() << " " <<
-                               infpair.second.getMetadataHeight();
+                               infpair.second.getMetadataHeight() << " " <<
+                               EncodeDestination(nodeDest)
+                ;
                 std::string strInfo = streamInfo.str();
 
             UniValue metaHisto(UniValue::VARR);

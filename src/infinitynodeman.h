@@ -161,7 +161,7 @@ public:
     int64_t getLastScanWithLimit(){return nLastScanHeight/* + INF_MATURED_LIMIT*/;} // We'll need to move this to functions who actually use it and match it with our max reorg depth
     //build DIN map by scan from nBlockHeight to nLowHeight
     bool buildInfinitynodeList(int nBlockHeight, int nLowHeight = 0, bool fWriteDisk = false); /* init this to zero for better compat with regtest/testnet/devnets */
-    bool buildInfinitynodeListRPC(int nBlockHeight, int nLowHeight = 0); /* exposes cs to RPC indirectly */
+    bool buildInfinitynodeListFromGenesis(int nBlockHeight);
 
     //build DIN map immediate when connect block
     bool buildNonMaturedListFromBlock(const CBlock& block, CBlockIndex* pindex,

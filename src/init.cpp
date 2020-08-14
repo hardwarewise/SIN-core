@@ -1597,6 +1597,38 @@ bool AppInitMain()
     }
 
     // ********************************************************* Step 7: load block chain
+    //SIN: try load SIN cache memory before connectblock, because we need these informations for validation of block
+    boost::filesystem::path pathDB = GetDataDir();
+    std::string strDBName;
+
+    strDBName = "infinitynode.dat";
+    uiInterface.InitMessage(_("Loading on-chain infinitynode list..."));
+    CFlatDB<CInfinitynodeMan> flatdb5(strDBName, "magicInfinityNodeCache");
+    if(!flatdb5.Load(infnodeman)) {
+        return InitError(_("Failed to load infinitynode cache from") + "\n" + (pathDB / strDBName).string());
+    }
+
+    strDBName = "infinitynodersv.dat";
+    uiInterface.InitMessage(_("Loading infinitynode RSV..."));
+    CFlatDB<CInfinitynodersv> flatdb6(strDBName, "magicInfinityRSV");
+    if(!flatdb6.Load(infnodersv)) {
+        return InitError(_("Failed to load RSV vote cache from") + "\n" + (pathDB / strDBName).string());
+    }
+
+    strDBName = "infinitynodemeta.dat";
+    uiInterface.InitMessage(_("Loading infinitynode Meta..."));
+    CFlatDB<CInfinitynodeMeta> flatdb7(strDBName, "magicInfinityMeta");
+    if(!flatdb7.Load(infnodemeta)) {
+        return InitError(_("Failed to load Metatdata cache from") + "\n" + (pathDB / strDBName).string());
+    }
+
+    strDBName = "infinitynodelockinfo.dat";
+    uiInterface.InitMessage(_("Loading infinitynode LockReward info..."));
+    CFlatDB<CInfinitynodeLockInfo> flatdb8(strDBName, "magicInfinityLockInfo");
+    if(!flatdb8.Load(infnodelrinfo)) {
+        return InitError(_("Failed to load LockReward cache from") + "\n" + (pathDB / strDBName).string());
+    }
+    //END SIN
 
     fReindex = gArgs.GetBoolArg("-reindex", false);
     bool fReindexChainState = gArgs.GetBoolArg("-reindex-chainstate", false);
@@ -1784,39 +1816,6 @@ bool AppInitMain()
         }
     }
 
-    //SIN: try load SIN cache memory before connectblock, because we need these informations for validation of block
-    boost::filesystem::path pathDB = GetDataDir();
-    std::string strDBName;
-
-    strDBName = "infinitynode.dat";
-    uiInterface.InitMessage(_("Loading on-chain infinitynode list..."));
-    CFlatDB<CInfinitynodeMan> flatdb5(strDBName, "magicInfinityNodeCache");
-    if(!flatdb5.Load(infnodeman)) {
-        return InitError(_("Failed to load infinitynode cache from") + "\n" + (pathDB / strDBName).string());
-    }
-
-    strDBName = "infinitynodersv.dat";
-    uiInterface.InitMessage(_("Loading infinitynode RSV..."));
-    CFlatDB<CInfinitynodersv> flatdb6(strDBName, "magicInfinityRSV");
-    if(!flatdb6.Load(infnodersv)) {
-        return InitError(_("Failed to load RSV vote cache from") + "\n" + (pathDB / strDBName).string());
-    }
-
-    strDBName = "infinitynodemeta.dat";
-    uiInterface.InitMessage(_("Loading infinitynode Meta..."));
-    CFlatDB<CInfinitynodeMeta> flatdb7(strDBName, "magicInfinityMeta");
-    if(!flatdb7.Load(infnodemeta)) {
-        return InitError(_("Failed to load Metatdata cache from") + "\n" + (pathDB / strDBName).string());
-    }
-
-    strDBName = "infinitynodelockinfo.dat";
-    uiInterface.InitMessage(_("Loading infinitynode LockReward info..."));
-    CFlatDB<CInfinitynodeLockInfo> flatdb8(strDBName, "magicInfinityLockInfo");
-    if(!flatdb8.Load(infnodelrinfo)) {
-        return InitError(_("Failed to load LockReward cache from") + "\n" + (pathDB / strDBName).string());
-    }
-    //END SIN
-
     // As LoadBlockIndex can take several minutes, it's possible the user
     // requested to kill the GUI during the last operation. If so, exit.
     // As the program has not fully started yet, Shutdown() is possibly overkill.
@@ -1833,6 +1832,12 @@ bool AppInitMain()
     fFeeEstimatesInitialized = true;
 
     // ********************************************************* Step 8: start indexers
+    //SIN
+    LogPrintf("InfinityNode last scan height: %d, Stm size for BIG node: %d, and active Height: %d\n", infnodeman.getLastScan(),
+                   infnodeman.getStatementMap(10).size(), chainActive.Height());
+    infnodeman.UpdateChainActiveHeight(chainActive.Height());
+    //
+
     if (gArgs.GetBoolArg("-txindex", DEFAULT_TXINDEX)) {
         g_txindex = MakeUnique<TxIndex>(nTxIndexCache, false, fReindex);
         g_txindex->Start();
