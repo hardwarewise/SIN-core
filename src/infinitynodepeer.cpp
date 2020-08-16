@@ -230,6 +230,15 @@ void CInfinitynodePeer::ManageStateRemote()
             return;
         }
 
+        CAddress addMeta = CAddress(meta.getService(), NODE_NETWORK);
+        CAddress addLocal = CAddress(service, NODE_NETWORK);
+        if(addMeta.ToStringIP()!= addLocal.ToStringIP()) {
+            nState = INFINITYNODE_PEER_NOT_CAPABLE;
+            strNotCapableReason = strprintf("Local Ip is different with Metadata ip: %s\n", addMeta.ToStringIP());
+            LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateRemote -- My Meta Ip is :%s, Local Ip is: %s\n", addMeta.ToStringIP(), addLocal.ToStringIP());
+            return;
+        }
+
         if(nState != INFINITYNODE_PEER_STARTED) {
             LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateRemote -- STARTED!\n");
             burntx = infoInf.vinBurnFund.prevout; //initial value

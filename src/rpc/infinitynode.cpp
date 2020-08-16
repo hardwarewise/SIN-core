@@ -326,10 +326,17 @@ UniValue infinitynode(const JSONRPCRequest& request)
             UniValue metaHisto(UniValue::VARR);
             for(auto& v : infpair.second.getHistory()){
                  std::ostringstream vHistoMeta;
+                 std::vector<unsigned char> tx_data_h = DecodeBase64(v.pubkeyHisto.c_str());
+
+                 CPubKey pubKey_h(tx_data_h.begin(), tx_data_h.end());
+                 CTxDestination nodeDest_h = GetDestinationForKey(pubKey_h, OutputType::LEGACY);
+
                  vHistoMeta << std::setw(4) <<
                      v.nHeightHisto  << " " <<
                      v.pubkeyHisto << " " <<
-                     v.serviceHisto.ToString();
+                     v.serviceHisto.ToString() << " " <<
+                     EncodeDestination(nodeDest_h)
+                     ;
                  std::string strHistoMeta = vHistoMeta.str();
                  metaHisto.push_back(strHistoMeta);
             }
@@ -624,6 +631,7 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "IP address is not valid");
         }
     }
+    CAddress addMeta = CAddress(service, NODE_NETWORK);
 
     std::string burnfundTxID = "";
     if(request.params[3].get_str().length() == 16){
@@ -640,6 +648,18 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
         std::string strError = strprintf("Error: Please wait %d blocks and try to update again.", nWait);
         throw JSONRPCError(RPC_TYPE_ERROR, strError);
     }
+
+    //check ip and pubkey dont exist
+    std::map<std::string, CMetadata> mapInfMetadata = infnodemeta.GetFullNodeMetadata();
+    for (auto& infpair : mapInfMetadata) {
+        CMetadata m = infpair.second;
+        CAddress add = CAddress(infpair.second.getService(), NODE_NETWORK);
+        if (m.getMetaID() != metaID && (m.getMetaPublicKey() == nodePublickeyHexStr || addMeta.ToStringIP() == add.ToStringIP())) {
+            std::string strError = strprintf("Error: Pubkey or IP address exist in network");
+            throw JSONRPCError(RPC_TYPE_ERROR, strError);
+        }
+    }
+
 
     EnsureWalletIsUnlocked(pwallet);
     // Make sure the results are valid at least up to the most recent block
@@ -698,7 +718,7 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
 
             results.push_back(Pair("Metadata",streamInfo.str()));
 
-
+/*
             CTransactionRef tx;
             if (!pwallet->CreateTransaction(vecSend, tx, reservekey, nFeeRequired, nChangePosRet, strError, coin_control, true, ALL_COINS)) {
                 if (!fSubtractFeeFromAmount && nAmount + nFeeRequired > curBalance)
@@ -712,7 +732,7 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
                 strError = strprintf("Error: The transaction was rejected! Reason given: %s", FormatStateMessage(state));
                 throw JSONRPCError(RPC_WALLET_ERROR, strError);
             }
-
+*/
             break; //immediat
         }
     }

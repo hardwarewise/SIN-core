@@ -65,6 +65,8 @@ bool CInfinitynodeMeta::Add(CMetadata &meta)
             int nHeight = meta.getMetadataHeight();
             std::string sPublicKey = meta.getMetaPublicKey();
             CService cService = meta.getService();
+            CAddress addMeta = CAddress(cService, NODE_NETWORK);
+
             if(nHeight < m.getMetadataHeight() + Params().MaxReorganizationDepth() * 2){
                 int nWait = m.getMetadataHeight() + Params().MaxReorganizationDepth() * 2 - nHeight;
                 LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::Can not update metadata now. Please update after %d blocks\n", nWait);
@@ -72,14 +74,30 @@ bool CInfinitynodeMeta::Add(CMetadata &meta)
             } else {
                 int nPass = nHeight - m.getMetadataHeight() - Params().MaxReorganizationDepth() * 2;
                 LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::Update metadata now. Pass %d blocks from last height(%)\n", nPass, m.getMetadataHeight());
-            }
-            CMetahisto histo(nHeight, sPublicKey, cService);
-            mapNodeMetadata[meta.getMetaID()].addHisto(histo);
-            mapNodeMetadata[meta.getMetaID()].setMetadataHeight(nHeight);
-            mapNodeMetadata[meta.getMetaID()].setMetaPublicKey(sPublicKey);
-            mapNodeMetadata[meta.getMetaID()].setService(cService);
 
-            return true;
+                //make sure that PublicKey and IP are not using in network for different metaID
+                bool fCheckExistant = false;
+                for (auto& infpair : mapNodeMetadata) {
+                    CMetadata m = infpair.second;
+                    CAddress add = CAddress(infpair.second.getService(), NODE_NETWORK);
+
+                    if (m.getMetaID() != meta.getMetaID() && (m.getMetaPublicKey() == sPublicKey || addMeta.ToStringIP() == add.ToStringIP())) {
+                        fCheckExistant = true;
+                    }
+                }
+
+                if(fCheckExistant) {
+                    LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::Can not update metadata now. PubKey or IP existant in network\n");
+                    return false;
+                } else {
+                    CMetahisto histo(nHeight, sPublicKey, cService);
+                    mapNodeMetadata[meta.getMetaID()].addHisto(histo);
+                    mapNodeMetadata[meta.getMetaID()].setMetadataHeight(nHeight);
+                    mapNodeMetadata[meta.getMetaID()].setMetaPublicKey(sPublicKey);
+                    mapNodeMetadata[meta.getMetaID()].setService(cService);
+                    return true;
+                }
+            }
         }else{
             LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::meta nHeight(%d) is lower than current height %d\n", meta.getMetadataHeight(), m.getMetadataHeight());
             return false;
