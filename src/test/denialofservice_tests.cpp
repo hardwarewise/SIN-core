@@ -145,7 +145,8 @@ BOOST_AUTO_TEST_CASE(stale_tip_peer_management)
         BOOST_CHECK(node->fDisconnect == false);
     }
 
-    SetMockTime(GetTime() + 3*consensusParams.nPowTargetSpacing + 1);
+    //Since our target spacing is 5 times less than Bitcoin, we need to add this back here - @giaki3003
+    SetMockTime(GetTime() + 3 * 5 * consensusParams.nPowTargetSpacing + 1);
 
     // Now tip should definitely be stale, and we should look for an extra
     // outbound peer
