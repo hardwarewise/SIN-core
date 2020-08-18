@@ -619,11 +619,6 @@ extern bool fDiscover;
 extern bool fListen;
 extern bool fRelayTxes;
 
-// Dash
-extern std::map<CInv, CDataStream> mapRelayDash;
-extern std::deque<std::pair<int64_t, CInv> > vRelayExpirationDash;
-extern CCriticalSection cs_mapRelayDash;
-
 extern limitedmap<uint256, int64_t> mapAlreadyAskedFor;
 
 /** Subversion as sent to the P2P network in `version` messages */
