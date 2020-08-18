@@ -718,7 +718,6 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
 
             results.push_back(Pair("Metadata",streamInfo.str()));
 
-/*
             CTransactionRef tx;
             if (!pwallet->CreateTransaction(vecSend, tx, reservekey, nFeeRequired, nChangePosRet, strError, coin_control, true, ALL_COINS)) {
                 if (!fSubtractFeeFromAmount && nAmount + nFeeRequired > curBalance)
@@ -732,7 +731,7 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
                 strError = strprintf("Error: The transaction was rejected! Reason given: %s", FormatStateMessage(state));
                 throw JSONRPCError(RPC_WALLET_ERROR, strError);
             }
-*/
+
             break; //immediat
         }
     }
