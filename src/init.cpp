@@ -1914,7 +1914,7 @@ bool AppInitMain()
         std::string strInfinityNodePrivKey = gArgs.GetArg("-infinitynodeprivkey", "");
         if(!strInfinityNodePrivKey.empty()) {
             if(!CMessageSigner::GetKeysFromSecret(strInfinityNodePrivKey, infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode))
-                return InitError(_("Invalid masternodeprivkey. Please see documentation."));
+                return InitError(_("Invalid infinitynodeprivkey. Please see documentation."));
             CTxDestination dest = GetDestinationForKey(infinitynodePeer.pubKeyInfinitynode, OutputType::LEGACY);
             LogPrintf("PubKeyInfinitynode: %s, address: %s\n", infinitynodePeer.pubKeyInfinitynode.GetID().ToString(), EncodeDestination(dest));
             infinitynodePeer.ManageState(connman);
