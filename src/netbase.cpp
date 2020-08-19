@@ -58,7 +58,7 @@ std::string GetNetworkName(enum Network net) {
     }
 }
 
-bool static LookupIntern(const char *pszName, std::vector<CNetAddr>& vIP, unsigned int nMaxSolutions, bool fAllowLookup)
+bool static LookupIntern(const char *pszName, std::vector<CNetAddr>& vIP, unsigned int nMaxSolutions, bool fAllowLookup, bool fRegtest = false)
 {
     vIP.clear();
 
@@ -102,8 +102,12 @@ bool static LookupIntern(const char *pszName, std::vector<CNetAddr>& vIP, unsign
             struct sockaddr_in6* s6 = (struct sockaddr_in6*) aiTrav->ai_addr;
             resolved = CNetAddr(s6->sin6_addr, s6->sin6_scope_id);
         }
-        /* Never allow resolving to an internal address. Consider any such result invalid */
+        /* Never allow resolving to an internal address (except on Regtest). Consider any such result invalid */
         if (!resolved.IsInternal()) {
+            vIP.push_back(resolved);
+        }
+
+        if (fRegtest == true) {
             vIP.push_back(resolved);
         }
 
@@ -124,7 +128,7 @@ bool LookupHost(const char *pszName, std::vector<CNetAddr>& vIP, unsigned int nM
         strHost = strHost.substr(1, strHost.size() - 2);
     }
 
-    return LookupIntern(strHost.c_str(), vIP, nMaxSolutions, fAllowLookup);
+    return LookupIntern(strHost.c_str(), vIP, nMaxSolutions, fAllowLookup, false);
 }
 
 bool LookupHost(const char *pszName, CNetAddr& addr, bool fAllowLookup)
@@ -137,7 +141,7 @@ bool LookupHost(const char *pszName, CNetAddr& addr, bool fAllowLookup)
     return true;
 }
 
-bool Lookup(const char *pszName, std::vector<CService>& vAddr, int portDefault, bool fAllowLookup, unsigned int nMaxSolutions)
+bool Lookup(const char *pszName, std::vector<CService>& vAddr, int portDefault, bool fAllowLookup, unsigned int nMaxSolutions, bool fRegtest)
 {
     if (pszName[0] == 0)
         return false;
@@ -146,7 +150,7 @@ bool Lookup(const char *pszName, std::vector<CService>& vAddr, int portDefault, 
     SplitHostPort(std::string(pszName), port, hostname);
 
     std::vector<CNetAddr> vIP;
-    bool fRet = LookupIntern(hostname.c_str(), vIP, nMaxSolutions, fAllowLookup);
+    bool fRet = LookupIntern(hostname.c_str(), vIP, nMaxSolutions, fAllowLookup, fRegtest);
     if (!fRet)
         return false;
     vAddr.resize(vIP.size());
@@ -155,10 +159,10 @@ bool Lookup(const char *pszName, std::vector<CService>& vAddr, int portDefault, 
     return true;
 }
 
-bool Lookup(const char *pszName, CService& addr, int portDefault, bool fAllowLookup)
+bool Lookup(const char *pszName, CService& addr, int portDefault, bool fAllowLookup, bool fRegtest)
 {
     std::vector<CService> vService;
-    bool fRet = Lookup(pszName, vService, portDefault, fAllowLookup, 1);
+    bool fRet = Lookup(pszName, vService, portDefault, fAllowLookup, 1, fRegtest);
     if (!fRet)
         return false;
     addr = vService[0];
