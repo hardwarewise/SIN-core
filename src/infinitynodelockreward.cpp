@@ -2029,7 +2029,7 @@ bool CInfinityNodeLockReward::ProcessBlock(int nBlockHeight, CConnman& connman)
         return false;
     }
 
-    int nRewardHeight = infnodeman.isPossibleForLockReward(infRet.getCollateralAddress());
+    int nRewardHeight = infnodeman.isPossibleForLockReward(infinitynodePeer.burntx);
 
     LOCK2(cs_main, cs);
     if(nRewardHeight == 0 || (nRewardHeight < (nCachedBlockHeight + Params().GetConsensus().nInfinityNodeCallLockRewardLoop))){

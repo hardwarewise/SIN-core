@@ -186,7 +186,7 @@ public:
     std::string getLastStatementString() const;
     int getRoi(int nSinType, int totalNode);
 
-    int isPossibleForLockReward(std::string nodeOwner);
+    int isPossibleForLockReward(COutPoint burntx);
     bool getScoreVector(const uint256& nBlockHash, int nSinType, int nBlockHeight, CInfinitynodeMan::score_pair_vec_t& vecScoresRet);
     bool getNodeScoreAtHeight(const COutPoint& outpoint, int nSinType, int nBlockHeight, int& nRankRet);
     bool getTopNodeScoreAtHeight(int nSinType, int nBlockHeight, int nTop, std::vector<CInfinitynode>& vecInfRet);

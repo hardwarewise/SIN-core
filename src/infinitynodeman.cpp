@@ -5,6 +5,7 @@
 #include <infinitynodeman.h>
 #include <infinitynodersv.h>
 #include <infinitynodemeta.h>
+#include <infinitynodepeer.h>
 
 #include <util.h> //fMasterNode variable
 #include <chainparams.h>
@@ -1259,11 +1260,16 @@ void CInfinitynodeMan::calculAllInfinityNodesRankAtLastStm()
 /*
  * @return 0 or nHeight of reward
  */
-int CInfinitynodeMan::isPossibleForLockReward(std::string nodeOwner)
+int CInfinitynodeMan::isPossibleForLockReward(COutPoint burntx)
 {
     LOCK(cs);
 
     CInfinitynode inf;
+    if(!Get(infinitynodePeer.burntx, inf)){
+        LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessBlock -- Can not identify mypeer in list: %s\n", infinitynodePeer.burntx.ToStringShort());
+        return false;
+    }
+/*
     bool found = false;
     for (auto& infpair : mapInfinitynodes) {
         if (infpair.second.collateralAddress == nodeOwner) {
@@ -1271,13 +1277,9 @@ int CInfinitynodeMan::isPossibleForLockReward(std::string nodeOwner)
             found = true;
         }
     }
+*/
 
     //not candidate => false
-    if(!found){
-        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::isPossibleForLockReward -- No, cannot find %s\n", nodeOwner);
-        return 0;
-    }
-    else
     {
         int nNodeSINtype = inf.getSINType();
         int nLastStmBySINtype = 0;
