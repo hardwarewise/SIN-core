@@ -97,11 +97,6 @@ CCriticalSection cs_mapLocalHost;
 std::map<CNetAddr, LocalServiceInfo> mapLocalHost;
 static bool vfLimited[NET_MAX] = {};
 std::string strSubVersion;
-
-// Dash
-std::map<CInv, CDataStream> mapRelayDash;
-std::deque<pair<int64_t, CInv> > vRelayExpirationDash;
-CCriticalSection cs_mapRelayDash;
 //
 limitedmap<uint256, int64_t> mapAlreadyAskedFor(MAX_INV_SZ);
 
@@ -2772,20 +2767,8 @@ void CConnman::RelayTransaction(const CTransaction& tx)
 void CConnman::RelayTransaction(const CTransaction& tx, const CDataStream& ss)
 {
     uint256 hash = tx.GetHash();
-    int nInv = static_cast<bool>(instantsend.HasTxLockRequest(hash) ? MSG_TXLOCK_REQUEST : MSG_TX);
+    int nInv = static_cast<int>(MSG_TX);
     CInv inv(nInv, hash);
-    {
-        LOCK(cs_mapRelayDash);
-        // Expire old relay messages
-        while (!vRelayExpirationDash.empty() && vRelayExpirationDash.front().first < GetTime())
-        {
-            mapRelayDash.erase(vRelayExpirationDash.front().second);
-            vRelayExpirationDash.pop_front();
-        }
-        // Save original serialized message so newer versions are preserved
-        mapRelayDash.insert(std::make_pair(inv, ss));
-        vRelayExpirationDash.push_back(std::make_pair(GetTime() + 15 * 60, inv));
-    }
     LOCK(cs_vNodes);
     for (auto* pnode : vNodes)
     {

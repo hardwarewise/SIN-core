@@ -77,12 +77,14 @@ bool CInfinitynodeMeta::Add(CMetadata &meta)
 
                 //make sure that PublicKey and IP are not using in network for different metaID
                 bool fCheckExistant = false;
-                for (auto& infpair : mapNodeMetadata) {
-                    CMetadata m = infpair.second;
-                    CAddress add = CAddress(infpair.second.getService(), NODE_NETWORK);
+                if (Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+                    for (auto& infpair : mapNodeMetadata) {
+                        CMetadata m = infpair.second;
+                        CAddress add = CAddress(infpair.second.getService(), NODE_NETWORK);
 
-                    if (m.getMetaID() != meta.getMetaID() && (m.getMetaPublicKey() == sPublicKey || addMeta.ToStringIP() == add.ToStringIP())) {
-                        fCheckExistant = true;
+                        if (m.getMetaID() != meta.getMetaID() && (m.getMetaPublicKey() == sPublicKey || addMeta.ToStringIP() == add.ToStringIP())) {
+                            fCheckExistant = true;
+                        }
                     }
                 }
 
@@ -180,14 +182,11 @@ bool CInfinitynodeMeta::RemoveMetaFromBlock(const CBlock& block, CBlockIndex* pi
                                             CPubKey decodePubKey(tx_data.begin(), tx_data.end());
                                             if (decodePubKey.IsValid()) {check++;}
                                         }
-                                        if (Params().NetworkIDString() != CBaseChainParams::REGTEST) {
-                                            //2nd position: Node IP
-                                            if (i==1 && Lookup(s.c_str(), service, 0, false)) {
+                                        //2nd position: Node IP
+                                        if (i==1) {
+                                            if (Lookup(s.c_str(), service, 0, false, Params().NetworkIDString() == CBaseChainParams::REGTEST)) {
                                                 check++;
                                             }
-                                        } else {
-                                            //lets INs run on 127.0.0.1 only on REGTEST
-                                            check++;
                                         }
                                         //3th position: 16 character from Infinitynode BurnTx
                                         if (i==2 && s.length() >= 16) {
@@ -315,13 +314,10 @@ bool CInfinitynodeMeta::metaScan(int nBlockHeight)
                                             }
                                         }
                                         //2nd position: Node IP
-                                        if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
-                                            if (i==1 && Lookup(s.c_str(), service, 0, false)) {
+                                        if (i==1) {
+                                            if (Lookup(s.c_str(), service, 0, false, Params().NetworkIDString() == CBaseChainParams::REGTEST)) {
                                                 check++;
                                             }
-                                        } else {
-                                            //lets INs run on 127.0.0.1 only on regtest
-                                            check ++;
                                         }
                                         //3th position: 16 character from Infinitynode BurnTx
                                         if (i==2 && s.length() >= 16) {

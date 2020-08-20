@@ -650,16 +650,17 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
     }
 
     //check ip and pubkey dont exist
-    std::map<std::string, CMetadata> mapInfMetadata = infnodemeta.GetFullNodeMetadata();
-    for (auto& infpair : mapInfMetadata) {
-        CMetadata m = infpair.second;
-        CAddress add = CAddress(infpair.second.getService(), NODE_NETWORK);
-        if (m.getMetaID() != metaID && (m.getMetaPublicKey() == nodePublickeyHexStr || addMeta.ToStringIP() == add.ToStringIP())) {
-            std::string strError = strprintf("Error: Pubkey or IP address exist in network");
-            throw JSONRPCError(RPC_TYPE_ERROR, strError);
+    if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+        std::map<std::string, CMetadata> mapInfMetadata = infnodemeta.GetFullNodeMetadata();
+        for (auto& infpair : mapInfMetadata) {
+            CMetadata m = infpair.second;
+            CAddress add = CAddress(infpair.second.getService(), NODE_NETWORK);
+            if (m.getMetaID() != metaID && (m.getMetaPublicKey() == nodePublickeyHexStr || addMeta.ToStringIP() == add.ToStringIP())) {
+                std::string strError = strprintf("Error: Pubkey or IP address exist in network");
+                throw JSONRPCError(RPC_TYPE_ERROR, strError);
+            }
         }
     }
-
 
     EnsureWalletIsUnlocked(pwallet);
     // Make sure the results are valid at least up to the most recent block

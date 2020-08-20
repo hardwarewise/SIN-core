@@ -43,6 +43,9 @@ public:
     typedef std::vector<score_pair_t> score_pair_vec_t;
     typedef std::pair<CScript, std::string> lockreward_pair_t; //how send LR and signature string
     typedef std::vector<lockreward_pair_t> lockreward_pair_vec_t;
+
+    // critical section to protect the inner data structures
+    mutable CCriticalSection cs;
 private:
     static const std::string SERIALIZATION_VERSION_STRING;
 
@@ -74,9 +77,6 @@ private:
 public:
 
     CInfinitynodeMan();
-
-    // critical section to protect the inner data structures
-    mutable CCriticalSection cs;
 
     int64_t nLastScanHeight;//last verification from blockchain
 

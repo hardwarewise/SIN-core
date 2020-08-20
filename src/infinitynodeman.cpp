@@ -283,14 +283,11 @@ bool CInfinitynodeMan::buildNonMaturedListFromBlock(const CBlock& block, CBlockI
                                             CPubKey decodePubKey(tx_data.begin(), tx_data.end());
                                             if (decodePubKey.IsValid()) {check++;}
                                         }
-                                        if (Params().NetworkIDString() != CBaseChainParams::REGTEST) {
-                                            //2nd position: Node IP
-                                            if (i==1 && Lookup(s.c_str(), service, 0, false)) {
+                                        //2nd position: Node IP
+                                        if (i==1) {
+                                            if (Lookup(s.c_str(), service, 0, false, Params().NetworkIDString() == CBaseChainParams::REGTEST)) {
                                                 check++;
                                             }
-                                        } else {
-                                            //lets INs run on 127.0.0.1 only on REGTEST
-                                            check++;
                                         }
                                         //3th position: 16 character from Infinitynode BurnTx
                                         if (i==2 && s.length() >= 16) {
@@ -488,14 +485,11 @@ bool CInfinitynodeMan::buildInfinitynodeListFromGenesis(int nBlockHeight)
                                             CPubKey decodePubKey(tx_data.begin(), tx_data.end());
                                             if (decodePubKey.IsValid()) {check++;}
                                         }
-                                        if (Params().NetworkIDString() != CBaseChainParams::REGTEST) {
-                                            //2nd position: Node IP
-                                            if (i==1 && Lookup(s.c_str(), service, 0, false)) {
+                                        //2nd position: Node IP
+                                        if (i==1) {
+                                            if (Lookup(s.c_str(), service, 0, false, Params().NetworkIDString() == CBaseChainParams::REGTEST)) {
                                                 check++;
                                             }
-                                        } else {
-                                            //lets INs run on 127.0.0.1 only on REGTEST
-                                            check++;
                                         }
                                         //3th position: 16 character from Infinitynode BurnTx
                                         if (i==2 && s.length() >= 16) {
@@ -618,6 +612,7 @@ bool CInfinitynodeMan::buildInfinitynodeListFromGenesis(int nBlockHeight)
         //next block
         nLowHeight = nLowHeight + 1;
     }
+    return true;
 }
 
 
@@ -814,14 +809,11 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight, b
                                             CPubKey decodePubKey(tx_data.begin(), tx_data.end());
                                             if (decodePubKey.IsValid()) {check++;}
                                         }
-                                        if (Params().NetworkIDString() != CBaseChainParams::REGTEST) {
-                                            //2nd position: Node IP
-                                            if (i==1 && Lookup(s.c_str(), service, 0, false)) {
+                                        //2nd position: Node IP
+                                        if (i==1) {
+                                            if (Lookup(s.c_str(), service, 0, false, Params().NetworkIDString() == CBaseChainParams::REGTEST)) {
                                                 check++;
                                             }
-                                        } else {
-                                            //lets INs run on 127.0.0.1 only on REGTEST
-                                            check++;
                                         }
                                         //3th position: 16 character from Infinitynode BurnTx
                                         if (i==2 && s.length() >= 16) {
@@ -1369,7 +1361,7 @@ bool CInfinitynodeMan::deterministicRewardAtHeight(int nBlockHeight, int nSinTyp
     int lastStatementSize = 0;
     bool fUpdateStm = false;
     int nNextStmHeight = 0;
-    int loop = 1;
+    long unsigned int loop = 1;
     for(auto& stm : mapStatementSinType)
     {
         if (nBlockHeight == stm.first)
