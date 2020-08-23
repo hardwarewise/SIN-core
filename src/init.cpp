@@ -1836,6 +1836,11 @@ bool AppInitMain()
     LogPrintf("InfinityNode last scan height: %d, Stm size for BIG node: %d, and active Height: %d\n", infnodeman.getLastScan(),
                    infnodeman.getStatementMap(10).size(), chainActive.Height());
     infnodeman.UpdateChainActiveHeight(chainActive.Height());
+    if(infnodeman.getLastScan() == 0 && chainActive.Height() > chainparams.GetConsensus().nInfinityNodeBeginHeight) {
+        LogPrintf("ERROR: InfinityNode is not loaded correctly\n");
+        return false;
+    }
+
     //
 
     if (gArgs.GetBoolArg("-txindex", DEFAULT_TXINDEX)) {
