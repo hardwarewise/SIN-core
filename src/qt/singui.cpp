@@ -172,6 +172,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
 
     QWidget *topBar = new QWidget;
     topThemeButton = new QPushButton();
+    QPushButton *topSetupButton = new QPushButton();
     QPushButton *topConsoleButton = new QPushButton();
     QPushButton *topOptionButton = new QPushButton();
     QPushButton *topAddressButton = new QPushButton();
@@ -181,6 +182,9 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     QHBoxLayout *topBarLayout = new QHBoxLayout;
 
     topBarLayout->addWidget(topThemeButton);
+    if (settings.value("fShowMasternodesTab").toBool()) { 
+    topBarLayout->addWidget(topSetupButton);
+    }
     topBarLayout->addWidget(topConsoleButton);
     topBarLayout->addWidget(topOptionButton);
     topBarLayout->addWidget(topAddressButton);
@@ -207,7 +211,12 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     topThemeButton->setIconSize(QSize(24, 24));
     topThemeButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
 
-
+    topSetupButton->setIcon(QIcon(":/icons/setup"));
+    topSetupButton->setIconSize(QSize(58, 24));
+    topSetupButton->setToolTip( "Open SetUP Wizard"  );
+    topSetupButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
+    
+    
     topConsoleButton->setIcon(QIcon(":/icons/debugwindow"));
     topConsoleButton->setIconSize(QSize(20, 20));
     topConsoleButton->setToolTip( "Open Console"  );
@@ -235,6 +244,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
 
 
     connect(topThemeButton, SIGNAL (released()), this, SLOT (onThemeClicked()));
+    connect(topSetupButton, SIGNAL(released()), this, SLOT(gotoMasternodePage()));
     connect(topConsoleButton, SIGNAL (released()), this, SLOT (showDebugWindowActivateConsole()));
     connect(topOptionButton, SIGNAL(released()), this, SLOT(optionsClicked()));
     connect(topAddressButton, SIGNAL(released()), walletFrame, SLOT(usedReceivingAddresses()));
