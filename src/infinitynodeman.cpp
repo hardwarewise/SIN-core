@@ -323,6 +323,14 @@ bool CInfinitynodeMan::buildNonMaturedListFromBlock(const CBlock& block, CBlockI
         }
     }
 
+    if(fReachedLastBlock){
+        CFlatDB<CInfinitynodeMan> flatdb5("infinitynode.dat", "magicInfinityNodeCache");
+        flatdb5.Dump(infnodeman);
+
+        CFlatDB<CInfinitynodeMeta> flatdb7("infinitynodemeta.dat", "magicInfinityMeta");
+        flatdb7.Dump(infnodemeta);
+    }
+
     return true;
 }
 
@@ -372,6 +380,15 @@ bool CInfinitynodeMan::removeNonMaturedList(CBlockIndex* pindex)
             ++it;
         }
     }
+
+    if(fReachedLastBlock){
+        CFlatDB<CInfinitynodeMan> flatdb5("infinitynode.dat", "magicInfinityNodeCache");
+        flatdb5.Dump(infnodeman);
+
+        CFlatDB<CInfinitynodeMeta> flatdb7("infinitynodemeta.dat", "magicInfinityMeta");
+        flatdb7.Dump(infnodemeta);
+    }
+
     return true;
 }
 
