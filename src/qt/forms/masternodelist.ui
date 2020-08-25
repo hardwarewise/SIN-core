@@ -54,7 +54,7 @@ width: 150px;
         </size>
        </property>
        <property name="currentIndex">
-        <number>3</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tabMyMasternodes">
         <attribute name="title">
@@ -982,7 +982,7 @@ color: #01FFFF;</string>
            <x>10</x>
            <y>330</y>
            <width>971</width>
-           <height>21</height>
+           <height>22</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -1208,6 +1208,13 @@ color: #01FFFF;
           </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_8"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnRestore">
+            <property name="text">
+             <string>Restore</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
