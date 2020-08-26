@@ -111,7 +111,7 @@
         <file alias="minilogo">res/icons/minilogo.png</file>
         <file alias="midlogo">res/icons/midlogo.png</file>
         <file alias="biglogo">res/icons/biglogo.png</file>
-        <file alias="setup">res/icons/setup.png</file>
+        <file alias="setup">res/icons/setup.svg</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>
