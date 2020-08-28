@@ -146,8 +146,8 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
         return true;
     } else {
         //not mainnet
-        // accept all block inferieur than 93000 = fork height in testnet
-        if(nBlockHeight < 93022){
+        // accept all block inferieur than 123000 = fork height in testnet
+        if(nBlockHeight < 123000){
             LogPrintf("IsBlockPayeeValid -- accept all Coinbase Tx before simulation hardfork\n");
             return true;
         }
@@ -326,12 +326,12 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
                                 }
 
                                 bool fLRSenderCheck = false;
-
-                                for(auto& vHisto : meta.getHistory()){
-                                    std::vector<unsigned char> tx_data = DecodeBase64(vHisto.pubkeyHisto.c_str());
+                                CScript senderScript;
+                                for(auto& vhisto : meta.getHistory()){
+                                    std::vector<unsigned char> tx_data = DecodeBase64(vhisto.pubkeyHisto.c_str());
                                     CPubKey pubKey(tx_data.begin(), tx_data.end());
                                     CTxDestination nodeDest = GetDestinationForKey(pubKey, OutputType::LEGACY);
-                                    CScript senderScript = GetScriptForDestination(nodeDest);
+                                    senderScript = GetScriptForDestination(nodeDest);
                                     if(v.scriptPubKey == senderScript){
                                         fLRSenderCheck = true;
                                         break;
@@ -343,6 +343,7 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
                                     fFoundLockReward = true;
                                     break;
                                 } else {
+                                    LogPrintf("FillBlockPayments -- %s <<<<>>>> %s\n", ScriptToAsmStr(v.scriptPubKey), ScriptToAsmStr(senderScript));
                                     LogPrintf("FillBlockPayments -- Found LR, but sender is NOT VALID\n");
                                 }
                         }

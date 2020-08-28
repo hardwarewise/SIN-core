@@ -43,7 +43,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
         strFilter = request.params[1].get_str();
         strOption = request.params[2].get_str();
     }
-    if (request.params.size() > 3)
+    if (request.params.size() > 4)
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Too many parameters");
 
     if (request.fHelp  ||
@@ -53,7 +53,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
                                     && strCommand != "scan-vote" && strCommand != "show-proposals" && strCommand != "keypair"
                                     && strCommand != "mypeerinfo" && strCommand != "checkkey" && strCommand != "scan-metadata"
                                     && strCommand != "show-metadata" && strCommand != "memory-lockreward"
-                                    && strCommand != "show-lockreward"
+                                    && strCommand != "show-lockreward" &&  strCommand != "check-lockreward"
         ))
             throw std::runtime_error(
                 "infinitynode \"command\"...\n"
@@ -63,6 +63,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
                 "\nAvailable commands:\n"
                 "  keypair                     - Generation the compressed key pair\n"
                 "  checkkey                    - Get info about a privateKey\n"
+                "  check-lockreward            - Return the status of Register string\n"
                 "  mypeerinfo                  - Get status of Peer if this node is Infinitynode\n"
                 "  build-list                  - Build list of all infinitynode from block height 165000 to last block\n"
                 "  build-stm                   - Build statement list from genesis parameter\n"
@@ -121,6 +122,30 @@ UniValue infinitynode(const JSONRPCRequest& request)
         obj.push_back(Pair("DecodePublicKey", decodePubKey.GetID().ToString()));
         obj.push_back(Pair("Address", EncodeDestination(dest)));
         obj.push_back(Pair("isCompressed", pubkey.IsCompressed()));
+
+        return obj;
+    }
+
+    if (strCommand == "check-lockreward")
+    {
+        if (request.params.size() < 4)
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Correct usage is 'infinitynode check-lockreward \"BurnTxId\" \"index\" \"RegisterString\" '");
+
+        uint256 txId;
+        txId = uint256S(request.params[1].get_str());
+
+        std::string index = request.params[2].get_str();
+        int i = atoi(index);
+
+        COutPoint outpointBurnTx = COutPoint(txId, i);
+
+        std::string strRegisterInfo = request.params[3].get_str();
+        std::string error = "";
+
+        bool result = inflockreward.CheckLockRewardRegisterInfo(strRegisterInfo, error, outpointBurnTx);
+
+        obj.push_back(Pair("Result", result));
+        obj.push_back(Pair("Error string", error));
 
         return obj;
     }
