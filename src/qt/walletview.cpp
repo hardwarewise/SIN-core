@@ -342,6 +342,14 @@ void WalletView::gotoVerifyMessageTab(QString addr)
         signVerifyMessageDialog->setAddress_VM(addr);
 }
 
+void WalletView::gotoSetupTab()
+{
+    // calls show() in showTab_setUP()
+    setCurrentWidget(masternodeListPage);
+    masternodeListPage->showTab_setUP(true);
+   
+}
+
 bool WalletView::handlePaymentRequest(const SendCoinsRecipient& recipient)
 {
     return sendCoinsPage->handlePaymentRequest(recipient);

@@ -90,6 +90,11 @@ public Q_SLOTS:
     void gotoFaqPage();
     //
 
+    // setUP
+    /** Switch to setUP Tab */
+    void gotoSetupTab();
+    //
+
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */

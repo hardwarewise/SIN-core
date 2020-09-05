@@ -244,7 +244,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
 
 
     connect(topThemeButton, SIGNAL (released()), this, SLOT (onThemeClicked()));
-    connect(topSetupButton, SIGNAL(released()), this, SLOT(gotoMasternodePage()));
+    connect(topSetupButton, SIGNAL(released()), this, SLOT(gotoSetupTab()));
     connect(topConsoleButton, SIGNAL (released()), this, SLOT (showDebugWindowActivateConsole()));
     connect(topOptionButton, SIGNAL(released()), this, SLOT(optionsClicked()));
     connect(topAddressButton, SIGNAL(released()), walletFrame, SLOT(usedReceivingAddresses()));
@@ -1373,8 +1373,16 @@ void SINGUI::gotoSignMessageTab(QString addr)
 
 void SINGUI::gotoVerifyMessageTab(QString addr)
 {
-    if (walletFrame) walletFrame->gotoVerifyMessageTab(addr);
+    if (walletFrame) walletFrame->gotoVerifyMessageTab();
 }
+
+void SINGUI::gotoSetupTab()
+{
+    if (walletFrame) walletFrame->gotoSetupTab();
+    masternodeAction->setChecked(true);
+    
+}
+
 #endif // ENABLE_WALLET
 
 void SINGUI::updateNetworkState()

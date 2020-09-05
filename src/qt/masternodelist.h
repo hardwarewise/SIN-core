@@ -62,6 +62,7 @@ public:
     void setWalletModel(WalletModel *walletModel);
     void StartAlias(std::string strAlias);
     void StartAll(std::string strCommand = "start-all");
+    void showTab_setUP(bool fShow);
 
 private:
     QMenu *contextMenu;
