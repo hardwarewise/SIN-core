@@ -286,6 +286,11 @@ private Q_SLOTS:
     void gotoMasternodePage();
     //
 
+    // setUP
+    /** Switch to setUP Tab */
+    void gotoSetupTab();
+    //
+
     // Instaswap
     /** Switch to instaswap page */
     void gotoInstaswapPage();
