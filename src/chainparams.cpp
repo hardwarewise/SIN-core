@@ -347,7 +347,7 @@ public:
 
         //vSeeds.emplace_back("206.189.57.75");
         //vSeeds.emplace_back("165.22.81.15");
-        nDefaultPort = 20980;
+        nDefaultPort = 20990;
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,63);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
