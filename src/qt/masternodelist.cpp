@@ -1819,6 +1819,12 @@ void MasternodeList::nodeSetupCleanProgress()   {
     currentStep = 0;
 }
 
+void MasternodeList::showTab_setUP(bool fShow)
+{
+    ui->tabWidget->setCurrentIndex(3);
+    
+}
+
 // RPC helper
 UniValue nodeSetupCallRPC(string args)
 {

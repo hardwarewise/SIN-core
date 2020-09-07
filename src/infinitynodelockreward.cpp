@@ -1596,10 +1596,12 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
             if(!CheckLockRewardRegisterInfo(sLockRewardMusig, sErrorCheck, mapLockRewardGroupSigners[nHashGroupSigner].vin.prevout)){
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Check error: %s, Register LockReward error: %s\n",
                          sErrorCheck, sErrorRegister);
+                return false;
             } else {
                 //send register info
                 if(!AutoResigterLockReward(sLockRewardMusig, sErrorCheck)){
                     LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Register LockReward false: %s\n", sErrorCheck);
+                    return false;
                 } else {
                     //memory the musig in map. No build for this anymore
                     mapSigned[mapLockRewardRequest[nHashLockRequest].nRewardHeight] = nHashGroupSigner;
@@ -1794,9 +1796,10 @@ bool CInfinityNodeLockReward::CheckLockRewardRegisterInfo(std::string sLockRewar
 
                 //check metadata use with nRewardHeight of reward
                 bool fFindMetaHisto = false;
-                std::string pubkeyMetaHisto = "";
+                std::string pubkeyMetaHisto = metaTopNode.getMetaPublicKey();//last Pubkey
                 int nBestDistant = 10000000; //blocks
                 if(nRewardHeight < metaTopNode.getMetadataHeight() + Params().MaxReorganizationDepth() * 2){
+                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Find info in hisroty\n");
                     //height of current metadata is KO for Musig => find in history to get good metadata info
                     for(auto& v : metaTopNode.getHistory()){
                         int metaHistoMature = v.nHeightHisto + Params().MaxReorganizationDepth() * 2;
@@ -1813,6 +1816,7 @@ bool CInfinityNodeLockReward::CheckLockRewardRegisterInfo(std::string sLockRewar
                         return false;
                     }
                 }
+                LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Pubkey signer %d: %s\n", signerIndexes[i], pubkeyMetaHisto);
 
                 int nScore;
                 int nSINtypeCanLockReward = Params().GetConsensus().nInfinityNodeLockRewardSINType; //mypeer must be this SINtype, if not, score is NULL
@@ -1829,7 +1833,7 @@ bool CInfinityNodeLockReward::CheckLockRewardRegisterInfo(std::string sLockRewar
                 }
 
                 {
-                    std::string metaPublicKey = metaTopNode.getMetaPublicKey();
+                    std::string metaPublicKey = pubkeyMetaHisto;
                     std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
                     CPubKey pubKey(tx_data.begin(), tx_data.end());
                     if (!secp256k1_ec_pubkey_parse(secp256k1_context_musig, &pubkeys[i], pubKey.data(), pubKey.size())) {
