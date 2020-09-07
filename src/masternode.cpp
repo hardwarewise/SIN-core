@@ -129,8 +129,8 @@ void CMasternode::updateInfinityNodeInfo(bool fAllowFull)
     Solver(prevScript, whichType, vSolutions);
     if (whichType == TX_BURN_DATA){burnTxStandard="burn_and_data";}
 
-    nExpireHeight = coinBurnFund.nHeight + 720*365;
-    if(Params().NetworkIDString() == CBaseChainParams::TESTNET){nExpireHeight = coinBurnFund.nHeight + 720*7;}
+    nExpireHeight = coinBurnFund.nHeight + Params().GetConsensus().nInfinityNodeExpireTime;
+    if(Params().NetworkIDString() == CBaseChainParams::TESTNET){nExpireHeight = coinBurnFund.nHeight + Params().GetConsensus().nInfinityNodeExpireTime;}
     nBurnAmount = coinBurnFund.out.nValue / COIN + 1; //automaticaly round
     nCollateralAmount = coinCollateral.out.nValue / COIN;
     collateralAddress = EncodeDestination(addressCollateral);
@@ -267,7 +267,7 @@ CMasternode::BurnFundStatus CMasternode::CheckBurnFund(const COutPoint& outpoint
         return BURNFUND_INVALID_AMOUNT;
     }
 
-    nHeightRet = nExpireHeight - 720 *650;
+    nHeightRet = nExpireHeight - Params().GetConsensus().nInfinityNodeExpireTime;
     return BURNFUND_OK;
 }
 

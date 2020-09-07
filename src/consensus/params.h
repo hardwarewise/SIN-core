@@ -77,6 +77,7 @@ struct Params {
     int nInfinityNodeLockRewardTop; //in number
     int nInfinityNodeLockRewardSigners; //in number
     int nInfinityNodeLockRewardSINType; //in number
+    int nInfinityNodeExpireTime; //in number
     int nSchnorrActivationHeight; // block height (int)
     int nNewDevfeeAddress; // block height (int) - DIN switch height
 
