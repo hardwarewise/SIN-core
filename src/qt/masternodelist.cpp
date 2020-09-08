@@ -34,6 +34,7 @@
 #include <QTimer>
 #include <QMessageBox>
 #include <QStyleFactory>
+#include <QDesktopServices>
 
 // begin nodeSetup
 #include <boost/algorithm/string.hpp>
@@ -132,6 +133,7 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     // node setup
     NODESETUP_ENDPOINT_NODE = QString::fromStdString(gArgs.GetArg("-nodesetupurl", "https://setup2dev.sinovate.io/includes/api/nodecp.php"));
     NODESETUP_ENDPOINT_BASIC = QString::fromStdString(gArgs.GetArg("-nodesetupurlbasic", "https://setup2dev.sinovate.io/includes/api/basic.php"));
+    NODESETUP_RESTORE_URL = QString::fromStdString(gArgs.GetArg("-nodesetupurlrestore", "https://setup2dev.sinovate.io/index.php?rp=/password/reset/begin"));
     NODESETUP_PID = "1";  // "22" for prod
     NODESETUP_CONFIRMS = 2;
 
@@ -144,6 +146,9 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
 
     burnSendTimer = new QTimer(this);
     connect(burnSendTimer, SIGNAL(timeout()), this, SLOT(nodeSetupCheckBurnSendConfirmations()));
+
+    pendingPaymentsTimer = new QTimer(this);
+    connect(pendingPaymentsTimer, SIGNAL(timeout()), this, SLOT(nodeSetupCheckBurnSendConfirmations()));
 
     nodeSetupInitialize();
 }
@@ -478,7 +483,6 @@ void MasternodeList::updateDINList()
                 }
                 // update used burn tx map
                 std::string burnfundTxId = infoInf.vinBurnFund.prevout.hash.ToString().substr(0, 16);
-LogPrintf("nodeSetupGetUnusedBurnTxs updateDINList %s, %s \n", sPeerAddress, burnfundTxId);
                 nodeSetupUsedBurnTxs.insert( { burnfundTxId, 1  } );
             }
             if(infoInf.nExpireHeight < nCurrentHeight){
@@ -700,13 +704,42 @@ void MasternodeList::on_payButton_clicked()
      if (invoiceToPay>0)    {
         nodeSetupAPIGetInvoice( invoiceToPay, strAmount, strStatus, paymentAddress, strError );
         CAmount invoiceAmount = strAmount.toDouble();
+        LogPrintf("nodeSetupCheckPendingPayments nodeSetupAPIGetInvoice %s, %d \n", strStatus.toStdString(), invoiceToPay );
+
          if ( strStatus == "Unpaid" )  {
              QString paymentTx = nodeSetupSendToAddress( paymentAddress, invoiceAmount, NULL );
              if ( paymentTx != "" ) {
+                 nodeSetupPendingPayments.insert( { paymentTx.toStdString(), invoiceToPay } );
+                 if ( pendingPaymentsTimer !=NULL && !pendingPaymentsTimer->isActive() )  {
+LogPrintf("nodeSetupCheckPendingPayments start timer %d \n", invoiceToPay );
+                     pendingPaymentsTimer->start(30000);
+                 }
                  ui->labelMessage->setText( "Pending Invoice Payment finished, please wait for confirmations." );
              }
          }
      }
+}
+
+void MasternodeList::nodeSetupCheckPendingPayments()    {
+    int invoiceToPay;
+    QString strAmount, strStatus, paymentAddress, strError;
+LogPrintf("nodeSetupCheckPendingPayments \n" );
+
+    for(auto& itemPair : nodeSetupPendingPayments)   {
+        invoiceToPay = itemPair.second;
+        nodeSetupAPIGetInvoice( invoiceToPay, strAmount, strStatus, paymentAddress, strError );
+LogPrintf("nodeSetupCheckPendingPayments %s, %d \n", strStatus.toStdString(), invoiceToPay );
+        if ( strStatus != "Unpaid" )  { // either paid or cancelled/removed
+            nodeSetupPendingPayments.erase(itemPair.first);
+        }
+    }
+
+    if ( nodeSetupPendingPayments.size()==0 )   {
+        if ( pendingPaymentsTimer !=NULL && pendingPaymentsTimer->isActive() )  {
+LogPrintf("nodeSetupCheckPendingPayments stop timer %d \n" );
+            pendingPaymentsTimer->stop();
+        }
+    }
 }
 
 QString MasternodeList::nodeSetupGetNewAddress()    {
@@ -724,6 +757,11 @@ QString MasternodeList::nodeSetupGetNewAddress()    {
     } catch (UniValue& objError ) {
         ui->labelMessage->setText( "Error getting new wallet address" );
     }
+    catch ( std::runtime_error e)
+    {
+        ui->labelMessage->setText( QString::fromStdString( "ERROR getnewaddress: unexpected error " ) + QString::fromStdString( e.what() ));
+    }
+
     return strAddress;
 }
 
@@ -733,6 +771,8 @@ QString MasternodeList::nodeSetupSendToAddress( QString strAddress, int amount, 
     try {
         cmd.str("");
         cmd << "sendtoaddress " << strAddress.toUtf8().constData() << " " << amount;
+LogPrintf("nodeSetupSendToAddress %s, %f\n", strAddress.toStdString(), amount );
+
         UniValue jsonVal = nodeSetupCallRPC( cmd.str() );
         if ( jsonVal.type() == UniValue::VSTR )       // tx id returned
         {
@@ -749,11 +789,20 @@ QString MasternodeList::nodeSetupSendToAddress( QString strAddress, int amount, 
 
         ui->labelMessage->setText( QString::fromStdString(find_value(objError, "message").get_str()) );
     }
+    catch ( std::runtime_error e)
+    {
+        ui->labelMessage->setText( QString::fromStdString( "ERROR sendtoaddress: unexpected error " ) + QString::fromStdString( e.what() ));
+    }
+
     return strTxId;
 }
 
 UniValue MasternodeList::nodeSetupGetTxInfo( QString txHash, std::string attribute)  {
-    UniValue ret;
+    UniValue ret = 0;
+
+    if ( txHash.length() != 64  )
+        return ret;
+
     std::ostringstream cmd;
     try {
         cmd.str("");
@@ -769,6 +818,11 @@ UniValue MasternodeList::nodeSetupGetTxInfo( QString txHash, std::string attribu
     } catch (UniValue& objError ) {
         ui->labelMessage->setText( "Error calling RPC gettransaction");
     }
+    catch ( std::runtime_error e)
+    {
+        ui->labelMessage->setText( QString::fromStdString( "ERROR gettransaction: unexpected error " ) + QString::fromStdString( e.what() ));
+    }
+
     return ret;
 }
 
@@ -824,17 +878,23 @@ LogPrintf("nodeSetupCheckInvoiceStatus no txID \n");
     }
 
     if ( strStatus == "Paid" )  {           // launch node setup (RPC)
-LogPrintf("nodeSetupCheckInvoiceStatus Invoice Paid \n");
         invoiceTimer->stop();
 
         QString strPrivateKey, strPublicKey, strDecodePublicKey, strAddress, strNodeIp;
 
         mBurnTx = nodeSetupGetBurnTx();
         QString strSelectedBurnTx = ui->comboBurnTx->currentData().toString();
+        if (strSelectedBurnTx=="WAIT")  strSelectedBurnTx = "NEW";
 
-        if ( mBurnTx=="" && strSelectedBurnTx!="NEW")   mBurnTx = strSelectedBurnTx;
+LogPrintf("nodeSetupCheckInvoiceStatus mBurnTx = %s \n", mBurnTx.toStdString());
+
+        if ( mBurnTx=="" && strSelectedBurnTx!="NEW")   {
+            mBurnTx = strSelectedBurnTx;
+            nodeSetupSetBurnTx(mBurnTx);
+        }
 
         if ( mBurnTx!="" )   {   // skip to check burn tx
+            mBurnAddress = nodeSetupGetOwnerAddressFromBurnTx(mBurnTx);
             if ( !burnSendTimer->isActive() )  {
                 burnSendTimer->start(20000);    // check every 20 secs
             }
@@ -844,7 +904,6 @@ LogPrintf("nodeSetupCheckInvoiceStatus Invoice Paid \n");
             int nMasternodeBurn = nodeSetupGetBurnAmount();
 
             mBurnPrepareTx = nodeSetupSendToAddress( mBurnAddress, nMasternodeBurn, burnPrepareTimer );
-    LogPrintf("nodeSetupSendToAddress %s \n", mBurnPrepareTx.toStdString());
             if ( mBurnPrepareTx=="" )  {
                ui->labelMessage->setText( "ERROR: failed to prepare burn transaction." );
             }
@@ -853,6 +912,44 @@ LogPrintf("nodeSetupCheckInvoiceStatus Invoice Paid \n");
     }
 
     return strStatus;
+}
+
+QString MasternodeList::nodeSetupGetOwnerAddressFromBurnTx( QString burnTx )    {
+    QString address = "";
+
+    std::ostringstream cmd;
+    try {
+        cmd.str("");
+        cmd << "getrawtransaction " << burnTx.toUtf8().constData() << " 1";
+        UniValue jsonVal = nodeSetupCallRPC( cmd.str() );
+        if ( jsonVal.type() == UniValue::VOBJ )       // object returned
+        {
+            UniValue vinArray = find_value(jsonVal.get_obj(), "vin").get_array();
+            UniValue vin0 = vinArray[0].get_obj();
+            QString txid = QString::fromStdString(find_value(vin0, "txid").get_str());
+LogPrintf("nodeSetupGetOwnerAddressFromBurnTx %s \n", txid.toStdString());
+            if ( txid!="" ) {
+                cmd.str("");
+                cmd << "gettransaction " << txid.toUtf8().constData();
+                jsonVal = nodeSetupCallRPC( cmd.str() );
+                UniValue details = find_value(jsonVal.get_obj(), "details").get_array();
+                UniValue detail0 = details[0].get_obj();
+                address = QString::fromStdString(find_value(detail0, "address").get_str());
+LogPrintf("nodeSetupGetOwnerAddressFromBurnTx address %s \n", address.toStdString());
+            }
+
+        }
+        else {
+            ui->labelMessage->setText( "Error calling RPC getrawtransaction");
+        }
+    } catch (UniValue& objError ) {
+        ui->labelMessage->setText( "Error RPC obtaining owner address");
+    }
+    catch ( std::runtime_error e)
+    {
+        ui->labelMessage->setText( QString::fromStdString( "ERROR get owner address: unexpected error " ) + QString::fromStdString( e.what() ));
+    }
+    return address;
 }
 
 void MasternodeList::nodeSetupCheckBurnPrepareConfirmations()   {
@@ -866,7 +963,6 @@ void MasternodeList::nodeSetupCheckBurnPrepareConfirmations()   {
         int nMasternodeBurn = nodeSetupGetBurnAmount();
 
         mBurnTx = nodeSetupRPCBurnFund( mBurnAddress, nMasternodeBurn , strAddressBackup);
-LogPrintf("nodeSetupCheckBurnPrepareConfirmations burntx=%s \n", mBurnTx.toStdString());
         QString metaTx = nodeSetupSendToAddress( mBurnAddress, 5 , NULL );
         if ( mBurnTx!="" )  {
             nodeSetupSetBurnTx(mBurnTx);
@@ -908,6 +1004,7 @@ LogPrintf("nodeSetupCheckBurnSendConfirmations %d, %d, %s, %s \n", mServiceId, c
                 cmd << "infinitynodeupdatemeta " << mBurnAddress.toUtf8().constData() << " " << strPublicKey.toUtf8().constData() << " " << strNodeIp.toUtf8().constData() << " " << mBurnTx.left(16).toUtf8().constData();
                 UniValue jsonVal = nodeSetupCallRPC( cmd.str() );
 
+                nodeSetupSendToAddress( strAddress, 1, NULL );  // send 1 coin as per recommendation from BEET to expedite the rewards
                 nodeSetupSetServiceForNodeAddress( strAddress, mServiceId); // store serviceid
                 // cleanup
                 nodeSetupResetOrderId();
@@ -1100,6 +1197,8 @@ void MasternodeList::nodeSetupResetClientId( )  {
     ui->setupButtons->hide();
     ui->labelClientId->setText("");
     ui->btnLogin->setText("Create/Login");
+    ui->btnRestore->show();
+
     ui->btnCheck->setEnabled(false);
     ui->btnSetup->setEnabled(false);
     ui->btnCheck->setEnabled(false);
@@ -1129,6 +1228,7 @@ void MasternodeList::nodeSetupEnableClientId( int clientId )  {
     ui->labelMessage->setText("Select a node Tier and then press 'Check' to verify if you meet the prerequisites");
     mClientid = clientId;
     ui->btnLogin->setText("Logout");
+    ui->btnRestore->hide();
 
     nodeSetupPopulateInvoicesCombo();
     ui->comboBurnTx->addItem(tr("Loading node data..."),"WAIT");
@@ -1291,6 +1391,7 @@ QString MasternodeList::nodeSetupGetBurnTx( )  {
     if (settings.contains("nodeSetupBurnTx"))
         ret = settings.value("nodeSetupBurnTx").toString();
 
+    if (ret=="WAIT")    ret = "";
     return ret;
 }
 
@@ -1503,7 +1604,7 @@ LogPrintf("nodeSetup::ListInvoices %s \n", url.toString().toStdString());
             QString status = obj["status"].toString();
             QString total = obj["total"].toString() + " " + obj["currencycode"].toString();
             QString duedate = obj["duedate"].toString();
-LogPrintf("nodeSetupAPIListInvoices %d, %s, %s \n",invoiceId, status.toStdString(), duedate.toStdString() );
+//LogPrintf("nodeSetupAPIListInvoices %d, %s, %s \n",invoiceId, status.toStdString(), duedate.toStdString() );
             if ( status == "Unpaid" )   {
                 QString description = "#" + QString::number(invoiceId) + " " + duedate + " (" + total + " )";
                 ret.insert( { invoiceId , description.toStdString() } );
@@ -1689,7 +1790,7 @@ std::map<std::string, std::string> MasternodeList::nodeSetupGetUnusedBurnTxs( ) 
                 }
 
                 description = strNodeType + " " + GUIUtil::dateTimeStr(pwtx->GetTxTime()).toUtf8().constData();
-LogPrintf("nodeSetupGetUnusedBurnTxs  confirmed %s, %d, %s \n", txHash.substr(0, 16), roundAmount, description);
+//LogPrintf("nodeSetupGetUnusedBurnTxs  confirmed %s, %d, %s \n", txHash.substr(0, 16), roundAmount, description);
                 ret.insert( { txHash,  description} );
             }
         }
@@ -1743,4 +1844,9 @@ LogPrintf("nodeSetupCallRPC  %s\n", args);
     req.strMethod = strMethod;
     req.URI = uri;
     return ::tableRPC.execute(req);
+}
+
+void MasternodeList::on_btnRestore_clicked()
+{
+    QDesktopServices::openUrl(QUrl(NODESETUP_RESTORE_URL, QUrl::TolerantMode));
 }
