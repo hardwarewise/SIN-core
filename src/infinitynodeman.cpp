@@ -73,6 +73,11 @@ bool CInfinitynodeMan::Add(CInfinitynode &inf)
 bool CInfinitynodeMan::AddUpdateLastPaid(CScript scriptPubKey, int nHeightLastPaid)
 {
     LOCK(cs_LastPaid);
+
+    CTxDestination addressBurnFund;
+    ExtractDestination(scriptPubKey, addressBurnFund);
+    LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::AddUpdateLastPaid -- %s: %d\n", EncodeDestination(addressBurnFund), nHeightLastPaid);
+
     auto it = mapLastPaid.find(scriptPubKey);
     if (it != mapLastPaid.end()) {
         if (mapLastPaid[scriptPubKey] < nHeightLastPaid) {
@@ -144,30 +149,7 @@ void CInfinitynodeMan::CheckAndRemove(CConnman& connman)
         return;
     }
 
-    //first scan -- normaly, list is built in init.cpp
-    if (nLastScanHeight == 0 && nCachedBlockHeight > Params().GetConsensus().nInfinityNodeBeginHeight) {
-        buildInfinitynodeList(nCachedBlockHeight, Params().GetConsensus().nInfinityNodeBeginHeight);
-        return;
-    }
-
-    //2nd scan and loop
-    if (nCachedBlockHeight > nLastScanHeight && nLastScanHeight > 0)
-    {
-        LogPrint(BCLog::INFINITYNODE, "CInfinitynodeMan::CheckAndRemove -- block height %d and lastScan %d\n", 
-                   nCachedBlockHeight, nLastScanHeight);
-        buildInfinitynodeList(nCachedBlockHeight, nLastScanHeight);
-    }
-
-    if (nBIGLastStmHeight + nBIGLastStmSize - nCachedBlockHeight < Params().MaxReorganizationDepth()){
-        deterministicRewardStatement(10);
-    }
-    if (nMIDLastStmHeight + nMIDLastStmSize - nCachedBlockHeight < Params().MaxReorganizationDepth()){
-        deterministicRewardStatement(5);
-    }
-    if (nLILLastStmHeight + nLILLastStmSize - nCachedBlockHeight < Params().MaxReorganizationDepth()){
-        deterministicRewardStatement(1);
-    }
-
+    updateLastPaidList(nCachedBlockHeight, nCachedBlockHeight - Params().MaxReorganizationDepth());
     return;
 }
 
@@ -633,20 +615,18 @@ bool CInfinitynodeMan::buildInfinitynodeListFromGenesis(int nBlockHeight)
 }
 
 
-/*this function dont be used*/
-bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight, bool fWriteDisk)
+bool CInfinitynodeMan::updateLastPaidList(int nBlockHeight, int nLowHeight)
 {
 
-    Clear();
     infnodersv.Clear();
+    if (nLowHeight <= 0) nLowHeight = 1;
 
     LOCK2(cs_main, cs);
-
-    nLowHeight = 1;
+    LogPrint(BCLog::INFINITYNODE, "CInfinitynodeMan::updateLastPaidList -- from %d to %d\n", nBlockHeight, nLowHeight);
 
     uint256 blockHash;
     if(!GetBlockHash(blockHash, nBlockHeight)) {
-        LogPrint(BCLog::INFINITYNODE, "CInfinitynodeMan::buildInfinitynodeList -- can not get block hash at %d\n", nBlockHeight);
+        LogPrint(BCLog::INFINITYNODE, "CInfinitynodeMan::updateLastPaidList -- can not get block hash at %d\n", nBlockHeight);
         return false;
     }
 
@@ -679,89 +659,6 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight, b
                         txnouttype whichType;
                         const CScript& prevScript = out.scriptPubKey;
                         Solver(prevScript, whichType, vSolutions);
-                        //Send to BurnAddress
-                        if (whichType == TX_BURN_DATA && Params().GetConsensus().cBurnAddress == EncodeDestination(CKeyID(uint160(vSolutions[0]))))
-                        {
-                            //Amount for InfnityNode
-                            if (
-                            ((Params().GetConsensus().nMasternodeBurnSINNODE_1 - 1) * COIN < out.nValue && out.nValue <= Params().GetConsensus().nMasternodeBurnSINNODE_1 * COIN) ||
-                            ((Params().GetConsensus().nMasternodeBurnSINNODE_5 - 1) * COIN < out.nValue && out.nValue <= Params().GetConsensus().nMasternodeBurnSINNODE_5 * COIN) ||
-                            ((Params().GetConsensus().nMasternodeBurnSINNODE_10 - 1) * COIN < out.nValue && out.nValue <= Params().GetConsensus().nMasternodeBurnSINNODE_10 * COIN)
-                            ) {
-                                COutPoint outpoint(tx->GetHash(), i);
-                                CInfinitynode inf(PROTOCOL_VERSION, outpoint);
-                                inf.setHeight(prevBlockIndex->nHeight);
-                                inf.setBurnValue(out.nValue);
-
-                                if (vSolutions.size() == 2){
-                                    std::string backupAddress(vSolutions[1].begin(), vSolutions[1].end());
-                                    CTxDestination NodeAddress = DecodeDestination(backupAddress);
-                                    if (IsValidDestination(NodeAddress)) {
-                                        inf.setBackupAddress(backupAddress);
-                                    }
-                                }
-                                //SINType
-                                CAmount nBurnAmount = out.nValue / COIN + 1; //automaticaly round
-                                inf.setSINType(nBurnAmount / 100000);
-                                //Address payee: we known that there is only 1 input
-                                const CTxIn& txin = tx->vin[0];
-                                int index = txin.prevout.n;
-
-                                CTransactionRef prevtx;
-                                uint256 hashblock;
-                                if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false, nullptr, false)) {
-                                    LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- PrevBurnFund tx is not in block.\n");
-                                    return false;
-                                }
-
-                                CTxDestination addressBurnFund;
-                                if(!ExtractDestination(prevtx->vout[index].scriptPubKey, addressBurnFund)){
-                                    LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- False when extract payee from BurnFund tx.\n");
-                                    return false;
-                                }
-
-                                inf.setCollateralAddress(EncodeDestination(addressBurnFund));
-                                inf.setScriptPublicKey(prevtx->vout[index].scriptPubKey);
-
-                                //we have all infos. Then add in map
-                                if(prevBlockIndex->nHeight < pindex->nHeight - Params().MaxReorganizationDepth()) {
-                                    //matured
-                                    Add(inf);
-                                }
-                            }
-                            //Amount for vote
-                            if (out.nValue == Params().GetConsensus().nInfinityNodeVoteValue * COIN){
-                                if (vSolutions.size() == 2){
-                                    std::string voteOpinion(vSolutions[1].begin(), vSolutions[1].end());
-                                    if (voteOpinion.length() == 9) {
-                                        std::string proposalID = voteOpinion.substr(0, 8);
-                                        bool opinion = false;
-                                        if (voteOpinion.substr(8, 1) == "1" ) {
-                                            opinion = true;
-                                        }
-                                        //Address payee: we known that there is only 1 input
-                                        const CTxIn& txin = tx->vin[0];
-                                        int index = txin.prevout.n;
-
-                                        CTransactionRef prevtx;
-                                        uint256 hashblock;
-                                        if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false, nullptr, false)) {
-                                            LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- PrevBurnFund tx is not in block.\n");
-                                            return false;
-                                        }
-
-                                        CTxDestination addressBurnFund;
-                                        if(!ExtractDestination(prevtx->vout[index].scriptPubKey, addressBurnFund)){
-                                            LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- False when extract payee from BurnFund tx.\n");
-                                            return false;
-                                        }
-
-                                        CVote vote = CVote(proposalID, prevtx->vout[index].scriptPubKey, prevBlockIndex->nHeight, opinion);
-                                        infnodersv.Add(vote);
-                                    }
-                                }
-                            }
-                        }
                         //Governance Vote Address
                         if (whichType == TX_BURN_DATA && Params().GetConsensus().cGovernanceAddress == EncodeDestination(CKeyID(uint160(vSolutions[0]))))
                         {
@@ -769,7 +666,7 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight, b
                             if (out.nValue == Params().GetConsensus().nInfinityNodeVoteValue * COIN){
                                 if (vSolutions.size() == 2){
                                     std::string voteOpinion(vSolutions[1].begin(), vSolutions[1].end());
-                                    LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- Extract vote at height: %d.\n", prevBlockIndex->nHeight);
+                                    LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateLastPaidList -- Extract vote at height: %d.\n", prevBlockIndex->nHeight);
                                     if(voteOpinion.length() == 9){
                                         std::string proposalID = voteOpinion.substr(0, 8);
                                         bool opinion = false;
@@ -781,141 +678,31 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight, b
                                         CTransactionRef prevtx;
                                         uint256 hashblock;
                                         if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false, nullptr, false)) {
-                                            LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- PrevBurnFund tx is not in block.\n");
+                                            LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateLastPaidList -- PrevBurnFund tx is not in block.\n");
                                             return false;
                                         }
                                         CTxDestination addressBurnFund;
                                         if(!ExtractDestination(prevtx->vout[index].scriptPubKey, addressBurnFund)){
-                                            LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- False when extract payee from BurnFund tx.\n");
+                                            LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateLastPaidList -- False when extract payee from BurnFund tx.\n");
                                             return false;
                                         }
                                         //we have all infos. Then add in map
                                         if(prevBlockIndex->nHeight < pindex->nHeight - Params().MaxReorganizationDepth()) {
                                             //matured
-	                                        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- Voter: %s, proposal: %s.\n", EncodeDestination(addressBurnFund), voteOpinion);
+	                                        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateLastPaidList -- Voter: %s, proposal: %s.\n", EncodeDestination(addressBurnFund), voteOpinion);
                                             CVote vote = CVote(proposalID, prevtx->vout[index].scriptPubKey, prevBlockIndex->nHeight, opinion);
                                             infnodersv.Add(vote);
                                         } else {
                                             //non matured
-                                            LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- Non matured vote.\n");
+                                            LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateLastPaidList -- Non matured vote.\n");
                                         }
                                     }
                                 }
                             }
                         }
-                        //Amount to update Metadata
-                        if (whichType == TX_BURN_DATA && Params().GetConsensus().cMetadataAddress == EncodeDestination(CKeyID(uint160(vSolutions[0]))))
-                        {
-                            //Amount for UpdateMeta
-                            if ((Params().GetConsensus().nInfinityNodeUpdateMeta - 1) * COIN <= out.nValue && out.nValue <= (Params().GetConsensus().nInfinityNodeUpdateMeta) * COIN) {
-                                if (vSolutions.size() == 2) {
-                                    std::string metadata(vSolutions[1].begin(), vSolutions[1].end());
-                                    string s;
-                                    stringstream ss(metadata);
-                                    int i=0;
-                                    int check=0;
-                                    std::string publicKeyString;
-                                    CService service;
-                                    std::string burnTxID;
-                                    while (getline(ss, s,';')) {
-                                        CTxDestination NodeAddress;
-                                        //1st position: Node Address
-                                        if (i==0) {
-                                            publicKeyString = s;
-                                            std::vector<unsigned char> tx_data = DecodeBase64(publicKeyString.c_str());
-                                            CPubKey decodePubKey(tx_data.begin(), tx_data.end());
-                                            if (decodePubKey.IsValid()) {check++;}
-                                        }
-                                        //2nd position: Node IP
-                                        if (i==1) {
-                                            if (Lookup(s.c_str(), service, 0, false, Params().NetworkIDString() == CBaseChainParams::REGTEST)) {
-                                                check++;
-                                            }
-                                        }
-                                        //3th position: 16 character from Infinitynode BurnTx
-                                        if (i==2 && s.length() >= 16) {
-                                            check++;
-                                            burnTxID = s.substr(0, 16);
-                                        }
-                                        //Update node metadata if nHeight is bigger
-                                        if (check == 3){
-                                            //prevBlockIndex->nHeight
-                                            const CTxIn& txin = tx->vin[0];
-                                            int index = txin.prevout.n;
-
-                                            CTransactionRef prevtx;
-                                            uint256 hashblock;
-                                            if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false, nullptr, false)) {
-                                                LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMeta::metaScan -- PrevBurnFund tx is not in block.\n");
-                                                return false;
-                                            }
-
-                                            CTxDestination addressBurnFund;
-                                            if(!ExtractDestination(prevtx->vout[index].scriptPubKey, addressBurnFund)){
-                                                LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMeta::metaScan -- False when extract payee from BurnFund tx.\n");
-                                                return false;
-                                            }
-
-                                            std::ostringstream streamInfo;
-                                            streamInfo << EncodeDestination(addressBurnFund) << "-" << burnTxID;
-
-                                            LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMeta:: meta update: %s, %s, %s\n", 
-                                                         streamInfo.str(), publicKeyString, service.ToString());
-                                            int avtiveBK = 0;
-                                            CMetadata meta = CMetadata(streamInfo.str(), publicKeyString, service, prevBlockIndex->nHeight, avtiveBK);
-                                            infnodemeta.Add(meta);
-                                        }
-                                        i++;
-                                    }
-                                }
-                            }
-                        }
-                        //Amount to Notification
-                        if (whichType == TX_BURN_DATA && Params().GetConsensus().cNotifyAddress == EncodeDestination(CKeyID(uint160(vSolutions[0]))))
-                        {
-                            //Amount for UpdateMeta
-                            if ( (Params().GetConsensus().nInfinityNodeNotificationValue - 1) * COIN <= out.nValue && out.nValue <= (Params().GetConsensus().nInfinityNodeNotificationValue) * COIN){
-                                if (vSolutions.size() == 2){
-                                    std::string metadata(vSolutions[1].begin(), vSolutions[1].end());
-                                    string s;
-                                    stringstream ss(metadata);
-                                    int i=0;
-                                    int check=0;
-                                    std::string burnTxID;
-                                    while (getline(ss, s,';')) {
-                                        //3th position: 12 character from Infinitynode BurnTx
-                                        if (i==0 && s.length() >= 16) {
-                                            check++;
-                                            burnTxID = s.substr(0, 16);
-                                        }
-                                        if (check == 1){
-                                            //Address payee: we known that there is only 1 input
-                                            const CTxIn& txin = tx->vin[0];
-                                            int index = txin.prevout.n;
-
-                                            CTransactionRef prevtx;
-                                            uint256 hashblock;
-                                            if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false, nullptr, false)) {
-                                                LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- PrevBurnFund tx is not in block.\n");
-                                                return false;
-                                            }
-
-                                            CTxDestination addressBurnFund;
-                                            if(!ExtractDestination(prevtx->vout[index].scriptPubKey, addressBurnFund)){
-                                                LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateInfinityNodeInfo -- False when extract payee from BurnFund tx.\n");
-                                                return false;
-                                            }
-                                            std::ostringstream streamInfo;
-                                            streamInfo << EncodeDestination(addressBurnFund) << "-" << burnTxID;
-                                            infnodemeta.setActiveBKAddress(streamInfo.str());
-                                        }
-                                    }
-                                }
-                            }//Amount for UpdateMeta
-                        }
-                    } //end loop for all output
+                    }
                 } else { //Coinbase tx => update mapLastPaid
-                    if (prevBlockIndex->nHeight >= pindex->nHeight - nLastPaidScanDeepth){
+                    if (prevBlockIndex->nHeight >= nLowHeight){
                         //block payment value
                         CAmount nNodePaymentSINNODE_1 = GetMasternodePayment(prevBlockIndex->nHeight, 1);
                         CAmount nNodePaymentSINNODE_5 = GetMasternodePayment(prevBlockIndex->nHeight, 5);
@@ -933,28 +720,15 @@ bool CInfinitynodeMan::buildInfinitynodeList(int nBlockHeight, int nLowHeight, b
                 }
             }
         } else {
-            LogPrint(BCLog::INFINITYNODE, "CInfinitynodeMan::buildInfinitynodeList -- can not read block from disk\n");
+            LogPrint(BCLog::INFINITYNODE, "CInfinitynodeMan::updateLastPaidList -- can not read block from disk\n");
             return false;
         }
         // continue with previous block
         prevBlockIndex = prevBlockIndex->pprev;
     }
 
-    nLastScanHeight = nBlockHeight - Params().MaxReorganizationDepth();
     updateLastPaid();
 
-    if(fWriteDisk){
-        CFlatDB<CInfinitynodeMan> flatdb5("infinitynode.dat", "magicInfinityNodeCache");
-        flatdb5.Dump(infnodeman);
-
-        CFlatDB<CInfinitynodersv> flatdb6("infinitynodersv.dat", "magicInfinityRSV");
-        flatdb6.Dump(infnodersv);
-
-        CFlatDB<CInfinitynodeMeta> flatdb7("infinitynodemeta.dat", "magicInfinityMeta");
-        flatdb7.Dump(infnodemeta);
-    }
-
-    LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::buildInfinitynodeList -- list infinity node was built from blockchain at Height: %s\n", nBlockHeight);
     return true;
 }
 
