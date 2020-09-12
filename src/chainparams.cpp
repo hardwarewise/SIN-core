@@ -123,6 +123,7 @@ public:
         consensus.nInfinityNodeLockRewardTop=16; //in number
         consensus.nInfinityNodeLockRewardSigners=5; //in number
         consensus.nInfinityNodeLockRewardSINType=10; //in number
+        consensus.nInfinityNodeExpireTime=262800;//720*365 days = 1 year
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         /*Previously used as simple constants in validation */
@@ -266,8 +267,9 @@ public:
         consensus.nInfinityNodeCallLockRewardDeepth=12;
         consensus.nInfinityNodeCallLockRewardLoop=5; //next LR will be in 5 blocks
         consensus.nInfinityNodeLockRewardTop=20; //top 20 nodes will build Musig in number
-        consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
-        consensus.nInfinityNodeLockRewardSINType=1; //in number
+        consensus.nInfinityNodeLockRewardSigners=3; //number of signers paticiple Musig
+        consensus.nInfinityNodeLockRewardSINType=10; //in number
+        consensus.nInfinityNodeExpireTime=5040;
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         /*Previously used as simple constants in validation */
@@ -345,7 +347,7 @@ public:
 
         //vSeeds.emplace_back("206.189.57.75");
         //vSeeds.emplace_back("165.22.81.15");
-        nDefaultPort = 20980;
+        nDefaultPort = 20990;
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,63);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
@@ -406,6 +408,7 @@ public:
         consensus.nInfinityNodeLockRewardTop=5; //in number
         consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
         consensus.nInfinityNodeLockRewardSINType=1; //in number
+        consensus.nInfinityNodeExpireTime=5040;
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         /*Previously used as simple constants in validation */
@@ -535,6 +538,7 @@ public:
         consensus.nInfinityNodeLockRewardTop=5; //in number
         consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
         consensus.nInfinityNodeLockRewardSINType=1; //in number
+        consensus.nInfinityNodeExpireTime=5040;
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
         consensus.nMasternodeBurnSINNODE_1 = 100000;
         consensus.nMasternodeBurnSINNODE_5 = 500000;

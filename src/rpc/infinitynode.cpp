@@ -54,6 +54,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
                                     && strCommand != "mypeerinfo" && strCommand != "checkkey" && strCommand != "scan-metadata"
                                     && strCommand != "show-metadata" && strCommand != "memory-lockreward"
                                     && strCommand != "show-lockreward" &&  strCommand != "check-lockreward"
+                                    && strCommand != "show-all-infos"
         ))
             throw std::runtime_error(
                 "infinitynode \"command\"...\n"
@@ -68,6 +69,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
                 "  build-list                  - Build list of all infinitynode from block height 165000 to last block\n"
                 "  build-stm                   - Build statement list from genesis parameter\n"
                 "  show-infos                  - Show the list of nodes and last information\n"
+                "  show-all-infos              - Show the list of nodes (non matured)\n"
                 "  show-lastscan               - Last nHeight when list is updated\n"
                 "  show-lastpaid               - Last paid of all nodes\n"
                 "  show-stm                    - Last statement of each SinType\n"
@@ -262,6 +264,27 @@ UniValue infinitynode(const JSONRPCRequest& request)
                                inf.getMetaID() << " " <<
                                nodeAddress << " " <<
                                meta.getService().ToString()
+                               ;
+                std::string strInfo = streamInfo.str();
+                obj.push_back(Pair(strOutpoint, strInfo));
+        }
+        return obj;
+    }
+
+    if (strCommand == "show-all-infos")
+    {
+        std::map<COutPoint, CInfinitynode> mapInfinitynodes = infnodeman.GetFullInfinitynodeNonMaturedMap();
+        for (auto& infpair : mapInfinitynodes) {
+            std::string strOutpoint = infpair.first.ToStringShort();
+            CInfinitynode inf = infpair.second;
+
+                std::ostringstream streamInfo;
+                streamInfo << std::setw(8) <<
+                               inf.getCollateralAddress() << " " <<
+                               inf.getHeight() << " " <<
+                               inf.getExpireHeight() << " " <<
+                               inf.getRoundBurnValue() << " " <<
+                               inf.getSINType() << " "
                                ;
                 std::string strInfo = streamInfo.str();
                 obj.push_back(Pair(strOutpoint, strInfo));

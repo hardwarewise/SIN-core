@@ -1704,7 +1704,7 @@ void MasternodeList::nodeSetupStep( std::string icon , std::string text )   {
 
     labelPic[currentStep]->setVisible(true);
     labelTxt[currentStep]->setVisible(true);
-    QPixmap labelIcon ( QString::fromStdString( icon ) );
+    QPixmap labelIcon ( QString::fromStdString(strIcon) );
     labelPic[currentStep]->setPixmap(labelIcon);
     labelTxt[currentStep]->setText( QString::fromStdString( text ) );
 }
@@ -1716,6 +1716,12 @@ void MasternodeList::nodeSetupCleanProgress()   {
         labelTxt[idx]->setVisible(false);
     }
     currentStep = 0;
+}
+
+void MasternodeList::showTab_setUP(bool fShow)
+{
+    ui->tabWidget->setCurrentIndex(3);
+    
 }
 
 // RPC helper
