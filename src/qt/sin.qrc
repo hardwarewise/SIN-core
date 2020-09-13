@@ -101,9 +101,9 @@
         <file alias="instaswap1">res/icons/instaswap1.png</file>
         <file alias="stats">res/icons/stats.png</file>
         <file alias="faq">res/icons/faq.svg</file>
-        <file alias="setupOk">res/icons/ok.png</file>
-        <file alias="setupKo">res/icons/ko.png</file>
-        <file alias="setupWait">res/icons/clock1.png</file>
+        <file alias="setupOk">res/icons/ok.svg</file>
+        <file alias="setupKo">res/icons/ko.svg</file>
+        <file alias="setupWait">res/icons/wait.svg</file>
         <file alias="theme-white">res/icons/theme-white.svg</file>
         <file alias="theme-light">res/icons/theme-light.svg</file>
         <file alias="exit">res/icons/exit.svg</file>
