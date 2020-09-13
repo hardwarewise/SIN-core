@@ -93,7 +93,7 @@ public Q_SLOTS:
     bool nodeSetupAPINodeList( QString email, QString pass, QString& strError  );
     bool nodeSetupCheckFunds( CAmount invoiceAmount = 0 );
     void nodeSetupStep( std::string icon , std::string text );
-    int  nodeSetupGetClientId( QString& email, QString& pass );
+    int  nodeSetupGetClientId( QString& email, QString& pass, bool bSilent = false);
     void nodeSetupSetClientId( int clientId, QString email, QString pass );
     void nodeSetupEnableClientId( int clientId );
     int  nodeSetupGetOrderId( int& invoiceid, QString& mProductIds );

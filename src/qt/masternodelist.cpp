@@ -100,7 +100,7 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     ui->dinTable->setColumnWidth(4, 250);
     ui->dinTable->setColumnWidth(5, 90);
     ui->dinTable->setColumnWidth(6, 60);
-    ui->dinTable->setColumnWidth(7, 250);
+    ui->dinTable->setColumnWidth(7, 60);
     ui->dinTable->setColumnWidth(8, 200);
     ui->dinTable->setColumnWidth(9, 100);
 
@@ -148,7 +148,7 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     connect(burnSendTimer, SIGNAL(timeout()), this, SLOT(nodeSetupCheckBurnSendConfirmations()));
 
     pendingPaymentsTimer = new QTimer(this);
-    connect(pendingPaymentsTimer, SIGNAL(timeout()), this, SLOT(nodeSetupCheckBurnSendConfirmations()));
+    connect(pendingPaymentsTimer, SIGNAL(timeout()), this, SLOT(nodeSetupCheckPendingPayments()));
 
     nodeSetupInitialize();
 }
@@ -511,8 +511,8 @@ void MasternodeList::updateDINList()
 
         if (bNeedToQueryAPIServiceId)   {
             QString email, pass, strError;
-            int clientId = nodeSetupGetClientId( email, pass );
-            if (clientId>0) {
+            int clientId = nodeSetupGetClientId( email, pass, true );
+            if (clientId>0 && pass != "") {
                 nodeSetupAPINodeList( email, pass, strError );
             }
         }
@@ -627,7 +627,7 @@ void MasternodeList::on_checkDINNode()
         if (serviceId > 0)    {
             QString email, pass, strError;
             int clientId = nodeSetupGetClientId( email, pass );
-            if (clientId>0) {
+            if (clientId>0 && pass != "") {
                 QJsonObject obj = nodeSetupAPINodeInfo( serviceId, mClientid , email, pass, strError );
                 if (obj.contains("Blockcount") && obj.contains("MyPeerInfo"))   {
                     int blockCount = obj["Blockcount"].toInt();
@@ -652,6 +652,11 @@ void MasternodeList::on_checkDINNode()
 // nodeSetup buttons
 void MasternodeList::on_btnCheck_clicked()
 {
+    QString email, pass, strError;
+    int clientId = nodeSetupGetClientId( email, pass, false );
+
+    if ( pass == "")    return;
+
     nodeSetupCleanProgress();
     if ( !nodeSetupCheckFunds() )   {
         ui->labelMessage->setText("You didn't pass the checks. Please review.");
@@ -666,6 +671,8 @@ void MasternodeList::on_btnCheck_clicked()
 
 void MasternodeList::on_btnSetup_clicked()
 {
+    QString strError;
+
     // check again in case they changed the tier...
     nodeSetupCleanProgress();
     if ( !nodeSetupCheckFunds() )   {
@@ -674,7 +681,6 @@ void MasternodeList::on_btnSetup_clicked()
     }
 
     int orderid, invoiceid, productid;
-    QString strError;
     QString strBillingCycle = QString::fromStdString(billingOptions[ui->comboBilling->currentData().toInt()]);
 
 //LogPrintf("place order %d, %s ", mClientid, strBillingCycle);
@@ -707,6 +713,16 @@ void MasternodeList::on_payButton_clicked()
         LogPrintf("nodeSetupCheckPendingPayments nodeSetupAPIGetInvoice %s, %d \n", strStatus.toStdString(), invoiceToPay );
 
          if ( strStatus == "Unpaid" )  {
+             // Display message box
+             QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm Invoice Payment"),
+                 "Are you sure you want to pay " + QString::number(invoiceAmount) + " SIN?",
+                 QMessageBox::Yes | QMessageBox::Cancel,
+                 QMessageBox::Cancel);
+
+             if(retval != QMessageBox::Yes)  {
+                 return;
+             }
+
              QString paymentTx = nodeSetupSendToAddress( paymentAddress, invoiceAmount, NULL );
              if ( paymentTx != "" ) {
                  nodeSetupPendingPayments.insert( { paymentTx.toStdString(), invoiceToPay } );
@@ -714,7 +730,8 @@ void MasternodeList::on_payButton_clicked()
 LogPrintf("nodeSetupCheckPendingPayments start timer %d \n", invoiceToPay );
                      pendingPaymentsTimer->start(30000);
                  }
-                 ui->labelMessage->setText( "Pending Invoice Payment finished, please wait for confirmations." );
+                 nodeSetupStep( "setupWait", "Pending Invoice Payment finished, please wait for confirmations.");
+                 //ui->labelMessage->setText( "Pending Invoice Payment finished, please wait for confirmations." );
              }
          }
      }
@@ -731,6 +748,7 @@ LogPrintf("nodeSetupCheckPendingPayments \n" );
 LogPrintf("nodeSetupCheckPendingPayments %s, %d \n", strStatus.toStdString(), invoiceToPay );
         if ( strStatus != "Unpaid" )  { // either paid or cancelled/removed
             nodeSetupPendingPayments.erase(itemPair.first);
+            nodeSetupStep( "setupOk", strprintf("Payment for invoice #%d processed", invoiceToPay) );
         }
     }
 
@@ -831,7 +849,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
     nodeSetupAPIGetInvoice( mInvoiceid, strAmount, strStatus, paymentAddress, strError );
 
     CAmount invoiceAmount = strAmount.toDouble();
-ui->labelMessage->setText(QString::fromStdString(strprintf("Invoice amount %f SIN", invoiceAmount)));
+    ui->labelMessage->setText(QString::fromStdString(strprintf("Invoice amount %f SIN", invoiceAmount)));
 //LogPrintf("nodeSetupCheckInvoiceStatus %s, %s, %f\n", strStatus.toStdString(), paymentAddress.toStdString(), invoiceAmount );
     if ( strStatus == "Cancelled" || strStatus == "Refunded" )  {  // reset and call again
         nodeSetupStep( "setupWait", "Order cancelled or refunded, creating a new order");
@@ -849,7 +867,6 @@ LogPrintf("nodeSetupCheckInvoiceStatus %s \n", mPaymentTx.toStdString() );
         }
         else    {
 LogPrintf("nodeSetupCheckInvoiceStatus no txID \n");
-            nodeSetupStep( "setupWait", "Paying invoice");
             // Display message box
             QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm Invoice Payment"),
                 "Are you sure you want to pay " + QString::number(invoiceAmount) + " SIN?",
@@ -864,6 +881,7 @@ LogPrintf("nodeSetupCheckInvoiceStatus no txID \n");
                 return "cancelled";
             }
 
+            nodeSetupStep( "setupWait", "Paying invoice");
             mPaymentTx = nodeSetupSendToAddress( paymentAddress, invoiceAmount, invoiceTimer );
             if ( mPaymentTx != "" ) {
                 nodeSetupSetPaymentTx(mPaymentTx);
@@ -984,7 +1002,7 @@ void MasternodeList::nodeSetupCheckBurnSendConfirmations()   {
 
     UniValue objConfirms = nodeSetupGetTxInfo( mBurnTx, "confirmations" );
     int numConfirms = objConfirms.get_int();
-    if ( numConfirms>NODESETUP_CONFIRMS )    {
+    if ( numConfirms>NODESETUP_CONFIRMS && pass != "" )    {
         nodeSetupStep( "setupKo", "Finishing node setup");
         burnSendTimer->stop();
 
@@ -1010,7 +1028,7 @@ LogPrintf("nodeSetupCheckBurnSendConfirmations %d, %d, %s, %s \n", mServiceId, c
                 nodeSetupResetOrderId();
                 nodeSetupSetBurnTx("");
 
-                nodeSetupStep( "setupKo", "Node setup finished");
+                nodeSetupStep( "setupOk", "Node setup finished");
             }
             catch (const UniValue& objError)
             {
@@ -1075,13 +1093,14 @@ QString MasternodeList::nodeSetupRPCBurnFund( QString collateralAddress, CAmount
 void MasternodeList::on_btnLogin_clicked()
 {
     QString strError = "";
-LogPrintf("nodeSetup login \n");
+    LogPrintf("nodeSetup::on_btnLogin_clicked -- %d\n", mClientid);
     if ( mClientid > 0 )    {   // reset
         nodeSetupResetClientId();
+        ui->btnLogin->setText("Create/Login");
         return;
     }
 
-    int clientId = nodeSetupAPIAddClient( ui->txtFirstName->text(), ui->txtLastName->text(), ui->txtEmail->text(), ui->txtPassword->text(), strError );
+    int clientId = nodeSetupAPIAddClient( "", "", ui->txtEmail->text(), ui->txtPassword->text(), strError );
     if ( strError != "" )  {
         ui->labelMessage->setText( strError );
     }
@@ -1089,13 +1108,13 @@ LogPrintf("nodeSetup login \n");
     if ( clientId > 0 ) {
         nodeSetupEnableClientId( clientId );
         nodeSetupSetClientId( clientId, ui->txtEmail->text(), ui->txtPassword->text() );
-LogPrintf("nodeSetup enable %d\n", clientId);
+        ui->btnLogin->setText("Logout");
     }
 }
 
 void MasternodeList::on_btnSetupReset_clicked()
 {
-    nodeSetupSetOrderId(0, 0, "");
+    nodeSetupResetOrderId();
     nodeSetupEnableOrderUI(false);
 }
 
@@ -1122,10 +1141,12 @@ void MasternodeList::nodeSetupInitialize()   {
     labelTxt[7] = ui->labelTxt_8;
 
     // combo billing
-    for (int i=0; i<sizeof(billingOptions)/sizeof(billingOptions[0]); i++)    {
+    int i;
+    for (i=0; i<sizeof(billingOptions)/sizeof(billingOptions[0]); i++)    {
         std::string option = billingOptions[i];
         ui->comboBilling->addItem(QString::fromStdString(option), QVariant(i));
     }
+    ui->comboBilling->setCurrentIndex(2);
 
 #if defined(Q_OS_WIN)
 #else
@@ -1143,16 +1164,19 @@ void MasternodeList::nodeSetupInitialize()   {
     // recover data
     QString email, pass;
 
-    int clientId = nodeSetupGetClientId( email, pass );
+    int clientId = nodeSetupGetClientId( email, pass, true );
     if ( clientId == 0 )    {
-        ui->widgetLogin->show();
+        //ui->widgetLogin->show();
         ui->widgetCurrent->hide();
         ui->setupButtons->hide();
         ui->labelClientId->setText("");
     }
     else {
         nodeSetupEnableClientId(clientId);
+        ui->txtEmail->setText(email);
+        ui->btnLogin->setText("Logout");
     }
+    mClientid = clientId;
 
     mOrderid = nodeSetupGetOrderId( mInvoiceid, mProductIds );
     if ( mOrderid > 0 )    {
@@ -1169,6 +1193,7 @@ void MasternodeList::nodeSetupInitialize()   {
 void MasternodeList::nodeSetupEnableOrderUI( bool bEnable, int orderID , int invoiceID ) {
     if (bEnable)    {
         ui->btnCheck->setEnabled(false);
+        ui->comboBilling->setEnabled(false);
         ui->btnSetup->setEnabled(true);
         ui->btnSetupReset->setEnabled(true);
         ui->labelOrder->setVisible(true);
@@ -1181,6 +1206,7 @@ void MasternodeList::nodeSetupEnableOrderUI( bool bEnable, int orderID , int inv
     }
     else {
         ui->btnCheck->setEnabled(true);
+        ui->comboBilling->setEnabled(true);
         ui->btnSetup->setEnabled(false);
         ui->btnSetupReset->setEnabled(false);
         ui->labelOrder->setVisible(false);
@@ -1192,11 +1218,10 @@ void MasternodeList::nodeSetupEnableOrderUI( bool bEnable, int orderID , int inv
 
 void MasternodeList::nodeSetupResetClientId( )  {
     nodeSetupSetClientId( 0 , "", "");
-    ui->widgetLogin->show();
+    //ui->widgetLogin->show();
     ui->widgetCurrent->hide();
     ui->setupButtons->hide();
     ui->labelClientId->setText("");
-    ui->btnLogin->setText("Create/Login");
     ui->btnRestore->show();
 
     ui->btnCheck->setEnabled(false);
@@ -1217,17 +1242,17 @@ void MasternodeList::nodeSetupResetOrderId( )   {
     mOrderid = mInvoiceid = mServiceId = 0;
     mPaymentTx = "";
     nodeSetupSetBurnTx("");
+    nodeSetupCleanProgress();
 }
 
 void MasternodeList::nodeSetupEnableClientId( int clientId )  {
-    ui->widgetLogin->hide();
+    //ui->widgetLogin->hide();
     ui->widgetCurrent->show();
     ui->setupButtons->show();
     ui->labelClientId->setText("#"+QString::number(clientId));
     ui->btnCheck->setEnabled(true);
     ui->labelMessage->setText("Select a node Tier and press 'Check' to verify if you meet the prerequisites");
     mClientid = clientId;
-    ui->btnLogin->setText("Logout");
     ui->btnRestore->hide();
 
     nodeSetupPopulateInvoicesCombo();
@@ -1236,7 +1261,9 @@ void MasternodeList::nodeSetupEnableClientId( int clientId )  {
 
 void MasternodeList::nodeSetupPopulateInvoicesCombo( )  {
     QString email, pass, strError;
-    int clientId = nodeSetupGetClientId( email, pass );
+    int clientId = nodeSetupGetClientId( email, pass, true );
+    if ( clientId == 0 || pass == "" )    return;   // not logged in
+
     std::map<int, std::string> pendingInvoices = nodeSetupAPIListInvoices( email, pass, strError );
 
     // preserve previous selection before clearing
@@ -1338,7 +1365,7 @@ bool MasternodeList::nodeSetupCheckFunds( CAmount invoiceAmount )   {
     return bRet;
 }
 
-int MasternodeList::nodeSetupGetClientId( QString& email, QString& pass )  {
+int MasternodeList::nodeSetupGetClientId( QString& email, QString& pass, bool bSilent)  {
     int ret = 0;
     QSettings settings;
 
@@ -1348,8 +1375,12 @@ int MasternodeList::nodeSetupGetClientId( QString& email, QString& pass )  {
     if (settings.contains("nodeSetupEmail"))
         email = settings.value("nodeSetupEmail").toString();
 
-    if (settings.contains("nodeSetupPassword"))
-        pass = settings.value("nodeSetupPassword").toString();
+    // pass taken from text control (not stored in settings)
+    pass = ui->txtPassword->text();
+    if ( pass == "" && !bSilent )   {
+        QMessageBox::warning(this, "Please enter password", "Node Setup password is not stored. Please enter nodeSetup password and retry.", QMessageBox::Ok, QMessageBox::Ok);
+        ui->txtPassword->setFocus();
+    }
 
     return ret;
 }
@@ -1358,7 +1389,6 @@ void MasternodeList::nodeSetupSetClientId( int clientId, QString email, QString 
     QSettings settings;
     settings.setValue("nodeSetupClientId", clientId);
     settings.setValue("nodeSetupEmail", email);
-    settings.setValue("nodeSetupPassword", pass);
 }
 
 int MasternodeList::nodeSetupGetOrderId( int& invoiceid, QString& productids )  {
@@ -1770,7 +1800,7 @@ std::map<std::string, std::string> MasternodeList::nodeSetupGetUnusedBurnTxs( ) 
                 destAddress = EncodeDestination(s.destination);
             }
             std::string txHash = pwtx->GetHash().GetHex();
-            if (destAddress == Params().GetConsensus().cBurnAddress && confirms<720*365 && nodeSetupUsedBurnTxs.find(txHash.substr(0, 16)) == nodeSetupUsedBurnTxs.end() )  {
+            if (destAddress == Params().GetConsensus().cBurnAddress && confirms<720*365 /* && nodeSetupUsedBurnTxs.find(txHash.substr(0, 16)) == nodeSetupUsedBurnTxs.end() */ )  {
 
                 std::string description = "";
                 std::string strNodeType = "";
