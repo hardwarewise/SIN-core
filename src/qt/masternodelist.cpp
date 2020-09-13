@@ -1225,7 +1225,7 @@ void MasternodeList::nodeSetupEnableClientId( int clientId )  {
     ui->setupButtons->show();
     ui->labelClientId->setText("#"+QString::number(clientId));
     ui->btnCheck->setEnabled(true);
-    ui->labelMessage->setText("Select a node Tier and then press 'Check' to verify if you meet the prerequisites");
+    ui->labelMessage->setText("Select a node Tier and press 'Check' to verify if you meet the prerequisites");
     mClientid = clientId;
     ui->btnLogin->setText("Logout");
     ui->btnRestore->hide();
