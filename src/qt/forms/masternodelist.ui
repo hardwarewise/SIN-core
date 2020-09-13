@@ -54,7 +54,7 @@ width: 150px;
         </size>
        </property>
        <property name="currentIndex">
-        <number>3</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="tabMyMasternodes">
         <attribute name="title">
@@ -1124,88 +1124,6 @@ color: #ffffff;</string>
            <widget class="QWidget" name="widgetLogin" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout_10">
              <item>
-              <widget class="QLabel" name="labelFirstName">
-               <property name="font">
-                <font>
-                 <pointsize>-1</pointsize>
-                 <weight>50</weight>
-                 <bold>false</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">font-size:16px;
-color: #01FFFF;
-
-
-
-</string>
-               </property>
-               <property name="text">
-                <string>First Name:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="txtFirstName">
-               <property name="styleSheet">
-                <string notr="true">background-color: white;</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelLastName">
-               <property name="font">
-                <font>
-                 <pointsize>-1</pointsize>
-                 <weight>50</weight>
-                 <bold>false</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">font-size:16px;
-color: #01FFFF;
-
-</string>
-               </property>
-               <property name="text">
-                <string>Last Name:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="txtLastName">
-               <property name="styleSheet">
-                <string notr="true">background-color: white;</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
               <widget class="QLabel" name="labelEmail">
                <property name="font">
                 <font>
@@ -1272,6 +1190,9 @@ color: #01FFFF;
                </property>
                <property name="echoMode">
                 <enum>QLineEdit::Password</enum>
+               </property>
+               <property name="placeholderText">
+                <string>&lt;Enter password&gt;</string>
                </property>
               </widget>
              </item>
