@@ -509,13 +509,6 @@ void MasternodeList::updateDINList()
 
         bDINNodeAPIUpdate = true;
 
-        if (bNeedToQueryAPIServiceId)   {
-            QString email, pass, strError;
-            int clientId = nodeSetupGetClientId( email, pass, true );
-            if (clientId>0 && pass != "") {
-                nodeSetupAPINodeList( email, pass, strError );
-            }
-        }
         // use as nodeSetup combo refresh too
         nodeSetupPopulateInvoicesCombo();
         nodeSetupPopulateBurnTxCombo();
@@ -622,11 +615,21 @@ void MasternodeList::on_checkDINNode()
         msg.exec();
     }
     else    {
+        QString email, pass, strError;
+        int clientId = nodeSetupGetClientId( email, pass, true );
+        ui->dinTable->setItem(nSelectedRow, 9, new QTableWidgetItem("Loading..."));
+        ui->dinTable->setItem(nSelectedRow, 10, new QTableWidgetItem("Loading..."));
         mCheckNodeAction->setEnabled(false);
         int serviceId = nodeSetupGetServiceForNodeAddress( strAddress );
+LogPrintf("nodeSetup::on_checkDINNode #%s#, %d, %d \n", pass.toStdString(), clientId, serviceId );
+        if (serviceId <= 0)   {     // retry load nodes' service data
+            if (clientId>0 && pass != "") {
+                nodeSetupAPINodeList( email, pass, strError );
+                serviceId = nodeSetupGetServiceForNodeAddress( strAddress );
+            }
+        }
+
         if (serviceId > 0)    {
-            QString email, pass, strError;
-            int clientId = nodeSetupGetClientId( email, pass );
             if (clientId>0 && pass != "") {
                 QJsonObject obj = nodeSetupAPINodeInfo( serviceId, mClientid , email, pass, strError );
                 if (obj.contains("Blockcount") && obj.contains("MyPeerInfo"))   {
@@ -635,17 +638,28 @@ void MasternodeList::on_checkDINNode()
                     ui->dinTable->setItem(nSelectedRow, 9, new QTableWidgetItem(QString::number(blockCount)));
                     ui->dinTable->setItem(nSelectedRow, 10, new QTableWidgetItem(peerInfo));
                 }
+                else    {
+                    msg.setText("Node status check timeout:\nCheck if your Node Setup password is correct, then try again.");
+                    msg.exec();
+                    ui->dinTable->setItem(nSelectedRow, 9, new QTableWidgetItem(""));
+                    ui->dinTable->setItem(nSelectedRow, 10, new QTableWidgetItem(""));
+                }
             }
             else    {
                 msg.setText("Could not recover node's client ID\nPlease log in with your user email and password in the Node Setup tab");
                 msg.exec();
+                ui->dinTable->setItem(nSelectedRow, 9, new QTableWidgetItem(""));
+                ui->dinTable->setItem(nSelectedRow, 10, new QTableWidgetItem(""));
             }
         }
         else    {
             msg.setText("Could not recover node's service ID\nPlease log in with your user email and password in the Node Setup tab");
             msg.exec();
+            ui->dinTable->setItem(nSelectedRow, 9, new QTableWidgetItem(""));
+            ui->dinTable->setItem(nSelectedRow, 10, new QTableWidgetItem(""));
         }
         mCheckNodeAction->setEnabled(true);
+
     }
 }
 
@@ -975,7 +989,7 @@ void MasternodeList::nodeSetupCheckBurnPrepareConfirmations()   {
     UniValue objConfirms = nodeSetupGetTxInfo( mBurnPrepareTx, "confirmations" );
     int numConfirms = objConfirms.get_int();
     if ( numConfirms>NODESETUP_CONFIRMS )    {
-        nodeSetupStep( "setupOk", "Sending burn transaction");
+        nodeSetupStep( "setupWait", "Sending burn transaction");
         burnPrepareTimer->stop();
         QString strAddressBackup = nodeSetupGetNewAddress();
         int nMasternodeBurn = nodeSetupGetBurnAmount();
