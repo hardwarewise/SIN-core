@@ -149,6 +149,8 @@ private:
     QString NODESETUP_RESTORE_URL;
     QString NODESETUP_PID;
     int NODESETUP_CONFIRMS;
+    int NODESETUP_REFRESHCOMBOS;    // every N updateDINList cycles
+    int nodeSetup_RefreshCounter;
     int mClientid, mOrderid, mInvoiceid, mServiceId;
     std::map<std::string, int> nodeSetupUsedBurnTxs;
     std::map<std::string, int> nodeSetupPendingPayments;

@@ -136,6 +136,8 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     NODESETUP_RESTORE_URL = QString::fromStdString(gArgs.GetArg("-nodesetupurlrestore", "https://setup2dev.sinovate.io/index.php?rp=/password/reset/begin"));
     NODESETUP_PID = "1";  // "22" for prod
     NODESETUP_CONFIRMS = 2;
+    NODESETUP_REFRESHCOMBOS = 6;
+    nodeSetup_RefreshCounter = NODESETUP_REFRESHCOMBOS;
 
     // define timers
     invoiceTimer = new QTimer(this);
@@ -510,8 +512,12 @@ void MasternodeList::updateDINList()
         bDINNodeAPIUpdate = true;
 
         // use as nodeSetup combo refresh too
-        nodeSetupPopulateInvoicesCombo();
-        nodeSetupPopulateBurnTxCombo();
+        nodeSetup_RefreshCounter++;
+        if ( nodeSetup_RefreshCounter >= NODESETUP_REFRESHCOMBOS )  {
+            nodeSetup_RefreshCounter = 0;
+            nodeSetupPopulateInvoicesCombo();
+            nodeSetupPopulateBurnTxCombo();
+        }
     }
 }
 
@@ -621,7 +627,6 @@ void MasternodeList::on_checkDINNode()
         ui->dinTable->setItem(nSelectedRow, 10, new QTableWidgetItem("Loading..."));
         mCheckNodeAction->setEnabled(false);
         int serviceId = nodeSetupGetServiceForNodeAddress( strAddress );
-LogPrintf("nodeSetup::on_checkDINNode #%s#, %d, %d \n", pass.toStdString(), clientId, serviceId );
         if (serviceId <= 0)   {     // retry load nodes' service data
             if (clientId>0 && pass != "") {
                 nodeSetupAPINodeList( email, pass, strError );
@@ -741,7 +746,6 @@ void MasternodeList::on_payButton_clicked()
              if ( paymentTx != "" ) {
                  nodeSetupPendingPayments.insert( { paymentTx.toStdString(), invoiceToPay } );
                  if ( pendingPaymentsTimer !=NULL && !pendingPaymentsTimer->isActive() )  {
-LogPrintf("nodeSetupCheckPendingPayments start timer %d \n", invoiceToPay );
                      pendingPaymentsTimer->start(30000);
                  }
                  nodeSetupStep( "setupWait", "Pending Invoice Payment finished, please wait for confirmations.");
