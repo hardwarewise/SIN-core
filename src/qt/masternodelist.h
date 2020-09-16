@@ -93,7 +93,7 @@ public Q_SLOTS:
     bool nodeSetupAPINodeList( QString email, QString pass, QString& strError  );
     bool nodeSetupCheckFunds( CAmount invoiceAmount = 0 );
     void nodeSetupStep( std::string icon , std::string text );
-    int  nodeSetupGetClientId( QString& email, QString& pass );
+    int  nodeSetupGetClientId( QString& email, QString& pass, bool bSilent = false);
     void nodeSetupSetClientId( int clientId, QString email, QString pass );
     void nodeSetupEnableClientId( int clientId );
     int  nodeSetupGetOrderId( int& invoiceid, QString& mProductIds );
@@ -110,6 +110,7 @@ public Q_SLOTS:
     void nodeSetupPopulateBurnTxCombo( );
 
     QString nodeSetupCheckInvoiceStatus();
+    void nodeSetupCheckPendingPayments();
     QString nodeSetupRPCBurnFund( QString collateralAddress, CAmount amount, QString backupAddress );
     int nodeSetupGetBurnAmount();
     QString nodeSetupGetNewAddress();
@@ -118,6 +119,7 @@ public Q_SLOTS:
     void nodeSetupCheckBurnPrepareConfirmations();
     void nodeSetupCheckBurnSendConfirmations();
     std::map<std::string, std::string> nodeSetupGetUnusedBurnTxs( );
+    QString nodeSetupGetOwnerAddressFromBurnTx( QString burnTx );
 
 Q_SIGNALS:
 
@@ -140,13 +142,18 @@ private:
     QTimer *invoiceTimer;
     QTimer *burnPrepareTimer;
     QTimer *burnSendTimer;
+    QTimer *pendingPaymentsTimer;
     QNetworkAccessManager *ConnectionManager;
     QString NODESETUP_ENDPOINT_BASIC;
     QString NODESETUP_ENDPOINT_NODE;
+    QString NODESETUP_RESTORE_URL;
     QString NODESETUP_PID;
     int NODESETUP_CONFIRMS;
+    int NODESETUP_REFRESHCOMBOS;    // every N updateDINList cycles
+    int nodeSetup_RefreshCounter;
     int mClientid, mOrderid, mInvoiceid, mServiceId;
     std::map<std::string, int> nodeSetupUsedBurnTxs;
+    std::map<std::string, int> nodeSetupPendingPayments;
     QString mPaymentTx;
     QString mBurnPrepareTx;
     QString mBurnAddress;
@@ -172,6 +179,7 @@ private Q_SLOTS:
     void on_btnCheck_clicked();
     void on_btnLogin_clicked();
     void on_btnSetupReset_clicked();
+    void on_btnRestore_clicked();
 };
 
 #endif // FXTC_QT_MASTERNODELIST_H

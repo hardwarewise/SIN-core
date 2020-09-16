@@ -110,7 +110,7 @@ void DepositCoinsDialog::on_sendButton_clicked()
                 termDepositBlocks = entry->getTermDepositLength();
                 if (termDepositBlocks < Params().MaxReorganizationDepth() + 1){
                     QString questionString = QString::fromStdString("Number of block is false.");
-                    QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Timelocked Error"),
+                    QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Hodl Period Error"),
                         questionString,
                         QMessageBox::Yes | QMessageBox::Cancel,
                     QMessageBox::Cancel);
@@ -430,7 +430,7 @@ void DepositCoinsDialog::setBalance(const interfaces::WalletBalances& balances)
                 ui->hodlTable->setItem(k, 0, new QTableWidgetItem(QString("Matured")));
                 totalMatured += txOut.nValue;
             }else{
-                ui->hodlTable->setItem(k, 0, new QTableWidgetItem(QString("TimeLocked")));
+                ui->hodlTable->setItem(k, 0, new QTableWidgetItem(QString("Hodl Period")));
                 totalLocked  += txOut.nValue;
             }
 
