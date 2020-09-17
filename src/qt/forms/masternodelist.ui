@@ -525,7 +525,7 @@ QRadioButton::indicator:unchecked {
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>335</width>
+               <width>80</width>
                <height>20</height>
               </size>
              </property>
@@ -556,19 +556,34 @@ color: #01FFFF;
               </item>
               <item>
                <widget class="QLineEdit" name="txtEmail">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>150</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="styleSheet">
                  <string notr="true">background-color: white;</string>
                 </property>
                </widget>
               </item>
               <item>
-               <spacer name="horizontalSpacer_4">
+               <spacer name="horizontalSpacer_7">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
                 <property name="sizeHint" stdset="0">
                  <size>
-                  <width>40</width>
+                  <width>52</width>
                   <height>20</height>
                  </size>
                 </property>
@@ -596,6 +611,18 @@ color: #01FFFF;
               </item>
               <item>
                <widget class="QLineEdit" name="txtPassword">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>150</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="styleSheet">
                  <string notr="true">background-color: white;</string>
                 </property>
@@ -607,24 +634,33 @@ color: #01FFFF;
                 </property>
                </widget>
               </item>
-              <item>
-               <spacer name="horizontalSpacer_7">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
              </layout>
             </widget>
            </item>
            <item>
+            <spacer name="horizontalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>123</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
             <widget class="QPushButton" name="btnLogin">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="text">
               <string>Login</string>
              </property>
@@ -636,11 +672,11 @@ color: #01FFFF;
               <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
+              <enum>QSizePolicy::Expanding</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>18</width>
+               <width>88</width>
                <height>20</height>
               </size>
              </property>
@@ -918,100 +954,6 @@ color:#ffffff;</string>
           </spacer>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_13">
-           <item>
-            <widget class="QWidget" name="widgetCurrent" native="true">
-             <layout class="QHBoxLayout" name="horizontalLayout_14" stretch="1,5,0,5,0">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <item>
-               <widget class="QLabel" name="labelInvoicePending">
-                <property name="styleSheet">
-                 <string notr="true">font-size:16px;
-color: #01FFFF;
-
-</string>
-                </property>
-                <property name="text">
-                 <string>Pending Invoice:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QComboBox" name="comboInvoice">
-                <property name="minimumSize">
-                 <size>
-                  <width>152</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_12">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QPushButton" name="payButton">
-                <property name="minimumSize">
-                 <size>
-                  <width>150</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Pay to contunie service</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_13">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>9</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <spacer name="verticalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
           <layout class="QHBoxLayout" name="horizontalLayout_15">
            <item>
             <spacer name="horizontalSpacer_20">
@@ -1073,7 +1015,7 @@ color: #ffffff;</string>
 font-size: 14px;</string>
                 </property>
                 <property name="text">
-                 <string>2- Click Place Order and confirm payment (yes/no)</string>
+                 <string>Click Place Order and confirm payment (yes/no)</string>
                 </property>
                </widget>
               </item>
@@ -1103,19 +1045,6 @@ font-size: 14px;</string>
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
-               <spacer name="horizontalSpacer_21">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
               <item row="0" column="2">
                <widget class="QLabel" name="label_2">
                 <property name="styleSheet">
@@ -1123,7 +1052,7 @@ font-size: 14px;</string>
 font-size: 14px;</string>
                 </property>
                 <property name="text">
-                 <string>1 -Check avaliable funds</string>
+                 <string>Check avaliable funds</string>
                 </property>
                </widget>
               </item>
@@ -1134,7 +1063,7 @@ font-size: 14px;</string>
 font-size: 14px;</string>
                 </property>
                 <property name="text">
-                 <string>Select D.I.N. hosting billing cycle</string>
+                 <string>Select D.I.N. hosting billing cycle (optional)</string>
                 </property>
                </widget>
               </item>
@@ -1182,7 +1111,7 @@ margin-top:10px;
 </string>
                 </property>
                 <property name="text">
-                 <string>Start over</string>
+                 <string>-Start over</string>
                 </property>
                </widget>
               </item>
@@ -1203,7 +1132,50 @@ margin-top:10px;
 font-size: 14px;</string>
                 </property>
                 <property name="text">
-                 <string>Create new BurnTx or migrate an existing one</string>
+                 <string>Create new BurnTx or migrate an existing one (optional)</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_7">
+                <property name="styleSheet">
+                 <string notr="true">font-size:18px;
+color: #01FFFF;
+font-weight : bold;</string>
+                </property>
+                <property name="text">
+                 <string>1-</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <spacer name="horizontalSpacer_21">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLabel" name="label_8">
+                <property name="styleSheet">
+                 <string notr="true">font-size:18px;
+color: #01FFFF;
+font-weight : bold;</string>
+                </property>
+                <property name="text">
+                 <string>2-</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                 </property>
                </widget>
               </item>
@@ -1411,6 +1383,116 @@ color: #01FFFF;</string>
               </size>
              </property>
             </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_13">
+           <item>
+            <widget class="QWidget" name="widgetCurrent" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_14" stretch="0,1,5,0,5,0">
+              <property name="spacing">
+               <number>6</number>
+              </property>
+              <item>
+               <spacer name="horizontalSpacer_11">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>73</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="labelInvoicePending">
+                <property name="styleSheet">
+                 <string notr="true">font-size:16px;
+color: #01FFFF;
+
+</string>
+                </property>
+                <property name="text">
+                 <string>Pending Invoice:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="comboInvoice">
+                <property name="minimumSize">
+                 <size>
+                  <width>152</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_12">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>84</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="payButton">
+                <property name="minimumSize">
+                 <size>
+                  <width>150</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Pay to continue service</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_13">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>117</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
            </item>
           </layout>
          </item>
