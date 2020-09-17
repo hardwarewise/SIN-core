@@ -1228,7 +1228,7 @@ color: #01FFFF;
           <item>
            <widget class="QPushButton" name="btnLogin">
             <property name="text">
-             <string>Create/Login</string>
+             <string>Login</string>
             </property>
            </widget>
           </item>
