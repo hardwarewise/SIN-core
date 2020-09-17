@@ -483,12 +483,12 @@ void MasternodeList::updateDINList()
                         nodeSetupSetServiceForNodeAddress( QString::fromStdString(sPeerAddress), serviceValue );  // -1 = reset to checked, not queried
                     }
                 }
-                // update used burn tx map
-                std::string burnfundTxId = infoInf.vinBurnFund.prevout.hash.ToString().substr(0, 16);
-                nodeSetupUsedBurnTxs.insert( { burnfundTxId, 1  } );
             }
             if(infoInf.nExpireHeight < nCurrentHeight){
                 status="Expired";
+                // update used burn tx map
+                std::string burnfundTxId = infoInf.vinBurnFund.prevout.hash.ToString().substr(0, 16);
+                nodeSetupUsedBurnTxs.insert( { burnfundTxId, 1  } );
             }
             QString nodeTxId = QString::fromStdString(infoInf.collateralAddress);
             ui->dinTable->setItem(k, 0, new QTableWidgetItem(QString(nodeTxId)));
@@ -744,6 +744,12 @@ void MasternodeList::on_payButton_clicked()
 
              QString paymentTx = nodeSetupSendToAddress( paymentAddress, invoiceAmount, NULL );
              if ( paymentTx != "" ) {
+                 std::vector<std::shared_ptr<CWallet>> wallets = GetWallets();
+                 CWallet * const pwallet = (wallets.size() > 0) ? wallets[0].get() : nullptr;
+                 if (pwallet!=nullptr)   {
+                    CTxDestination dest = DecodeDestination(paymentAddress.toStdString());
+                    pwallet->SetAddressBook(dest, strprintf("Invoice #%d", invoiceToPay), "send");
+                 }
                  nodeSetupPendingPayments.insert( { paymentTx.toStdString(), invoiceToPay } );
                  if ( pendingPaymentsTimer !=NULL && !pendingPaymentsTimer->isActive() )  {
                      pendingPaymentsTimer->start(30000);
@@ -758,12 +764,10 @@ void MasternodeList::on_payButton_clicked()
 void MasternodeList::nodeSetupCheckPendingPayments()    {
     int invoiceToPay;
     QString strAmount, strStatus, paymentAddress, strError;
-LogPrintf("nodeSetupCheckPendingPayments \n" );
 
     for(auto& itemPair : nodeSetupPendingPayments)   {
         invoiceToPay = itemPair.second;
         nodeSetupAPIGetInvoice( invoiceToPay, strAmount, strStatus, paymentAddress, strError );
-LogPrintf("nodeSetupCheckPendingPayments %s, %d \n", strStatus.toStdString(), invoiceToPay );
         if ( strStatus != "Unpaid" )  { // either paid or cancelled/removed
             nodeSetupPendingPayments.erase(itemPair.first);
             nodeSetupStep( "setupOk", strprintf("Payment for invoice #%d processed", invoiceToPay) );
@@ -772,7 +776,6 @@ LogPrintf("nodeSetupCheckPendingPayments %s, %d \n", strStatus.toStdString(), in
 
     if ( nodeSetupPendingPayments.size()==0 )   {
         if ( pendingPaymentsTimer !=NULL && pendingPaymentsTimer->isActive() )  {
-LogPrintf("nodeSetupCheckPendingPayments stop timer %d \n" );
             pendingPaymentsTimer->stop();
         }
     }
@@ -807,7 +810,6 @@ QString MasternodeList::nodeSetupSendToAddress( QString strAddress, int amount, 
     try {
         cmd.str("");
         cmd << "sendtoaddress " << strAddress.toUtf8().constData() << " " << amount;
-LogPrintf("nodeSetupSendToAddress %s, %f\n", strAddress.toStdString(), amount );
 
         UniValue jsonVal = nodeSetupCallRPC( cmd.str() );
         if ( jsonVal.type() == UniValue::VSTR )       // tx id returned
@@ -868,7 +870,6 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
 
     CAmount invoiceAmount = strAmount.toDouble();
     ui->labelMessage->setText(QString::fromStdString(strprintf("Invoice amount %f SIN", invoiceAmount)));
-//LogPrintf("nodeSetupCheckInvoiceStatus %s, %s, %f\n", strStatus.toStdString(), paymentAddress.toStdString(), invoiceAmount );
     if ( strStatus == "Cancelled" || strStatus == "Refunded" )  {  // reset and call again
         nodeSetupStep( "setupWait", "Order cancelled or refunded, creating a new order");
         invoiceTimer->stop();
@@ -878,13 +879,11 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
 
     if ( strStatus == "Unpaid" )  {
         if ( mPaymentTx != "" ) {   // already paid, waiting confirmations
-LogPrintf("nodeSetupCheckInvoiceStatus %s \n", mPaymentTx.toStdString() );
             nodeSetupStep( "setupWait", "Invoice paid, waiting for confirmation");
             ui->btnSetup->setEnabled(false);
             ui->btnSetupReset->setEnabled(false);
         }
         else    {
-LogPrintf("nodeSetupCheckInvoiceStatus no txID \n");
             // Display message box
             QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm Invoice Payment"),
                 "Are you sure you want to pay " + QString::number(invoiceAmount) + " SIN?",
@@ -902,6 +901,13 @@ LogPrintf("nodeSetupCheckInvoiceStatus no txID \n");
             nodeSetupStep( "setupWait", "Paying invoice");
             mPaymentTx = nodeSetupSendToAddress( paymentAddress, invoiceAmount, invoiceTimer );
             if ( mPaymentTx != "" ) {
+                std::vector<std::shared_ptr<CWallet>> wallets = GetWallets();
+                CWallet * const pwallet = (wallets.size() > 0) ? wallets[0].get() : nullptr;
+                if (pwallet!=nullptr)   {
+                    CTxDestination dest = DecodeDestination(paymentAddress.toStdString());
+                    pwallet->SetAddressBook(dest, strprintf("Invoice #%d", mInvoiceid), "send");
+                }
+
                 nodeSetupSetPaymentTx(mPaymentTx);
                 ui->labelMessage->setText( "Payment finished, please wait until platform confirms payment to proceed to node creation." );
                 ui->btnSetup->setEnabled(false);
@@ -1819,7 +1825,7 @@ std::map<std::string, std::string> MasternodeList::nodeSetupGetUnusedBurnTxs( ) 
                 destAddress = EncodeDestination(s.destination);
             }
             std::string txHash = pwtx->GetHash().GetHex();
-            if (destAddress == Params().GetConsensus().cBurnAddress && confirms<720*365 /* && nodeSetupUsedBurnTxs.find(txHash.substr(0, 16)) == nodeSetupUsedBurnTxs.end() */ )  {
+            if (destAddress == Params().GetConsensus().cBurnAddress && confirms<720*365 && nodeSetupUsedBurnTxs.find(txHash.substr(0, 16)) == nodeSetupUsedBurnTxs.end() )  {
 
                 std::string description = "";
                 std::string strNodeType = "";
