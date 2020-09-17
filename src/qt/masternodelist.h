@@ -152,6 +152,7 @@ private:
     int NODESETUP_REFRESHCOMBOS;    // every N updateDINList cycles
     int nodeSetup_RefreshCounter;
     int mClientid, mOrderid, mInvoiceid, mServiceId;
+    bool bNodeSetupLogged = false;
     std::map<std::string, int> nodeSetupUsedBurnTxs;
     std::map<std::string, int> nodeSetupPendingPayments;
     QString mPaymentTx;

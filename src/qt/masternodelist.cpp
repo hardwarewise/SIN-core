@@ -1110,11 +1110,12 @@ QString MasternodeList::nodeSetupRPCBurnFund( QString collateralAddress, CAmount
 
 void MasternodeList::on_btnLogin_clicked()
 {
-    QString strError = "";
+    QString strError = "", pass = ui->txtPassword->text();
     LogPrintf("nodeSetup::on_btnLogin_clicked -- %d\n", mClientid);
-    if ( mClientid > 0 )    {   // reset
+    if ( bNodeSetupLogged )    {   // reset
         nodeSetupResetClientId();
-        ui->btnLogin->setText("Create/Login");
+        ui->btnLogin->setText("Login");
+        bNodeSetupLogged = false;
         return;
     }
 
@@ -1124,6 +1125,7 @@ void MasternodeList::on_btnLogin_clicked()
     }
 
     if ( clientId > 0 ) {
+        bNodeSetupLogged = true;
         nodeSetupEnableClientId( clientId );
         nodeSetupSetClientId( clientId, ui->txtEmail->text(), ui->txtPassword->text() );
         ui->btnLogin->setText("Logout");
@@ -1183,7 +1185,8 @@ void MasternodeList::nodeSetupInitialize()   {
     QString email, pass;
 
     int clientId = nodeSetupGetClientId( email, pass, true );
-    if ( clientId == 0 )    {
+    ui->txtEmail->setText(email);
+    if ( clientId == 0 || pass=="" )    {
         //ui->widgetLogin->show();
         ui->widgetCurrent->hide();
         ui->setupButtons->hide();
@@ -1191,7 +1194,6 @@ void MasternodeList::nodeSetupInitialize()   {
     }
     else {
         nodeSetupEnableClientId(clientId);
-        ui->txtEmail->setText(email);
         ui->btnLogin->setText("Logout");
     }
     mClientid = clientId;
@@ -1206,6 +1208,8 @@ void MasternodeList::nodeSetupInitialize()   {
         nodeSetupEnableOrderUI(false);
     }
 
+    nodeSetupPopulateInvoicesCombo();
+    nodeSetupPopulateBurnTxCombo();
 }
 
 void MasternodeList::nodeSetupEnableOrderUI( bool bEnable, int orderID , int invoiceID ) {
@@ -1272,9 +1276,6 @@ void MasternodeList::nodeSetupEnableClientId( int clientId )  {
     ui->labelMessage->setText("Select a node Tier and press 'Check' to verify if you meet the prerequisites");
     mClientid = clientId;
     ui->btnRestore->hide();
-
-    nodeSetupPopulateInvoicesCombo();
-    ui->comboBurnTx->addItem(tr("Loading node data..."),"WAIT");
 }
 
 void MasternodeList::nodeSetupPopulateInvoicesCombo( )  {
