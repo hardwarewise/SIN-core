@@ -444,7 +444,7 @@ width: 150px;
            <item>
             <widget class="QLabel" name="label">
              <property name="styleSheet">
-              <string notr="true">color: rgb(255, 0, 0);</string>
+              <string notr="true"/>
              </property>
              <property name="text">
               <string>Right click IP address to see node stats</string>
@@ -473,7 +473,7 @@ width: 150px;
          <string notr="true">QWidget#tabNodeSetup {
 background-color : #011552;
 background-image: url(':/images/setuplogo');
-background-position : center bottom;
+background-position : right bottom;
 background-repeat:none;
 /*border : 3px solid #01FFFF;*/
 }
@@ -515,6 +515,22 @@ QRadioButton::indicator:unchecked {
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <spacer name="horizontalSpacer_8">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>335</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
            <item>
             <widget class="QWidget" name="widgetLogin" native="true">
              <layout class="QHBoxLayout" name="horizontalLayout_10">
@@ -608,24 +624,27 @@ color: #01FFFF;
             </widget>
            </item>
            <item>
-            <spacer name="horizontalSpacer_8">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
             <widget class="QPushButton" name="btnLogin">
              <property name="text">
               <string>Login</string>
              </property>
             </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_9">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>18</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_8"/>
@@ -902,33 +921,20 @@ color:#ffffff;</string>
           <layout class="QHBoxLayout" name="horizontalLayout_13">
            <item>
             <widget class="QWidget" name="widgetCurrent" native="true">
-             <layout class="QHBoxLayout" name="horizontalLayout_14" stretch="0,1,5,0,5,0,2,20">
+             <layout class="QHBoxLayout" name="horizontalLayout_14" stretch="1,5,0,5,0">
               <property name="spacing">
                <number>6</number>
               </property>
               <item>
-               <spacer name="horizontalSpacer_18">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>15</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
                <widget class="QLabel" name="labelInvoicePending">
                 <property name="styleSheet">
-                 <string notr="true">color: #01FFFF;</string>
+                 <string notr="true">font-size:16px;
+color: #01FFFF;
+
+</string>
                 </property>
                 <property name="text">
-                 <string>Pending:</string>
+                 <string>Pending Invoice:</string>
                 </property>
                </widget>
               </item>
@@ -967,7 +973,7 @@ color:#ffffff;</string>
                  </size>
                 </property>
                 <property name="text">
-                 <string>Pay</string>
+                 <string>Pay to contunie service</string>
                 </property>
                </widget>
               </item>
@@ -986,26 +992,6 @@ color:#ffffff;</string>
                  </size>
                 </property>
                </spacer>
-              </item>
-              <item>
-               <widget class="QLabel" name="labelBurns">
-                <property name="styleSheet">
-                 <string notr="true">color: #01FFFF;</string>
-                </property>
-                <property name="text">
-                 <string>Burn Txs:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QComboBox" name="comboBurnTx">
-                <property name="minimumSize">
-                 <size>
-                  <width>440</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </widget>
               </item>
              </layout>
             </widget>
@@ -1080,6 +1066,27 @@ color: #ffffff;</string>
            <item>
             <widget class="QWidget" name="setupButtons" native="true">
              <layout class="QGridLayout" name="gridLayout_3">
+              <item row="3" column="2">
+               <widget class="QLabel" name="label_4">
+                <property name="styleSheet">
+                 <string notr="true">color: rgb(255, 255, 255);
+font-size: 14px;</string>
+                </property>
+                <property name="text">
+                 <string>2- Click Place Order and confirm payment (yes/no)</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QComboBox" name="comboBilling">
+                <property name="minimumSize">
+                 <size>
+                  <width>150</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
               <item row="0" column="0">
                <widget class="QPushButton" name="btnCheck">
                 <property name="enabled">
@@ -1096,42 +1103,18 @@ color: #ffffff;</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="2">
-               <widget class="QLabel" name="label_4">
-                <property name="styleSheet">
-                 <string notr="true">color: rgb(255, 255, 255);
-font-size: 14px;</string>
+              <item row="3" column="1">
+               <spacer name="horizontalSpacer_21">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
                 </property>
-                <property name="text">
-                 <string>Click Place Order and confirm payment (yes/no)</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QComboBox" name="comboBilling">
-                <property name="minimumSize">
+                <property name="sizeHint" stdset="0">
                  <size>
-                  <width>150</width>
-                  <height>0</height>
+                  <width>40</width>
+                  <height>20</height>
                  </size>
                 </property>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QPushButton" name="btnSetupReset">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>223</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Reset Order</string>
-                </property>
-               </widget>
+               </spacer>
               </item>
               <item row="0" column="2">
                <widget class="QLabel" name="label_2">
@@ -1140,7 +1123,7 @@ font-size: 14px;</string>
 font-size: 14px;</string>
                 </property>
                 <property name="text">
-                 <string>Choose MINI/MID or BIG node and click Check</string>
+                 <string>1 -Check avaliable funds</string>
                 </property>
                </widget>
               </item>
@@ -1151,22 +1134,11 @@ font-size: 14px;</string>
 font-size: 14px;</string>
                 </property>
                 <property name="text">
-                 <string>Select node hosting billing circle</string>
+                 <string>Select D.I.N. hosting billing cycle</string>
                 </property>
                </widget>
               </item>
-              <item row="3" column="2">
-               <widget class="QLabel" name="label_5">
-                <property name="styleSheet">
-                 <string notr="true">color: rgb(255, 255, 255);
-font-size: 14px;</string>
-                </property>
-                <property name="text">
-                 <string>Start over</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
+              <item row="3" column="0">
                <widget class="QPushButton" name="btnSetup">
                 <property name="enabled">
                  <bool>false</bool>
@@ -1182,18 +1154,58 @@ font-size: 14px;</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
-               <spacer name="horizontalSpacer_21">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
+              <item row="4" column="0">
+               <widget class="QPushButton" name="btnSetupReset">
+                <property name="enabled">
+                 <bool>false</bool>
                 </property>
-                <property name="sizeHint" stdset="0">
+                <property name="minimumSize">
                  <size>
-                  <width>40</width>
-                  <height>20</height>
+                  <width>223</width>
+                  <height>0</height>
                  </size>
                 </property>
-               </spacer>
+                <property name="styleSheet">
+                 <string notr="true">margin-top:10px;</string>
+                </property>
+                <property name="text">
+                 <string>Reset Order</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="2">
+               <widget class="QLabel" name="label_5">
+                <property name="styleSheet">
+                 <string notr="true">color: rgb(255, 255, 255);
+font-size: 14px;
+margin-top:10px;
+</string>
+                </property>
+                <property name="text">
+                 <string>Start over</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QComboBox" name="comboBurnTx">
+                <property name="minimumSize">
+                 <size>
+                  <width>150</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QLabel" name="label_6">
+                <property name="styleSheet">
+                 <string notr="true">color: rgb(255, 255, 255);
+font-size: 14px;</string>
+                </property>
+                <property name="text">
+                 <string>Create new BurnTx or migrate an existing one</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>
@@ -1224,7 +1236,37 @@ font-size: 14px;</string>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="labelPic_8">
+              <widget class="QLabel" name="labelPic_2">
+               <property name="styleSheet">
+                <string notr="true">font-size:14px;</string>
+               </property>
+               <property name="text">
+                <string>pic</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelPic_3">
+               <property name="styleSheet">
+                <string notr="true">font-size:14px;</string>
+               </property>
+               <property name="text">
+                <string>pic</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelPic_4">
+               <property name="styleSheet">
+                <string notr="true">font-size:14px;</string>
+               </property>
+               <property name="text">
+                <string>pic</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelPic_5">
                <property name="styleSheet">
                 <string notr="true">font-size:14px;</string>
                </property>
@@ -1254,37 +1296,7 @@ font-size: 14px;</string>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="labelPic_5">
-               <property name="styleSheet">
-                <string notr="true">font-size:14px;</string>
-               </property>
-               <property name="text">
-                <string>pic</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelPic_3">
-               <property name="styleSheet">
-                <string notr="true">font-size:14px;</string>
-               </property>
-               <property name="text">
-                <string>pic</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelPic_2">
-               <property name="styleSheet">
-                <string notr="true">font-size:14px;</string>
-               </property>
-               <property name="text">
-                <string>pic</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelPic_4">
+              <widget class="QLabel" name="labelPic_8">
                <property name="styleSheet">
                 <string notr="true">font-size:14px;</string>
                </property>
@@ -1298,62 +1310,7 @@ font-size: 14px;</string>
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_7">
              <item>
-              <widget class="QLabel" name="labelTxt_6">
-               <property name="styleSheet">
-                <string notr="true">font-size:14px;
-color: #01FFFF;</string>
-               </property>
-               <property name="text">
-                <string>TextLabel</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelTxt_8">
-               <property name="styleSheet">
-                <string notr="true">font-size:14px;
-color: #01FFFF;</string>
-               </property>
-               <property name="text">
-                <string>TextLabel</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelTxt_4">
-               <property name="styleSheet">
-                <string notr="true">font-size:14px;
-color: #01FFFF;</string>
-               </property>
-               <property name="text">
-                <string>TextLabel</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelTxt_3">
-               <property name="styleSheet">
-                <string notr="true">font-size:14px;
-color: #01FFFF;</string>
-               </property>
-               <property name="text">
-                <string>TextLabel</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelTxt_7">
-               <property name="styleSheet">
-                <string notr="true">font-size:14px;
-color: #01FFFF;</string>
-               </property>
-               <property name="text">
-                <string>TextLabel</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelTxt_5">
+              <widget class="QLabel" name="labelTxt_1">
                <property name="styleSheet">
                 <string notr="true">font-size:14px;
 color: #01FFFF;</string>
@@ -1375,7 +1332,62 @@ color: #01FFFF;</string>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="labelTxt_1">
+              <widget class="QLabel" name="labelTxt_3">
+               <property name="styleSheet">
+                <string notr="true">font-size:14px;
+color: #01FFFF;</string>
+               </property>
+               <property name="text">
+                <string>TextLabel</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelTxt_4">
+               <property name="styleSheet">
+                <string notr="true">font-size:14px;
+color: #01FFFF;</string>
+               </property>
+               <property name="text">
+                <string>TextLabel</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelTxt_5">
+               <property name="styleSheet">
+                <string notr="true">font-size:14px;
+color: #01FFFF;</string>
+               </property>
+               <property name="text">
+                <string>TextLabel</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelTxt_6">
+               <property name="styleSheet">
+                <string notr="true">font-size:14px;
+color: #01FFFF;</string>
+               </property>
+               <property name="text">
+                <string>TextLabel</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelTxt_7">
+               <property name="styleSheet">
+                <string notr="true">font-size:14px;
+color: #01FFFF;</string>
+               </property>
+               <property name="text">
+                <string>TextLabel</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelTxt_8">
                <property name="styleSheet">
                 <string notr="true">font-size:14px;
 color: #01FFFF;</string>
@@ -1417,19 +1429,6 @@ color: #01FFFF;</string>
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_16">
-           <item>
-            <spacer name="horizontalSpacer_15">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>700</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
            <item>
             <widget class="QLabel" name="labelClientIdValue">
              <property name="font">
@@ -1572,6 +1571,19 @@ color: #01FFFF;</string>
              <property name="sizeHint" stdset="0">
               <size>
                <width>20</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_15">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>700</width>
                <height>20</height>
               </size>
              </property>
