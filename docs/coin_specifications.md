@@ -1,4 +1,8 @@
+**SINOVATE Specifications**
+
 SINOVATE’s X25X proof-of-work (PoW) algorithm is GPU mineable and ensures temporary(until optimized) ASIC, FPGA, and QUANTUM resistance, solidifying the decentralized consensus mechanism in the process.
+
+
 
 Name: SINOVATE  
 Ticker: SIN  
