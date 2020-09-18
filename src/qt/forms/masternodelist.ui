@@ -1063,7 +1063,7 @@ font-size: 14px;</string>
 font-size: 14px;</string>
                 </property>
                 <property name="text">
-                 <string>Select D.I.N. hosting billing cycle (optional)</string>
+                 <string>- Select D.I.N. hosting billing cycle (optional)</string>
                 </property>
                </widget>
               </item>
@@ -1132,7 +1132,7 @@ margin-top:10px;
 font-size: 14px;</string>
                 </property>
                 <property name="text">
-                 <string>Create new BurnTx or migrate an existing one (optional)</string>
+                 <string>-Create new BurnTx or migrate an existing one (optional)</string>
                 </property>
                </widget>
               </item>
