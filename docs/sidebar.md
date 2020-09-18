@@ -2,13 +2,13 @@
 - [Community contributions](/)
 - [SINOVATE coin specifications](coin_specifications)
 - **Documentation**
+- [D.I.N. Testnet setup GUIDE](din_testnet_setup_guide)
 - [SINOVATE Whitepaper Light](SINOVATE_Whitepaper_Light)
 - [Infinity Node setup](infinity_node_setup_guide)
 - [Inf. Node Guide with setUP](infinity_node_guide_with_setup)
 - [Bootstrap](bootstrap)
 - [Wallet](wallet)
 - **Tutorials & Guides**
-- [D.I.N. Testnet setup GUIDE](din_testnet_setup_guide)
 - [Infinity Node tips](infinity_node_tips)
 - [MAC Wallet Backup & Upgrade](mac_wallet_backup_and_upgrade)
 - [Multiple Nodes on one VPS](multiple_nodes_on_one_vps)
