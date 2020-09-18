@@ -1,5 +1,6 @@
 - **Introduction**
 - [Community contributions](/)
+- [SINOVATE coin specifications](coin_specifications)
 - **Documentation**
 - [SINOVATE Whitepaper Light](SINOVATE_Whitepaper_Light)
 - [Infinity Node setup](infinity_node_setup_guide)
