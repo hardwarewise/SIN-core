@@ -1,3 +1,7 @@
+![](https://lh6.googleusercontent.com/g2f9bcrBq8UDYOWJGS9J0RmrjnI2CyOhdyviXjUTieWLFKWmq-sXNUTPx6kXRytMRQnwgR2YXgTvRXvqcZ4FZl9FvyXhdS5QNhwd1dyAzJnaLilyZpbV9VJOxw38_d44MGTP3Z50)
+
+  
+
 Below you will see two different ways to install the testnet wallet.  
   
   
@@ -82,40 +86,33 @@ Step 9.  Launch the Testnet wallet again and check it out all the new changes we
 
 Step 10  Upon opening your SINOVATE wallet, click the “INFINITY NODES” tab.
 
-![](https://lh4.googleusercontent.com/qC8UjSEof9LBy1u-P9EO7T5DU7mT1CrmEcR-98mtDT1AQK0RHDkRfNLOnV-z3odt1rZxFXOtvFysy5WYHV0zN8ZrKY1lMxes2sPA6GgM_3tg-DEA1pThcq_jg4M2Ef4A2Jx2S7kr)
+![](https://lh5.googleusercontent.com/yHgeMNELdrBFHjzhi8ueJzl-Mutmw7e8m7VsQ6q37Gll1kUZGTGqOfY8UUI9mJhktt3n-fmWSGund0DynU3G4BqCym-UfyriQcf-E60vHyTn5th_METzdIGCDBTAPB2Y1mh5slgC)
 
-Step 11  Enter your First Name and Last Name into the fields provided.
+Step 11  Enter your e-mail and password into the fields provided to create or login..
 
 ![](https://lh5.googleusercontent.com/dVNLW4g715IcJaPJz3egkhFrP1G6XYjpBS2l28qT8RVl6OdL8pdGno03gX9nEtRH1D0V-FUiS4u87eFY53A86T0kwFk11C9spfM883uJpVLYtapyUAjZ8bWamKylZxgzXnFFKbdV)
 
   
   
-
-Step 12  Enter your Email address and Password for the SINOVATE setUP cold hosting service. Click the “Create/Login” button to create your login credentials.
-
-![](https://lh6.googleusercontent.com/a1tGMNsIaA_8fKYF5Z2D8fEm_j_3HfcU6mQ-DyD-xlVXfbKpj7MODrvM1oyK0tqxRHMaTNuzPRIScdW8ptHG1hyFB3KIA-IiBzPE2xha5QNDoY0tUt17WPcNaLCpiWutXTCsX_5S)
-
-Step 13  Select the “MINI Node” (100,000 SIN), “MID Node” (500,000 SIN), or “BIG Node” (1,000,000 SIN) circle, according to your desired level of investment. Participants can ensure that they have sufficient funds to set up a node by clicking “Check”.
-
-![](https://lh5.googleusercontent.com/o_y-FIdIU16X7mqQX2WA-GBl3qkcZt4G9ZY2GjZCs6ZWXYHTZ0sPgk-2E98IMuirNbTSWWAMn9yh1LuGWrbLzVA1yQvGiC0atrX0hoBKFQp3sIAvZCzx7xokuBbRI7kVRoAFsp5C)
-
-  
-
-Step 14  Once determined, select your preferred payment plan from the drop-down menu.
-
-![](https://lh4.googleusercontent.com/msH79S0WdgXYyW6DRfiTJfWlwZ2Cjp8lLftj5o8JR5k43Sc-2CLGUtelYWP41VpzJCdlmfWcPXCS4XXH-SrS2nLK30HVv0Z_K6mdpiCsEJODB7PwErdKiFN7FPuZno7bglPwSnCz)
-
-Step 15  Click “Place Order”
-
-![](https://lh4.googleusercontent.com/9ZL0KLbKZle_W3j1W3hZSHTuPrAoixPon4UDOr7Y0MJgGjEmmTLzpUZuWsrxr1ICGRea87DNdbBsrCWc-rzL3IhR-oY_1mKgMbxSZljFlyfaNclbTDA1K-mPyyje18245gUFlkdL)
-
   
   
 
-Step 16  Confirm your Invoice Payment by clicking “Yes”. Please ensure that you have the required additional SIN coins within your wallet balance in order to process the VPS (Virtual Private Server) rental fee. Please note that this will vary depending on the payment plan selected.
+Step 12  Select the “MINI Node” (100,000 SIN), “MID Node” (500,000 SIN), or “BIG Node” (1,000,000 SIN) circle, according to your desired level of investment. Participants can ensure that they have sufficient funds to set up a node by clicking “Check”.
 
-![](https://lh5.googleusercontent.com/-lRO70Mkfj7YKA3o3gyiAowap4-M5KVqjdY_C5pCBRCNP-GDBzou3z7decc-1TtRkdOPCK6LzMvnasxJr6q9sUiuAZ1AXzWnQMbX_JsKZuOD7wJVGhytD3w9ZbMujhOrd8C9PlJd)
+![](https://lh4.googleusercontent.com/NYRi-fpA_4nNKyWVGQVdgwmJKjlo-nZreUCgxBfB3yq5_RFhvTnzELwugv5iqt78aLE2Qx2nFFbpRq_mcbpOZsRO8i7HO3iGQ-mXwJ-K6s3-S5X04Umqqy53e-JCh0af-55Tm08f)
+
+  
+
+Step 13  Once determined, select your preferred payment plan from the drop-down menu.
+
+![](https://lh6.googleusercontent.com/4A2oUhiv5lR1R4uepdIy8h-nFIcgRXxCATfIiqHmNAajsRCHFR3Tq6gRG_256gq-Ahowx--wUbyDi-bABV3-bBHFJ81FvXIyP3go2_uuNQP3KqmYt6fxjzhjJ1x6jrQ3nw00y05z)
+
+Step 14  Click “Place Order” and Confirm your Invoice Payment by clicking “Yes”. Please ensure that you have the required additional SIN coins within your wallet balance in order to process the VPS (Virtual Private Server) rental fee. Please note that this will vary depending on the payment plan selected.
+
+![](https://lh6.googleusercontent.com/_Cj9-EtciHm-K1Izm4QmmEI77CtoQ2Plt5r5lqXUE9S3OMYhOL__wf_XAc8SB57parg3oWRMe__ymxqOV2Fo1EMWIAa3R8Kki7l9O8xGccYA-_zbrkKgyI6w2DKj8bonT3c7am8l)
+
+  
 
 SINOVATE setUP is now complete. Depending on block confirmation speed, invoice payment and the SIN coin burning process will take between 3–10 minutes to initialize. Once this is done you are good to go.
 
-![](https://lh3.googleusercontent.com/eUpybZA-UQTZSEV-dbYg55kFsGhyOSvG02uRa-d6fvlBXF-nT7zpvN1tuQa1PTfgVRfV-JLx2wn2od0YFdHVOMKKOy10fBRWXlKQvz5NRi0RgPPz7cCi-0iED_Pkhbwox6SOzExp)
+![](https://lh5.googleusercontent.com/ExLKJMouhOCYtNWdcEX8-ilwBDC_6bRZuXGnAyV8raLrh6ZhDK_RawL2tsfiEtzTpUiJDECzG3DmvONHOnw2cinaxrpGdPU1z3YJ1ihgt-v9dBv3p1toPXrt6usZ6gaGb0hxjBMF)
