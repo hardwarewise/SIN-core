@@ -4,7 +4,7 @@ D.I.N. Setup Guide : For SINOVATE Testnet
   
   
 
-Download putty or any SSH client program of your choice from [https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html.)
+Download putty or any SSH client program of your choice [https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html.)
 
   
 
