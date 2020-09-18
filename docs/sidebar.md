@@ -19,7 +19,7 @@
 - **Testnet**
 - [D.I.N. Testnet setup GUIDE](din_testnet_setup_guide)
 - [Testnet wallet setup GUIDE](testnet_wallet_setup_guide)
-- [In-wallet 2-click setUP GUIDE](inwallet_2click_guide)
+- [In-wallet 1-click setUP GUIDE](inwallet_1click_guide)
 - **Articles**
 - [Decentralized Cloud](decentralized_cloud)
 - [Proof-of-Burn](proof_of_burn)
