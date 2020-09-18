@@ -1,7 +1,7 @@
 
-D.I.N. Setup Guide : For SINOVATE Testnet
+D.I.N. Setup Guide : For SINOVATE Star Cradle Testnet
 
-**An Ubuntu 18.04 VPS with 1 Cpu and  512 mb ram is needed.**
+**An Ubuntu 18.04 VPS with 1 Cpu and  512 MB Ram is needed.**
   
 
 Download putty or any SSH client program of your choice [https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html.)
