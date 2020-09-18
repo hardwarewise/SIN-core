@@ -18,6 +18,7 @@
 - [X25X Pow GPU Mining](X25X-PoW-GPU-Mining)
 - **Testnet**
 - [D.I.N. Testnet setup GUIDE](din_testnet_setup_guide)
+- [Testnet wallet setup GUIDE](testnet_wallet_setup_guide)
 - **Articles**
 - [Decentralized Cloud](decentralized_cloud)
 - [Proof-of-Burn](proof_of_burn)
