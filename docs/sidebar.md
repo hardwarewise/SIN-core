@@ -2,7 +2,6 @@
 - [Community contributions](/)
 - [SINOVATE coin specifications](coin_specifications)
 - **Documentation**
-- [D.I.N. Testnet setup GUIDE](din_testnet_setup_guide)
 - [SINOVATE Whitepaper Light](SINOVATE_Whitepaper_Light)
 - [Infinity Node setup](infinity_node_setup_guide)
 - [Inf. Node Guide with setUP](infinity_node_guide_with_setup)
@@ -17,6 +16,8 @@
 - [Vps Wallet Update Guide](vps_wallet_update)
 - [WIN Wallet Backup & Upgrade](windows_wallet_backup_and_upgrade)
 - [X25X Pow GPU Mining](X25X-PoW-GPU-Mining)
+- **Testnet**
+- [D.I.N. Testnet setup GUIDE](din_testnet_setup_guide)
 - **Articles**
 - [Decentralized Cloud](decentralized_cloud)
 - [Proof-of-Burn](proof_of_burn)
