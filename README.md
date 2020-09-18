@@ -1,7 +1,7 @@
 # ![SINOVATE Logo](https://sinovate.io/wp-content/uploads/2019/07/logo.png)
 
 **SINOVATE (SIN)** is an open-source state of the art digital cryptocurrency. We create and build
-innovative blockchain services for individuals, developers, and enterprises. Big Data, decentralized cloud,
+innovative blockchain services for individuals, developers, and enterprises. Big Data solutions, decentralized cloud (dCloud),
 proof-of-integrity, proof-of-inheritance, and inflation are some of the resolutions presented to the crypto space.
 
 
@@ -27,7 +27,7 @@ X25X is  GPU mineable and ensures **ASIC, FPGA and QUANTUM resistance**,  solidi
 |Block Reward  | **3052.5 SIN** |
 |Block Time  | **2 Minutes** |
 |Block Fee  | **10%** |
-|Difficulty Retargeting Algo | LWMA | 
+|Difficulty Retargeting Algo | **LWMA** | 
 |Max Transactions Per Second  | **533 tx/s** |
 |Total Supply  | **Always Less than 800 million SIN infinitely** |
 |Max Block Size  | **16 MB** |
