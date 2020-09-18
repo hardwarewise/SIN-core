@@ -1,7 +1,7 @@
 
 D.I.N. Setup Guide : For SINOVATE Testnet
 
-  
+An Ubuntu 18.04 VPS with 1 Cpu and  512 mb ram is needed.
   
 
 Download putty or any SSH client program of your choice [https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html.)
