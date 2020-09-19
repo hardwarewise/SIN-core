@@ -24,6 +24,8 @@ Please follow the below guide in order to set up a testnet Deterministic Infinit
 
 ![Image for post](https://lh5.googleusercontent.com/lsv-w4ugpboCEd3E19c-jrX2TOiTKgajfc9RlQWNH52AZW8RZwHt--QPi-hn66udc3Wt8f8vaAIQqsV6C6Zv6ijelfb-Afo_5VZS4qF-YO_ysnmXuSbHfwIZPEEQO4bpZourX7p-)
 
+Check the transactions History of your wallet and your node will be up and running in less than 10 mins automatically after the confirmations.
+
 It really is that simple. In just a few short clicks, would-be network participants will earn considerable passive income for up to a year. For community members who have previously set up an infinity node, SINOVATE setUP provides the perfect opportunity to reassess your VPS needs at a fraction of the cost.
 
-In-wallet one-click infinity node cold hosting will be available as soon as the network upgrade initiates.
+
