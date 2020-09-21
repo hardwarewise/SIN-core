@@ -1028,7 +1028,7 @@ void MasternodeList::nodeSetupCheckBurnSendConfirmations()   {
     UniValue objConfirms = nodeSetupGetTxInfo( mBurnTx, "confirmations" );
     int numConfirms = objConfirms.get_int();
     if ( numConfirms>NODESETUP_CONFIRMS && pass != "" )    {
-        nodeSetupStep( "setupKo", "Finishing node setup");
+        nodeSetupStep( "setupOk", "Finishing node setup");
         burnSendTimer->stop();
 
         QJsonObject root = nodeSetupAPIInfo( mServiceId, clientId, email, pass, strError );
