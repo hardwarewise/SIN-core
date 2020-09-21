@@ -347,7 +347,7 @@ public:
 
         vSeeds.push_back("seederdns.suqa.org"); //Testnet SIN dns seeder
         
-        nDefaultPort = 20990;
+        nDefaultPort = 20980;
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,63);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
