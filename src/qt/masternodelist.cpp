@@ -48,6 +48,7 @@
 #include <QUrl>
 #include <QUrlQuery>
 #include <QNetworkReply>
+#include <QMovie>
 
 UniValue nodeSetupCallRPC(std::string args);
 // end nodeSetup
@@ -1860,9 +1861,11 @@ void MasternodeList::nodeSetupStep( std::string icon , std::string text )   {
 
     labelPic[currentStep]->setVisible(true);
     labelTxt[currentStep]->setVisible(true);
-    QPixmap labelIcon ( QString::fromStdString(strIcon) );
-    labelPic[currentStep]->setPixmap(labelIcon);
+    QMovie *movie = new QMovie( QString::fromStdString(strIcon));
+    labelPic[currentStep]->setMovie(movie);
+    movie->start();    
     labelTxt[currentStep]->setText( QString::fromStdString( text ) );
+
 }
 
 void MasternodeList::nodeSetupCleanProgress()   {
