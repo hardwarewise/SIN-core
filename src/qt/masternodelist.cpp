@@ -48,6 +48,7 @@
 #include <QUrl>
 #include <QUrlQuery>
 #include <QNetworkReply>
+#include <QMovie>
 
 UniValue nodeSetupCallRPC(std::string args);
 // end nodeSetup
@@ -1027,7 +1028,7 @@ void MasternodeList::nodeSetupCheckBurnSendConfirmations()   {
     UniValue objConfirms = nodeSetupGetTxInfo( mBurnTx, "confirmations" );
     int numConfirms = objConfirms.get_int();
     if ( numConfirms>NODESETUP_CONFIRMS && pass != "" )    {
-        nodeSetupStep( "setupKo", "Finishing node setup");
+        nodeSetupStep( "setupOk", "Finishing node setup");
         burnSendTimer->stop();
 
         QJsonObject root = nodeSetupAPIInfo( mServiceId, clientId, email, pass, strError );
@@ -1860,9 +1861,11 @@ void MasternodeList::nodeSetupStep( std::string icon , std::string text )   {
 
     labelPic[currentStep]->setVisible(true);
     labelTxt[currentStep]->setVisible(true);
-    QPixmap labelIcon ( QString::fromStdString(strIcon) );
-    labelPic[currentStep]->setPixmap(labelIcon);
+    QMovie *movie = new QMovie( QString::fromStdString(strIcon));
+    labelPic[currentStep]->setMovie(movie);
+    movie->start();    
     labelTxt[currentStep]->setText( QString::fromStdString( text ) );
+
 }
 
 void MasternodeList::nodeSetupCleanProgress()   {
