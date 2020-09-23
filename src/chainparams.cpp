@@ -345,7 +345,7 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
 
-        vSeeds.push_back("seederdns.suqa.org"); //Testnet SIN dns seeder
+        vSeeds.push_back("testnetseeder.suqa.org"); //Testnet SIN dns seeder
         
         nDefaultPort = 20980;
 
