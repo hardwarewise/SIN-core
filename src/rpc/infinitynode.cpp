@@ -157,9 +157,15 @@ UniValue infinitynode(const JSONRPCRequest& request)
         if (!fInfinityNode)
             throw JSONRPCError(RPC_INTERNAL_ERROR, "This is not an InfinityNode");
 
+        CBlockIndex* pindex = NULL;
+        {
+                LOCK(cs_main);
+                pindex = chainActive.Tip();
+        }
+
         UniValue infObj(UniValue::VOBJ);
         infinitynodePeer.ManageState(*g_connman);
-        infObj.push_back(Pair("MyPeerInfo", infinitynodePeer.GetMyPeerInfo()));
+        infObj.push_back(Pair("MyPeerInfo", infinitynodePeer.GetMyPeerInfo(pindex->nHeight)));
         return infObj;
     }
 
@@ -700,12 +706,18 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
     //check ip and pubkey dont exist
     if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
         std::map<std::string, CMetadata> mapInfMetadata = infnodemeta.GetFullNodeMetadata();
-        for (auto& infpair : mapInfMetadata) {
-            CMetadata m = infpair.second;
-            CAddress add = CAddress(infpair.second.getService(), NODE_NETWORK);
+        for (auto& infmetapair : mapInfMetadata) {
+            CMetadata m = infmetapair.second;
+            CAddress add = CAddress(infmetapair.second.getService(), NODE_NETWORK);
+            //found metaID => check expire or not
             if (m.getMetaID() != metaID && (m.getMetaPublicKey() == nodePublickeyHexStr || addMeta.ToStringIP() == add.ToStringIP())) {
-                std::string strError = strprintf("Error: Pubkey or IP address already exist in network");
-                throw JSONRPCError(RPC_TYPE_ERROR, strError);
+                std::map<COutPoint, CInfinitynode> mapInfinitynodes = infnodeman.GetFullInfinitynodeMap();
+                for (auto& infnodepair : mapInfinitynodes) {
+                    if (infnodepair.second.getMetaID() == m.getMetaID() && infnodepair.second.getExpireHeight() >= nCurrentHeight) {
+                        std::string strError = strprintf("Error: Pubkey or IP address already exist in network");
+                        throw JSONRPCError(RPC_TYPE_ERROR, strError);
+                    }
+                }
             }
         }
     }
