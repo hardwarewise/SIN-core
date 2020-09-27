@@ -512,13 +512,14 @@ QRadioButton::indicator:unchecked {
 QComboBox { /* Dropdown Menus */
 
 font-size: 16px;
+font-weight:bold;
 border-color:#bababa;
 border: 1px solid #2E3191;
 border-radius:0px;
 padding: 3px 5px 3px 5px;
 background:#01FFFF;
 min-height:25px;
-color:#FFFFFF;
+color:#000000;
 background-color:#01FFFF;
 
 
@@ -1131,7 +1132,8 @@ QPushButton#btnSetupReset:pressed {
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">font-size:14px;</string>
+                 <string notr="true">font-size:14px;
+font-weight: normal;</string>
                 </property>
                </widget>
               </item>
@@ -1211,7 +1213,7 @@ QPushButton#btnSetupReset:pressed {
 	border:  1px solid  #01FFFF;
     background-color:#FFFFFF;
     font-size:16px;
-	font-weight: bold;
+	/*font-weight: bold;*/
     padding:4px 6px;
     color: #011552;
     border-radius: 2px;
@@ -1221,7 +1223,7 @@ QPushButton#payButton:hover {
 	border:  2px solid #01FFFF;
     background-color:#011552;
     font-size:16px;
-	font-weight:bold;
+	/*font-weight:bold;*/
     padding:4px 6px;
     color: #01FFFF;
     border-radius: 2px;	
@@ -1232,7 +1234,7 @@ QPushButton#payButton:pressed {
 	border:  2px solid #01FFFF;
     background-color:#011552;
     font-size:16px;
-	font-weight:bold;
+	/*font-weight:bold;*/
     padding:4px 6px;
     color: #01FFFF;
     border-radius: 2px;	
