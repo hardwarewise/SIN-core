@@ -1198,7 +1198,7 @@ void MasternodeList::nodeSetupInitialize()   {
     ui->txtEmail->setText(email);
     if ( clientId == 0 || pass=="" )    {
         //ui->widgetLogin->show();
-        ui->widgetCurrent->hide();
+        //ui->widgetCurrent->hide();
         ui->setupButtons->hide();
         ui->labelClientId->setText("");
     }
@@ -1249,7 +1249,7 @@ void MasternodeList::nodeSetupEnableOrderUI( bool bEnable, int orderID , int inv
 void MasternodeList::nodeSetupResetClientId( )  {
     nodeSetupSetClientId( 0 , "", "");
     //ui->widgetLogin->show();
-    ui->widgetCurrent->hide();
+    //ui->widgetCurrent->hide();
     ui->setupButtons->hide();
     ui->labelClientId->setText("");
     ui->btnRestore->setText("Restore");
@@ -1276,7 +1276,7 @@ void MasternodeList::nodeSetupResetOrderId( )   {
 
 void MasternodeList::nodeSetupEnableClientId( int clientId )  {
     //ui->widgetLogin->hide();
-    ui->widgetCurrent->show();
+    //ui->widgetCurrent->show();
     ui->setupButtons->show();
     ui->labelClientId->setText("#"+QString::number(clientId));
     ui->labelMessage->setText("Select a node Tier and press 'Check' to verify if you meet the prerequisites");
