@@ -1008,101 +1008,7 @@ color: #ffffff;</string>
            <item>
             <widget class="QWidget" name="setupButtons" native="true">
              <layout class="QGridLayout" name="gridLayout_3">
-              <item row="3" column="2">
-               <widget class="QLabel" name="label_4">
-                <property name="styleSheet">
-                 <string notr="true">color: rgb(255, 255, 255);
-font-size: 14px;</string>
-                </property>
-                <property name="text">
-                 <string>Click Place Order and confirm payment (yes/no)</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QComboBox" name="comboBilling">
-                <property name="minimumSize">
-                 <size>
-                  <width>150</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QPushButton" name="btnCheck">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>150</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Check</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QLabel" name="label_2">
-                <property name="styleSheet">
-                 <string notr="true">color: rgb(255, 255, 255);
-font-size: 14px;</string>
-                </property>
-                <property name="text">
-                 <string>Check avaliable funds</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QLabel" name="label_3">
-                <property name="styleSheet">
-                 <string notr="true">color: rgb(255, 255, 255);
-font-size: 14px;</string>
-                </property>
-                <property name="text">
-                 <string>- Select D.I.N. hosting billing cycle (optional)</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QPushButton" name="btnSetup">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>223</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Place Order</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0">
-               <widget class="QPushButton" name="btnSetupReset">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>223</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">margin-top:10px;</string>
-                </property>
-                <property name="text">
-                 <string>Reset Order</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="2">
+              <item row="5" column="2">
                <widget class="QLabel" name="label_5">
                 <property name="styleSheet">
                  <string notr="true">color: rgb(255, 255, 255);
@@ -1112,27 +1018,6 @@ margin-top:10px;
                 </property>
                 <property name="text">
                  <string>-Start over</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QComboBox" name="comboBurnTx">
-                <property name="minimumSize">
-                 <size>
-                  <width>150</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="2">
-               <widget class="QLabel" name="label_6">
-                <property name="styleSheet">
-                 <string notr="true">color: rgb(255, 255, 255);
-font-size: 14px;</string>
-                </property>
-                <property name="text">
-                 <string>-Create new BurnTx or migrate an existing one (optional)</string>
                 </property>
                </widget>
               </item>
@@ -1151,20 +1036,55 @@ font-weight : bold;</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
-               <spacer name="horizontalSpacer_21">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
+              <item row="4" column="0">
+               <widget class="QPushButton" name="btnSetup">
+                <property name="enabled">
+                 <bool>false</bool>
                 </property>
-                <property name="sizeHint" stdset="0">
+                <property name="minimumSize">
                  <size>
-                  <width>40</width>
-                  <height>20</height>
+                  <width>223</width>
+                  <height>0</height>
                  </size>
                 </property>
-               </spacer>
+                <property name="text">
+                 <string>Place Order</string>
+                </property>
+               </widget>
               </item>
-              <item row="3" column="1">
+              <item row="0" column="2">
+               <widget class="QLabel" name="label_3">
+                <property name="styleSheet">
+                 <string notr="true">color: rgb(255, 255, 255);
+font-size: 14px;</string>
+                </property>
+                <property name="text">
+                 <string>- Select D.I.N. hosting billing cycle (optional)</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QComboBox" name="comboBurnTx">
+                <property name="minimumSize">
+                 <size>
+                  <width>150</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="2">
+               <widget class="QLabel" name="label_6">
+                <property name="styleSheet">
+                 <string notr="true">color: rgb(255, 255, 255);
+font-size: 14px;</string>
+                </property>
+                <property name="text">
+                 <string>-Create new BurnTx or migrate an existing one (optional)</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
                <widget class="QLabel" name="label_8">
                 <property name="styleSheet">
                  <string notr="true">font-size:18px;
@@ -1178,6 +1098,59 @@ font-weight : bold;</string>
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                 </property>
                </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QComboBox" name="comboBilling">
+                <property name="minimumSize">
+                 <size>
+                  <width>150</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="2">
+               <widget class="QLabel" name="label_4">
+                <property name="styleSheet">
+                 <string notr="true">color: rgb(255, 255, 255);
+font-size: 14px;</string>
+                </property>
+                <property name="text">
+                 <string>Click Place Order and confirm payment (yes/no)</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="QPushButton" name="btnSetupReset">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>223</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">margin-top:10px;</string>
+                </property>
+                <property name="text">
+                 <string>Reset Order</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <spacer name="horizontalSpacer_21">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </widget>
