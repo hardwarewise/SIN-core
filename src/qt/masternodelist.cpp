@@ -72,6 +72,9 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
 {
     ui->setupUi(this);
 
+    ui->btnSetup->setIcon(QIcon(":/icons/setup"));
+    ui->btnSetup->setIconSize(QSize(58, 24));
+
     ui->startButton->setEnabled(false);
 
     int columnAliasWidth = 100;
@@ -1269,7 +1272,7 @@ void MasternodeList::nodeSetupResetOrderId( )   {
     nodeSetupSetOrderId( 0, 0, "");
     ui->btnSetupReset->setEnabled(false);
     ui->btnSetup->setEnabled(true);
-    ui->btnSetup->setText(QString::fromStdString("Place Order"));
+    //ui->btnSetup->setText(QString::fromStdString("Place Order"));
     ui->labelMessage->setText("Select a node Tier and then follow below steps for setup.");
     mOrderid = mInvoiceid = mServiceId = 0;
     mPaymentTx = "";
@@ -1283,7 +1286,7 @@ void MasternodeList::nodeSetupEnableClientId( int clientId )  {
     //ui->widgetCurrent->show();
     ui->setupButtons->show();
     ui->labelClientId->setText("#"+QString::number(clientId));
-    ui->labelMessage->setText("Select a node Tier and press 'Check' to verify if you meet the prerequisites");
+    ui->labelMessage->setText("Select a node Tier and press '1-Click setUP' to verify if you meet the prerequisites");
     mClientid = clientId;
     ui->btnRestore->setText("Support");
 }
