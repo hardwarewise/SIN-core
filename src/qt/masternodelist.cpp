@@ -690,6 +690,10 @@ void MasternodeList::on_btnSetup_clicked()
         mOrderid = nodeSetupAPIAddOrder( mClientid, strBillingCycle, mProductIds, mInvoiceid, strError );
     }
 
+    if (mInvoiceid==0)  {
+        QMessageBox::warning(this, "Maintenance Mode", "We are sorry, Node Setup is in maintenance mode at this moment. Please try later.", QMessageBox::Ok, QMessageBox::Ok);
+    }
+
     if ( mOrderid > 0 && mInvoiceid > 0) {
         nodeSetupSetOrderId( mOrderid, mInvoiceid, mProductIds );
         nodeSetupEnableOrderUI(true, mOrderid, mInvoiceid);
