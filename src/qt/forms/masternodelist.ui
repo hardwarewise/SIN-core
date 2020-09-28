@@ -512,14 +512,14 @@ QRadioButton::indicator:unchecked {
 QComboBox { /* Dropdown Menus */
 
 font-size: 16px;
-font-weight:bold;
+font-weight:normal;
 border-color:#bababa;
 border: 1px solid #2E3191;
 border-radius:0px;
 padding: 3px 5px 3px 5px;
 background:#01FFFF;
 min-height:25px;
-color:#000000;
+color:#333333;
 background-color:#01FFFF;
 
 
@@ -752,7 +752,7 @@ background-size: 32px 32px;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:14px;
-color: #ffffff;</string>
+color: rgb(255, 255, 0);</string>
              </property>
              <property name="text">
               <string>Enter your client data and create a new user or login an existing one.</string>
@@ -787,8 +787,7 @@ color:#ffffff;</string>
              <property name="styleSheet">
               <string notr="true">QPushButton#btnLogin {
 	/* Secondary Button Style */
-	border-top:  2px solid  #01FFFF;
-	border-right:  1px solid  #01FFFF;
+	border:  1px solid  #01FFFF;
     background-color:#011552;
     font-size:16px;
 	font-weight: bold;
@@ -865,8 +864,7 @@ color:#ffffff;</string>
              <property name="styleSheet">
               <string notr="true">QPushButton#btnRestore {
 	/* Secondary Button Style */
-	border-top:  2px solid  #01FFFF;
-	border-right:  1px solid  #01FFFF;
+	border:  1px solid  #01FFFF;
     background-color:#011552;
     font-size:16px;
 	font-weight: bold;
@@ -1144,7 +1142,7 @@ font-weight: normal;</string>
 </string>
                 </property>
                 <property name="text">
-                 <string>Click Place Order and confirm payment (yes/no)</string>
+                 <string>1-Click setUP</string>
                 </property>
                </widget>
               </item>
@@ -1404,7 +1402,7 @@ QPushButton#btnSetup:pressed {
 </string>
                 </property>
                 <property name="text">
-                 <string>Place Order</string>
+                 <string/>
                 </property>
                </widget>
               </item>
