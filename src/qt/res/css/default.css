@@ -1670,7 +1670,7 @@ QTabBar::tab {
 }
 
 QTabBar::tab:selected {
-    border-bottom: 3px solid #01FFFF;
+    border-bottom: 3px solid #BC8F3A;
     background-color:transparent;
     }
 QTabBar::tab:pressed {
