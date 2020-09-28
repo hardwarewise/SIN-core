@@ -183,6 +183,7 @@
      <file alias="stats-network-header">res/images/stats-network-header.svg</file>
      <file alias="stats-top-header">res/images/stats-top-header.svg</file>
      <file alias="setuplogo">res/images/setuplogo.png</file>
+     <file alias="splash-loading">res/images/splash-loading.gif</file>
 
      </qresource>
      
