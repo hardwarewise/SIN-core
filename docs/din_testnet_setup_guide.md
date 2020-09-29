@@ -211,8 +211,7 @@ infinitynodeburnfund [YourAddress] [Amount 1M / 500K / 100K] [YourBackupAddress]
 ![](https://lh4.googleusercontent.com/PrFINr0C-L-exsHOVWgfoYyL-7XzYm8rfNnmNVQnpclbu30xOX3DYQaEeO6UkDm-L2c6BkJpUpnVjQPtwVVgnl0VuL3h09vGcWVQ_3qjW_2unHNLRU2Dj5gwh6AS6Mjr5_hAHtWc)
 
   
-
-![](https://lh6.googleusercontent.com/G4y7C56FSZ0tjlengyamwLSxJEP9Qd3miy_oJ4DmxmlR79NbCRfCMID88zCOqRHm1cQ2yZ_wk86qVMFDkl0nWXWDUP7zmvtP1p4uyYpjEinJq8JlVlPEPF-_rtbxF7t5N5zQHFES)
+![](https://lh4.googleusercontent.com/Vuqd-GPkg2eF17ZjjBulGVRtiuLs9QFIjspeurUai6HxlQHTboTwXfEeTJ5VhFgWDd8SLIIgHI3dOh1xzxNTBHKZe3nCc9uxXHCr0EuWKujk-g4Y3qiDG8r8Na1ZQ0REk_MNmsHP)
 
   
   
@@ -223,8 +222,8 @@ infinitynodeburnfund [YourAddress] [Amount 1M / 500K / 100K] [YourBackupAddress]
 
 Please wait for 2 confirmations!
 
-![](https://lh4.googleusercontent.com/Vuqd-GPkg2eF17ZjjBulGVRtiuLs9QFIjspeurUai6HxlQHTboTwXfEeTJ5VhFgWDd8SLIIgHI3dOh1xzxNTBHKZe3nCc9uxXHCr0EuWKujk-g4Y3qiDG8r8Na1ZQ0REk_MNmsHP)
 
+![](https://lh6.googleusercontent.com/G4y7C56FSZ0tjlengyamwLSxJEP9Qd3miy_oJ4DmxmlR79NbCRfCMID88zCOqRHm1cQ2yZ_wk86qVMFDkl0nWXWDUP7zmvtP1p4uyYpjEinJq8JlVlPEPF-_rtbxF7t5N5zQHFES)
   
 
 Please wait for 2 confirmations!
