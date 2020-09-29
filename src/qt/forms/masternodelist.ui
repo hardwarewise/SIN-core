@@ -1144,13 +1144,18 @@ QPushButton#btnSetupReset:pressed {
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>200</width>
+                  <width>210</width>
                   <height>16777215</height>
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">font-size:14px;
-font-weight: normal;</string>
+                 <string notr="true">QComboBox {
+font-size:12px;
+font-weight: normal;
+}
+QComboBox QAbstractItemView  {
+min-width: 270px;
+    }</string>
                 </property>
                </widget>
               </item>
