@@ -103,7 +103,7 @@
         <file alias="faq">res/icons/faq.svg</file>
         <file alias="setupOk">res/icons/ok.svg</file>
         <file alias="setupKo">res/icons/ko.svg</file>
-        <file alias="setupWait">res/icons/wait.svg</file>
+        <file alias="setupWait">res/icons/waitgif.gif</file>
         <file alias="theme-white">res/icons/theme-white.svg</file>
         <file alias="theme-light">res/icons/theme-light.svg</file>
         <file alias="exit">res/icons/exit.svg</file>
@@ -183,6 +183,7 @@
      <file alias="stats-network-header">res/images/stats-network-header.svg</file>
      <file alias="stats-top-header">res/images/stats-top-header.svg</file>
      <file alias="setuplogo">res/images/setuplogo.png</file>
+     <file alias="splash-loading">res/images/splash-loading.gif</file>
 
      </qresource>
      

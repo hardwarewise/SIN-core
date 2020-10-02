@@ -1656,7 +1656,7 @@ QTabBar::tab:hover:!selected {
     background-color: #A6D8FF;
 }
 QTabBar::tab {
-  color:#747c83;
+  color:#333333;
   font-size:14px;
   background-color:transparent;
   padding-left: 4px;

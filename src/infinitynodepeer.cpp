@@ -17,7 +17,7 @@ void CInfinitynodePeer::ManageState(CConnman& connman)
 {
     LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageState -- Start\n");
     if(!fInfinityNode) {
-        LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageState -- Not a masternode, returning\n");
+        LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageState -- Not an Infinitynode, returning\n");
         return;
     }
 
@@ -68,13 +68,13 @@ std::string CInfinitynodePeer::GetTypeString() const
     return strType;
 }
 
-std::string CInfinitynodePeer::GetMyPeerInfo() const
+std::string CInfinitynodePeer::GetMyPeerInfo(int nHeight) const
 {
     std::string myPeerInfo;
     infinitynode_info_t infoInf;
     if(eType == INFINITYNODE_UNKNOWN)
     {
-        myPeerInfo = strprintf("Can not initial Peer. Please make sure that the configuration: flisten, externalip, network port...");
+        myPeerInfo = strprintf("Unable to start peer. Check configuration options such as network behaviour (-listen, -externalip, -port)");
         return myPeerInfo;
     }
     if(nState != INFINITYNODE_PEER_STARTED)
@@ -85,8 +85,11 @@ std::string CInfinitynodePeer::GetMyPeerInfo() const
     if(infnodeman.GetInfinitynodeInfo(EncodeBase64(pubKeyInfinitynode.begin(), pubKeyInfinitynode.size()), infoInf)
       && eType == INFINITYNODE_REMOTE && nState == INFINITYNODE_PEER_STARTED) {
         myPeerInfo = strprintf("My Peer is running with metadata ID: %s", infoInf.metadataID);
+        if(nHeight >= infoInf.nExpireHeight) {
+            myPeerInfo = strprintf("My Peer is EXPIRED with metadata ID: %s", infoInf.metadataID);
+        }
     } else {
-        myPeerInfo = strprintf("Peer is not ready. Please update the metadata of Infinitynode.");
+        myPeerInfo = strprintf("Peer not ready. Please update Infinitynode metadata.");
     }
     return myPeerInfo;
 }
@@ -153,7 +156,7 @@ void CInfinitynodePeer::ManageStateInitial(CConnman& connman)
 
     if(!fFoundLocal) {
         nState = INFINITYNODE_PEER_NOT_CAPABLE;
-        strNotCapableReason = "Can't detect valid external address. Please consider using the externalip configuration option if problem persists. Make sure to use IPv4 address only.";
+        strNotCapableReason = "Can't detect valid external address. Please consider using the externalip configuration option if problem persists.";
         LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateInitial -- %s: %s\n", GetStateString(), strNotCapableReason);
         return;
     }
@@ -218,14 +221,14 @@ void CInfinitynodePeer::ManageStateRemote()
         CMetadata meta = infnodemeta.Find(infoInf.metadataID);
         if (meta.getMetadataHeight() == 0){
             nState = INFINITYNODE_PEER_NOT_CAPABLE;
-            strNotCapableReason = "Metatdata not found.";
+            strNotCapableReason = "Metatdata not found";
             LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateRemote -- %s: %s\n", GetStateString(), strNotCapableReason);
             return;
         }
 
         if(!CInfinitynode::IsValidStateForAutoStart(meta.getMetadataHeight())) {
             nState = INFINITYNODE_PEER_NOT_CAPABLE;
-            strNotCapableReason = strprintf("Infinitynode metadata height is %d", meta.getMetadataHeight());
+            strNotCapableReason = strprintf("Infinitynode metadata height is %d, please wait for more confirmations.", meta.getMetadataHeight());
             LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateRemote -- %s: %s\n", GetStateString(), strNotCapableReason);
             return;
         }
@@ -234,8 +237,8 @@ void CInfinitynodePeer::ManageStateRemote()
         CAddress addLocal = CAddress(service, NODE_NETWORK);
         if(addMeta.ToStringIP()!= addLocal.ToStringIP()) {
             nState = INFINITYNODE_PEER_NOT_CAPABLE;
-            strNotCapableReason = strprintf("Local Ip is different with Metadata ip: %s\n", addMeta.ToStringIP());
-            LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateRemote -- My Meta Ip is :%s, Local Ip is: %s\n", addMeta.ToStringIP(), addLocal.ToStringIP());
+            strNotCapableReason = strprintf("Local IP isn't the same as Metadata IP: %s\n", addMeta.ToStringIP());
+            LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateRemote -- My Metadata IP is :%s, Local IP is: %s\n", addMeta.ToStringIP(), addLocal.ToStringIP());
             return;
         }
 

@@ -12,6 +12,7 @@
 #include <sync.h>
 #include <util.h>
 #include <wallet/wallet.h>
+#include <qt/walletmodel.h>
 #include <QMenu>
 #include <QLabel>
 #include <QTimer>
@@ -28,7 +29,6 @@ namespace Ui {
 }
 
 class ClientModel;
-class WalletModel;
 class OptionsModel;
 class QNetworkAccessManager;
 class UniValue;
@@ -120,6 +120,8 @@ public Q_SLOTS:
     void nodeSetupCheckBurnSendConfirmations();
     std::map<std::string, std::string> nodeSetupGetUnusedBurnTxs( );
     QString nodeSetupGetOwnerAddressFromBurnTx( QString burnTx );
+    bool nodeSetupUnlockWallet();
+    void nodeSetupLockWallet();
 
 Q_SIGNALS:
 
@@ -147,11 +149,13 @@ private:
     QString NODESETUP_ENDPOINT_BASIC;
     QString NODESETUP_ENDPOINT_NODE;
     QString NODESETUP_RESTORE_URL;
+    QString NODESETUP_SUPPORT_URL;
     QString NODESETUP_PID;
     int NODESETUP_CONFIRMS;
     int NODESETUP_REFRESHCOMBOS;    // every N updateDINList cycles
     int nodeSetup_RefreshCounter;
     int mClientid, mOrderid, mInvoiceid, mServiceId;
+    bool bNodeSetupLogged = false;
     std::map<std::string, int> nodeSetupUsedBurnTxs;
     std::map<std::string, int> nodeSetupPendingPayments;
     QString mPaymentTx;
@@ -161,6 +165,7 @@ private:
     QString mProductIds;
     std::string billingOptions[3] = {"Monthly", "Semiannually", "Annually"};
     QAction *mCheckNodeAction;
+    WalletModel::UnlockContext *pUnlockCtx = NULL;
 
 private Q_SLOTS:
     void showContextMenu(const QPoint &);
@@ -176,7 +181,6 @@ private Q_SLOTS:
 
     // node setup
     void on_btnSetup_clicked();
-    void on_btnCheck_clicked();
     void on_btnLogin_clicked();
     void on_btnSetupReset_clicked();
     void on_btnRestore_clicked();

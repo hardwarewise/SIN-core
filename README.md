@@ -1,7 +1,7 @@
-# ![SINOVATE Logo](https://sinovate.io/wp-content/uploads/2019/07/logo.png)
+# ![SINOVATE Logo](docs/assets/img/sin_background.png)
 
 **SINOVATE (SIN)** is an open-source state of the art digital cryptocurrency. We create and build
-innovative blockchain services for individuals, developers, and enterprises. Big Data, decentralized cloud,
+innovative blockchain services for individuals, developers, and enterprises. Big Data solutions, decentralized cloud (dCloud),
 proof-of-integrity, proof-of-inheritance, and inflation are some of the resolutions presented to the crypto space.
 
 
@@ -12,7 +12,7 @@ proof-of-integrity, proof-of-inheritance, and inflation are some of the resoluti
  - **x25X** GPU Algorithm. Leading-edge, in-house built,custom GPU mining algorithm. More complex,less power-hungry.
  - **Infinity Nodes** Explicitly designed to overcome the hyperinflation all cryptocurrency projects face. Infinity nodes burn the collateral with unprecedented network security and stability.
  - **Incorruptible Data Storage** Incorruptible Data Storage. DataSend, DataStore and Blockchain-mail. Proof-of-Integrity. Unlimited private networking of big data storage.
- - **FlashSend** Instanteneous trasnactions in less than 2 seconds.
+
 SINOVATE (SIN) combines its brand new **X25X Proof of Work (PoW)** algorithm with LWMA difficulty retargeting algorithm, Reorg fork reject solution merged with P.O.B., establishes a 51% attack protection.
 
 X25X is  GPU mineable and ensures **ASIC, FPGA and QUANTUM resistance**,  solidifying the decentralised consensus mechanism in the process. 
@@ -27,9 +27,9 @@ X25X is  GPU mineable and ensures **ASIC, FPGA and QUANTUM resistance**,  solidi
 |Block Reward  | **3052.5 SIN** |
 |Block Time  | **2 Minutes** |
 |Block Fee  | **10%** |
-|Difficulty Retargeting Algo | LWMA | 
+|Difficulty Retargeting Algo | **LWMA** | 
 |Max Transactions Per Second  | **533 tx/s** |
-|Total Supply  | **Always Less than 700 million SIN infinitely** |
+|Total Supply  | **Always Less than 800 million SIN infinitely** |
 |Max Block Size  | **16 MB** |
 |SINOVATE legacy address start with  | **S** |
 |Infinity Node Port  | **20970** |
@@ -38,12 +38,7 @@ X25X is  GPU mineable and ensures **ASIC, FPGA and QUANTUM resistance**,  solidi
 |<small>MINI</small> Infinity Node Requirement  | **100.000 SIN** |
 
 
-# Installation
-
-# Support
-
 # Roadmap
+https://sinovate.io/roadmap/
 
-# Contributing
 
-# Project status

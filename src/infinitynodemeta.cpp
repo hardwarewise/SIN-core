@@ -51,16 +51,16 @@ void CInfinitynodeMeta::Clear()
 bool CInfinitynodeMeta::Add(CMetadata &meta)
 {
     LOCK(cs);
-    LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::new Metadata from %s %d\n", meta.getMetaID(), meta.getMetadataHeight());
+    LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::Add() New Metadata from %s at height: %d\n", meta.getMetaID(), meta.getMetadataHeight());
     auto it = mapNodeMetadata.find(meta.getMetaID());
     if(it == mapNodeMetadata.end()){
-        LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::1st metadata from %s\n", meta.getMetaID());
+        LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::Add() 1st metadata from %s\n", meta.getMetaID());
         mapNodeMetadata[meta.getMetaID()] = meta;
         return true;
     } else {
         CMetadata m = it->second;
         if(m.getMetaID() == meta.getMetaID() && meta.getMetadataHeight() >  m.getMetadataHeight()){
-            LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::new metadata from higher height %s, %d\n", meta.getMetaID(),  meta.getMetadataHeight());
+            LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::Add() New metadata %s, at height: %d\n", meta.getMetaID(),  meta.getMetadataHeight());
             //we have a new metadata. we need check the distant between 2 update befor add it in histo
             int nHeight = meta.getMetadataHeight();
             std::string sPublicKey = meta.getMetaPublicKey();
@@ -69,11 +69,11 @@ bool CInfinitynodeMeta::Add(CMetadata &meta)
 
             if(nHeight < m.getMetadataHeight() + Params().MaxReorganizationDepth() * 2){
                 int nWait = m.getMetadataHeight() + Params().MaxReorganizationDepth() * 2 - nHeight;
-                LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::Can not update metadata now. Please update after %d blocks\n", nWait);
+                LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::Add() Cannot update metadata now. Please update after %d blocks\n", nWait);
                 return false;
             } else {
                 int nPass = nHeight - m.getMetadataHeight() - Params().MaxReorganizationDepth() * 2;
-                LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::Update metadata now. Pass %d blocks from last height(%)\n", nPass, m.getMetadataHeight());
+                LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::Add() Update metadata now. %d blocks have passed from last update height: %d\n", nPass, m.getMetadataHeight());
 
                 //make sure that PublicKey and IP are not using in network for different metaID
                 bool fCheckExistant = false;
@@ -89,7 +89,7 @@ bool CInfinitynodeMeta::Add(CMetadata &meta)
                 }
 
                 if(fCheckExistant) {
-                    LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::Can not update metadata now. PubKey or IP existant in network\n");
+                    LogPrint(BCLog::INFINITYMETA,"CInfinitynodeMeta::Add() Cannot update metadata now. PubKey or IP existant in network\n");
                     return false;
                 } else {
                     CMetahisto histo(nHeight, sPublicKey, cService);
