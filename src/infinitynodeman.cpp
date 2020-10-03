@@ -150,6 +150,27 @@ void CInfinitynodeMan::CheckAndRemove(CConnman& connman)
     }
 
     updateLastPaidList(nCachedBlockHeight, nCachedBlockHeight - Params().MaxReorganizationDepth());
+
+    //optimisation memory
+    std::map<CScript, int>::iterator itLP = mapLastPaid.begin();
+    while(itLP != mapLastPaid.end()) {
+        if (itLP->second < nCachedBlockHeight - Params().MaxReorganizationDepth() * 2) {
+            mapLastPaid.erase(itLP++);
+        } else {
+            ++itLP;
+        }
+    }
+
+    std::map<COutPoint, CInfinitynode>::iterator itNonMatured =  mapInfinitynodesNonMatured.begin();
+    while(itNonMatured != mapInfinitynodesNonMatured.end()) {
+        CInfinitynode inf = itNonMatured->second;
+        if(inf.nHeight < nCachedBlockHeight - Params().MaxReorganizationDepth() * 2){
+            mapInfinitynodesNonMatured.erase(itNonMatured++);
+        } else {
+            ++itNonMatured;
+        }
+    }
+
     return;
 }
 
@@ -1227,7 +1248,7 @@ bool CInfinitynodeMan::deterministicRewardAtHeight(int nBlockHeight, int nSinTyp
  */
 void CInfinitynodeMan::updateLastStmHeightAndSize(int nBlockHeight, int nSinType)
 {
-    LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateLastStmHeightAndSize -- SIN type: %d, Height: %d\n", nSinType, nBlockHeight);
+    //LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateLastStmHeightAndSize -- SIN type: %d, Height: %d\n", nSinType, nBlockHeight);
     if(nBlockHeight < Params().GetConsensus().nInfinityNodeGenesisStatement) return;
     //step1: copy mapStatement for nSinType
     std::map<int, int> mapStatementSinType = getStatementMap(nSinType);
@@ -1241,7 +1262,7 @@ void CInfinitynodeMan::updateLastStmHeightAndSize(int nBlockHeight, int nSinType
     {
         if (nBlockHeight == stm.first)
         {
-                LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateLastStmHeightAndSize -- SIN type: %d, switch to new Stm :%d at size: %d\n", nSinType, stm.first, stm.second);
+                //LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::updateLastStmHeightAndSize -- SIN type: %d, switch to new Stm :%d at size: %d\n", nSinType, stm.first, stm.second);
                 //we switch to new Stm ==> update rank
                 lastStatement = stm.first;
                 lastStatementSize = stm.second;

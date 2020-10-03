@@ -88,7 +88,7 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
 
 bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount blockReward, CBlockHeader pblock)
 {
-    if (Params().NetworkIDString() == CBaseChainParams::MAIN) {
+    //if (Params().NetworkIDString() == CBaseChainParams::MAIN) {
         if(!masternodeSync.IsSynced()) {
             //there is no budget data to use to check anything, let's just accept the longest chain
             if(fDebug) LogPrintf("IsBlockPayeeValid -- WARNING: Client not synced, skipping block payee checks\n");
@@ -144,134 +144,21 @@ bool IsBlockPayeeValid(const CTransactionRef txNew, int nBlockHeight, CAmount bl
 
         LogPrintf("IsBlockPayeeValid -- WARNING: Masternode payment enforcement is disabled, accepting any payee\n");
         return true;
-    } else {
+    //}
         //not mainnet
         // accept all block inferieur than 10340 = fork height in testnet
+        /*
         if(nBlockHeight < 10340){
             LogPrintf("IsBlockPayeeValid -- accept all Coinbase Tx before simulation hardfork\n");
             return true;
         }
-
-        int counterNodePayment = 0;
-        CScript burnfundScript;
-        burnfundScript << OP_DUP << OP_HASH160 << ParseHex(Params().GetConsensus().cBurnAddressPubKey) << OP_EQUALVERIFY << OP_CHECKSIG;
-
-        //extract LockReward
-        std::vector<CLockRewardExtractInfo> vecLockRewardRet;
-        if (!infnodeman.getLRForHeight(nBlockHeight-1, vecLockRewardRet)) {
-            LogPrintf("IsBlockPayeeValid -- use externe LR database\n");
-            infnodelrinfo.getLRInfo(nBlockHeight, vecLockRewardRet);
-        }
-        LogPrintf("IsBlockPayeeValid -- LR size: %d\n", (int) vecLockRewardRet.size());
-
-        int txIndex = 0;
-        for (auto txout : txNew->vout) {
-            txIndex ++;
-            if (3 <= txIndex && txIndex <=5) {
-                //BEGIN
-                CScript DINPayee;
-
-                int SINType = 0;
-                //choose tier value
-                if (txIndex == 3) {
-                    SINType = 10;
-                } else if (txIndex == 4) {
-                    SINType = 5;
-                } else {
-                    SINType = 1;
-                }
-                //candidate for this Height
-                //check if exist a LR for candidate: Yes: Must pay for him with exact Amount; No: Burn
-                CInfinitynode infOwner;
-                std::string sErrorCheck = "";
-
-                LOCK(infnodeman.cs);
-                if (infnodeman.deterministicRewardAtHeight(nBlockHeight, SINType, infOwner)){
-
-                    CAmount InfPaymentOwner = 0;
-                    InfPaymentOwner = GetMasternodePayment(nBlockHeight, SINType);
-
-                    bool fCandidateValid = false;
-                    CTxDestination addressTxDIN;
-                    std::string addressTxDIN2 = "";
-                    ExtractDestination(txout.scriptPubKey, addressTxDIN);
-                    addressTxDIN2 = EncodeDestination(addressTxDIN);
-
-                    for (auto& v : vecLockRewardRet) {
-                        if(v.nSINtype == SINType && v.nRewardHeight == nBlockHeight && txout.nValue == InfPaymentOwner){
-                            //and LR was sent from good metadata: v.scriptPubKey
-                            if(inflockreward.CheckLockRewardRegisterInfo(v.sLRInfo, sErrorCheck, infOwner.getBurntxOutPoint())){
-                                CMetadata meta = infnodemeta.Find(infOwner.getMetaID());
-                                if(meta.getMetadataHeight() == 0){
-                                    LogPrintf("IsBlockPayeeValid -- Not found metadata for candidate at height: %d\n", nBlockHeight);
-                                    continue;
-                                }
-
-                                bool fLRSenderCheck = false;
-                                CScript senderScript;
-                                for(auto& vhisto : meta.getHistory()){
-                                    std::vector<unsigned char> tx_data = DecodeBase64(vhisto.pubkeyHisto.c_str());
-                                    CPubKey pubKey(tx_data.begin(), tx_data.end());
-                                    CTxDestination nodeDest = GetDestinationForKey(pubKey, OutputType::LEGACY);
-                                    senderScript = GetScriptForDestination(nodeDest);
-                                    if(v.scriptPubKey == senderScript){
-                                        fLRSenderCheck = true;
-                                        break;
-                                    }
-                                }
-
-                                if(fLRSenderCheck){
-                                    LogPrintf("IsBlockPayeeValid -- VALID tx out: %d, LockReward for SINtype: %d, address: %d\n", txIndex, SINType, addressTxDIN2);
-                                    fCandidateValid = true;
-                                } else {
-                                    LogPrintf("IsBlockPayeeValid -- %s <<<<>>>> %s\n", ScriptToAsmStr(v.scriptPubKey), ScriptToAsmStr(senderScript));
-                                    LogPrintf("IsBlockPayeeValid -- Found LR, but sender is NOT VALID\n");
-                                }
-                            } else {
-                                LogPrintf("IsBlockPayeeValid -- LR found for height but NOT VALID: %s\n", sErrorCheck);
-                            }
-                        }
-                    }
-
-                    //LR and amount of reward is valid, check script to make sure that destination is candidate
-                    if(fCandidateValid){
-                        if (txout.scriptPubKey == infOwner.GetInfo().scriptPubKey){
-                            LogPrintf("IsBlockPayeeValid -- VALID tx out: %d, Payment for SINtype: %d, address: %d\n", txIndex, SINType, addressTxDIN2);
-                            counterNodePayment ++;
-                        }
-                    }
-                    //No LR found for candidate => payment is correct if reward is burnt
-                    else {
-                        if (txout.scriptPubKey == burnfundScript){
-                            LogPrintf("IsBlockPayeeValid -- VALID tx out: %d, No LR for SINtype: %d, burnd it: %d.\n", txIndex, SINType, addressTxDIN2);
-                            counterNodePayment ++;
-                        }
-                    }
-                }
-                //Not found candidate, payment is correct if reward is burnt
-                else {
-                    if (txout.scriptPubKey == burnfundScript){
-                        LogPrintf("IsBlockPayeeValid -- VALID tx out: %d, No Candiate found for SINtype: %d.\n", txIndex, SINType);
-                        counterNodePayment ++;
-                    }
-                }
-            }
-        }//end loop output
-
-        if ( counterNodePayment == 3 ) {
-            LogPrintf("IsBlockPayeeValid -- 3 payments are validated\n");
-            return true;
-        } else {
-            LogPrintf("IsBlockPayeeValid -- ERROR: Missing required payment\n");
-            return false;
-        }
-    }
+        */
 }
 
 void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blockReward, std::vector<CTxOut>& txoutMasternodeRet, std::vector<CTxOut>& voutSuperblockRet)
 {
     // FILL BLOCK PAYEE WITH MASTERNODE PAYMENT OTHERWISE
-    if (Params().NetworkIDString() == CBaseChainParams::MAIN) {
+    //if (Params().NetworkIDString() == CBaseChainParams::MAIN) {
         int fSINNODE_1 = 0; int fSINNODE_5 = 0; int fSINNODE_10 = 0;
         sintype_pair_vec_t vSinType;
 
@@ -286,152 +173,6 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
             LogPrint(BCLog::MNPAYMENTS, "FillBlockPayments -- nBlockHeight %d blockReward %lld txoutMasternodeRet %s txNew %s\n",
                             nBlockHeight, blockReward, txoutMasternode.ToString(), txNew.ToString());
         }
-    } else {
-        //not mainnet
-        std::vector<CLockRewardExtractInfo> vecLockRewardRet;
-        if (!infnodeman.getLRForHeight(nBlockHeight-1, vecLockRewardRet)) {
-            LogPrintf("IsBlockPayeeValid -- use externe LR database\n");
-            infnodelrinfo.getLRInfo(nBlockHeight, vecLockRewardRet);
-        }
-
-        CScript DINPayee;
-        CInfinitynode infOwner;
-        int SINType = 0;
-        for (int i = 0; i <= 2; i++) {
-            //choose tier value
-            if (i == 0) {
-                SINType = 10;
-            } else if (i == 1) {
-                SINType = 5;
-            } else {
-                SINType = 1;
-            }
-            bool fBurnRewardOwner = false;
-            bool fFoundLockReward = false;
-            CAmount InfPaymentOwner = 0;
-            InfPaymentOwner = GetMasternodePayment(nBlockHeight, SINType);
-            std::string sErrorCheck = "";
-
-            LOCK(infnodeman.cs);
-            if (infnodeman.deterministicRewardAtHeight(nBlockHeight, SINType, infOwner)){
-                DINPayee = infOwner.GetInfo().scriptPubKey;
-                for (auto& v : vecLockRewardRet) {
-                    if(v.nSINtype == SINType && v.nRewardHeight == nBlockHeight){
-                        //check schnorr musig
-                        if(inflockreward.CheckLockRewardRegisterInfo(v.sLRInfo, sErrorCheck, infOwner.getBurntxOutPoint())){
-                                CMetadata meta = infnodemeta.Find(infOwner.getMetaID());
-                                if(meta.getMetadataHeight() == 0){
-                                    LogPrintf("IsBlockPayeeValid -- Not found metadata for candidate at height: %d\n", nBlockHeight);
-                                    continue;
-                                }
-
-                                bool fLRSenderCheck = false;
-                                CScript senderScript;
-                                for(auto& vhisto : meta.getHistory()){
-                                    std::vector<unsigned char> tx_data = DecodeBase64(vhisto.pubkeyHisto.c_str());
-                                    CPubKey pubKey(tx_data.begin(), tx_data.end());
-                                    CTxDestination nodeDest = GetDestinationForKey(pubKey, OutputType::LEGACY);
-                                    senderScript = GetScriptForDestination(nodeDest);
-                                    if(v.scriptPubKey == senderScript){
-                                        fLRSenderCheck = true;
-                                        break;
-                                    }
-                                }
-
-                                if(fLRSenderCheck){
-                                    LogPrintf("FillBlockPayments -- LockReward for SINtype: %d is VALID\n", SINType);
-                                    fFoundLockReward = true;
-                                    break;
-                                } else {
-                                    LogPrintf("FillBlockPayments -- %s <<<<>>>> %s\n", ScriptToAsmStr(v.scriptPubKey), ScriptToAsmStr(senderScript));
-                                    LogPrintf("FillBlockPayments -- Found LR, but sender is NOT VALID\n");
-                                }
-                        }
-                    }
-                }
-
-                if(fFoundLockReward){
-                    LogPrintf("FillBlockPayments -- TESTNET LockReward ADD Payment\n");
-                    txNew.vout[0].nValue -= InfPaymentOwner;
-                    txNew.vout.push_back(CTxOut(InfPaymentOwner, DINPayee));
-                }else{
-                    fBurnRewardOwner=true;
-                    LogPrintf("FillBlockPayments -- TESTNET LockReward NOT FOUND or NOT Valid (%s) => Burn\n", sErrorCheck);
-                }
-            } else {
-                LogPrintf("FillBlockPayments -- TESTNET SINtype: %d, No candidate found\n", SINType);
-                fBurnRewardOwner=true;
-            }
-
-            if(fBurnRewardOwner){
-                txNew.vout[0].nValue -= InfPaymentOwner;
-                CTxDestination burnDestination =  DecodeDestination(Params().GetConsensus().cBurnAddress);
-                CScript burnAddressScript = GetScriptForDestination(burnDestination);
-                txNew.vout.push_back(CTxOut(InfPaymentOwner, burnAddressScript));
-            }
-        }
-    }
-
-    /*pay small reward for Node address of Infinitynode*/
-    CScript DINPayeeNode;
-    CInfinitynode infinitynode;
-    int SINType = 0;
-
-    for (int i = 0; i <= 2; i++) {
-            //choose tier value
-            if (i == 0) {
-                SINType = 10;
-            } else if (i == 1) {
-                SINType = 5;
-            } else {
-                SINType = 1;
-            }
-
-        bool fBurnRewardNode = false;
-
-        CAmount InfPayment = 0;
-        InfPayment = Params().GetConsensus().nMasternodeBurnSINNODE_10;
-        {
-            LOCK(infnodeman.cs);
-            if (infnodeman.deterministicRewardAtHeight(nBlockHeight, SINType, infinitynode)){
-
-                LogPrint(BCLog::MNPAYMENTS, "FillBlockPayments -- candidate %d at height %d: %s\n", SINType, nBlockHeight, infinitynode.getCollateralAddress());
-                CMetadata metaSender = infnodemeta.Find(infinitynode.getMetaID());
-                if (metaSender.getMetadataHeight() == 0){
-                    LogPrint(BCLog::MNPAYMENTS, "FillBlockPayments -- can not get metadata of node\n");
-                    fBurnRewardNode=true;
-                }
-                //payment to the last metadata info, so do not do further check
-
-                if(!fBurnRewardNode){
-                    std::string metaPublicKey = metaSender.getMetaPublicKey();
-                    std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
-                    CPubKey pubKey(tx_data.begin(), tx_data.end());
-                    if(pubKey.IsValid() && pubKey.IsCompressed()){
-                        CTxDestination dest = GetDestinationForKey(pubKey, OutputType::LEGACY);
-                        std::string address2 = EncodeDestination(dest);
-                        LogPrint(BCLog::MNPAYMENTS, "FillBlockPayments -- payment for: %s amount %lld\n",address2, InfPayment);
-
-                        DINPayeeNode = GetScriptForDestination(dest);
-                        txNew.vout[0].nValue -= InfPayment;
-                        txNew.vout.push_back(CTxOut(InfPayment, DINPayeeNode));
-                    }else{
-                        fBurnRewardNode=true;
-                    }
-                }
-            } else {
-                LogPrint(BCLog::MNPAYMENTS, "FillBlockPayments -- can not found infinitynode candidate %d at height %d\n", SINType, nBlockHeight);
-                fBurnRewardNode=true;
-            }
-
-            if(fBurnRewardNode){
-                txNew.vout[0].nValue -= InfPayment;
-                CTxDestination burnDestination =  DecodeDestination(Params().GetConsensus().cBurnAddress);
-                CScript burnAddressScript = GetScriptForDestination(burnDestination);
-                txNew.vout.push_back(CTxOut(InfPayment, burnAddressScript));
-            }
-        }
-    }
 }
 
 std::string GetRequiredPaymentsString(int nBlockHeight)

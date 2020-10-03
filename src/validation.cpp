@@ -2222,7 +2222,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
                                REJECT_INVALID, "bad-cb-amount");
 
     // verify devfund addr and amount are correct
-    if (pindex->nHeight <= chainparams.GetConsensus().nNewDevfeeAddress) {
+    if (pindex->nHeight <= chainparams.GetConsensus().nDINActivationHeight) {
         if (block.vtx[0]->vout[1].scriptPubKey != devScript)
             return state.DoS(100, error("ConnectBlock(): coinbase does not pay to the old dev fund address."), REJECT_INVALID, "bad-cb-old-dev-fee");
     } else {
@@ -2239,24 +2239,24 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
     if (pindex->nHeight <= chainparams.GetConsensus().nINActivationHeight) {
         //POW mode: do nothing
         LogPrintf("Validation -- POW\n");
-    } else if (pindex->nHeight > chainparams.GetConsensus().nINActivationHeight && pindex->nHeight <= chainparams.GetConsensus().nNewDevfeeAddress) {
+    } else if (pindex->nHeight > chainparams.GetConsensus().nINActivationHeight && pindex->nHeight <= chainparams.GetConsensus().nDINActivationHeight) {
         //Masternode mode: check payment
         LogPrintf("Validation -- POW + Masternode\n");
         if (!IsBlockPayeeValid(block.vtx[0], pindex->nHeight, block.vtx[0]->GetValueOut(), pindex->GetBlockHeader())) {
             mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
             LogPrintf("IsBlockPayeeValid -- disconnect block!\n");
             if (pindex->nHeight >= chainparams.GetConsensus().nINEnforcementHeight) {
-                return state.DoS(0, error("ConnectBlock(SIN): couldn't find masternode or superblock payments"),
+                return state.DoS(100, error("ConnectBlock(SIN): couldn't find masternode or superblock payments"),
                 REJECT_INVALID, "bad-cb-payee");
             }
         }
     } else {
         //Infinitynode mode: validation LR
         LogPrintf("Validation -- POW + Infinitynode\n");
-        if (!LockRewardValidation(pindex->nHeight, block)) {
+        if (!LockRewardValidation(pindex->nHeight, block.vtx[0])) {
             mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
             LogPrintf("LockRewardValidation -- disconnect block!\n");
-            return state.DoS(0, error("ConnectBlock(SIN): couldn't find valid LockReward"), REJECT_INVALID, "bad-lockreward");
+            return state.DoS(100, error("ConnectBlock(SIN): couldn't find valid LockReward"), REJECT_INVALID, "bad-lockreward");
         }
     }
 
