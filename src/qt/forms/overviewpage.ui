@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1015</width>
-    <height>707</height>
+    <width>1000</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -993,7 +993,12 @@ color:#000000;</string>
         </size>
        </property>
        <property name="styleSheet">
-        <string notr="true"/>
+        <string notr="true">QFrame#listTransactionsFrame {
+background-image: url(':/images/sinbg');
+background-repeat:none;
+background-position: right bottom;
+}
+</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
@@ -1054,10 +1059,7 @@ margin-bottom: 9px;
           <item>
            <widget class="QFrame" name="frame_5">
             <property name="styleSheet">
-             <string notr="true">background-image: url(':/images/sinbg');
-background-repeat:none;
-background-position: right bottom;
-background-size: 440px 412px;</string>
+             <string notr="true"/>
             </property>
             <property name="frameShape">
              <enum>QFrame::WinPanel</enum>

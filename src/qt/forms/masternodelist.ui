@@ -471,15 +471,14 @@ width: 150px;
        <widget class="QWidget" name="tabNodeSetup">
         <property name="styleSheet">
          <string notr="true">QWidget#tabNodeSetup {
-background-color : #011552;
+/*background-color : #011552;*/
 background-image: url(':/images/setuplogo');
 background-position : right bottom;
 background-repeat:none;
-/*border : 3px solid #01FFFF;*/
 }
 
 
-QRadioButton:checked {
+/*QRadioButton:checked {
     color: #FFFFFF;
     font-size:18px;
 }
@@ -508,8 +507,9 @@ QRadioButton::indicator:unchecked {
    image: url(':/images/radio_unchecked1');
 }
 
+*/
 
-QComboBox { /* Dropdown Menus */
+/*QComboBox { 
 
 font-size: 16px;
 font-weight:normal;
@@ -573,7 +573,7 @@ selection-background-color:transparent;
 color:transparent;
 selection-color:transparent;
 }
-</string>
+*/</string>
         </property>
         <attribute name="title">
          <string>InfinityNode setUP</string>
@@ -609,10 +609,7 @@ selection-color:transparent;
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color: white;
-border: 0;
-outline: 0;
-border-bottom: 2px solid  #01FFFF;</string>
+              <string notr="true"/>
              </property>
              <property name="echoMode">
               <enum>QLineEdit::Password</enum>
@@ -651,7 +648,7 @@ border-bottom: 2px solid  #01FFFF;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:16px;
-color: #01FFFF;
+
 
 </string>
              </property>
@@ -731,9 +728,15 @@ background-size: 32px 32px;</string>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="minimumSize">
+              <size>
+               <width>87</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
-               <width>16777215</width>
+               <width>87</width>
                <height>0</height>
               </size>
              </property>
@@ -746,7 +749,7 @@ background-size: 32px 32px;</string>
             <widget class="QLabel" name="labelLILDesc">
              <property name="styleSheet">
               <string notr="true">font-size:18px;
-color:#ffffff;</string>
+</string>
              </property>
              <property name="text">
               <string>100.000 SIN Burn</string>
@@ -774,38 +777,7 @@ color:#ffffff;</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">QPushButton#btnLogin {
-	/* Secondary Button Style */
-	border:  1px solid  #01FFFF;
-    background-color:#011552;
-    font-size:16px;
-	font-weight: bold;
-    padding:4px 6px;
-    color: #01FFFF;
-    border-radius: 2px;
-	
-}
-QPushButton#btnLogin:hover {
-	border:  2px solid #01FFFF;
-    background-color:#011552;
-    font-size:16px;
-	font-weight:bold;
-    padding:4px 6px;
-    color: #FFFFFF;
-    border-radius: 2px;	
-	
-}
-
-QPushButton#btnLogin:pressed {
-	border:  2px solid #01FFFF;
-    background-color:#FFFFFF;
-    font-size:16px;
-	font-weight:bold;
-    padding:4px 6px;
-    color: #FFFFFF;
-    border-radius: 2px;	
-}
-</string>
+              <string notr="true"/>
              </property>
              <property name="text">
               <string>Login</string>
@@ -816,7 +788,7 @@ QPushButton#btnLogin:pressed {
             <widget class="QLabel" name="labelMIDDesc">
              <property name="styleSheet">
               <string notr="true">font-size:18px;
-color:#ffffff;</string>
+</string>
              </property>
              <property name="text">
               <string>500.000 SIN Burn</string>
@@ -863,38 +835,7 @@ color:#ffffff;</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">QPushButton#btnRestore {
-	/* Secondary Button Style */
-	border:  1px solid  #01FFFF;
-    background-color:#011552;
-    font-size:16px;
-	font-weight: bold;
-    padding:4px 6px;
-    color: #01FFFF;
-    border-radius: 2px;
-	
-}
-QPushButton#btnRestore:hover {
-	border:  2px solid #01FFFF;
-    background-color:#011552;
-    font-size:16px;
-	font-weight:bold;
-    padding:4px 6px;
-    color: #FFFFFF;
-    border-radius: 2px;	
-	
-}
-
-QPushButton#btnRestore:pressed {
-	border:  2px solid #01FFFF;
-    background-color:#FFFFFF;
-    font-size:16px;
-	font-weight:bold;
-    padding:4px 6px;
-    color: #FFFFFF;
-    border-radius: 2px;	
-}
-</string>
+              <string notr="true"/>
              </property>
              <property name="text">
               <string>Restore</string>
@@ -930,7 +871,7 @@ background-size: 32px 32px;</string>
             <widget class="QLabel" name="labelBIGDesc">
              <property name="styleSheet">
               <string notr="true">font-size:18px;
-color:#ffffff;</string>
+</string>
              </property>
              <property name="text">
               <string>1.000.000 SIN Burn</string>
@@ -952,10 +893,7 @@ color:#ffffff;</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color: white;
-border: 0;
-outline: 0;
-border-bottom: 2px solid  #01FFFF;</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -988,7 +926,7 @@ border-bottom: 2px solid  #01FFFF;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:16px;
-color: #01FFFF;
+
 
 </string>
              </property>
@@ -1045,7 +983,7 @@ background-size: 32px 32px;</string>
              <property name="styleSheet">
               <string notr="true">font-size:14px;
 font-weight:bold;
-color: #BC8F3A;</string>
+</string>
              </property>
              <property name="text">
               <string>Enter your client data and create a new user or login an existing one.</string>
@@ -1096,38 +1034,7 @@ color: #BC8F3A;</string>
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">QPushButton#btnSetupReset {
-	/* Secondary Button Style */
-	border:  1px solid  #01FFFF;
-    background-color:#011552;
-    font-size:16px;
-	font-weight: bold;
-    padding:4px 6px;
-    color: #FFFFFF;
-    border-radius: 2px;
-	
-}
-QPushButton#btnSetupReset:hover {
-	border:  2px solid #01FFFF;
-    background-color:#011552;
-    font-size:16px;
-	font-weight:bold;
-    padding:4px 6px;
-    color: #01FFFF;
-    border-radius: 2px;	
-	
-}
-
-QPushButton#btnSetupReset:pressed {
-	border:  2px solid #01FFFF;
-    background-color:#011552;
-    font-size:16px;
-	font-weight:bold;
-    padding:4px 6px;
-    color: #01FFFF;
-    border-radius: 2px;	
-}
-</string>
+                 <string notr="true"/>
                 </property>
                 <property name="text">
                  <string>Reset Order</string>
@@ -1139,7 +1046,7 @@ QPushButton#btnSetupReset:pressed {
                 <property name="minimumSize">
                  <size>
                   <width>200</width>
-                  <height>33</height>
+                  <height>0</height>
                  </size>
                 </property>
                 <property name="maximumSize">
@@ -1162,8 +1069,7 @@ min-width: 270px;
               <item row="0" column="3">
                <widget class="QLabel" name="label_8">
                 <property name="styleSheet">
-                 <string notr="true">color: rgb(255, 255, 255);
-</string>
+                 <string notr="true"/>
                 </property>
                 <property name="text">
                  <string>1-Click setUP</string>
@@ -1181,7 +1087,7 @@ min-width: 270px;
                 <property name="minimumSize">
                  <size>
                   <width>200</width>
-                  <height>33</height>
+                  <height>0</height>
                  </size>
                 </property>
                 <property name="maximumSize">
@@ -1189,6 +1095,9 @@ min-width: 270px;
                   <width>200</width>
                   <height>16777215</height>
                  </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true"/>
                 </property>
                </widget>
               </item>
@@ -1201,8 +1110,7 @@ min-width: 270px;
                  </sizepolicy>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">color: rgb(255, 255, 255);
-</string>
+                 <string notr="true"/>
                 </property>
                 <property name="text">
                  <string>Start over</string>
@@ -1230,38 +1138,7 @@ min-width: 270px;
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">QPushButton#payButton {
-	/* Secondary Button Style */
-	border:  1px solid  #01FFFF;
-    background-color:#FFFFFF;
-    font-size:16px;
-	/*font-weight: bold;*/
-    padding:4px 6px;
-    color: #011552;
-    border-radius: 2px;
-	
-}
-QPushButton#payButton:hover {
-	border:  2px solid #01FFFF;
-    background-color:#011552;
-    font-size:16px;
-	/*font-weight:bold;*/
-    padding:4px 6px;
-    color: #01FFFF;
-    border-radius: 2px;	
-	
-}
-
-QPushButton#payButton:pressed {
-	border:  2px solid #01FFFF;
-    background-color:#011552;
-    font-size:16px;
-	/*font-weight:bold;*/
-    padding:4px 6px;
-    color: #01FFFF;
-    border-radius: 2px;	
-}
-</string>
+                 <string notr="true"/>
                 </property>
                 <property name="text">
                  <string>Pay to continue service</string>
@@ -1302,8 +1179,7 @@ QPushButton#payButton:pressed {
                  </sizepolicy>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">color: rgb(255, 255, 255);
-</string>
+                 <string notr="true"/>
                 </property>
                 <property name="text">
                  <string>Select D.I.N. hosting billing cycle (optional)</string>
@@ -1319,8 +1195,7 @@ QPushButton#payButton:pressed {
                  </sizepolicy>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">color: rgb(255, 255, 255);
-</string>
+                 <string notr="true"/>
                 </property>
                 <property name="text">
                  <string>Create new BurnTx or migrate (optional)</string>
@@ -1332,7 +1207,7 @@ QPushButton#payButton:pressed {
                 <property name="minimumSize">
                  <size>
                   <width>200</width>
-                  <height>33</height>
+                  <height>0</height>
                  </size>
                 </property>
                 <property name="maximumSize">
@@ -1378,7 +1253,7 @@ QPushButton#payButton:pressed {
                 </property>
                 <property name="styleSheet">
                  <string notr="true">font-size:16px;
-color: #01FFFF;
+
 
 </string>
                 </property>
@@ -1452,41 +1327,7 @@ color: #01FFFF;
                  <enum>Qt::LeftToRight</enum>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">QPushButton#btnSetup {
-	/* Secondary Button Style */
-	border:  1px solid  #01FFFF;
-    background-color:#011552;
-    font-size:16px;
-	font-weight: bold;
-    padding:4px 6px;
-    color: #FFFFFF;
-    border-radius: 2px;
-    text-align:center;
-	
-}
-QPushButton#btnSetup:hover {
-	border:  2px solid #01FFFF;
-    background-color:#011552;
-    font-size:16px;
-	font-weight:bold;
-    padding:4px 6px;
-    color: #01FFFF;
-    border-radius: 2px;	
-	
-}
-
-QPushButton#btnSetup:pressed {
-	border:  2px solid #01FFFF;
-    background-color:#011552;
-    font-size:16px;
-	font-weight:bold;
-    padding:4px 6px;
-    color: #01FFFF;
-    border-radius: 2px;	
-}
-
-
-</string>
+                 <string notr="true"/>
                 </property>
                 <property name="text">
                  <string>Order</string>
@@ -1587,7 +1428,7 @@ QPushButton#btnSetup:pressed {
                  <widget class="QLabel" name="labelTxt_1">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-color: #01FFFF;</string>
+</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1598,7 +1439,7 @@ color: #01FFFF;</string>
                  <widget class="QLabel" name="labelTxt_2">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-color: #01FFFF;</string>
+</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1609,7 +1450,7 @@ color: #01FFFF;</string>
                  <widget class="QLabel" name="labelTxt_3">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-color: #01FFFF;</string>
+</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1620,7 +1461,7 @@ color: #01FFFF;</string>
                  <widget class="QLabel" name="labelTxt_4">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-color: #01FFFF;</string>
+</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1631,7 +1472,7 @@ color: #01FFFF;</string>
                  <widget class="QLabel" name="labelTxt_5">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-color: #01FFFF;</string>
+</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1642,7 +1483,7 @@ color: #01FFFF;</string>
                  <widget class="QLabel" name="labelTxt_6">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-color: #01FFFF;</string>
+</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1653,7 +1494,7 @@ color: #01FFFF;</string>
                  <widget class="QLabel" name="labelTxt_7">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-color: #01FFFF;</string>
+</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1664,7 +1505,7 @@ color: #01FFFF;</string>
                  <widget class="QLabel" name="labelTxt_8">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-color: #01FFFF;</string>
+</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1729,7 +1570,7 @@ color: #01FFFF;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-color: #01FFFF;</string>
+</string>
              </property>
              <property name="text">
               <string>Client ID:</string>
@@ -1747,7 +1588,7 @@ color: #01FFFF;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-color: #01FFFF;</string>
+</string>
              </property>
              <property name="text">
               <string>#10</string>
@@ -1765,7 +1606,7 @@ color: #01FFFF;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-color: #01FFFF;</string>
+</string>
              </property>
              <property name="text">
               <string>Order ID:</string>
@@ -1783,7 +1624,7 @@ color: #01FFFF;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-color: #01FFFF;</string>
+</string>
              </property>
              <property name="text">
               <string>#11</string>
@@ -1801,7 +1642,7 @@ color: #01FFFF;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-color: #01FFFF;</string>
+</string>
              </property>
              <property name="text">
               <string>Invoice ID:</string>
@@ -1819,7 +1660,7 @@ color: #01FFFF;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-color: #01FFFF;</string>
+</string>
              </property>
              <property name="text">
               <string>#12</string>
