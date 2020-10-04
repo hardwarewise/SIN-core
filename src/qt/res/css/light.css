@@ -94,7 +94,7 @@ background-color: #1A000000;
 }
 
 QMessageBox {
-background-color: #d6dce5;
+background-color: #EAEAEA;
 }
 
 /*******************************************************/
@@ -153,7 +153,7 @@ font-size:16px;
 }
 
 .QValidatedLineEdit:disabled, .QLineEdit:disabled {
-background-color: #d6dce5;
+background-color: #EAEAEA;
 }
 
 /***** BUTTONS *****/
@@ -534,7 +534,7 @@ QDialog .QTabWidget QTabBar::tab:selected {
  }
 
 QDialog .QTabWidget .QWidget {
-background-color: #d6dce5;
+background-color: #EAEAEA;
 color:#fff;
 }
 
@@ -563,7 +563,7 @@ outline: 0;
 
 /* Dialog: Open URI */
 QDialog#OpenURIDialog {
-background-color: #d6dce5;
+background-color: #EAEAEA;
 }
 
 QDialog#OpenURIDialog QLabel#label { /* URI Label */
@@ -604,7 +604,7 @@ QDialog#OpenURIDialog QLabel#label_2 { /* Open payment request from URI or file 
 
 /* Dialog: Sign / Verify Message */
 QDialog#SignVerifyMessageDialog {
-background-color: #d6dce5;
+background-color: #EAEAEA;
 }
 
 QDialog#SignVerifyMessageDialog QPushButton#addressBookButton_SM { /* Address Book Button */
@@ -682,12 +682,12 @@ QDialog#SignVerifyMessageDialog QLabel#infoLabel_VM {
 
 /* Dialog: Send and Receive */
 QWidget#AddressBookPage {
-background-color: #d6dce5;
+background-color: #EAEAEA;
 }
 
 
 QWidget#AddressBookPage QTableView { /* Address Listing */
-background-color: #d6dce5;
+background-color: #EAEAEA;
 font-size:14px;
 color: #000000;
 }
@@ -702,7 +702,7 @@ min-width:260px;
 
 /* Encrypt Wallet and Change Passphrase Dialog */
 QDialog#AskPassphraseDialog {
-background-color: #d6dce5;
+background-color: #EAEAEA;
 }
 
 QDialog#AskPassphraseDialog QLabel#passLabel1, QDialog#AskPassphraseDialog QLabel#passLabel2, QDialog#AskPassphraseDialog QLabel#passLabel3 {
@@ -731,7 +731,7 @@ QDialog#OptionsDialog QGroupBox {
 }
 
 QDialog#OptionsDialog {
-background-color: #d6dce5;
+background-color: #EAEAEA;
 }
 
   QDialog#OptionsDialog QSpinBox {
@@ -909,7 +909,7 @@ QDialog#OptionsDialog QPushButton#resetButton:pressed {
 /* TOOLS MENU */
 
 QWidget#RPCConsole QTabWidget {
-background-color: #d6dce5;
+background-color: #EAEAEA;
 }
 
 
@@ -917,7 +917,7 @@ background-color: #d6dce5;
 
 /* Command Line Options Dialog */
 QDialog#HelpMessageDialog {
-  background-color: #d6dce5;
+  background-color: #EAEAEA;
   }
 
   QTextEdit#helpMessage {
@@ -928,7 +928,7 @@ QDialog#HelpMessageDialog {
   }
 
 QDialog#HelpMessageDialog QScrollArea#scrollArea {
-	background-color: #d6dce5;
+	background-color: #EAEAEA;
 }
 
 QDialog#HelpMessageDialog QScrollBar:vertical,
@@ -938,7 +938,7 @@ QDialog#HelpMessageDialog QScrollBar:horizontal {
 
 /* About SIN Dialog */
 QDialog#AboutDialog {
-background-color: #d6dce5;
+background-color: #EAEAEA;
 color : #333333;
 }
 
@@ -947,23 +947,23 @@ margin-left:10px;
 }
 
 QDialog#AboutDialog QLabel#label_2 { /* Margin for About Sinovate text */
-background-color: #d6dce5;
+background-color: #EAEAEA;
 margin-right:10px;
 }
 
 QDialog#HelpMessageDialog QLabel#aboutMessage { /* Margin for About Sinovate text */
-background-color: #d6dce5;
+background-color: #EAEAEA;
 margin-right:10px;
 }
 
 QDialog#HelpMessageDialog QWidget#scrollAreaWidgetContents { /* Margin for About Sinovate text */
-background-color: #d6dce5;
+background-color: #EAEAEA;
 
 }
 
 /* Edit Address Dialog */
 QDialog#EditAddressDialog {
-background-color: #d6dce5;
+background-color: #EAEAEA;
 }
 
 QDialog#EditAddressDialog QLabel {
@@ -977,7 +977,7 @@ padding-right:5px;
 /* MODAL OVERLAY */
 
   QWidget#bgWidget { /* The 'frame' overlaying the overview-page */
-    background-color: #d6dce5;
+    background-color: #EAEAEA;
       color:#ffffff;
       padding-left:10px;
       padding-right:10px;
@@ -1475,7 +1475,7 @@ border:  1px solid #0e1163;
 
 /**************************** RECEIVE COINS DIALOG **************************************/
 QDialog#ReceiveRequestDialog {
-  background-color: #d6dce5;
+  background-color: #EAEAEA;
 }
 
 QDialog#ReceiveRequestDialog QTextEdit {
@@ -1549,7 +1549,7 @@ font-size: 16px;
 
 
 QDialog#TransactionDescDialog QTextEdit {
-background-color: #d6dce5;
+background-color: #EAEAEA;
 border:1px solid #d7d7d7;
 color: #333;
 }
