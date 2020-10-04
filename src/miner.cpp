@@ -42,6 +42,7 @@
 // SIN
 #include <infinitynodeman.h>
 #include <infinitynode.h>
+#include <infinitynodelockreward.h>
 
 #include <validation.h>
 
@@ -83,79 +84,44 @@ int64_t UpdateTime(CBlock* pblock, const Consensus::Params& consensusParams, con
             // Update coinbase output to new value
             CMutableTransaction coinbaseTx(*pblock->vtx[0]);
             coinbaseTx.vout[0].nValue = nFees + nBlockReward;
-            /*
-            if (nHeight <= 100consensusParams.GetConsensus().nNewDevfeeAddress) {
-            */
-            // Update masternode reward to new value
-            CScript cMasternodePayee;
-    	    //sintype  LIL SIN : 1
-            if(mnpayments.GetBlockPayee(nHeight, 1, cMasternodePayee)) {
-    		    nMasternodePayment = GetMasternodePayment(nHeight, 1);
-                for (auto output : coinbaseTx.vout) {
-                    if (output.scriptPubKey == cMasternodePayee) {
-                        coinbaseTx.vout[0].nValue -= nMasternodePayment;
-                        output.nValue = nMasternodePayment;
-                        break;
+            if (nHeight <= consensusParams.nDINActivationHeight) {
+                // Update masternode reward to new value
+                CScript cMasternodePayee;
+                //sintype  LIL SIN : 1
+                if(mnpayments.GetBlockPayee(nHeight, 1, cMasternodePayee)) {
+                    nMasternodePayment = GetMasternodePayment(nHeight, 1);
+                    for (auto output : coinbaseTx.vout) {
+                        if (output.scriptPubKey == cMasternodePayee) {
+                            coinbaseTx.vout[0].nValue -= nMasternodePayment;
+                            output.nValue = nMasternodePayment;
+                            break;
+                        }
                     }
                 }
-            }
-    	    //sintype  LIL SIN : 5
-            if(mnpayments.GetBlockPayee(nHeight, 5, cMasternodePayee)) {
-    		    nMasternodePayment = GetMasternodePayment(nHeight, 5);
-                for (auto output : coinbaseTx.vout) {
-                    if (output.scriptPubKey == cMasternodePayee) {
-                        coinbaseTx.vout[0].nValue -= nMasternodePayment;
-                        output.nValue = nMasternodePayment;
-                        break;
+                //sintype  LIL SIN : 5
+                if(mnpayments.GetBlockPayee(nHeight, 5, cMasternodePayee)) {
+                    nMasternodePayment = GetMasternodePayment(nHeight, 5);
+                    for (auto output : coinbaseTx.vout) {
+                        if (output.scriptPubKey == cMasternodePayee) {
+                            coinbaseTx.vout[0].nValue -= nMasternodePayment;
+                            output.nValue = nMasternodePayment;
+                            break;
+                        }
                     }
                 }
-            }
-    	    //sintype  LIL SIN : 10
-            if(mnpayments.GetBlockPayee(nHeight, 10, cMasternodePayee)) {
-    		    nMasternodePayment = GetMasternodePayment(nHeight, 10);
-                for (auto output : coinbaseTx.vout) {
-                    if (output.scriptPubKey == cMasternodePayee) {
-                        coinbaseTx.vout[0].nValue -= nMasternodePayment;
-                        output.nValue = nMasternodePayment;
-                        break;
+                //sintype  LIL SIN : 10
+                if(mnpayments.GetBlockPayee(nHeight, 10, cMasternodePayee)) {
+                    nMasternodePayment = GetMasternodePayment(nHeight, 10);
+                    for (auto output : coinbaseTx.vout) {
+                        if (output.scriptPubKey == cMasternodePayee) {
+                            coinbaseTx.vout[0].nValue -= nMasternodePayment;
+                            output.nValue = nMasternodePayment;
+                            break;
+                        }
                     }
                 }
+                pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
             }
-            pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
-            /*
-            } else {
-                //new deterministic IN reward
-                CScript DINPayee;
-                CInfinitynode infinitynode;
-                int SINType = 0;
-                for (int i = 0; i <= 2; i++) {
-                    //choose tier value
-                    if (i == 0) {
-                        SINType = 10;
-                    } else if (i == 1) {
-                        SINType = 5;
-                    } else {
-                        SINType = 1;
-                    }
-                    if (infnodeman.deterministicRewardAtHeight(nHeight, SINType, infinitynode)){
-                        CAmount DINReward = GetMasternodePayment(nHeight, SINType);
-                        DINPayee = infinitynode.GetInfo().scriptPubKey;
-                        // subtract this payment from miner subsidy
-                        coinbaseTx.vout[0].nValue -= DINReward;
-                        // pay out this infinitynode
-                        coinbaseTx.vout.push_back(CTxOut(DINReward, DINPayee));
-
-                        CTxDestination address1;
-                        ExtractDestination(DINPayee, address1);
-                        std::string address2 = EncodeDestination(address1);
-
-                        LogPrintf("CInfinitynodeMan::deterministicRewardAtHeight -- DIN payment %lld to %s with SIN type %d\n", DINReward, address2, SINType);
-                    } else {
-                        throw std::runtime_error(strprintf("CInfinitynodeMan::deterministicRewardAtHeight -- Couldn't find candidate for SIN type: %s", SINType));
-                    }
-                }
-            }
-            */
         }
     }
 
@@ -275,50 +241,18 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     coinbaseTx.vout[0].nValue = blockReward;
     coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0;
     // Dev fee
-    if (nHeight <= chainparams.GetConsensus().nNewDevfeeAddress) {
+    if (nHeight <= chainparams.GetConsensus().nDINActivationHeight) {
         coinbaseTx.vout.push_back(CTxOut(GetDevCoin(nHeight, blockReward), devScript));
     } else {
         coinbaseTx.vout.push_back(CTxOut(GetDevCoin(nHeight, blockReward), devScript2));
     }
-    /*
-    if (nHeight <= chainparams.GetConsensus().nNewDevfeeAddress) {
-    */
-    //legacy sinnode reward
-    FillBlockPayments(coinbaseTx, nHeight, coinbaseTx.vout[0].nValue, pblock->txoutMasternode, pblock->voutSuperblock);
-    /*
+    if (nHeight <= chainparams.GetConsensus().nDINActivationHeight) {
+        //legacy sinnode reward
+        FillBlockPayments(coinbaseTx, nHeight, coinbaseTx.vout[0].nValue, pblock->txoutMasternode, pblock->voutSuperblock);
     } else {
-        //new deterministic IN reward
-        CScript DINPayee;
-        CInfinitynode infinitynode;
-        int SINType = 0;
-        for (int i = 0; i < 2; i++) {
-            //choose tier value
-            if (i == 0) {
-                SINType = 10;
-            } else if (i == 1) {
-                SINType = 5;
-            } else {
-                SINType = 1;
-            }
-            if (infnodeman.deterministicRewardAtHeight(nHeight, SINType, infinitynode)){
-                CAmount DINReward = GetMasternodePayment(nHeight, SINType);
-                DINPayee = infinitynode.GetInfo().scriptPubKey;
-                // subtract this payment from miner subsidy
-                coinbaseTx.vout[0].nValue -= DINReward;
-                // pay out this infinitynode
-                coinbaseTx.vout.push_back(CTxOut(DINReward, DINPayee));
-
-                CTxDestination address1;
-                ExtractDestination(DINPayee, address1);
-                std::string address2 = EncodeDestination(address1);
-
-                LogPrintf("CInfinitynodeMan::deterministicRewardAtHeight -- DIN payment %lld to %s with SIN type %d\n", DINReward, address2, SINType);
-            } else {
-                throw std::runtime_error(strprintf("CInfinitynodeMan::deterministicRewardAtHeight -- Couldn't find candidate for SIN type: %s", SINType));
-            }
-        }
+        FillBlock(coinbaseTx, nHeight);
     }
-    */
+
     // Burn Tx Fee
     coinbaseTx.vout[0].nValue -= nFees;
     CTxDestination burnDestination =  DecodeDestination(Params().GetConsensus().cBurnAddress);

@@ -121,16 +121,15 @@ public:
         consensus.nInfinityNodeCallLockRewardDeepth=50;
         consensus.nInfinityNodeCallLockRewardLoop=10; //in number of blocks
         consensus.nInfinityNodeLockRewardTop=16; //in number
-        consensus.nInfinityNodeLockRewardSigners=5; //in number
+        consensus.nInfinityNodeLockRewardSigners=4; //in number
         consensus.nInfinityNodeLockRewardSINType=10; //in number
         consensus.nInfinityNodeExpireTime=262800;//720*365 days = 1 year
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         /*Previously used as simple constants in validation */
-        consensus.nINActivationHeight = 170000; // Activation of IN payments, should also be the same as nSinHeightMainnet in primitives/block.cpp
+        consensus.nINActivationHeight = 170000; // Activation of IN payments, should also be the same as nInfinityNodeBeginHeight in primitives/block.cpp
         consensus.nINEnforcementHeight = 178000; // Enforcement of IN payments
-
-        consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
+        consensus.nDINActivationHeight = 99999999; // Activation of DIN 1.0 payments, and new dev fee address.
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440 * 5; // 1 common year
         consensus.nBudgetPaymentsCycleBlocks = 10958; // weekly
@@ -261,7 +260,7 @@ public:
         consensus.nLimitSINNODE_10=6;
         consensus.nInstantSendKeepLock = 24;
         consensus.nInfinityNodeBeginHeight=100;
-        consensus.nInfinityNodeGenesisStatement=110;
+        consensus.nInfinityNodeGenesisStatement=110;// begin point for new reward algo
         consensus.nInfinityNodeUpdateMeta=5;
         consensus.nInfinityNodeNotificationValue=1;
         consensus.nInfinityNodeCallLockRewardDeepth=12;
@@ -273,10 +272,9 @@ public:
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         /*Previously used as simple constants in validation */
-        consensus.nINActivationHeight = 100; // Activation of IN 0.1 in primitives/block.cpp
+        consensus.nINActivationHeight = 100; //  Activation of IN 0.1 payments, should also be the same as nInfinityNodeBeginHeight in primitives/block.cpp
         consensus.nINEnforcementHeight = 120; // Enforcement of IN payments
-
-        consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
+        consensus.nDINActivationHeight = 700; // Activation of DIN 1.0 payments, and new dev fee address
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
         consensus.nBudgetPaymentsCycleBlocks = 10958; // weekly
@@ -414,8 +412,7 @@ public:
         /*Previously used as simple constants in validation */
         consensus.nINActivationHeight = 170000; // Activation of IN payment enforcement, should also be the same as nSinHeightMainnet in primitives/block.cpp
         consensus.nINEnforcementHeight = 178000; // Enforcement of IN payments
-        
-        consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
+        consensus.nDINActivationHeight = 99999999; // Placeholder, need to choose a fork block.
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
         consensus.nBudgetPaymentsCycleBlocks = 10958; // weekly
@@ -548,8 +545,7 @@ public:
         /*Previously used as simple constants in validation */
         consensus.nINActivationHeight = 5000; // Activation of IN payment enforcement, should also be the same as nSinHeightMainnet in primitives/block.cpp
         consensus.nINEnforcementHeight = 5500; // Enforcement of IN payments
-        
-        consensus.nNewDevfeeAddress = 60000000; // Placeholder, need to choose a fork block.
+        consensus.nDINActivationHeight = 60000000; // Placeholder, need to choose a fork block.
 
         consensus.BIP16Exception = uint256();
         consensus.BIP34Height = 100000000;

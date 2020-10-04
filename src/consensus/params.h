@@ -79,11 +79,10 @@ struct Params {
     int nInfinityNodeLockRewardSINType; //in number
     int nInfinityNodeExpireTime; //in number
     int nSchnorrActivationHeight; // block height (int)
-    int nNewDevfeeAddress; // block height (int) - DIN switch height
-
     // these params were once hardcoded in validation.cpp
     int nINActivationHeight; // block height (int)
     int nINEnforcementHeight; // block height (int)
+    int nDINActivationHeight; // block height (int) - DIN switch height
 
     int nInstantSendKeepLock; // in blocks
 

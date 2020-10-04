@@ -12,30 +12,10 @@
 using namespace std;
 
 class CInfinitynodeMan;
-//class CLockRewardExtractInfo;
 class CConnman;
 
 extern CInfinitynodeMan infnodeman;
-/*
-class CLockRewardExtractInfo
-{
-public:
-    int nSINtype{0};
-    int nBlockHeight{0}; //blockHeight read
-    int nRewardHeight{0};
-    CScript scriptPubKey{};
-    std::string sLRInfo="";
 
-    CLockRewardExtractInfo() = default;
-    CLockRewardExtractInfo(int nBlockHeightIn, int nSINtypeIn, int nRewardHeightIn, CScript nPayee, std::string sInfo):
-    nBlockHeight(nBlockHeightIn),
-    nSINtype(nSINtypeIn),
-    nRewardHeight(nRewardHeightIn),
-    scriptPubKey(nPayee),
-    sLRInfo(sInfo)
-    {}
-};
-*/
 class CInfinitynodeMan
 {
 public:

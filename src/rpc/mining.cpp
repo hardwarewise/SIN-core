@@ -562,7 +562,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     // Dash
     // when enforcement is on we need information about a masternode payee or otherwise our block is going to be orphaned by the network
     //sintype
-    if (pindexPrev->nHeight + 1 <= Params().GetConsensus().nNewDevfeeAddress) {
+    if (pindexPrev->nHeight + 1 <= Params().GetConsensus().nDINActivationHeight) {
         CScript payee;
         if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT) && !masternodeSync.IsWinnersListSynced() && !mnpayments.GetBlockPayee(chainActive.Height() + 1, 1,  payee)) {
                 throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "SIN Core is downloading masternode winners...");
@@ -761,7 +761,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         result.pushKV("default_witness_commitment", HexStr(pblocktemplate->vchCoinbaseCommitment.begin(), pblocktemplate->vchCoinbaseCommitment.end()));
     }
 
-    result.push_back(Pair("payee", pindexPrev->nHeight + 1 <= Params().GetConsensus().nNewDevfeeAddress ? Params().GetConsensus().devAddress : Params().GetConsensus().devAddress2));
+    result.push_back(Pair("payee", pindexPrev->nHeight + 1 <= Params().GetConsensus().nDINActivationHeight ? Params().GetConsensus().devAddress : Params().GetConsensus().devAddress2));
     result.push_back(Pair("payee_amount", (int64_t)pblock->vtx[0]->vout[1].nValue));
 
     return result;
