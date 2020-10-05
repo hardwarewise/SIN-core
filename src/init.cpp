@@ -469,6 +469,7 @@ void SetupServerArgs()
     //SIN
     gArgs.AddArg("-infinitynode=<n>", strprintf("Enable the client to act as an infinitynode (0-1)"), false, OptionsCategory::OPTIONS);
     gArgs.AddArg("-infinitynodeprivkey=<n>","Set the infinitynode private key", false, OptionsCategory::OPTIONS);
+    gArgs.AddArg("-turnoffmasternode=<n>","Disable legacy masternode functionality", false, OptionsCategory::OPTIONS);
 
     gArgs.AddArg("-addnode=<ip>", "Add a node to connect to and attempt to keep the connection open (see the `addnode` RPC command help for more info). This option can be specified multiple times to add multiple nodes.", false, OptionsCategory::CONNECTION);
     gArgs.AddArg("-banscore=<n>", strprintf("Threshold for disconnecting misbehaving peers (default: %u)", DEFAULT_BANSCORE_THRESHOLD), false, OptionsCategory::CONNECTION);
