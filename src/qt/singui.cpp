@@ -292,18 +292,18 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
 #endif // QT_NO_TOOLTIP
     website->setText(QApplication::translate("OverviewPage", "<a href=\"https://sinovate.io\"><img src=\":/icons/website\" width=\"19\" height=\"19\"></a>", nullptr));
 
-            QLabel* instaswap = new QLabel();
-    instaswap->setObjectName(QStringLiteral("instaswap"));
-    instaswap->setMinimumSize(QSize(32, 32));
-    instaswap->setMaximumSize(QSize(32, 32));
-    instaswap->setBaseSize(QSize(0, 0));
-    instaswap->setCursor(QCursor(Qt::PointingHandCursor));
-    instaswap->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-    instaswap->setOpenExternalLinks(true);
-#ifndef QT_NO_TOOLTIP
-    instaswap->setToolTip(QApplication::translate("OverviewPage", "Exchange your SIN rapidly", nullptr));
-#endif // QT_NO_TOOLTIP
-    instaswap->setText(QApplication::translate("OverviewPage", "<a href=\"https://instaswap.io/\"><img src=\":/icons/instaswap1\" width=\"32\" height=\"32\"></a>", nullptr));
+            //QLabel* instaswap = new QLabel();
+    //instaswap->setObjectName(QStringLiteral("instaswap"));
+    //instaswap->setMinimumSize(QSize(32, 32));
+    //instaswap->setMaximumSize(QSize(32, 32));
+    //instaswap->setBaseSize(QSize(0, 0));
+    //instaswap->setCursor(QCursor(Qt::PointingHandCursor));
+    //instaswap->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+    //instaswap->setOpenExternalLinks(true);
+//#ifndef QT_NO_TOOLTIP
+    //instaswap->setToolTip(QApplication::translate("OverviewPage", "Exchange your SIN rapidly", nullptr));
+//#endif // QT_NO_TOOLTIP
+    //instaswap->setText(QApplication::translate("OverviewPage", "<a href=\"https://instaswap.io/\"><img src=\":/icons/instaswap1\" width=\"32\" height=\"32\"></a>", nullptr));
 
             QLabel* twitter = new QLabel();
     twitter->setObjectName(QStringLiteral("twitter"));
@@ -348,7 +348,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     frameSocialLayout->addWidget(discord);
     frameSocialLayout->addWidget(twitter);
     frameSocialLayout->addWidget(github);
-    frameSocialLayout->addWidget(instaswap);
+    //frameSocialLayout->addWidget(instaswap);
     frameSocialLayout->addWidget(explorer);
 
 
@@ -944,7 +944,7 @@ void SINGUI::createToolBars()
 		toolbar->addWidget(empty);
 
 		 QLabel* labelVersion = new QLabel();
-        labelVersion->setText(QString(tr("v%1\n")).arg(QString::fromStdString(FormatVersionFriendly())));
+        labelVersion->setText(QString(tr("D.I.N.\nAURORA\nv%1\n")).arg(QString::fromStdString(FormatVersionFriendly())));
         labelVersion->setStyleSheet("color: white ; margin-top: 10px; margin-bottom: 2px; font-weight : bold;");
         labelVersion->setAlignment(Qt::AlignCenter);
         toolbar->addWidget(labelVersion);

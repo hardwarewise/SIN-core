@@ -471,109 +471,39 @@ width: 150px;
        <widget class="QWidget" name="tabNodeSetup">
         <property name="styleSheet">
          <string notr="true">QWidget#tabNodeSetup {
-/*background-color : #011552;*/
 background-image: url(':/images/setuplogo');
 background-position : right bottom;
 background-repeat:none;
 }
 
 
-/*QRadioButton:checked {
-    color: #FFFFFF;
+QPushButton#btnSetup{ /* setUP Button */
+border:  1px solid #011552;
+    background-color:#011552;
     font-size:18px;
-}
-
-QRadioButton:unchecked {
+    padding:4px 6px;
     color: #FFFFFF;
+    border-radius: 2px;
+}
+
+
+QPushButton#btnSetup:hover { /* setUP Button hover */
+border:  1px solid #011552;
+    background-color:#0e1163;
     font-size:18px;
+    padding:4px 6px;
+    color: #FFFFFF;
+    border-radius: 2px;
 }
 
-QRadioButton {
-    color: #bababa;
-    font-size:14px;
-    spacing:10px;
-}
-
-QRadioButton::indicator {
-    width:                  18px;
-    height:                 18px;
-}
-
-QRadioButton::indicator:checked {
-	image: url(':/images/radio_checked1');
-}
-
-QRadioButton::indicator:unchecked {
-   image: url(':/images/radio_unchecked1');
-}
-
-*/
-
-/*QComboBox { 
-
-font-size: 16px;
-font-weight:normal;
-border-color:#bababa;
-border: 1px solid #2E3191;
-border-radius:0px;
-padding: 3px 5px 3px 5px;
-background:#01FFFF;
-min-height:25px;
-color:#333333;
-background-color:#01FFFF;
-
-
-}
-
-QComboBox:checked {
-background:#01FFFF;
-
-}
-
-QComboBox:editable {
-background: #01FFFF;
-color:#bababa;
-border:0px solid transparent;
-}
-
-QComboBox::drop-down {
-width:25px;
-border:0px;
-}
-
-QComboBox::down-arrow {
-border-image: url(':/images/downArrow') 0 0 0 0 stretch stretch;
-
-}
-
-QComboBox QListView {
-border:1px solid #bababa;
-color:#333333;
-background-color:#01FFFF;
-padding-right:1px;
-padding-left:1px;
-}
-
-QComboBox QAbstractItemView::item { margin:4px; }
-
-QComboBox::item {
-color:#01FFFF;
-}
-
-QComboBox::item:alternate { background:#01FFFF;}
-
-QComboBox::item:selected {
-border:0px solid transparent;
-background:#01FFFF;
-}
-
-QComboBox::indicator {
-background-color:transparent;
-selection-background-color:transparent;
-color:transparent;
-selection-color:transparent;
-}
-*/</string>
+QPushButton#btnSetup:pressed { /* setUP Button pressed */
+border:  1px solid #0e1163;
+    background-color:#0e1163;
+    font-size:18px;
+    padding:4px 6px;
+    color: #00B4B8;
+    border-radius: 2px;
+}</string>
         </property>
         <attribute name="title">
          <string>InfinityNode setUP</string>
@@ -581,209 +511,6 @@ selection-color:transparent;
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
           <layout class="QGridLayout" name="gridLayout_4">
-           <item row="6" column="1">
-            <spacer name="verticalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="0" column="3">
-            <widget class="QLineEdit" name="txtPassword">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>200</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-             <property name="echoMode">
-              <enum>QLineEdit::Password</enum>
-             </property>
-             <property name="placeholderText">
-              <string>&lt;Enter password&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QLabel" name="labelPassword">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>120</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>-1</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">font-size:16px;
-
-
-</string>
-             </property>
-             <property name="text">
-              <string>Passsword:</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <spacer name="verticalSpacer_4">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>27</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="5" column="1">
-            <widget class="QLabel" name="label_3">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>spacer</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="5">
-            <widget class="QRadioButton" name="radioBIGNode">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>32</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>32</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-image: url(':/icons/biglogo');
-background-repeat:none;
-background-position: right;
-background-size: 32px 32px;</string>
-             </property>
-             <property name="text">
-              <string>BIG Node</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="4">
-            <widget class="QLabel" name="spacerLabel1">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>87</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>87</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QLabel" name="labelLILDesc">
-             <property name="styleSheet">
-              <string notr="true">font-size:18px;
-</string>
-             </property>
-             <property name="text">
-              <string>100.000 SIN Burn</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="5">
-            <widget class="QPushButton" name="btnLogin">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>86</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>86</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-             <property name="text">
-              <string>Login</string>
-             </property>
-            </widget>
-           </item>
            <item row="4" column="3">
             <widget class="QLabel" name="labelMIDDesc">
              <property name="styleSheet">
@@ -791,7 +518,7 @@ background-size: 32px 32px;</string>
 </string>
              </property>
              <property name="text">
-              <string>500.000 SIN Burn</string>
+              <string>500 000 SIN Burn</string>
              </property>
             </widget>
            </item>
@@ -811,34 +538,6 @@ background-size: 32px 32px;</string>
              </property>
              <property name="text">
               <string>spacer</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="6">
-            <widget class="QPushButton" name="btnRestore">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>86</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>86</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-             <property name="text">
-              <string>Restore</string>
              </property>
             </widget>
            </item>
@@ -867,19 +566,8 @@ background-size: 32px 32px;</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="5">
-            <widget class="QLabel" name="labelBIGDesc">
-             <property name="styleSheet">
-              <string notr="true">font-size:18px;
-</string>
-             </property>
-             <property name="text">
-              <string>1.000.000 SIN Burn</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="txtEmail">
+           <item row="0" column="4">
+            <widget class="QLabel" name="spacerLabel1">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -888,12 +576,18 @@ background-size: 32px 32px;</string>
              </property>
              <property name="minimumSize">
               <size>
-               <width>200</width>
+               <width>87</width>
                <height>0</height>
               </size>
              </property>
-             <property name="styleSheet">
-              <string notr="true"/>
+             <property name="maximumSize">
+              <size>
+               <width>87</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>TextLabel</string>
              </property>
             </widget>
            </item>
@@ -926,7 +620,7 @@ background-size: 32px 32px;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:16px;
-
+color: #011552;
 
 </string>
              </property>
@@ -935,6 +629,119 @@ background-size: 32px 32px;</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="5">
+            <widget class="QPushButton" name="btnLogin">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>86</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>86</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>Login</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1" colspan="5">
+            <widget class="QLabel" name="labelMessage">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font-size:14px;
+font-weight:bold;
+color: #011552;
+</string>
+             </property>
+             <property name="text">
+              <string>Enter your client data and create a new user or login an existing one.</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <spacer name="verticalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>27</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="3" column="5">
+            <widget class="QRadioButton" name="radioBIGNode">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-image: url(':/icons/biglogo');
+background-repeat:none;
+background-position: right;
+background-size: 32px 32px;</string>
+             </property>
+             <property name="text">
+              <string>BIG Node</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QLineEdit" name="txtPassword">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>200</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="echoMode">
+              <enum>QLineEdit::Password</enum>
+             </property>
+             <property name="placeholderText">
+              <string>&lt;Enter password&gt;</string>
              </property>
             </widget>
            </item>
@@ -972,23 +779,148 @@ background-size: 32px 32px;</string>
              </property>
             </widget>
            </item>
-           <item row="7" column="1" colspan="5">
-            <widget class="QLabel" name="labelMessage">
+           <item row="0" column="2">
+            <widget class="QLabel" name="labelPassword">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="minimumSize">
               <size>
-               <width>0</width>
+               <width>120</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>-1</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font-size:16px;
+color: #011552;
+
+
+</string>
+             </property>
+             <property name="text">
+              <string>Passsword:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="6">
+            <widget class="QPushButton" name="btnRestore">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>86</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>86</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>Restore</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLabel" name="label_3">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>spacer</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="txtEmail">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>200</width>
                <height>0</height>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">font-size:14px;
-font-weight:bold;
+              <string notr="true"/>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="5">
+            <widget class="QLabel" name="labelBIGDesc">
+             <property name="styleSheet">
+              <string notr="true">font-size:18px;
 </string>
              </property>
              <property name="text">
-              <string>Enter your client data and create a new user or login an existing one.</string>
+              <string>1 000 000 SIN Burn</string>
              </property>
             </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLabel" name="labelLILDesc">
+             <property name="styleSheet">
+              <string notr="true">font-size:18px;
+</string>
+             </property>
+             <property name="text">
+              <string>100 000 SIN Burn</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <spacer name="verticalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </item>
@@ -1253,7 +1185,7 @@ min-width: 270px;
                 </property>
                 <property name="styleSheet">
                  <string notr="true">font-size:16px;
-
+color: #011552;
 
 </string>
                 </property>
@@ -1428,7 +1360,7 @@ min-width: 270px;
                  <widget class="QLabel" name="labelTxt_1">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-</string>
+color: #011552;</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1439,6 +1371,7 @@ min-width: 270px;
                  <widget class="QLabel" name="labelTxt_2">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
+color: #011552;
 </string>
                   </property>
                   <property name="text">
@@ -1450,6 +1383,7 @@ min-width: 270px;
                  <widget class="QLabel" name="labelTxt_3">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
+color: #011552;
 </string>
                   </property>
                   <property name="text">
@@ -1461,6 +1395,7 @@ min-width: 270px;
                  <widget class="QLabel" name="labelTxt_4">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
+color: #011552;
 </string>
                   </property>
                   <property name="text">
@@ -1472,7 +1407,7 @@ min-width: 270px;
                  <widget class="QLabel" name="labelTxt_5">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-</string>
+color: #011552;</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1483,7 +1418,7 @@ min-width: 270px;
                  <widget class="QLabel" name="labelTxt_6">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-</string>
+color: #011552;</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1494,7 +1429,7 @@ min-width: 270px;
                  <widget class="QLabel" name="labelTxt_7">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-</string>
+color: #011552;</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1505,7 +1440,7 @@ min-width: 270px;
                  <widget class="QLabel" name="labelTxt_8">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-</string>
+color: #011552;</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1570,7 +1505,7 @@ min-width: 270px;
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-</string>
+color: #011552;</string>
              </property>
              <property name="text">
               <string>Client ID:</string>
@@ -1588,7 +1523,7 @@ min-width: 270px;
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-</string>
+color: #011552;</string>
              </property>
              <property name="text">
               <string>#10</string>
@@ -1606,7 +1541,7 @@ min-width: 270px;
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-</string>
+color: #011552;</string>
              </property>
              <property name="text">
               <string>Order ID:</string>
@@ -1624,7 +1559,7 @@ min-width: 270px;
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-</string>
+color: #011552;</string>
              </property>
              <property name="text">
               <string>#11</string>
@@ -1642,7 +1577,7 @@ min-width: 270px;
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-</string>
+color: #011552;</string>
              </property>
              <property name="text">
               <string>Invoice ID:</string>
@@ -1660,7 +1595,7 @@ min-width: 270px;
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-</string>
+color: #011552;</string>
              </property>
              <property name="text">
               <string>#12</string>

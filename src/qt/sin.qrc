@@ -108,9 +108,9 @@
         <file alias="theme-light">res/icons/theme-light.svg</file>
         <file alias="exit">res/icons/exit.svg</file>
         <file alias="password">res/icons/password.svg</file>
-        <file alias="minilogo">res/icons/minilogo.png</file>
-        <file alias="midlogo">res/icons/midlogo.png</file>
-        <file alias="biglogo">res/icons/biglogo.png</file>
+        <file alias="minilogo">res/icons/minilogo.svg</file>
+        <file alias="midlogo">res/icons/midlogo.svg</file>
+        <file alias="biglogo">res/icons/biglogo.svg</file>
         <file alias="setup">res/icons/setup.svg</file>
     </qresource>
     <qresource prefix="/movies">
@@ -182,10 +182,9 @@
      <file alias="stats-address-header">res/images/stats-address-header.svg</file>
      <file alias="stats-network-header">res/images/stats-network-header.svg</file>
      <file alias="stats-top-header">res/images/stats-top-header.svg</file>
-     <file alias="setuplogo">res/images/setuplogo.png</file>
+     <file alias="setuplogo">res/images/setuplogo.svg</file>
      <file alias="splash-loading">res/images/splash-loading.gif</file>
-
-     </qresource>
+</qresource>
      
    <qresource prefix="/fonts">
        <file alias="Hind-Bold">res/fonts/Hind-Bold.ttf</file>
