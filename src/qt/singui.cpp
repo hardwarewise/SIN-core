@@ -211,7 +211,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     topThemeButton->setIconSize(QSize(24, 24));
     topThemeButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
 
-    topSetupButton->setIcon(QIcon(":/icons/setup"));
+    topSetupButton->setIcon(QIcon(":/icons/setup_top"));
     topSetupButton->setIconSize(QSize(58, 24));
     topSetupButton->setToolTip( "Open SetUP Wizard"  );
     topSetupButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");

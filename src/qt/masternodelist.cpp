@@ -73,7 +73,7 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     ui->setupUi(this);
 
     ui->btnSetup->setIcon(QIcon(":/icons/setup"));
-    ui->btnSetup->setIconSize(QSize(58, 24));
+    ui->btnSetup->setIconSize(QSize(77, 32));
 
     ui->startButton->setEnabled(false);
 
@@ -1272,7 +1272,7 @@ void MasternodeList::nodeSetupResetOrderId( )   {
     nodeSetupSetOrderId( 0, 0, "");
     ui->btnSetupReset->setEnabled(false);
     ui->btnSetup->setEnabled(true);
-    ui->btnSetup->setText(QString::fromStdString("Order"));
+    ui->btnSetup->setText(QString::fromStdString("setUP"));
     ui->labelMessage->setText("Select a node Tier and then follow below steps for setup.");
     mOrderid = mInvoiceid = mServiceId = 0;
     mPaymentTx = "";

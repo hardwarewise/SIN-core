@@ -112,6 +112,7 @@
         <file alias="midlogo">res/icons/midlogo.svg</file>
         <file alias="biglogo">res/icons/biglogo.svg</file>
         <file alias="setup">res/icons/setup.svg</file>
+        <file alias="setup_top">res/icons/setup_top.svg</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>

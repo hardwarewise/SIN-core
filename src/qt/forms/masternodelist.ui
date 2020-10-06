@@ -601,13 +601,13 @@ background-size: 32px 32px;</string>
              </property>
              <property name="minimumSize">
               <size>
-               <width>90</width>
+               <width>68</width>
                <height>0</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>90</width>
+               <width>68</width>
                <height>16777215</height>
               </size>
              </property>
@@ -671,7 +671,7 @@ color: #011552;
              <property name="styleSheet">
               <string notr="true">font-size:14px;
 font-weight:bold;
-color: #011552;
+color: #BC8F3A;
 </string>
              </property>
              <property name="text">
@@ -789,13 +789,13 @@ background-size: 32px 32px;</string>
              </property>
              <property name="minimumSize">
               <size>
-               <width>120</width>
+               <width>88</width>
                <height>0</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>120</width>
+               <width>88</width>
                <height>16777215</height>
               </size>
              </property>
@@ -969,7 +969,7 @@ color: #011552;
                  <string notr="true"/>
                 </property>
                 <property name="text">
-                 <string>Reset Order</string>
+                 <string>Reset setUP</string>
                 </property>
                </widget>
               </item>
@@ -1262,14 +1262,14 @@ color: #011552;
                  <string notr="true"/>
                 </property>
                 <property name="text">
-                 <string>Order</string>
+                 <string>setUP</string>
                 </property>
                </widget>
               </item>
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="10,90">
+             <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="15,85">
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_7">
                 <item>

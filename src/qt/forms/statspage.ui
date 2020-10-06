@@ -22,7 +22,7 @@
   <property name="styleSheet">
    <string notr="true">font-size: 16px;</string>
   </property>
-  <layout class="QVBoxLayout" name="topLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_9">
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -64,8 +64,17 @@
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <item>
-           <widget class="QFrame" name="frame_6">
+          <property name="spacing">
+           <number>6</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <item alignment="Qt::AlignHCenter">
+           <widget class="QWidget" name="widget_6" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -74,27 +83,22 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>976</width>
+              <width>981</width>
               <height>90</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>976</width>
+              <width>981</width>
               <height>90</height>
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color: #2E3192;
+             <string notr="true">background-color: #011552;
 background-image: url(':/images/stats-top-header');
 background-repeat:none;
-background-position: center;</string>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
+background-position: center;
+</string>
             </property>
            </widget>
           </item>
@@ -118,15 +122,54 @@ background-position: center;</string>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_3">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetDefaultConstraint</enum>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_4">
+              <property name="spacing">
+               <number>6</number>
+              </property>
               <item>
                <layout class="QGridLayout" name="gridLayout">
                 <property name="horizontalSpacing">
                  <number>0</number>
                 </property>
+                <property name="verticalSpacing">
+                 <number>6</number>
+                </property>
+                <item row="2" column="1">
+                 <widget class="QLabel" name="difficultyValueLabel">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>320</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: #BC8F3A;
+font-weight:bold;
+</string>
+                  </property>
+                  <property name="text">
+                   <string>0.0</string>
+                  </property>
+                 </widget>
+                </item>
                 <item row="1" column="1">
                  <widget class="QLabel" name="hashrateValueLabel">
                   <property name="sizePolicy">
@@ -154,33 +197,8 @@ font-weight:bold;
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="0">
-                 <widget class="QLabel" name="heightLabel">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>120</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">margin-left: 15px;</string>
-                  </property>
-                  <property name="text">
-                   <string>Height:</string>
-                  </property>
-                  <property name="margin">
-                   <number>0</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="1">
-                 <widget class="QLabel" name="lastPriceValueLabel">
+                <item row="4" column="1">
+                 <widget class="QLabel" name="heightValueLabel">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -198,32 +216,7 @@ font-weight:bold;
 color:#00B4B8;</string>
                   </property>
                   <property name="text">
-                   <string>0</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="hashrateLabel">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>120</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">margin-left: 15px;</string>
-                  </property>
-                  <property name="text">
-                   <string>Hashrate:</string>
-                  </property>
-                  <property name="margin">
-                   <number>0</number>
+                   <string>0/0/0</string>
                   </property>
                  </widget>
                 </item>
@@ -252,8 +245,8 @@ color:#00B4B8;</string>
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="1">
-                 <widget class="QLabel" name="difficultyValueLabel">
+                <item row="4" column="0">
+                 <widget class="QLabel" name="heightLabel">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -262,22 +255,48 @@ color:#00B4B8;</string>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>320</width>
+                    <width>120</width>
                     <height>0</height>
                    </size>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">color: #BC8F3A;
-font-weight:bold;
-</string>
+                   <string notr="true">margin-left: 15px;</string>
                   </property>
                   <property name="text">
-                   <string>0.0</string>
+                   <string>Height:</string>
+                  </property>
+                  <property name="margin">
+                   <number>0</number>
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="1">
-                 <widget class="QLabel" name="heightValueLabel">
+                <item row="1" column="0">
+                 <widget class="QLabel" name="hashrateLabel">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>120</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">margin-left: 15px;</string>
+                  </property>
+                  <property name="text">
+                   <string>Hashrate:</string>
+                  </property>
+                  <property name="margin">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QLabel" name="lastPriceValueLabel">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -295,7 +314,7 @@ font-weight:bold;
 color:#00B4B8;</string>
                   </property>
                   <property name="text">
-                   <string>0/0/0</string>
+                   <string>0</string>
                   </property>
                  </widget>
                 </item>
@@ -334,20 +353,22 @@ color:#00B4B8;</string>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>452</width>
-                    <height>40</height>
+                    <width>465</width>
+                    <height>60</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>452</width>
-                    <height>40</height>
+                    <width>465</width>
+                    <height>60</height>
                    </size>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-image: url(':/images/stats-network-header');
 background-repeat:none;
-background-position: center;</string>
+background-position: center;
+background-color: #011552;
+</string>
                   </property>
                   <property name="frameShape">
                    <enum>QFrame::StyledPanel</enum>
@@ -396,105 +417,6 @@ background-position: center;</string>
                 <property name="horizontalSpacing">
                  <number>0</number>
                 </property>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="activeLabel">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>120</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">margin-left: 15px;</string>
-                  </property>
-                  <property name="text">
-                   <string>Active:</string>
-                  </property>
-                  <property name="margin">
-                   <number>0</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="0">
-                 <widget class="QLabel" name="top50Label">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>120</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">margin-left: 15px;</string>
-                  </property>
-                  <property name="text">
-                   <string>Top 50:</string>
-                  </property>
-                  <property name="margin">
-                   <number>0</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="0">
-                 <widget class="QLabel" name="top10Label">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>120</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">margin-left: 15px;</string>
-                  </property>
-                  <property name="text">
-                   <string>Top 10:</string>
-                  </property>
-                  <property name="margin">
-                   <number>0</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QLabel" name="activeValueLabel">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>320</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">color: #BC8F3A;
-font-weight:bold;
-</string>
-                  </property>
-                  <property name="text">
-                   <string>00000</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="1" column="0">
                  <widget class="QLabel" name="addressesLabel">
                   <property name="sizePolicy">
@@ -543,29 +465,6 @@ color:#00B4B8;</string>
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="1">
-                 <widget class="QLabel" name="top50ValueLabel">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>320</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">font-weight:bold;
-color:#00B4B8;</string>
-                  </property>
-                  <property name="text">
-                   <string>00000000</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="1" column="1">
                  <widget class="QLabel" name="addressesValueLabel">
                   <property name="sizePolicy">
@@ -590,6 +489,31 @@ font-weight:bold;
                   </property>
                  </widget>
                 </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="activeLabel">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>120</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">margin-left: 15px;</string>
+                  </property>
+                  <property name="text">
+                   <string>Active:</string>
+                  </property>
+                  <property name="margin">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
                 <item row="0" column="0" colspan="2">
                  <widget class="QFrame" name="frame_3">
                   <property name="sizePolicy">
@@ -600,26 +524,124 @@ font-weight:bold;
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>452</width>
-                    <height>40</height>
+                    <width>465</width>
+                    <height>60</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>452</width>
-                    <height>76</height>
+                    <width>465</width>
+                    <height>60</height>
                    </size>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-image: url(':/images/stats-address-header');
 background-repeat:none;
-background-position: center;</string>
+background-position: center;
+background-color: #011552;</string>
                   </property>
                   <property name="frameShape">
                    <enum>QFrame::StyledPanel</enum>
                   </property>
                   <property name="frameShadow">
                    <enum>QFrame::Raised</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QLabel" name="activeValueLabel">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>320</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: #BC8F3A;
+font-weight:bold;
+</string>
+                  </property>
+                  <property name="text">
+                   <string>00000</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QLabel" name="top10Label">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>120</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">margin-left: 15px;</string>
+                  </property>
+                  <property name="text">
+                   <string>Top 10:</string>
+                  </property>
+                  <property name="margin">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QLabel" name="top50Label">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>120</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">margin-left: 15px;</string>
+                  </property>
+                  <property name="text">
+                   <string>Top 50:</string>
+                  </property>
+                  <property name="margin">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1">
+                 <widget class="QLabel" name="top50ValueLabel">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>320</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">font-weight:bold;
+color:#00B4B8;</string>
+                  </property>
+                  <property name="text">
+                   <string>00000000</string>
                   </property>
                  </widget>
                 </item>
@@ -661,37 +683,16 @@ background-position: center;</string>
            <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_7">
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
               <item>
                <layout class="QGridLayout" name="gridLayout_3">
                 <property name="horizontalSpacing">
                  <number>0</number>
                 </property>
-                <item row="2" column="1">
-                 <widget class="QLabel" name="nodesValueLabel">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>320</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">color: #BC8F3A;
-font-weight:bold;
-</string>
-                  </property>
-                  <property name="text">
-                   <string>0</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="feeLabel">
+                <item row="3" column="0">
+                 <widget class="QLabel" name="totalBurntLabel">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -708,7 +709,32 @@ font-weight:bold;
                    <string notr="true">margin-left: 15px;</string>
                   </property>
                   <property name="text">
-                   <string>Burnt Fees:</string>
+                   <string>Total Burnts:</string>
+                  </property>
+                  <property name="margin">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="nodesLabel">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>150</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">margin-left: 15px;</string>
+                  </property>
+                  <property name="text">
+                   <string>Burnt Nodes:</string>
                   </property>
                   <property name="margin">
                    <number>0</number>
@@ -740,8 +766,8 @@ font-weight:bold;
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="0">
-                 <widget class="QLabel" name="totalBurntLabel">
+                <item row="1" column="0">
+                 <widget class="QLabel" name="feeLabel">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -758,15 +784,39 @@ font-weight:bold;
                    <string notr="true">margin-left: 15px;</string>
                   </property>
                   <property name="text">
-                   <string>Total Burnts:</string>
+                   <string>Burnt Fees:</string>
                   </property>
                   <property name="margin">
                    <number>0</number>
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="1">
-                 <widget class="QLabel" name="totalBurntValueLabel">
+                <item row="2" column="1">
+                 <widget class="QLabel" name="nodesValueLabel">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>320</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: #BC8F3A;
+font-weight:bold;
+</string>
+                  </property>
+                  <property name="text">
+                   <string>0</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1">
+                 <widget class="QLabel" name="totalSupplyValueLabel">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -788,33 +838,8 @@ color:#00B4B8;</string>
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="nodesLabel">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>150</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">margin-left: 15px;</string>
-                  </property>
-                  <property name="text">
-                   <string>Burnt Nodes:</string>
-                  </property>
-                  <property name="margin">
-                   <number>0</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="1">
-                 <widget class="QLabel" name="totalSupplyValueLabel">
+                <item row="3" column="1">
+                 <widget class="QLabel" name="totalBurntValueLabel">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -870,20 +895,21 @@ font-weight:bold;
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>452</width>
-                    <height>40</height>
+                    <width>465</width>
+                    <height>60</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>452</width>
-                    <height>40</height>
+                    <width>465</width>
+                    <height>60</height>
                    </size>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-image: url(':/images/stats-burncoins-header');
 background-repeat:none;
-background-position: center;</string>
+background-position: center;
+background-color: #011552;</string>
                   </property>
                   <property name="frameShape">
                    <enum>QFrame::StyledPanel</enum>
@@ -1138,20 +1164,21 @@ font-weight:bold;</string>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>452</width>
-                    <height>40</height>
+                    <width>465</width>
+                    <height>60</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>452</width>
-                    <height>40</height>
+                    <width>465</width>
+                    <height>60</height>
                    </size>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-image: url(':/images/stats-nodes-header');
 background-repeat:none;
-background-position: center;</string>
+background-position: center;
+background-color: #011552;</string>
                   </property>
                   <property name="frameShape">
                    <enum>QFrame::StyledPanel</enum>
