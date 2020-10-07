@@ -73,7 +73,9 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     ui->setupUi(this);
 
     ui->btnSetup->setIcon(QIcon(":/icons/setup"));
-    ui->btnSetup->setIconSize(QSize(77, 32));
+    ui->btnSetup->setIconSize(QSize(200, 32));
+    ui->btnSetupReset->setIcon(QIcon(":/icons/setup_res"));
+    ui->btnSetupReset->setIconSize(QSize(200, 32));
 
     ui->startButton->setEnabled(false);
 
@@ -1237,7 +1239,9 @@ void MasternodeList::nodeSetupEnableOrderUI( bool bEnable, int orderID , int inv
         ui->labelOrder->setVisible(true);
         ui->labelOrderID->setVisible(true);
         ui->labelOrderID->setText(QString::fromStdString("#")+QString::number(orderID));
-        ui->btnSetup->setText(QString::fromStdString("Continue"));
+        ui->btnSetup->setIcon(QIcon(":/icons/setup_con"));
+        ui->btnSetup->setIconSize(QSize(200, 32));
+        ui->btnSetup->setText(QString::fromStdString(""));
         ui->labelInvoice->setVisible(true);
         ui->labelInvoiceID->setVisible(true);
         ui->labelInvoiceID->setText(QString::fromStdString("#")+QString::number(mInvoiceid));
@@ -1272,7 +1276,9 @@ void MasternodeList::nodeSetupResetOrderId( )   {
     nodeSetupSetOrderId( 0, 0, "");
     ui->btnSetupReset->setEnabled(false);
     ui->btnSetup->setEnabled(true);
-    ui->btnSetup->setText(QString::fromStdString("setUP"));
+    ui->btnSetup->setIcon(QIcon(":/icons/setup"));
+    ui->btnSetup->setIconSize(QSize(200, 32));
+    ui->btnSetup->setText(QString::fromStdString(""));
     ui->labelMessage->setText("Select a node Tier and then follow below steps for setup.");
     mOrderid = mInvoiceid = mServiceId = 0;
     mPaymentTx = "";

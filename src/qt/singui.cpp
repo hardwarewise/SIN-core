@@ -893,8 +893,16 @@ void SINGUI::createToolBars()
     	mainIcon->setAlignment(Qt::AlignCenter);
     	mainIcon->show();
     	mainIcon->setStyleSheet("QLabel { margin-top: 10px; margin-bottom: 10px; }");
-    	toolbar->addWidget(mainIcon);
+    	
 
+        mainBrand = new QLabel (this);
+    	mainBrand->setText("SINOVATE");
+    	mainBrand->setAlignment(Qt::AlignCenter);
+    	mainBrand->show();
+    	mainBrand->setStyleSheet("QLabel { color:#FFFFFF; font-size:14px; font-weight:bold;}");
+    	
+        toolbar->addWidget(mainBrand);
+        toolbar->addWidget(mainIcon);
 
         toolbar->addAction(overviewAction);
         toolbar->addAction(sendCoinsAction);
@@ -943,9 +951,16 @@ void SINGUI::createToolBars()
 		empty->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 		toolbar->addWidget(empty);
 
+        QLabel* labelVersionName = new QLabel();
+        labelVersionName->setText("D.I.N.");
+        labelVersionName->setStyleSheet("margin-top: 10px; color: white ; font-size: 16px; font-weight : bold;");
+        labelVersionName->setAlignment(Qt::AlignCenter);
+        toolbar->addWidget(labelVersionName);
+
+
 		 QLabel* labelVersion = new QLabel();
-        labelVersion->setText(QString(tr("D.I.N.\nAURORA\nv%1\n")).arg(QString::fromStdString(FormatVersionFriendly())));
-        labelVersion->setStyleSheet("color: white ; margin-top: 10px; margin-bottom: 2px; font-weight : bold;");
+        labelVersion->setText(QString(tr("AURORA\nv%1\n")).arg(QString::fromStdString(FormatVersionFriendly())));
+        labelVersion->setStyleSheet("color: white ; margin-bottom: 2px; font-weight : bold;");
         labelVersion->setAlignment(Qt::AlignCenter);
         toolbar->addWidget(labelVersion);
 

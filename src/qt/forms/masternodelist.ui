@@ -488,7 +488,7 @@ border:  1px solid #011552;
 
 
 QPushButton#btnSetup:hover { /* setUP Button hover */
-border:  1px solid #011552;
+border:  2px solid #00FFFF;
     background-color:#0e1163;
     font-size:18px;
     padding:4px 6px;
@@ -497,6 +497,34 @@ border:  1px solid #011552;
 }
 
 QPushButton#btnSetup:pressed { /* setUP Button pressed */
+border:  1px solid #0e1163;
+    background-color:#0e1163;
+    font-size:18px;
+    padding:4px 6px;
+    color: #00B4B8;
+    border-radius: 2px;
+}
+
+QPushButton#btnSetupReset{ /* reset setUP Button */
+border:  1px solid #011552;
+    background-color:#011552;
+    font-size:18px;
+    padding:4px 6px;
+    color: #FFFFFF;
+    border-radius: 2px;
+}
+
+
+QPushButton#btnSetupReset:hover { /* reset setUP Button hover */
+border:  2px solid #00FFFF;
+    background-color:#0e1163;
+    font-size:18px;
+    padding:4px 6px;
+    color: #FFFFFF;
+    border-radius: 2px;
+}
+
+QPushButton#btnSetupReset:pressed { /* reset setUP Button pressed */
 border:  1px solid #0e1163;
     background-color:#0e1163;
     font-size:18px;
@@ -956,20 +984,20 @@ color: #011552;
                 <property name="minimumSize">
                  <size>
                   <width>200</width>
-                  <height>0</height>
+                  <height>32</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
                   <width>200</width>
-                  <height>16777215</height>
+                  <height>32</height>
                  </size>
                 </property>
                 <property name="styleSheet">
                  <string notr="true"/>
                 </property>
                 <property name="text">
-                 <string>Reset setUP</string>
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -1238,7 +1266,7 @@ color: #011552;
                  <bool>false</bool>
                 </property>
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1262,7 +1290,7 @@ color: #011552;
                  <string notr="true"/>
                 </property>
                 <property name="text">
-                 <string>setUP</string>
+                 <string/>
                 </property>
                </widget>
               </item>
