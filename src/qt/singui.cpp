@@ -899,7 +899,7 @@ void SINGUI::createToolBars()
     	mainBrand->setText("SINOVATE");
     	mainBrand->setAlignment(Qt::AlignCenter);
     	mainBrand->show();
-    	mainBrand->setStyleSheet("QLabel { color:#FFFFFF; font-size:14px; font-weight:bold;}");
+    	mainBrand->setStyleSheet("QLabel { color:#FFFFFF; font-size:16px; font-weight:bold;}");
     	
         toolbar->addWidget(mainBrand);
         toolbar->addWidget(mainIcon);
@@ -953,7 +953,7 @@ void SINGUI::createToolBars()
 
         QLabel* labelVersionName = new QLabel();
         labelVersionName->setText("D.I.N.");
-        labelVersionName->setStyleSheet("margin-top: 10px; color: white ; font-size: 16px; font-weight : bold;");
+        labelVersionName->setStyleSheet("margin-top: 10px; color: #00FFFF ; font-size: 16px; font-weight : bold;");
         labelVersionName->setAlignment(Qt::AlignCenter);
         toolbar->addWidget(labelVersionName);
 

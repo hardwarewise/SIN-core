@@ -756,7 +756,8 @@ color:#00B4B8;</string>
                    </size>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">margin-left: 15px;</string>
+                   <string notr="true">margin-left: 15px;
+font-weight: bold;</string>
                   </property>
                   <property name="text">
                    <string>Total Supply:</string>
@@ -1048,7 +1049,8 @@ color:#BC8F3A;</string>
                    </size>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">margin-left: 15px;</string>
+                   <string notr="true">margin-left: 15px;
+font-weight:bold;</string>
                   </property>
                   <property name="text">
                    <string>Total:</string>
