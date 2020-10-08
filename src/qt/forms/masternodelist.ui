@@ -505,33 +505,7 @@ border:  1px solid #0e1163;
     border-radius: 2px;
 }
 
-QPushButton#btnSetupReset{ /* reset setUP Button */
-border:  1px solid #011552;
-    background-color:#011552;
-    font-size:18px;
-    padding:4px 6px;
-    color: #FFFFFF;
-    border-radius: 2px;
-}
-
-
-QPushButton#btnSetupReset:hover { /* reset setUP Button hover */
-border:  2px solid #00FFFF;
-    background-color:#0e1163;
-    font-size:18px;
-    padding:4px 6px;
-    color: #FFFFFF;
-    border-radius: 2px;
-}
-
-QPushButton#btnSetupReset:pressed { /* reset setUP Button pressed */
-border:  1px solid #0e1163;
-    background-color:#0e1163;
-    font-size:18px;
-    padding:4px 6px;
-    color: #00B4B8;
-    border-radius: 2px;
-}</string>
+</string>
         </property>
         <attribute name="title">
          <string>InfinityNode setUP</string>
@@ -997,7 +971,7 @@ color: #011552;
                  <string notr="true"/>
                 </property>
                 <property name="text">
-                 <string/>
+                 <string>Reset setUP</string>
                 </property>
                </widget>
               </item>

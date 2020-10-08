@@ -74,9 +74,7 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
 
     ui->btnSetup->setIcon(QIcon(":/icons/setup"));
     ui->btnSetup->setIconSize(QSize(200, 32));
-    ui->btnSetupReset->setIcon(QIcon(":/icons/setup_res"));
-    ui->btnSetupReset->setIconSize(QSize(200, 32));
-
+    
     ui->startButton->setEnabled(false);
 
     int columnAliasWidth = 100;
