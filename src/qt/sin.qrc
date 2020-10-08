@@ -111,7 +111,7 @@
         <file alias="minilogo">res/icons/minilogo.svg</file>
         <file alias="midlogo">res/icons/midlogo.svg</file>
         <file alias="biglogo">res/icons/biglogo.svg</file>
-        <file alias="setup">res/icons/setup.svg</file>
+        <file alias="setup">res/icons/setup.png</file>
         <file alias="setup_top">res/icons/setup_top.svg</file>
         <file alias="setup_res">res/icons/setup_res.svg</file>
         <file alias="setup_con">res/icons/setup_con.svg</file>
