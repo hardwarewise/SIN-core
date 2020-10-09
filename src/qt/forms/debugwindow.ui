@@ -58,7 +58,7 @@ QTabBar::tab {
 }
 
 QTabBar::tab:selected {
-    border-bottom: 3px solid #EF3C23;
+    border-bottom: 3px solid #BC8F3A;
     background-color:transparent;
 
     }
@@ -88,7 +88,7 @@ border-radius: 10px;
 
 QWidget#RPCConsole QWidget#tab_peers QLabel#peerHeading {
 	/* Peers Info Header */
-	color: #EF3C23;
+	color: #BC8F3A;
 }
 
 QLabel {
@@ -265,7 +265,7 @@ QScrollBar::sub-page:vertical {
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_info">
       <property name="styleSheet">
@@ -996,7 +996,7 @@ color : #707070;</string>
             </size>
            </property>
            <property name="styleSheet">
-            <string notr="true">color: red;</string>
+            <string notr="true">color: #BC8F3A;</string>
            </property>
            <property name="text">
             <string>N/A</string>
@@ -1086,7 +1086,7 @@ color : #707070;</string>
             <string/>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="../sin.qrc">
              <normaloff>:/icons/fontsmaller</normaloff>:/icons/fontsmaller</iconset>
            </property>
            <property name="iconSize">
@@ -1118,7 +1118,7 @@ color : #707070;</string>
             <string/>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="../sin.qrc">
              <normaloff>:/icons/fontbigger</normaloff>:/icons/fontbigger</iconset>
            </property>
            <property name="iconSize">
@@ -1153,7 +1153,7 @@ color : #707070;</string>
             <string/>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="../sin.qrc">
              <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
            </property>
            <property name="shortcut">
@@ -1208,7 +1208,7 @@ color : #707070;</string>
             <string/>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="../sin.qrc">
              <normaloff>:/icons/prompticon</normaloff>
              <disabledoff>:/icons/prompticon</disabledoff>:/icons/prompticon</iconset>
            </property>
