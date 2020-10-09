@@ -171,6 +171,7 @@ private:
 
     
     QLabel *mainIcon;
+    QLabel *mainBrand;
     
     QLabel *m_wallet_selector_label = nullptr;
     QComboBox* m_wallet_selector = nullptr;

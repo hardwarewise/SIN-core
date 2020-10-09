@@ -211,7 +211,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     topThemeButton->setIconSize(QSize(24, 24));
     topThemeButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
 
-    topSetupButton->setIcon(QIcon(":/icons/setup"));
+    topSetupButton->setIcon(QIcon(":/icons/setup_top"));
     topSetupButton->setIconSize(QSize(58, 24));
     topSetupButton->setToolTip( "Open SetUP Wizard"  );
     topSetupButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
@@ -292,18 +292,18 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
 #endif // QT_NO_TOOLTIP
     website->setText(QApplication::translate("OverviewPage", "<a href=\"https://sinovate.io\"><img src=\":/icons/website\" width=\"19\" height=\"19\"></a>", nullptr));
 
-            QLabel* instaswap = new QLabel();
-    instaswap->setObjectName(QStringLiteral("instaswap"));
-    instaswap->setMinimumSize(QSize(32, 32));
-    instaswap->setMaximumSize(QSize(32, 32));
-    instaswap->setBaseSize(QSize(0, 0));
-    instaswap->setCursor(QCursor(Qt::PointingHandCursor));
-    instaswap->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-    instaswap->setOpenExternalLinks(true);
-#ifndef QT_NO_TOOLTIP
-    instaswap->setToolTip(QApplication::translate("OverviewPage", "Exchange your SIN rapidly", nullptr));
-#endif // QT_NO_TOOLTIP
-    instaswap->setText(QApplication::translate("OverviewPage", "<a href=\"https://instaswap.io/\"><img src=\":/icons/instaswap1\" width=\"32\" height=\"32\"></a>", nullptr));
+            //QLabel* instaswap = new QLabel();
+    //instaswap->setObjectName(QStringLiteral("instaswap"));
+    //instaswap->setMinimumSize(QSize(32, 32));
+    //instaswap->setMaximumSize(QSize(32, 32));
+    //instaswap->setBaseSize(QSize(0, 0));
+    //instaswap->setCursor(QCursor(Qt::PointingHandCursor));
+    //instaswap->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+    //instaswap->setOpenExternalLinks(true);
+//#ifndef QT_NO_TOOLTIP
+    //instaswap->setToolTip(QApplication::translate("OverviewPage", "Exchange your SIN rapidly", nullptr));
+//#endif // QT_NO_TOOLTIP
+    //instaswap->setText(QApplication::translate("OverviewPage", "<a href=\"https://instaswap.io/\"><img src=\":/icons/instaswap1\" width=\"32\" height=\"32\"></a>", nullptr));
 
             QLabel* twitter = new QLabel();
     twitter->setObjectName(QStringLiteral("twitter"));
@@ -348,7 +348,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     frameSocialLayout->addWidget(discord);
     frameSocialLayout->addWidget(twitter);
     frameSocialLayout->addWidget(github);
-    frameSocialLayout->addWidget(instaswap);
+    //frameSocialLayout->addWidget(instaswap);
     frameSocialLayout->addWidget(explorer);
 
 
@@ -893,8 +893,16 @@ void SINGUI::createToolBars()
     	mainIcon->setAlignment(Qt::AlignCenter);
     	mainIcon->show();
     	mainIcon->setStyleSheet("QLabel { margin-top: 10px; margin-bottom: 10px; }");
-    	toolbar->addWidget(mainIcon);
+    	
 
+        mainBrand = new QLabel (this);
+    	mainBrand->setText("SINOVATE");
+    	mainBrand->setAlignment(Qt::AlignCenter);
+    	mainBrand->show();
+    	mainBrand->setStyleSheet("QLabel { color:#FFFFFF; font-size:16px; font-weight:bold;}");
+    	
+        toolbar->addWidget(mainBrand);
+        toolbar->addWidget(mainIcon);
 
         toolbar->addAction(overviewAction);
         toolbar->addAction(sendCoinsAction);
@@ -943,9 +951,16 @@ void SINGUI::createToolBars()
 		empty->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 		toolbar->addWidget(empty);
 
+        QLabel* labelVersionName = new QLabel();
+        labelVersionName->setText("D.I.N.");
+        labelVersionName->setStyleSheet("margin-top: 10px; color: #00FFFF ; font-size: 16px; font-weight : bold;");
+        labelVersionName->setAlignment(Qt::AlignCenter);
+        toolbar->addWidget(labelVersionName);
+
+
 		 QLabel* labelVersion = new QLabel();
-        labelVersion->setText(QString(tr("v%1\n")).arg(QString::fromStdString(FormatVersionFriendly())));
-        labelVersion->setStyleSheet("color: white ; margin-top: 10px; margin-bottom: 2px; font-weight : bold;");
+        labelVersion->setText(QString(tr("AURORA\nv%1\n")).arg(QString::fromStdString(FormatVersionFriendly())));
+        labelVersion->setStyleSheet("color: white ; margin-bottom: 2px; font-weight : bold;");
         labelVersion->setAlignment(Qt::AlignCenter);
         toolbar->addWidget(labelVersion);
 
