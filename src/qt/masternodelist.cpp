@@ -678,6 +678,12 @@ void MasternodeList::on_btnSetup_clicked()
 {
     QString strError;
 
+    // check for chain synced...
+    if (!masternodeSync.IsBlockchainSynced())    {
+        ui->labelMessage->setText("Chain is out-of-sync. Please wait until it's fully synced.");
+        return;
+    }
+
     // check again in case they changed the tier...
     nodeSetupCleanProgress();
     if ( !nodeSetupCheckFunds() )   {
