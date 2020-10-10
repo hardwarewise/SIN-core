@@ -180,11 +180,11 @@
      <file alias="nav-logo-sin">res/images/nav-logo-sin.png</file>
      <file alias="indeterminate">res/images/indeterminate.png</file>
      <file alias="close">res/images/close.png</file>
-     <file alias="stats-nodes-header">res/images/stats-nodes-header.svg</file>
-     <file alias="stats-burncoins-header">res/images/stats-burncoins-header.svg</file>
-     <file alias="stats-address-header">res/images/stats-address-header.svg</file>
-     <file alias="stats-network-header">res/images/stats-network-header.svg</file>
-     <file alias="stats-top-header">res/images/stats-top-header.svg</file>
+     <file alias="stats-nodes-header">res/images/stats-nodes-header.png</file>
+     <file alias="stats-burncoins-header">res/images/stats-burncoins-header.png</file>
+     <file alias="stats-address-header">res/images/stats-address-header.png</file>
+     <file alias="stats-network-header">res/images/stats-network-header.png</file>
+     <file alias="stats-top-header">res/images/stats-top-header.png</file>
      <file alias="setuplogo">res/images/setuplogo.svg</file>
      <file alias="splash-loading">res/images/splash-loading.gif</file>
 </qresource>
