@@ -73,7 +73,7 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     ui->setupUi(this);
 
     ui->btnSetup->setIcon(QIcon(":/icons/setup"));
-    ui->btnSetup->setIconSize(QSize(200, 32));
+    ui->btnSetup->setIconSize(QSize(177, 26));
     
     ui->startButton->setEnabled(false);
 
