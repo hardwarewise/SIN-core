@@ -135,11 +135,12 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     updateDINList();
 
     // node setup
-    NODESETUP_ENDPOINT_NODE = QString::fromStdString(gArgs.GetArg("-nodesetupurl", "https://setup2dev.sinovate.io/includes/api/nodecp.php"));
-    NODESETUP_ENDPOINT_BASIC = QString::fromStdString(gArgs.GetArg("-nodesetupurlbasic", "https://setup2dev.sinovate.io/includes/api/basic.php"));
-    NODESETUP_RESTORE_URL = QString::fromStdString(gArgs.GetArg("-nodesetupurlrestore", "https://setup2dev.sinovate.io/index.php?rp=/password/reset/begin"));
-    NODESETUP_SUPPORT_URL = QString::fromStdString(gArgs.GetArg("-nodesetupsupporturl", "https://setup2dev.sinovate.io/submitticket.php"));
-    NODESETUP_PID = "1";  // "22" for prod
+    std::string baseURL = ( Params().NetworkIDString() == CBaseChainParams::TESTNET ) ? "https://setup2dev.sinovate.io" : "https://setup.sinovate.io";
+    NODESETUP_ENDPOINT_NODE = QString::fromStdString(gArgs.GetArg("-nodesetupurl", baseURL + "/includes/api/nodecp.php"));
+    NODESETUP_ENDPOINT_BASIC = QString::fromStdString(gArgs.GetArg("-nodesetupurlbasic", baseURL + "/includes/api/basic.php"));
+    NODESETUP_RESTORE_URL = QString::fromStdString(gArgs.GetArg("-nodesetupurlrestore", baseURL + "/index.php?rp=/password/reset/begin"));
+    NODESETUP_SUPPORT_URL = QString::fromStdString(gArgs.GetArg("-nodesetupsupporturl", baseURL + "/submitticket.php"));
+    NODESETUP_PID = ( Params().NetworkIDString() == CBaseChainParams::TESTNET ) ? "1" : "22";
     NODESETUP_CONFIRMS = 2;
     NODESETUP_REFRESHCOMBOS = 6;
     nodeSetup_RefreshCounter = NODESETUP_REFRESHCOMBOS;
