@@ -233,7 +233,7 @@ static UniValue getaccountaddress(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
             "getaccountaddress \"account\"\n"
-            "\n\nDEPRECATED. Returns the current Bitcoin address for receiving payments to this account.\n"
+            "\n\nDEPRECATED. Returns the current SIN address for receiving payments to this account.\n"
             "\nArguments:\n"
             "1. \"account\"       (string, required) The account for the address. It can also be set to the empty string \"\" to represent the default account. The account does not need to exist, it will be created and a new address created  if there is no account by the given name.\n"
             "\nResult:\n"
@@ -343,7 +343,7 @@ static UniValue setlabel(const JSONRPCRequest& request)
 
     CTxDestination dest = DecodeDestination(request.params[0].get_str());
     if (!IsValidDestination(dest)) {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Bitcoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid SIN address");
     }
 
     std::string old_label = pwallet->mapAddressBook[dest].name;
@@ -489,7 +489,7 @@ static CTransactionRef SendMoney(CWallet * const pwallet, const CTxDestination &
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
     }
 
-    // Parse Bitcoin address
+    // Parse SIN address
     std::string strError;
     CScript scriptPubKey;
     if (nBlockLocked == 0)
@@ -1104,7 +1104,7 @@ static UniValue getreceivedbyaddress(const JSONRPCRequest& request)
 
     LOCK2(cs_main, pwallet->cs_wallet);
 
-    // Bitcoin address
+    // SIN address
     CTxDestination dest = DecodeDestination(request.params[0].get_str());
     if (!IsValidDestination(dest)) {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid SIN address");

@@ -160,7 +160,7 @@ UniValue importprivkey(const JSONRPCRequest& request)
         CKeyID vchAddress = pubkey.GetID();
         {
             pwallet->MarkDirty();
-            //Bitcoin: We don't know which corresponding address will be used; label them all
+            //SIN: We don't know which corresponding address will be used; label them all
             //SIN: don't support P2SH_SEGWIT and BECH32 yet
             //for (const auto& dest : GetAllDestinationsForKey(pubkey)) {
             OutputType output_type = pwallet->m_default_address_type;
@@ -263,7 +263,7 @@ UniValue importaddress(const JSONRPCRequest& request)
             "importaddress \"address\" ( \"label\" rescan p2sh )\n"
             "\nAdds an address or script (in hex) that can be watched as if it were in your wallet but cannot be used to spend. Requires a new wallet backup.\n"
             "\nArguments:\n"
-            "1. \"address\"          (string, required) The Bitcoin address (or hex-encoded script)\n"
+            "1. \"address\"          (string, required) The SIN address (or hex-encoded script)\n"
             "2. \"label\"            (string, optional, default=\"\") An optional label\n"
             "3. rescan               (boolean, optional, default=true) Rescan the wallet for transactions\n"
             "4. p2sh                 (boolean, optional, default=false) Add the P2SH version of the script as well\n"
