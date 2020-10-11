@@ -85,8 +85,8 @@ public Q_SLOTS:
     void nodeSetupCleanProgress();
     void nodeSetupEnableOrderUI( bool bEnable, int orderID = 0, int invoiceID = 0 );
     int nodeSetupAPIAddClient( QString firstName, QString lastName, QString email, QString password, QString& strError );
-    int nodeSetupAPIAddOrder( int clientid, QString billingCycle, QString& productids, int& invoiceid, QString& strError );
-    bool nodeSetupAPIGetInvoice( int invoiceid, QString& strAmount, QString& strStatus, QString& paymentAddress, QString& strError );
+    int nodeSetupAPIAddOrder( int clientid, QString billingCycle, QString& productids, int& invoiceid, QString email, QString password, QString& strError );
+    bool nodeSetupAPIGetInvoice( int invoiceid, QString& strAmount, QString& strStatus, QString& paymentAddress, QString email, QString password, QString& strError );
     std::map<int,std::string> nodeSetupAPIListInvoices( QString email, QString password, QString& strError );
     QJsonObject nodeSetupAPIInfo( int serviceid, int clientid, QString email, QString password, QString& strError );
     QJsonObject nodeSetupAPINodeInfo( int serviceid, int clientId, QString email, QString pass, QString& strError  );
