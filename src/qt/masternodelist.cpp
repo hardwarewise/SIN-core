@@ -677,7 +677,7 @@ void MasternodeList::on_checkDINNode()
 // nodeSetup buttons
 void MasternodeList::on_btnSetup_clicked()
 {
-    QString strError;
+    QString email, pass, strError;
 
     // check for chain synced...
     if (!masternodeSync.IsBlockchainSynced())    {
@@ -692,12 +692,14 @@ void MasternodeList::on_btnSetup_clicked()
         return;
     }
 
+    nodeSetupGetClientId( email, pass, true );
+
     int orderid, invoiceid, productid;
     QString strBillingCycle = QString::fromStdString(billingOptions[ui->comboBilling->currentData().toInt()]);
 
 //LogPrintf("place order %d, %s ", mClientid, strBillingCycle);
     if ( ! (mOrderid > 0 && mInvoiceid > 0) ) {     // place new order if there is none already
-        mOrderid = nodeSetupAPIAddOrder( mClientid, strBillingCycle, mProductIds, mInvoiceid, strError );
+        mOrderid = nodeSetupAPIAddOrder( mClientid, strBillingCycle, mProductIds, mInvoiceid, email, pass, strError );
     }
 
     if (mInvoiceid==0)  {
@@ -721,10 +723,13 @@ void MasternodeList::on_btnSetup_clicked()
 void MasternodeList::on_payButton_clicked()
 {
      int invoiceToPay = ui->comboInvoice->currentData().toInt();
-     QString strAmount, strStatus, paymentAddress, strError;
+     QString strAmount, strStatus, paymentAddress;
+     QString email, pass, strError;
+
+     nodeSetupGetClientId( email, pass, true );
 
      if (invoiceToPay>0)    {
-        nodeSetupAPIGetInvoice( invoiceToPay, strAmount, strStatus, paymentAddress, strError );
+        nodeSetupAPIGetInvoice( invoiceToPay, strAmount, strStatus, paymentAddress, email, pass, strError );
         CAmount invoiceAmount = strAmount.toDouble();
         //LogPrintf("nodeSetupCheckPendingPayments nodeSetupAPIGetInvoice %s, %d \n", strStatus.toStdString(), invoiceToPay );
 
@@ -772,11 +777,14 @@ void MasternodeList::on_payButton_clicked()
 
 void MasternodeList::nodeSetupCheckPendingPayments()    {
     int invoiceToPay;
-    QString strAmount, strStatus, paymentAddress, strError;
+    QString strAmount, strStatus, paymentAddress;
+    QString email, pass, strError;
+
+    nodeSetupGetClientId( email, pass, true );
 
     for(auto& itemPair : nodeSetupPendingPayments)   {
         invoiceToPay = itemPair.second;
-        nodeSetupAPIGetInvoice( invoiceToPay, strAmount, strStatus, paymentAddress, strError );
+        nodeSetupAPIGetInvoice( invoiceToPay, strAmount, strStatus, paymentAddress, email, pass, strError );
         if ( strStatus != "Unpaid" )  { // either paid or cancelled/removed
             nodeSetupPendingPayments.erase(itemPair.first);
             nodeSetupStep( "setupOk", strprintf("Payment for invoice #%d processed", invoiceToPay) );
@@ -874,8 +882,12 @@ UniValue MasternodeList::nodeSetupGetTxInfo( QString txHash, std::string attribu
 }
 
 QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
-    QString strAmount, strStatus, paymentAddress, strError;
-    nodeSetupAPIGetInvoice( mInvoiceid, strAmount, strStatus, paymentAddress, strError );
+    QString strAmount, strStatus, paymentAddress;
+    QString email, pass, strError;
+
+    nodeSetupGetClientId( email, pass, true );
+
+    nodeSetupAPIGetInvoice( mInvoiceid, strAmount, strStatus, paymentAddress, email, pass, strError );
 
     CAmount invoiceAmount = strAmount.toDouble();
     ui->labelMessage->setText(QString::fromStdString(strprintf("Invoice amount %f SIN", invoiceAmount)));
@@ -1540,7 +1552,7 @@ int MasternodeList::nodeSetupAPIAddClient( QString firstName, QString lastName, 
     return ret;
 }
 
-int MasternodeList::nodeSetupAPIAddOrder( int clientid, QString billingCycle, QString& productids, int& invoiceid, QString& strError )  {
+int MasternodeList::nodeSetupAPIAddOrder( int clientid, QString billingCycle, QString& productids, int& invoiceid, QString email, QString password, QString& strError )  {
     int orderid = 0;
 
     QString Service = QString::fromStdString("AddOrder");
@@ -1552,6 +1564,8 @@ int MasternodeList::nodeSetupAPIAddOrder( int clientid, QString billingCycle, QS
     urlQuery.addQueryItem("domain", "nodeSetup.sinovate.io");
     urlQuery.addQueryItem("billingcycle", billingCycle);
     urlQuery.addQueryItem("paymentmethod", "sin");
+    urlQuery.addQueryItem("email", email);
+    urlQuery.addQueryItem("password2", password);
     url.setQuery( urlQuery );
 
     QNetworkRequest request( url );
@@ -1587,7 +1601,7 @@ int MasternodeList::nodeSetupAPIAddOrder( int clientid, QString billingCycle, QS
     return orderid;
 }
 
-bool MasternodeList::nodeSetupAPIGetInvoice( int invoiceid, QString& strAmount, QString& strStatus, QString& paymentAddress, QString& strError )  {
+bool MasternodeList::nodeSetupAPIGetInvoice( int invoiceid, QString& strAmount, QString& strStatus, QString& paymentAddress, QString email, QString password, QString& strError )  {
     bool ret = false;
 
     QString Service = QString::fromStdString("GetInvoice");
@@ -1595,6 +1609,8 @@ bool MasternodeList::nodeSetupAPIGetInvoice( int invoiceid, QString& strAmount, 
     QUrlQuery urlQuery( url );
     urlQuery.addQueryItem("action", Service);
     urlQuery.addQueryItem("invoiceid", QString::number(invoiceid));
+    urlQuery.addQueryItem("email", email);
+    urlQuery.addQueryItem("password2", password);
     url.setQuery( urlQuery );
 
     QNetworkRequest request( url );
