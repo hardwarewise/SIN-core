@@ -54,7 +54,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
                                     && strCommand != "mypeerinfo" && strCommand != "checkkey" && strCommand != "scan-metadata"
                                     && strCommand != "show-metadata" && strCommand != "memory-lockreward"
                                     && strCommand != "show-lockreward" &&  strCommand != "check-lockreward"
-                                    && strCommand != "show-all-infos"
+                                    && strCommand != "show-all-infos" &&  strCommand != "getblockcount"
         ))
             throw std::runtime_error(
                 "infinitynode \"command\"...\n"
@@ -66,6 +66,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
                 "  checkkey                    - Print information about provided privatekey\n"
                 "  check-lockreward            - Return the status of Register string\n"
                 "  mypeerinfo                  - Print InfinityNode status\n"
+                "  getblockcount               - InfinityNode current height\n"
                 "  build-list                  - Build a list of all InfinityNodes from InfinityNode genesis block to current tip\n"
                 "  build-stm                   - Build a list of all statements from the InfinityNode genesis block to current tip\n"
                 "  show-infos                  - Print a list of all active InfinityNodes and latest information about them\n"
@@ -150,6 +151,14 @@ UniValue infinitynode(const JSONRPCRequest& request)
         obj.push_back(Pair("Error string", error));
 
         return obj;
+    }
+
+    if (strCommand == "getblockcount")
+    {
+        if (!fInfinityNode)
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "This is not an InfinityNode");
+
+        return infnodeman.getCacheHeightInf();
     }
 
     if (strCommand == "mypeerinfo")

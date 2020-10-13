@@ -132,6 +132,7 @@ public:
         if(nSinType == 5) return nMIDLastStmSize;
         if(nSinType == 1) return nLILLastStmSize;
     }
+    int getCacheHeightInf(){LOCK(cs); return nCachedBlockHeight;};
 
     void setSyncStatus(bool flag){LOCK(cs); fReachedLastBlock=flag;}
     bool isReachedLastBlock(){LOCK(cs); return fReachedLastBlock;}
