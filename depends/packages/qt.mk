@@ -77,7 +77,6 @@ $(package)_config_opts += -v
 $(package)_config_opts += -no-feature-printer
 $(package)_config_opts += -no-feature-printdialog
 $(package)_config_opts += -feature-concurrent
-$(package)_config_opts += -no-feature-concurrent
 $(package)_config_opts += -no-feature-xml
 
 ifneq ($(build_os),darwin)
