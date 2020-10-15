@@ -25,7 +25,7 @@
     background-color:transparent;
     font-size:18px;
     padding:4px 6px;
-    color: #2E3191;
+    color: #011552;
     border:none;
 	text-align: left;
 
@@ -38,7 +38,7 @@ QPushButton:hover {
 
 QPushButton:checked {
 	 border:none;
-    background-color:#2E3191;
+    background-color:#011552;
     font-size:18px;
     padding:4px 6px;
     color: #ffffff;
@@ -58,7 +58,7 @@ font-size: 16px;
        <property name="styleSheet">
         <string notr="true">font-size:18px;
 font-weight: bold;
-color: #2E3191;</string>
+color: #011552;</string>
        </property>
        <property name="text">
         <string>Frequently Asked Questions</string>
@@ -470,7 +470,7 @@ border: 1px solid #2E3191;
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>-1026</y>
+                 <y>-4275</y>
                  <width>658</width>
                  <height>5000</height>
                 </rect>
@@ -533,7 +533,7 @@ border: 1px solid #2E3191;
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -627,7 +627,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -724,7 +724,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -818,7 +818,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -913,7 +913,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -1007,7 +1007,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -1104,7 +1104,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -1198,7 +1198,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -1292,7 +1292,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -1386,7 +1386,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">

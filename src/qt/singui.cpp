@@ -209,35 +209,35 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     this->setStyleSheet(styleSheet);
 
     topThemeButton->setIconSize(QSize(24, 24));
-    topThemeButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
+    topThemeButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
 
     topSetupButton->setIcon(QIcon(":/icons/setup_top"));
     topSetupButton->setIconSize(QSize(58, 24));
     topSetupButton->setToolTip( "Open SetUP Wizard"  );
-    topSetupButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
+    topSetupButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent; } QPushButton:hover {border: 1px solid  #00FFFF; } ");
     
     
     topConsoleButton->setIcon(QIcon(":/icons/debugwindow"));
     topConsoleButton->setIconSize(QSize(20, 20));
     topConsoleButton->setToolTip( "Open Console"  );
-    topConsoleButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
+    topConsoleButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
 
 
 
     topOptionButton->setIcon(QIcon(":/icons/options"));
     topOptionButton->setIconSize(QSize(20, 20));
     topOptionButton->setToolTip( "Open Options Window"  );
-    topOptionButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
+    topOptionButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
 
     topAddressButton->setIcon(QIcon(":/icons/address-book"));
     topAddressButton->setIconSize(QSize(20, 20));
     topAddressButton->setToolTip( "Open Receiving Addresses"  );
-    topAddressButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
+    topAddressButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
 
     topFaqButton->setIcon(QIcon(":/icons/faq"));
     topFaqButton->setIconSize(QSize(20, 20));
     topFaqButton->setToolTip( "Open FAQ Window"  );
-    topFaqButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
+    topFaqButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
 
     topBar->setLayout(topBarLayout);
     appMenuBar->setCornerWidget(topBar, Qt::TopRightCorner);
