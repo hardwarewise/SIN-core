@@ -73,7 +73,7 @@ public:
     std::string GetStateString() const;
     std::string GetStatus() const;
     std::string GetTypeString() const;
-    std::string GetMyPeerInfo(int nHeight) const;
+    std::string GetMyPeerInfo() const;
 
 private:
     void ManageStateInitial(CConnman& connman);

@@ -258,3 +258,9 @@ void CInfinitynodePeer::ManageStateRemote()
         LogPrint(BCLog::INFINITYPEER,"CInfinitynodePeer::ManageStateRemote -- %s: %s\n", GetStateString(), strNotCapableReason);
     }
 }
+
+void CInfinitynodePeer::UpdatedBlockTip(const CBlockIndex *pindex)
+{
+    LOCK(cs);
+    nCachedBlockHeight = pindex->nHeight;
+}
