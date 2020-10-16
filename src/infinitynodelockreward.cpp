@@ -1167,7 +1167,7 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- number of signers: %d or commitment:% d, is not the same as consensus\n", nSigner, nCommitment);
         free(pubkeys); pubkeys = NULL;
         free(commitmentpk); commitmentpk = NULL;
-        for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
+        for(int c = 0; c < nCommitment; c++) { //use the actual commitment numbers here, not what we expected to find
             free(commitmenthash[c]);
         }
         free(commitmenthash); commitmenthash = NULL;
