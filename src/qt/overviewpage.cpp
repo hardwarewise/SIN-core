@@ -301,7 +301,7 @@ void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
 
      // Create the timer
         connect(pricingTimer, SIGNAL(timeout()), this, SLOT(getPriceInfo()));
-        pricingTimer->start(1800000);
+        pricingTimer->start(300000);
         getPriceInfo();
         /** pricing USD END */
 
