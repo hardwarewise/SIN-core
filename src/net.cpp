@@ -2767,15 +2767,10 @@ void CConnman::RelayTransaction(const CTransaction& tx)
 void CConnman::RelayTransaction(const CTransaction& tx, const CDataStream& ss)
 {
     uint256 hash = tx.GetHash();
-    int nInv = static_cast<int>(MSG_TX);
-    CInv inv(nInv, hash);
+    CInv inv(MSG_TX, hash);
     LOCK(cs_vNodes);
     for (auto* pnode : vNodes)
     {
-        if (nInv == MSG_TXLOCK_REQUEST) {
-            LOCK(pnode->cs_filter);
-            if(pnode->pfilter && !pnode->pfilter->IsRelevantAndUpdate(tx)) continue;
-        }
         pnode->PushInventory(inv);
     }
 }
