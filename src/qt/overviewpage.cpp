@@ -445,7 +445,7 @@ void OverviewPage::SetupTransactionList(int nNumItems) {
 
 void OverviewPage::getPriceInfo()
 {
-        request->setUrl(QUrl("https://sinovate.io/priceUSD.php"));
+        request->setUrl(QUrl("https://stats.sinovate.io/priceUSD.php"));
     
     networkManager->get(*request);
 }
