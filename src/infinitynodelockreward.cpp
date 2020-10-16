@@ -401,8 +401,11 @@ bool CInfinityNodeLockReward::AddMusigPartialSignLR(const CMusigPartialSignLR& p
 {
     AssertLockHeld(cs);
 
-    if(mapPartialSign.count(ps.GetHash())) return false;
-        mapPartialSign.insert(make_pair(ps.GetHash(), ps));
+    if(mapPartialSign.count(ps.GetHash())) {
+        return false;
+    }
+    mapPartialSign.insert(make_pair(ps.GetHash(), ps));
+    
     return true;
 }
 
@@ -2719,7 +2722,10 @@ void CInfinityNodeLockReward::ProcessMessage(CNode* pfrom, const std::string& st
                           partialSign.vin.prevout.ToStringShort(), partialSign.nHashGroupSigners.ToString(), partialSign.GetHash().ToString());
                 partialSign.Relay(connman);
                 AddMyPartialSignsMap(partialSign);
-                FindAndBuildMusigLockReward();
+                if (!FindAndBuildMusigLockReward()) {
+                    LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessMessage -- Couldn't build MuSig\n");
+                    return;
+                }
             } else {
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::ProcessMessage -- Partial Sign received. Dont do anything\n");
             }
