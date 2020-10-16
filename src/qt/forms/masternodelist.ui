@@ -54,7 +54,7 @@ width: 150px;
         </size>
        </property>
        <property name="currentIndex">
-        <number>3</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="tabMyMasternodes">
         <attribute name="title">
@@ -447,7 +447,7 @@ width: 150px;
               <string notr="true"/>
              </property>
              <property name="text">
-              <string>Right click IP address to see node stats</string>
+              <string>Right click IP address to check node stats</string>
              </property>
             </widget>
            </item>
