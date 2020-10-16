@@ -12,6 +12,7 @@
 
 #include <infinitynodetip.h>
 #include <infinitynodeman.h>
+#include <infinitynodepeer.h>
 #include <infinitynodelockreward.h>
 
 void CDSNotificationInterface::InitializeCurrentBlockTip()
@@ -45,6 +46,7 @@ void CDSNotificationInterface::UpdatedBlockTip(const CBlockIndex *pindexNew, con
     instantsend.UpdatedBlockTip(pindexNew);
     mnpayments.UpdatedBlockTip(pindexNew, connman);
 
+    infinitynodePeer.UpdatedBlockTip(pindexNew);
     infnodeman.UpdatedBlockTip(pindexNew);
     inflockreward.UpdatedBlockTip(pindexNew, connman);
 }

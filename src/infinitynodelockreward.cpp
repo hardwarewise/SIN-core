@@ -1088,7 +1088,7 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- metadata of signer is not ready for Musig(wait %d blocks).\n", nWait);
                 free(pubkeys); pubkeys = NULL;
                 free(commitmentpk); commitmentpk = NULL;
-                for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
+                for(int c = 0; c < nCommitment; c++) {
                     free(commitmenthash[c]);
                 }
                 free(commitmenthash); commitmenthash = NULL;
@@ -1102,7 +1102,7 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::MusigPartialSign -- Can't calculate score signer Rank %d\n",Id);
                 free(pubkeys); pubkeys = NULL;
                 free(commitmentpk); commitmentpk = NULL;
-                for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
+                for(int c = 0; c < nCommitment; c++) {
                     free(commitmenthash[c]);
                 }
                 free(commitmenthash); commitmenthash = NULL;
@@ -1114,7 +1114,7 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
                          Id, Params().GetConsensus().nInfinityNodeLockRewardTop, nScore);
                 free(pubkeys); pubkeys = NULL;
                 free(commitmentpk); commitmentpk = NULL;
-                for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
+                for(int c = 0; c < nCommitment; c++) {
                     free(commitmenthash[c]);
                 }
                 free(commitmenthash); commitmenthash = NULL;
@@ -1530,7 +1530,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- metadata of signer is not ready for Musig (wait %d blocks).\n", nWait);
                         free(pubkeys); pubkeys = NULL;
                         free(commitmentpk); commitmentpk = NULL;
-                        for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
+                        for(int c = 0; c < nCommitment; c++) {
                             free(commitmenthash[c]);
                         }
                         free(commitmenthash); commitmenthash = NULL;
@@ -1544,7 +1544,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Can't calculate score signer Rank %d\n",Id);
                         free(pubkeys); pubkeys = NULL;
                         free(commitmentpk); commitmentpk = NULL;
-                        for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
+                        for(int c = 0; c < nCommitment; c++) {
                             free(commitmenthash[c]);
                         }
                         free(commitmenthash); commitmenthash = NULL;
@@ -1556,7 +1556,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                                  Id, Params().GetConsensus().nInfinityNodeLockRewardTop, nScore);
                         free(pubkeys); pubkeys = NULL;
                         free(commitmentpk); commitmentpk = NULL;
-                        for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
+                        for(int c = 0; c < nCommitment; c++) {
                             free(commitmenthash[c]);
                         }
                         free(commitmenthash); commitmenthash = NULL;
@@ -1603,7 +1603,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- number of signers: %d or commitment:% d, is not the same as consensus\n", nSigner, nCommitment);
                 free(pubkeys); pubkeys = NULL;
                 free(commitmentpk); commitmentpk = NULL;
-                for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
+                for(int c = 0; c < nCommitment; c++) {
                     free(commitmenthash[c]);
                 }
                 free(commitmenthash); commitmenthash = NULL;

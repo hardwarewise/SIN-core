@@ -158,7 +158,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
         if (!fInfinityNode)
             throw JSONRPCError(RPC_INTERNAL_ERROR, "This is not an InfinityNode");
 
-        return infnodeman.getCacheHeightInf();
+        return infinitynodePeer.getCacheHeightInf();
     }
 
     if (strCommand == "mypeerinfo")
@@ -166,15 +166,9 @@ UniValue infinitynode(const JSONRPCRequest& request)
         if (!fInfinityNode)
             throw JSONRPCError(RPC_INTERNAL_ERROR, "This is not an InfinityNode");
 
-        CBlockIndex* pindex = NULL;
-        {
-                LOCK(cs_main);
-                pindex = chainActive.Tip();
-        }
-
         UniValue infObj(UniValue::VOBJ);
         infinitynodePeer.ManageState(*g_connman);
-        infObj.push_back(Pair("MyPeerInfo", infinitynodePeer.GetMyPeerInfo(pindex->nHeight)));
+        infObj.push_back(Pair("MyPeerInfo", infinitynodePeer.GetMyPeerInfo()));
         return infObj;
     }
 

@@ -68,7 +68,7 @@ std::string CInfinitynodePeer::GetTypeString() const
     return strType;
 }
 
-std::string CInfinitynodePeer::GetMyPeerInfo(int nHeight) const
+std::string CInfinitynodePeer::GetMyPeerInfo() const
 {
     std::string myPeerInfo;
     infinitynode_info_t infoInf;
@@ -81,11 +81,13 @@ std::string CInfinitynodePeer::GetMyPeerInfo(int nHeight) const
     {
         return GetStatus();
     }
+
+    LOCK(cs);
     //check if publicKey exist in metadata and in Deterministic Infinitynode list
     if(infnodeman.GetInfinitynodeInfo(EncodeBase64(pubKeyInfinitynode.begin(), pubKeyInfinitynode.size()), infoInf)
       && eType == INFINITYNODE_REMOTE && nState == INFINITYNODE_PEER_STARTED) {
         myPeerInfo = strprintf("My Peer is running with metadata ID: %s", infoInf.metadataID);
-        if(nHeight >= infoInf.nExpireHeight) {
+        if(nCachedBlockHeight >= infoInf.nExpireHeight) {
             myPeerInfo = strprintf("My Peer is EXPIRED with metadata ID: %s", infoInf.metadataID);
         }
     } else {
