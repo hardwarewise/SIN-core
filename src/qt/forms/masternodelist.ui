@@ -399,12 +399,12 @@ width: 150px;
            </column>
            <column>
             <property name="text">
-             <string>Node blockcount</string>
+             <string>Blockcount</string>
             </property>
            </column>
            <column>
             <property name="text">
-             <string>Node status</string>
+             <string>Status</string>
             </property>
            </column>
           </widget>
