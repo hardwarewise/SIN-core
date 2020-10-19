@@ -663,8 +663,8 @@ void SINGUI::createActions()
     //-//openPeersAction->setStatusTip(tr("Show peers info"));
     //-//openRepairAction = new QAction(QIcon(":/icons/" + theme + "/options"), tr("Wallet &Repair"), this);
     //-//openRepairAction->setStatusTip(tr("Show wallet repair options"));
-    openConfEditorAction = new QAction(QIcon(":/icons/edit"), tr("Open Wallet &Configuration File"), this);
-    openConfEditorAction->setStatusTip(tr("Open configuration file"));
+    openConfEditorAction = new QAction(QIcon(":/icons/edit"), tr("Open Wallet &Configuration File (sin.conf)"), this);
+    openConfEditorAction->setStatusTip(tr("Open configuration file (sin.conf)"));
     openMNConfEditorAction = new QAction(platformStyle->SingleColorIcon(":/icons/edit"), tr("Open &Infinitynode Configuration File"), this);
     openMNConfEditorAction->setStatusTip(tr("Open InfinityNode configuration file"));
     //-//showBackupsAction = new QAction(QIcon(":/icons/" + theme + "/browse"), tr("Show Automatic &Backups"), this);
