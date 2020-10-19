@@ -54,7 +54,7 @@ width: 150px;
         </size>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>3</number>
        </property>
        <widget class="QWidget" name="tabMyMasternodes">
         <attribute name="title">
@@ -748,7 +748,8 @@ background-size: 32px 32px;</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true"/>
+              <string notr="true">selection-color: white;
+selection-background-color: #BC8F3A;;</string>
              </property>
              <property name="echoMode">
               <enum>QLineEdit::Password</enum>
@@ -896,7 +897,8 @@ color: #011552;
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true"/>
+              <string notr="true">selection-color: white;
+selection-background-color: #BC8F3A;;</string>
              </property>
             </widget>
            </item>
