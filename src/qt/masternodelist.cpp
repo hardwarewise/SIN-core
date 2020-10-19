@@ -141,6 +141,7 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     NODESETUP_RESTORE_URL = QString::fromStdString(gArgs.GetArg("-nodesetupurlrestore", baseURL + "/index.php?rp=/password/reset/begin"));
     NODESETUP_SUPPORT_URL = QString::fromStdString(gArgs.GetArg("-nodesetupsupporturl", baseURL + "/submitticket.php"));
     NODESETUP_PID = ( Params().NetworkIDString() == CBaseChainParams::TESTNET ) ? "1" : "22";
+    NODESETUP_UPDATEMETA_AMOUNT = ( Params().NetworkIDString() == CBaseChainParams::TESTNET ) ? 5 : 25;
     NODESETUP_CONFIRMS = 2;
     NODESETUP_REFRESHCOMBOS = 6;
     nodeSetup_RefreshCounter = NODESETUP_REFRESHCOMBOS;
@@ -1033,7 +1034,7 @@ void MasternodeList::nodeSetupCheckBurnPrepareConfirmations()   {
         int nMasternodeBurn = nodeSetupGetBurnAmount();
 
         mBurnTx = nodeSetupRPCBurnFund( mBurnAddress, nMasternodeBurn , strAddressBackup);
-        QString metaTx = nodeSetupSendToAddress( mBurnAddress, 5 , NULL );
+        QString metaTx = nodeSetupSendToAddress( mBurnAddress, NODESETUP_UPDATEMETA_AMOUNT , NULL );
         if ( mBurnTx!="" )  {
             nodeSetupSetBurnTx(mBurnTx);
             if ( !burnSendTimer->isActive() )  {
@@ -1073,7 +1074,7 @@ void MasternodeList::nodeSetupCheckBurnSendConfirmations()   {
                 cmd << "infinitynodeupdatemeta " << mBurnAddress.toUtf8().constData() << " " << strPublicKey.toUtf8().constData() << " " << strNodeIp.toUtf8().constData() << " " << mBurnTx.left(16).toUtf8().constData();
                 UniValue jsonVal = nodeSetupCallRPC( cmd.str() );
 
-                nodeSetupSendToAddress( strAddress, 1, NULL );  // send 1 coin as per recommendation from BEET to expedite the rewards
+                nodeSetupSendToAddress( strAddress, 1, NULL );  // send 1 coin as per recommendation to expedite the rewards
                 nodeSetupSetServiceForNodeAddress( strAddress, mServiceId); // store serviceid
                 // cleanup
                 nodeSetupResetOrderId();

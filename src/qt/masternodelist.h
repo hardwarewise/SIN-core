@@ -151,6 +151,7 @@ private:
     QString NODESETUP_RESTORE_URL;
     QString NODESETUP_SUPPORT_URL;
     QString NODESETUP_PID;
+    int NODESETUP_UPDATEMETA_AMOUNT;
     int NODESETUP_CONFIRMS;
     int NODESETUP_REFRESHCOMBOS;    // every N updateDINList cycles
     int nodeSetup_RefreshCounter;
