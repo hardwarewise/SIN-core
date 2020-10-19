@@ -150,6 +150,7 @@ private:
     // Dash
     QAction *openMNConfEditorAction = nullptr;
     //
+    QAction *openConfEditorAction = nullptr;
     QAction* openAction = nullptr;
     QAction* showHelpMessageAction = nullptr;
     QAction* m_wallet_selector_label_action = nullptr;
@@ -346,6 +347,8 @@ private Q_SLOTS:
     //-//void showConfEditor();
     /** Open external (default) editor with masternode.conf */
     void showMNConfEditor();
+    /** Open external (default) editor with sin.conf */
+    void showConfEditor();
     /** Show folder with wallet backups in default file browser */
     //-//void showBackups();
     //
