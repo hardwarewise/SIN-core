@@ -129,7 +129,7 @@ public:
         /*Previously used as simple constants in validation */
         consensus.nINActivationHeight = 170000; // Activation of IN payments, should also be the same as nInfinityNodeBeginHeight in primitives/block.cpp
         consensus.nINEnforcementHeight = 178000; // Enforcement of IN payments
-        consensus.nDINActivationHeight = 9999999; // Activation of DIN 1.0 payments, and new dev fee address.
+        consensus.nDINActivationHeight = 550000; // Activation of DIN 1.0 payments, and new dev fee address.
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440 * 5; // 1 common year
         consensus.nBudgetPaymentsCycleBlocks = 10958; // weekly
