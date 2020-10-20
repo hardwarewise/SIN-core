@@ -87,7 +87,7 @@ infinitynode=1
 infinitynodeprivkey=[your_infinitynodeprivkey]  
   
 
-![](https://lh4.googleusercontent.com/pReZ18Eq0oS4wNDLylNS2xeWDVwViSuoGBqi2E89qyvni5pXpEzCJ5ihLr_lDS7kw1eXO6vc5F-3IT5_N7psM1ChBbFoEZBn35SJ5BH9qY2QRZZ9z9H0LytmdF7dx8LFhu-59T2_)
+![](assets/img/misc/double-run-01.png)
 
   
 
