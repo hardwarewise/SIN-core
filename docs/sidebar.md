@@ -10,6 +10,7 @@
 - [MAC Wallet Backup & Upgrade](mac_wallet_backup_and_upgrade)
 - [Infinity Node setup](infinity_node_setup_guide)
 - [Inf. Node Guide with setUP](infinity_node_guide_with_setup)
+- [Wallet Upgrade](wallet_upgrade)
 - [SIN WebTool](sin_webtool_guide)
 - [SUQA Coins Conflict](suqa_conflict)
 - [Vps Wallet Update Guide](vps_wallet_update)
