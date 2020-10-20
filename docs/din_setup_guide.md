@@ -124,10 +124,6 @@ Please save the given keys and address information. You can do this by choosing 
 
 ![](https://lh5.googleusercontent.com/F_aurcOEBKQvoVHgJAJuDmkNGAVgq1VIBRLrEIaq53TU0mrI3c7T4FM0MVF7vLhht-rzdcFXCD7dB_X68fRDrHZRowmSocYqlcj53job2hU02FnMtj9kwKfxrSwM9qnkOhKUYzYD)
 
-![](https://lh4.googleusercontent.com/4xlU3ZQrgIJHc1wOt4yhAlgBbqcK8NLrvwD3EKjbLc0xAXQ6e1XSuJAfymyXKKfnwfonywR0iVAUh6HC5lC-oY6c0X6T0x3vYNa-PGFkp40ImVewRZxZZ17_ZCrBzbyuRN62qi80)
-
-  
-  
   
 
 ![](https://lh4.googleusercontent.com/VtXV5A4V3S5ScoO2jdbsP_AqTXrnXcJ7Z_xJX0P6oEQ86rGfdOx6IZSKOgQ9dPnwgdO_EJk7v4E-N0Qw2sSaWuT0qjPY-yVvFot55_w0xA5aTZC7pZEha1kc7RckbITdMRqi9qh1)
