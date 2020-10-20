@@ -4,13 +4,12 @@
 - [Community contributions](/)
 - **Documentation**
 - [SINOVATE Whitepaper Light](SINOVATE_Whitepaper_Light)
-- [Infinity Node setup](infinity_node_setup_guide)
-- [Inf. Node Guide with setUP](infinity_node_guide_with_setup)
-- [Bootstrap](bootstrap)
 - **Tutorials & Guides**
+- [Bootstrap](bootstrap)
 - [Infinity Node tips](infinity_node_tips)
 - [MAC Wallet Backup & Upgrade](mac_wallet_backup_and_upgrade)
-- [Multiple Nodes on one VPS](multiple_nodes_on_one_vps)
+- [Infinity Node setup](infinity_node_setup_guide)
+- [Inf. Node Guide with setUP](infinity_node_guide_with_setup)
 - [SIN WebTool](sin_webtool_guide)
 - [SUQA Coins Conflict](suqa_conflict)
 - [Vps Wallet Update Guide](vps_wallet_update)
