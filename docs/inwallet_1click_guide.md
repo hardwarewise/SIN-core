@@ -44,7 +44,7 @@ Please follow the below guide in order to set up a testnet Deterministic Infinit
 
   
 
-![Image for post](assets/img/misc/in_wallet_setup_04.png)
+![Image for post](assets/img/misc/in_wallet_setup_05.png)
 
   
 
