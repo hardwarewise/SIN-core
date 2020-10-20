@@ -1,4 +1,4 @@
-## Windows QT Wallet Backup and Upgrade Guide
+# Windows QT Wallet Backup and Upgrade Guide
 
   
 
@@ -40,7 +40,7 @@ In case you need to resync your local wallet in Windows:
 ![](assets/img/misc/win_wallet_reindex.png)
 
 
-## MAC QT Wallet Backup and Upgrade Guide
+# MAC QT Wallet Backup and Upgrade Guide
 
   
 
@@ -77,7 +77,7 @@ Download the latest version of MAC Wallet at [https://github.com/SINOVATEblockch
 Replace the `sin-qt app` file in the compressed file you downloaded with the `sin-qt app` file you are currently using.
 
 
-## SINOVATE InfinityNode Update And Sync Guide
+# SINOVATE InfinityNode Update And Sync Guide
 
 ## If running Infinity Node, stop it.
 ``sudo systemctl stop sinovate.service``
@@ -107,4 +107,5 @@ Replace the `sin-qt app` file in the compressed file you downloaded with the `si
 ``./sin-cli -version``
 ## reboot infinitynode
 ``sudo reboot``
+
 
