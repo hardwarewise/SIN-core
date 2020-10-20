@@ -24,6 +24,8 @@
 #include <QPainter>
 #include <QRadialGradient>
 #include <QPainter>
+#include <QMovie>
+#include <QLabel>
 
 SplashScreen::SplashScreen(interfaces::Node& node, Qt::WindowFlags f, const NetworkStyle *networkStyle) :
     QWidget(0, f), curAlignment(0), m_node(node)
@@ -59,12 +61,22 @@ SplashScreen::SplashScreen(interfaces::Node& node, Qt::WindowFlags f, const Netw
     pixPaint.setPen(QColor("#ffffff"));
 
     QRect mainRect(QPoint(0,0), splashSize);
-    pixPaint.fillRect(mainRect, QColor("#f0f0f0"));
+    pixPaint.fillRect(mainRect, QColor("#194FA3"));
 
     // draw background
-    QRect rectBg(QPoint(0, 0), QSize(splashSize.width(), splashSize.height()));
-    QPixmap bg(":/images/splash");
-    pixPaint.drawPixmap(rectBg, bg);
+    //QRect rectBg(QPoint(0, 0), QSize(splashSize.width(), splashSize.height()));
+    //QPixmap bg("");
+    //pixPaint.drawPixmap(rectBg, bg);
+    QMovie *movie = new QMovie(":/images/splash-loading");
+    QLabel *labelMovie = new QLabel(this);
+    labelMovie->setContentsMargins(0,0,0,0);
+    labelMovie->setStyleSheet("background-color:#194FA3");
+    labelMovie->setSizePolicy(QSizePolicy::MinimumExpanding,
+                     QSizePolicy::MinimumExpanding);
+    labelMovie->setText("");
+    labelMovie->setMovie(movie);
+    labelMovie->setScaledContents(true);
+    movie->start();
 
 
     pixPaint.setFont(QFont(font, 28*fontFactor, QFont::Bold));

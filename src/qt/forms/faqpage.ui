@@ -25,7 +25,7 @@
     background-color:transparent;
     font-size:18px;
     padding:4px 6px;
-    color: #2E3191;
+    color: #011552;
     border:none;
 	text-align: left;
 
@@ -38,7 +38,7 @@ QPushButton:hover {
 
 QPushButton:checked {
 	 border:none;
-    background-color:#2E3191;
+    background-color:#011552;
     font-size:18px;
     padding:4px 6px;
     color: #ffffff;
@@ -58,7 +58,7 @@ font-size: 16px;
        <property name="styleSheet">
         <string notr="true">font-size:18px;
 font-weight: bold;
-color: #2E3191;</string>
+color: #011552;</string>
        </property>
        <property name="text">
         <string>Frequently Asked Questions</string>
@@ -470,9 +470,9 @@ border: 1px solid #2E3191;
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>0</y>
+                 <y>-4275</y>
                  <width>658</width>
-                 <height>5020</height>
+                 <height>5000</height>
                 </rect>
                </property>
                <property name="autoFillBackground">
@@ -533,7 +533,7 @@ border: 1px solid #2E3191;
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -627,7 +627,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -678,7 +678,7 @@ color: white;</string>
                      <item>
                       <widget class="QLabel" name="labelContent2">
                        <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Infinity Nodes are similar to traditional masternodes implemented by other cryptocurrency projects but have been designed differently for SINOVATE. They help to support the network by granting their holders additional bespoke features via a continuously connected GUI (graphical user interface) wallet. &lt;/p&gt;&lt;p&gt;Like simple nodes, a full copy of the main SIN blockchain is replicated by the Infinity Node holder, who is regularly rewarded daily with SIN coins as compensation for the services provided. &lt;/p&gt;&lt;p&gt;Therefore, it is an alternative means to acquire SIN coins besides the proof-of-work mining layer. &lt;/p&gt;&lt;p&gt;Multi-Tiered Infinity Nodes&lt;/p&gt;&lt;p&gt;There are three different tiers of Infinity Node available for users of the SINOVATE network. It is described as an evolution of previously implemented masternode technology by other blockchain projects. Each tier or layer provides different functions, but they all increase the overall decentralization and stability of the network. &lt;/p&gt;&lt;p&gt;Each tier requires different collateral in order to create the Infinity Node: &lt;/p&gt;&lt;p&gt;1. 100,000 SIN coins for Mini SIN&lt;/p&gt;&lt;p&gt;2. 500,000 SIN coins for Mid SIN &lt;/p&gt;&lt;p&gt;3. 1,000,000 SIN coins for Big SIN &lt;/p&gt;&lt;p&gt;For full transparency, SIN coins used to create Infinity Nodes are burnt and sent to the unspendable SIN wallet address below.&lt;/p&gt;&lt;p&gt;SinBurnAddress123456789SuqaXbx3AMC&lt;/p&gt;&lt;p&gt;For the Infinitynode installation guide, please visit &lt;a href=&quot;https://docs.sinovate.io/#/infinity_node_setup_guide&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://docs.sinovate.io/#/infinity_node_setup_guide&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Infinity Nodes are similar to traditional masternodes implemented by other cryptocurrency projects but have been designed differently for SINOVATE. They help to support the network by granting their holders additional bespoke features via a continuously connected GUI (graphical user interface) wallet. &lt;/p&gt;&lt;p&gt;Like simple nodes, a full copy of the main SIN blockchain is replicated by the Infinity Node holder, who is regularly rewarded daily with SIN coins as compensation for the services provided. &lt;/p&gt;&lt;p&gt;Therefore, it is an alternative means to acquire SIN coins besides the proof-of-work mining layer. &lt;/p&gt;&lt;p&gt;Multi-Tiered Infinity Nodes&lt;/p&gt;&lt;p&gt;There are three different tiers of Infinity Node available for users of the SINOVATE network. It is described as an evolution of previously implemented masternode technology by other blockchain projects. Each tier or layer provides different functions, but they all increase the overall decentralization and stability of the network. &lt;/p&gt;&lt;p&gt;Each tier requires different collateral in order to create the Infinity Node: &lt;/p&gt;&lt;p&gt;1. 100,000 SIN coins for Mini SIN&lt;/p&gt;&lt;p&gt;2. 500,000 SIN coins for Mid SIN &lt;/p&gt;&lt;p&gt;3. 1,000,000 SIN coins for Big SIN &lt;/p&gt;&lt;p&gt;For full transparency, SIN coins used to create Infinity Nodes are burnt and sent to the unspendable SIN wallet address below.&lt;/p&gt;&lt;p&gt;SinBurnAddress123456789SuqaXbx3AMC&lt;/p&gt;&lt;p&gt;For the installation guides, please visit &lt;a href=&quot;https://docs.sinovate.io/#/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://docs.sinovate.io/#/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                        <property name="alignment">
                         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -724,7 +724,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -818,7 +818,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -913,7 +913,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -961,7 +961,7 @@ color: white;</string>
                      <item>
                       <widget class="QLabel" name="labelContent5">
                        <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With EARN, you can lock your coins for the desired block height so you get an interest income.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With EARN, you can lock your coins for periods of 3, 6 or 12 months to generate interest income.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                        <property name="alignment">
                         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1007,7 +1007,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -1104,7 +1104,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -1198,7 +1198,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -1292,7 +1292,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -1386,7 +1386,7 @@ color: white;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#2E3191;
+                      <string notr="true">background-color:#011552;
 color: white;</string>
                      </property>
                      <property name="text">
@@ -1434,7 +1434,7 @@ color: white;</string>
                      <item>
                       <widget class="QLabel" name="labelContent10">
                        <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For more detailed information, you can visit the &lt;a href=&quot;https://sinovate.io&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;sinovate.io&lt;/span&gt;&lt;/a&gt; website. You can also check out our &lt;a href=&quot;https://sinovate.io/whitepaperv2light.pdf&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Whitepaper&lt;/span&gt;&lt;/a&gt; document.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For more detailed information, you can visit the &lt;a href=&quot;https://sinovate.io&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;sinovate.io&lt;/span&gt;&lt;/a&gt; website. You can also check out our &lt;a href=&quot;https://docs.sinovate.io/#/SINOVATE_Whitepaper_Light&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Whitepaper&lt;/span&gt;&lt;/a&gt; document.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                        <property name="alignment">
                         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

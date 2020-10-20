@@ -15,6 +15,7 @@ class CLockRewardCommitment;
 extern CInfinityNodeLockReward inflockreward;
 
 static const int MIN_INFINITYNODE_PAYMENT_PROTO_VERSION = 250003;
+static const int LIMIT_MEMORY = 10; //nblocks
 
 class CLockRewardRequest
 {
@@ -296,13 +297,16 @@ public:
     void AddMyPartialSignsMap(const CMusigPartialSignLR& ps);
     bool FindAndBuildMusigLockReward();
 
-    //register LockReward by send tx
-    bool AutoResigterLockReward(std::string sLR, std::string& strErrorRet);
+    //register LockReward by send tx if i am node of candidate
+    bool AutoResigterLockReward(std::string sLR, std::string& strErrorRet, const COutPoint& infCheck);
 
-    //Check CheckLockRewardRegisterInfo
-    bool CheckLockRewardRegisterInfo(std::string sLR, std::string& strErrorRet);
+    //Check CheckLockRewardRegisterInfo for candidate is OK or KO
+    bool CheckLockRewardRegisterInfo(std::string sLR, std::string& strErrorRet, const COutPoint& infCheck);
 
     //remove unused data to avoid memory issue
+    //call int init.cpp
+    void CheckAndRemove(CConnman& connman);
+    std::string GetMemorySize();
 
     //Connection
     void TryConnectToMySigners(int rewardHeight, CConnman& connman);
@@ -314,6 +318,10 @@ public:
     //call in dsnotificationinterface.cpp when node connect a new block
     void UpdatedBlockTip(const CBlockIndex *pindex, CConnman& connman);
 };
+// validation
+bool LockRewardValidation(const int nBlockHeight, const CTransactionRef txNew);
+// miner
+void FillBlock(CMutableTransaction& txNew, int nBlockHeight);
 
 class ECCMusigHandle
 {

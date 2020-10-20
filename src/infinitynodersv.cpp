@@ -49,10 +49,10 @@ bool CInfinitynodersv::Add(CVote &vote)
             //added
             if(v.getVoter() == vote.getVoter()){
                 if(v.getHeight() >= vote.getHeight()){
-                    LogPrint(BCLog::INFINITYRSV,"CInfinitynodersv::same voter from with low height %s\n", v.getVoter().ToString());
+                    LogPrint(BCLog::INFINITYRSV,"CInfinitynodersv::old vote by the same voter %s\n", v.getVoter().ToString());
                     return false;
                 }else{
-                    LogPrint(BCLog::INFINITYRSV,"CInfinitynodersv::new vote from higher height %s\n", vote.getVoter().ToString());
+                    LogPrint(BCLog::INFINITYRSV,"CInfinitynodersv::more recent vote %s\n", vote.getVoter().ToString());
                     mapProposalVotes[vote.getProposalId()].erase (mapProposalVotes[vote.getProposalId()].begin()+i);
                     mapProposalVotes[vote.getProposalId()].push_back(vote);
                     return true;
@@ -151,7 +151,7 @@ bool CInfinitynodersv::rsvScan(int nBlockHeight)
 
                                         CTransactionRef prevtx;
                                         uint256 hashblock;
-                                        if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false)) {
+                                        if(!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashblock, false, nullptr, false)) {
                                             LogPrint(BCLog::INFINITYRSV,"CInfinitynodersv::rsvScan -- PrevBurnFund tx is not in block.\n");
                                             return false;
                                         }

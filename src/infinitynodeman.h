@@ -6,7 +6,7 @@
 #define SIN_INFINITYNODEMAN_H
 
 #include <infinitynode.h>
-
+#include <infinitynodelockinfo.h>
 
 
 using namespace std;
@@ -21,15 +21,18 @@ class CInfinitynodeMan
 public:
     typedef std::pair<arith_uint256, CInfinitynode*> score_pair_t;
     typedef std::vector<score_pair_t> score_pair_vec_t;
-
-private:
-    static const std::string SERIALIZATION_VERSION_STRING;
+    typedef std::pair<CScript, std::string> lockreward_pair_t; //how send LR and signature string
+    typedef std::vector<lockreward_pair_t> lockreward_pair_vec_t;
 
     // critical section to protect the inner data structures
     mutable CCriticalSection cs;
+private:
+    static const std::string SERIALIZATION_VERSION_STRING;
+
     // Keep track of current block height and first download block
     int nCachedBlockHeight;
-    bool fMapInfinitynodeUpdated = false;
+    //
+    bool fReachedLastBlock = false;
 
     // map to hold all INFs
     std::map<COutPoint, CInfinitynode> mapInfinitynodes;
@@ -72,6 +75,7 @@ public:
         }
 
         READWRITE(mapInfinitynodes);
+        READWRITE(mapInfinitynodesNonMatured);
         READWRITE(mapLastPaid);
         READWRITE(nLastScanHeight);
         READWRITE(mapStatementBIG);
@@ -90,8 +94,6 @@ public:
     }
 
     std::string ToString() const;
-
-    bool getMapStatus(){LOCK(cs);  return fMapInfinitynodeUpdated;}
 
     bool Add(CInfinitynode &inf);
     bool AddUpdateLastPaid(CScript scriptPubKey, int nHeightLastPaid);
@@ -130,18 +132,31 @@ public:
         if(nSinType == 5) return nMIDLastStmSize;
         if(nSinType == 1) return nLILLastStmSize;
     }
+    int getCacheHeightInf(){LOCK(cs); return nCachedBlockHeight;};
+
+    void setSyncStatus(bool flag){LOCK(cs); fReachedLastBlock=flag;}
+    bool isReachedLastBlock(){LOCK(cs); return fReachedLastBlock;}
 
     std::map<CScript, int> GetFullLastPaidMap() { return mapLastPaid; }
     int64_t getLastScan(){return nLastScanHeight;}
     int64_t getLastScanWithLimit(){return nLastScanHeight/* + INF_MATURED_LIMIT*/;} // We'll need to move this to functions who actually use it and match it with our max reorg depth
+    //build DIN map by scan from nBlockHeight to nLowHeight
+    bool updateLastPaidList(int nBlockHeight, int nLowHeight = 0); /* init this to zero for better compat with regtest/testnet/devnets */
+    bool buildInfinitynodeListFromGenesis(int nBlockHeight);
 
+    //build DIN map immediate when connect block
+    bool buildNonMaturedListFromBlock(const CBlock& block, CBlockIndex* pindex,
+                  CCoinsViewCache& view, const CChainParams& chainparams); //call in validation.cpp
+    bool updateFinalList(CBlockIndex* pindex); // call when block is valid
+    bool removeNonMaturedList(CBlockIndex* pindex); //call when block is invalid or disconnect
 
-    bool buildInfinitynodeList(int nBlockHeight, int nLowHeight = 0); /* init this to zero for better compat with regtest/testnet/devnets */
-    bool buildInfinitynodeListRPC(int nBlockHeight, int nLowHeight = 0); /* exposes cs to RPC indirectly */
-    bool buildListForBlock(int nBlockHeight);
     void updateLastPaid();
     bool updateInfinitynodeList(int fromHeight);//call in init.cppp
     bool initialInfinitynodeList(int fromHeight);//call in init.cpp
+
+    //LR read back
+    bool ExtractLockReward(int nBlockHeight, int depth, std::vector<CLockRewardExtractInfo>& vecLRRet);
+    bool getLRForHeight(int height, std::vector<CLockRewardExtractInfo>& vecLockRewardRet);
 
     //this function build the map of STM from genesis
     bool deterministicRewardStatement(int nSinType);
@@ -152,9 +167,11 @@ public:
     std::string getLastStatementString() const;
     int getRoi(int nSinType, int totalNode);
 
-    int isPossibleForLockReward(std::string nodeOwner);
+    int isPossibleForLockReward(COutPoint burntx);
     bool getScoreVector(const uint256& nBlockHash, int nSinType, int nBlockHeight, CInfinitynodeMan::score_pair_vec_t& vecScoresRet);
     bool getNodeScoreAtHeight(const COutPoint& outpoint, int nSinType, int nBlockHeight, int& nRankRet);
+    bool getTopNodeScoreAtHeight(int nSinType, int nBlockHeight, int nTop, std::vector<CInfinitynode>& vecInfRet);
+
     std::string getVectorNodeRankAtHeight(const std::vector<COutPoint>  &vOutpoint, int nSinType, int nBlockHeight);
 
     //this function update lastStm and size from UpdatedBlockTip and map
@@ -163,5 +180,6 @@ public:
     /// This is dummy overload to be used for dumping/loading mncache.dat
     void CheckAndRemove() {}
     void UpdatedBlockTip(const CBlockIndex *pindex);
+    void UpdateChainActiveHeight(int number);
 };
 #endif // SIN_INFINITYNODEMAN_H

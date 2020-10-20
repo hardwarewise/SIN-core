@@ -153,12 +153,6 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     pricingTimer = new QTimer();
     networkManager = new QNetworkAccessManager();
     request = new QNetworkRequest();
-    pricingTimerBTC = new QTimer();
-    networkManagerBTC = new QNetworkAccessManager();
-    requestBTC = new QNetworkRequest();
-    versionTimer = new QTimer();
-    networkManagerVersion = new QNetworkAccessManager();
-    requestVersion = new QNetworkRequest();
     ui->setupUi(this);
 
     // ++ Explorer Stats
@@ -168,32 +162,6 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onResult(QNetworkReply*)));
     getStatistics();
     // --
-    
-               
-   // Set the Latest Version information
- // Network request code 
-        QObject::connect(networkManagerVersion, &QNetworkAccessManager::finished,
-                         this, [=](QNetworkReply *replyVersion) {  
-                         
-                    if (replyVersion->error()) {
-                        // to do
-                        //ui->labelLatestVersion->setText("");
-                        qDebug() << replyVersion->errorString();
-                        return;
-                    }
-                    // Get the data from the network request
-                    QString answerVersion = replyVersion->readAll();                                
-                    //to do 
-                    //ui->labelLatestVersion->setText("<a style=\"color:#000000;\" href=\"https://github.com/SINOVATEblockchain/SIN-core/releases\">"+ answerVersion +"</a>");
-                }
-                );
-   // End Latest Version information
-         
-         // Create the version timer
-        connect(versionTimer, SIGNAL(timeout()), this, SLOT(getVersionInfo()));
-        versionTimer->start(300000);
-        getVersionInfo();
-        /** version timer END */
 
     // Set the USD pricing information
        
@@ -250,69 +218,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                 }
         );
 
-        
-    
        
-
-// Set the BTC pricing information
-       
-
-        // Network request code for the header widget
-        QObject::connect(networkManagerBTC, &QNetworkAccessManager::finished,
-                         this, [=](QNetworkReply *replyBTC) {  
-                         
-                    if (replyBTC->error()) {
-                        ui->labelCurrentPriceBTC->setText("");
-                        qDebug() << replyBTC->errorString();
-                        return;
-                    }
-                    // Get the data from the network request
-                    QString answerBTC = replyBTC->readAll();
-
-                    // Create regex expression to find the value with 8 decimals
-                    QRegExp rx("\\d*.\\d\\d\\d\\d\\d\\d\\d\\d");
-                    rx.indexIn(answerBTC);
-
-                    // List the found values
-                    QStringList listBTC = rx.capturedTexts();
-
-                    QString currentPriceStyleSheet = ".QLabel{color: %1; font-size:18px;}";
-                    // Evaluate the current and next numbers and assign a color (green for positive, red for negative)
-                    bool ok;
-                    if (!listBTC.isEmpty()) {
-                        double next = listBTC.first().toDouble(&ok);
-                        if (!ok) {
-                            ui->labelCurrentPriceBTC->setStyleSheet(currentPriceStyleSheet.arg("#4960ad"));
-                            ui->labelCurrentPriceBTC->setText("");
-                        } else {
-                            double currentBTC = ui->labelCurrentPriceBTC->text().toDouble(&ok);
-                            if (!ok) {
-                                currentBTC = 0.00000000;
-                            } else {
-                                if (next < currentBTC)
-                                    ui->labelCurrentPriceBTC->setStyleSheet(currentPriceStyleSheet.arg("red"));
-                                else if (next > currentBTC)
-                                    ui->labelCurrentPriceBTC->setStyleSheet(currentPriceStyleSheet.arg("green"));
-                                else
-                                    ui->labelCurrentPriceBTC->setStyleSheet(currentPriceStyleSheet.arg("black"));
-                                    
-                            }
-                            ui->labelCurrentPriceBTC->setText(QString("%1").arg(QString().setNum(next, 'f', 8)));
-                        }
-                    }
-                }
-        );
-
-        
-    
-        // Create the timer
-        connect(pricingTimerBTC, SIGNAL(timeout()), this, SLOT(getPriceInfoBTC()));
-        pricingTimerBTC->start(300000);
-        getPriceInfoBTC();
-        /** pricing BTC END */
-
-
-
 
     m_balances.balance = -1;
 
@@ -539,24 +445,9 @@ void OverviewPage::SetupTransactionList(int nNumItems) {
 
 void OverviewPage::getPriceInfo()
 {
-        request->setUrl(QUrl("https://sinovate.io/priceUSD.php"));
+        request->setUrl(QUrl("https://stats.sinovate.io/priceUSD.php"));
     
     networkManager->get(*request);
-}
-
-void OverviewPage::getPriceInfoBTC()
-{
-        requestBTC->setUrl(QUrl("https://sinovate.io/priceBTC.php"));
-    
-    networkManagerBTC->get(*requestBTC);
-}
-
-
-void OverviewPage::getVersionInfo()
-{
-        requestVersion->setUrl(QUrl("https://sinovate.io/getLatestVersion.php"));
-    
-    networkManagerVersion->get(*requestVersion);
 }
 
 // ++ Explorer Stats
@@ -574,7 +465,9 @@ void OverviewPage::onResult(QNetworkReply* replystats)
         QJsonObject dataObject = jsonObject.value("data").toArray()[0].toObject();
 
         QLocale l = QLocale(QLocale::English);
-        
+
+        // Set LatestBTC strings
+        ui->labelCurrentPriceBTC->setText(QString::number(dataObject.value("lastPrice").toDouble(), 'f', 8));           
 
         // Set INFINITY NODE STATS strings
         int bigRoiDays = 1000000/((720/dataObject.value("inf_online_big").toDouble())*1752);

@@ -35,6 +35,8 @@
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 
+#define MAX_BYTES_TO_SELECT 99999
+
 QList<CAmount> CoinControlDialog::payAmounts;
 bool CoinControlDialog::fSubtractFeeFromAmount = false;
 
@@ -198,13 +200,24 @@ void CoinControlDialog::buttonSelectAllClicked()
             break;
         }
     }
+    int nBytes = 0;
     ui->treeWidget->setEnabled(false);
-    for (int i = 0; i < ui->treeWidget->topLevelItemCount(); i++)
-            if (ui->treeWidget->topLevelItem(i)->checkState(COLUMN_CHECKBOX) != state)
-                ui->treeWidget->topLevelItem(i)->setCheckState(COLUMN_CHECKBOX, state);
+    for (int i = 0; i < ui->treeWidget->topLevelItemCount(); i++) 
+    {
+        if (ui->treeWidget->topLevelItem(i)->checkState(COLUMN_CHECKBOX) != state) {
+            ui->treeWidget->topLevelItem(i)->setCheckState(COLUMN_CHECKBOX, state);
+            if (state == Qt::Checked) {
+                nBytes = nBytes + 148;
+            }
+        }
+        if (nBytes > MAX_BYTES_TO_SELECT) {
+            break;
+        }
+    }
     ui->treeWidget->setEnabled(true);
-    if (state == Qt::Unchecked)
+    if (state == Qt::Unchecked) {
         coinControl()->UnSelectAll(); // just to be sure
+    }
     CoinControlDialog::updateLabels(model, this);
 }
 
@@ -532,10 +545,6 @@ void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)
                 nBytesInputs += 148; // in all error cases, simply assume 148 here
         }
         else nBytesInputs += 148;
-
-        // Add inputs to calculate InstantSend Fee later
-        if(coinControl()->fUseInstantSend)
-            txDummy.vin.push_back(CTxIn());
     }
 
     // calculation
@@ -559,9 +568,6 @@ void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)
 
         // Fee
         nPayFee = model->wallet().getMinimumFee(nBytes, *coinControl(), nullptr /* returned_target */, nullptr /* reason */);
-
-        // InstantSend Fee
-        if (coinControl()->fUseInstantSend) nPayFee = std::max(nPayFee, CTxLockRequest(txDummy).GetMinFee());
 
         if (nPayAmount > 0)
         {

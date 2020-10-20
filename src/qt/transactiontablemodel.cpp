@@ -26,6 +26,10 @@
 #include <QDebug>
 #include <QIcon>
 #include <QList>
+#include <QtConcurrent/QtConcurrent>
+#include <QFuture>
+
+#define SINGLE_THREAD_MAX_TXES_SIZE 1000
 
 // Amount column is right-aligned it contains numbers
 static int column_alignments[] = {
@@ -77,13 +81,61 @@ public:
     {
         qDebug() << "TransactionTablePriv::refreshWallet";
         cachedWallet.clear();
-        {
-            for (const auto& wtx : wallet.getWalletTxs()) {
-                if (TransactionRecord::showTransaction()) {
-                    cachedWallet.append(TransactionRecord::decomposeTransaction(wtx));
-                }
+        
+        std::vector<interfaces::WalletTx> walletTxes = wallet.getWalletTxs();
+
+        int nRecordsToLoad = parent->walletModel->getOptionsModel()->getRecordsToLoad();
+
+        // Divide the work between multiple threads to speedup the process if the vector is larger than 1k txes
+        std::size_t txesSize = walletTxes.size();
+        if (txesSize > SINGLE_THREAD_MAX_TXES_SIZE) {
+
+            // First check if the amount of txs exceeds the UI limit
+            if (txesSize > nRecordsToLoad) {
+                // Only latest ones.
+                walletTxes = std::vector<interfaces::WalletTx>(walletTxes.end() - nRecordsToLoad, walletTxes.end());
+                txesSize = walletTxes.size();
+            };
+
+            // Simple way to get the processors count
+            std::size_t threadsCount = (QThreadPool::globalInstance()->maxThreadCount() / 2 ) + 1;
+
+            // Size of the tx subsets
+            std::size_t const subsetSize = txesSize / (threadsCount + 1);
+            std::size_t totalSumSize = 0;
+            QList<QFuture<QList<TransactionRecord>>> tasks;
+
+            // Subsets + run task
+            for (std::size_t i = 0; i < threadsCount; ++i) {
+                tasks.append(QtConcurrent::run(convertTxToRecords, this, std::vector<interfaces::WalletTx>(walletTxes.begin() + totalSumSize, walletTxes.begin() + totalSumSize + subsetSize)));
+                totalSumSize += subsetSize;
+            }
+
+            // Now take the remaining ones and do the work here
+            std::size_t const remainingSize = txesSize - totalSumSize;
+            auto res = convertTxToRecords(this, std::vector<interfaces::WalletTx>(walletTxes.end() - remainingSize, walletTxes.end()));
+            cachedWallet.append(res);
+
+            for (auto &future : tasks) {
+                future.waitForFinished();
+                cachedWallet.append(future.result());
+            }
+        } else {
+            // Single thread flow
+            cachedWallet.append(convertTxToRecords(this, walletTxes));
+        }
+    }
+
+    static QList<TransactionRecord> convertTxToRecords(TransactionTablePriv* tablePriv, const std::vector<interfaces::WalletTx>& walletTxes) {
+        QList<TransactionRecord> cachedWallet;
+
+        for (const auto& wtx : walletTxes) {
+            if (TransactionRecord::showTransaction()) {
+                cachedWallet.append(TransactionRecord::decomposeTransaction(wtx));
             }
         }
+
+        return cachedWallet;
     }
 
     /* Update our model of the wallet incrementally, to synchronize our model of the wallet

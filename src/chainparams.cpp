@@ -113,23 +113,23 @@ public:
         consensus.nLimitSINNODE_5=375;
         consensus.nLimitSINNODE_10=375;
         consensus.nInstantSendKeepLock = 24;
-        consensus.nInfinityNodeBeginHeight=160000;
-        consensus.nInfinityNodeGenesisStatement=250000;
+        consensus.nInfinityNodeBeginHeight=160000; //masternode code
+        consensus.nInfinityNodeGenesisStatement=250000; // begin point for new reward algo
         consensus.nInfinityNodeUpdateMeta=25;
         consensus.nInfinityNodeVoteValue=100;
         consensus.nInfinityNodeNotificationValue=1;
         consensus.nInfinityNodeCallLockRewardDeepth=50;
         consensus.nInfinityNodeCallLockRewardLoop=10; //in number of blocks
         consensus.nInfinityNodeLockRewardTop=16; //in number
-        consensus.nInfinityNodeLockRewardSigners=5; //in number
+        consensus.nInfinityNodeLockRewardSigners=4; //in number
         consensus.nInfinityNodeLockRewardSINType=10; //in number
+        consensus.nInfinityNodeExpireTime=262800;//720*365 days = 1 year
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         /*Previously used as simple constants in validation */
-        consensus.nINActivationHeight = 170000; // Activation of IN payments, should also be the same as nSinHeightMainnet in primitives/block.cpp
+        consensus.nINActivationHeight = 170000; // Activation of IN payments, should also be the same as nInfinityNodeBeginHeight in primitives/block.cpp
         consensus.nINEnforcementHeight = 178000; // Enforcement of IN payments
-
-        consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
+        consensus.nDINActivationHeight = 550000; // Activation of DIN 1.0 payments, and new dev fee address.
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440 * 5; // 1 common year
         consensus.nBudgetPaymentsCycleBlocks = 10958; // weekly
@@ -224,11 +224,20 @@ public:
 
         checkpointData = {
             {
-                { 0, consensus.hashGenesisBlock }
+                { 0     , uint256S("0x000032bd27c65ec42967b7854a49df222abdfae8d9350a61083af8eab2a25e03")},
+                { 100000, uint256S("0x00000000001e01fb192b33bc90a19fb4bd99bc4973ea2f766e4670ce5acb60bd")},
+                { 200000, uint256S("0x75f01eea029358a280b65b5d7e9ea3c4987a153cd1c702747ae88d811ada7c13")},
+                { 300000, uint256S("0xe0f5ecb094c6a26b3b57a259b9d4efa9903b8bae6f3194effd50c1c633c30e05")},
+                { 400000, uint256S("0x130bd010d1c8bc52637660938bfbea90f2ff6aadcb562d62ea838f2130d2dc83")},
+                { 500000, uint256S("0x9c642efedac61f56aabed01972cc5648def5a5a4c7373289f427895304d93d9a")},
             }
         };
 
         chainTxData = ChainTxData{
+            // Data from RPC: getchaintxstats 4096 7ba8d1850a54bdc3fa8863609ca44976217b59bf619f81c93d0a0c99622f1750
+            /* nTime    */ 1598428702,
+            /* nTxCount */ 1568986,
+            /* dTxRate  */ 0.017159050970158,
         };
 
         /* disable fallback fee on mainnet */
@@ -260,21 +269,21 @@ public:
         consensus.nLimitSINNODE_10=6;
         consensus.nInstantSendKeepLock = 24;
         consensus.nInfinityNodeBeginHeight=100;
-        consensus.nInfinityNodeGenesisStatement=110;
+        consensus.nInfinityNodeGenesisStatement=110;// begin point for new reward algo
         consensus.nInfinityNodeUpdateMeta=5;
         consensus.nInfinityNodeNotificationValue=1;
         consensus.nInfinityNodeCallLockRewardDeepth=12;
         consensus.nInfinityNodeCallLockRewardLoop=5; //next LR will be in 5 blocks
         consensus.nInfinityNodeLockRewardTop=20; //top 20 nodes will build Musig in number
-        consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
-        consensus.nInfinityNodeLockRewardSINType=1; //in number
+        consensus.nInfinityNodeLockRewardSigners=3; //number of signers paticiple Musig
+        consensus.nInfinityNodeLockRewardSINType=10; //in number
+        consensus.nInfinityNodeExpireTime=5040;
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         /*Previously used as simple constants in validation */
-        consensus.nINActivationHeight = 170000; // Activation of IN payment enforcement, should also be the same as nSinHeightMainnet in primitives/block.cpp
-        consensus.nINEnforcementHeight = 178000; // Enforcement of IN payments
-
-        consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
+        consensus.nINActivationHeight = 100; //  Activation of IN 0.1 payments, should also be the same as nInfinityNodeBeginHeight in primitives/block.cpp
+        consensus.nINEnforcementHeight = 120; // Enforcement of IN payments
+        consensus.nDINActivationHeight = 2880; // Activation of DIN 1.0 payments, and new dev fee address
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
         consensus.nBudgetPaymentsCycleBlocks = 10958; // weekly
@@ -343,8 +352,8 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
 
-        //vSeeds.emplace_back("206.189.57.75");
-        //vSeeds.emplace_back("165.22.81.15");
+        vSeeds.push_back("testnetseeder.suqa.org"); //Testnet SIN dns seeder
+        
         nDefaultPort = 20980;
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,63);
@@ -371,7 +380,7 @@ public:
 
         /* enable fallback fee on testnet */
         m_fallback_fee_enabled = true;
-        nMaxReorganizationDepth = 5; // 5 at 2 minute block timespan is +/- 10 minutes.
+        nMaxReorganizationDepth = 14; // 5 at 2 minute block timespan is +/- 10 minutes.
         nMinReorganizationPeers = 3;
 
         consensus.lwmaStartHeight = 150;
@@ -406,13 +415,13 @@ public:
         consensus.nInfinityNodeLockRewardTop=5; //in number
         consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
         consensus.nInfinityNodeLockRewardSINType=1; //in number
+        consensus.nInfinityNodeExpireTime=5040;
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
 
         /*Previously used as simple constants in validation */
         consensus.nINActivationHeight = 170000; // Activation of IN payment enforcement, should also be the same as nSinHeightMainnet in primitives/block.cpp
         consensus.nINEnforcementHeight = 178000; // Enforcement of IN payments
-        
-        consensus.nNewDevfeeAddress = 99999999; // Placeholder, need to choose a fork block.
+        consensus.nDINActivationHeight = 99999999; // Placeholder, need to choose a fork block.
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440; // 1 common year
         consensus.nBudgetPaymentsCycleBlocks = 10958; // weekly
@@ -535,6 +544,7 @@ public:
         consensus.nInfinityNodeLockRewardTop=5; //in number
         consensus.nInfinityNodeLockRewardSigners=2; //number of signers paticiple Musig
         consensus.nInfinityNodeLockRewardSINType=1; //in number
+        consensus.nInfinityNodeExpireTime=5040;
         consensus.nSchnorrActivationHeight = 1350000; // wait for active
         consensus.nMasternodeBurnSINNODE_1 = 100000;
         consensus.nMasternodeBurnSINNODE_5 = 500000;
@@ -544,8 +554,7 @@ public:
         /*Previously used as simple constants in validation */
         consensus.nINActivationHeight = 5000; // Activation of IN payment enforcement, should also be the same as nSinHeightMainnet in primitives/block.cpp
         consensus.nINEnforcementHeight = 5500; // Enforcement of IN payments
-        
-        consensus.nNewDevfeeAddress = 60000000; // Placeholder, need to choose a fork block.
+        consensus.nDINActivationHeight = 60000000; // Placeholder, need to choose a fork block.
 
         consensus.BIP16Exception = uint256();
         consensus.BIP34Height = 100000000;

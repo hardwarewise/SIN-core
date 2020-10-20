@@ -28,6 +28,7 @@ SendCoinsEntry::SendCoinsEntry(const PlatformStyle *_platformStyle, QWidget *par
     #else
         ui->locklength->setStyle(QStyleFactory::create("Windows"));
         ui->payAmount->setStyle(QStyleFactory::create("Windows"));
+        ui->lockperiod->setStyle(QStyleFactory::create("Windows"));
     #endif
 
     ui->addressBookButton->setIcon(platformStyle->SingleColorIcon(":/icons/address-book"));

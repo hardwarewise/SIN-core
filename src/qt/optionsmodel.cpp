@@ -28,6 +28,8 @@
 
 const char *DEFAULT_GUI_PROXY_HOST = "127.0.0.1";
 
+#define DEFAULT_RECORDS_TO_LOAD 20000
+
 static const QString GetDefaultProxyAddress();
 
 OptionsModel::OptionsModel(interfaces::Node& node, QObject *parent, bool resetSettings) :
@@ -56,6 +58,12 @@ void OptionsModel::Init(bool resetSettings)
 
     // These are Qt-only settings:
 
+    
+    //InfinityNode Tab Set default Enable
+     if (!settings.contains("fShowMasternodesTab"))
+        settings.setValue("fShowMasternodesTab", true);
+    
+    
     // Window
     if (!settings.contains("fHideTrayIcon"))
         settings.setValue("fHideTrayIcon", false);
@@ -75,14 +83,18 @@ void OptionsModel::Init(bool resetSettings)
         settings.setValue("nDisplayUnit", BitcoinUnits::SIN);
     nDisplayUnit = settings.value("nDisplayUnit").toInt();
 
+    if (!settings.contains("nRecordsToLoad"))
+        settings.setValue("nRecordsToLoad", DEFAULT_RECORDS_TO_LOAD);
+    nRecordsToLoad = settings.value("nRecordsToLoad").toInt();
+
     if (!settings.contains("strThirdPartyTxUrls"))
         settings.setValue("strThirdPartyTxUrls", "");
     strThirdPartyTxUrls = settings.value("strThirdPartyTxUrls", "").toString();
 
 #ifdef ENABLE_WALLET
     if (!settings.contains("fCoinControlFeatures"))
-        settings.setValue("fCoinControlFeatures", false);
-    fCoinControlFeatures = settings.value("fCoinControlFeatures", false).toBool();
+        settings.setValue("fCoinControlFeatures", true);
+    fCoinControlFeatures = settings.value("fCoinControlFeatures", true).toBool();
 
     // Dash
 
@@ -304,6 +316,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
 #endif
         case DisplayUnit:
             return nDisplayUnit;
+        case RecordsToLoad:
+            return nRecordsToLoad;
         case ThirdPartyTxUrls:
             return strThirdPartyTxUrls;
         case Language:
@@ -439,6 +453,12 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
         case Language:
             if (settings.value("language") != value) {
                 settings.setValue("language", value);
+                setRestartRequired(true);
+            }
+            break;
+        case RecordsToLoad:
+            if (settings.value("nRecordsToLoad") != value) {
+                settings.setValue("nRecordsToLoad", value);
                 setRestartRequired(true);
             }
             break;

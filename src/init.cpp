@@ -57,7 +57,7 @@
 #include <activemasternode.h>
 #include <dsnotificationinterface.h>
 #include <flat-database.h>
-#include <instantx.h>
+#include <wallet/wallet.h>
 #ifdef ENABLE_WALLET
 #include <keepass.h>
 #endif
@@ -276,6 +276,8 @@ void Shutdown()
     flatdb6.Dump(infnodersv);
     CFlatDB<CInfinitynodeMeta> flatdb7("infinitynodemeta.dat", "magicInfinityMeta");
     flatdb7.Dump(infnodemeta);
+    CFlatDB<CInfinitynodeLockInfo> flatdb8("infinitynodelockinfo.dat", "magicInfinityLockInfo");
+    flatdb8.Dump(infnodelrinfo);
     //
 
     if (fFeeEstimatesInitialized)
@@ -467,6 +469,7 @@ void SetupServerArgs()
     //SIN
     gArgs.AddArg("-infinitynode=<n>", strprintf("Enable the client to act as an infinitynode (0-1)"), false, OptionsCategory::OPTIONS);
     gArgs.AddArg("-infinitynodeprivkey=<n>","Set the infinitynode private key", false, OptionsCategory::OPTIONS);
+    gArgs.AddArg("-turnoffmasternode=<n>","Disable legacy masternode functionality", false, OptionsCategory::OPTIONS);
 
     gArgs.AddArg("-addnode=<ip>", "Add a node to connect to and attempt to keep the connection open (see the `addnode` RPC command help for more info). This option can be specified multiple times to add multiple nodes.", false, OptionsCategory::CONNECTION);
     gArgs.AddArg("-banscore=<n>", strprintf("Threshold for disconnecting misbehaving peers (default: %u)", DEFAULT_BANSCORE_THRESHOLD), false, OptionsCategory::CONNECTION);
@@ -1324,10 +1327,13 @@ void ThreadCheckInfinityNode(CConnman& connman)
             }
         }
         if(nTickDIN % (60 * 5) == 0) {
-            ENTER_CRITICAL_SECTION(cs_main);
+            if(infnodeman.isReachedLastBlock()){
+                ENTER_CRITICAL_SECTION(cs_main);
                 //call buildInfinitynodeList and deterministicRewardStatement(nSINtype)
                 infnodeman.CheckAndRemove(connman);
-            LEAVE_CRITICAL_SECTION(cs_main);
+                inflockreward.CheckAndRemove(connman);
+                LEAVE_CRITICAL_SECTION(cs_main);
+            }
         }
         if(!fTurnOffMasternode) {
             // try to sync from all available nodes, one step at a time
@@ -1345,7 +1351,6 @@ void ThreadCheckInfinityNode(CConnman& connman)
                     mnodeman.ProcessMasternodeConnections(connman);
                     mnodeman.CheckAndRemove(connman);
                     mnpayments.CheckAndRemove();
-                    instantsend.CheckAndRemove();
                 }
                 if(fMasterNode && (nTick % (60 * 5) == 0)) {
                     mnodeman.DoFullVerificationStep(connman);
@@ -1593,6 +1598,38 @@ bool AppInitMain()
     }
 
     // ********************************************************* Step 7: load block chain
+    //SIN: try load SIN cache memory before connectblock, because we need these informations for validation of block
+    boost::filesystem::path pathDB = GetDataDir();
+    std::string strDBName;
+
+    strDBName = "infinitynode.dat";
+    uiInterface.InitMessage(_("Loading on-chain infinitynode list..."));
+    CFlatDB<CInfinitynodeMan> flatdb5(strDBName, "magicInfinityNodeCache");
+    if(!flatdb5.Load(infnodeman)) {
+        return InitError(_("Failed to load infinitynode cache from") + "\n" + (pathDB / strDBName).string());
+    }
+
+    strDBName = "infinitynodersv.dat";
+    uiInterface.InitMessage(_("Loading infinitynode RSV..."));
+    CFlatDB<CInfinitynodersv> flatdb6(strDBName, "magicInfinityRSV");
+    if(!flatdb6.Load(infnodersv)) {
+        return InitError(_("Failed to load RSV vote cache from") + "\n" + (pathDB / strDBName).string());
+    }
+
+    strDBName = "infinitynodemeta.dat";
+    uiInterface.InitMessage(_("Loading infinitynode Meta..."));
+    CFlatDB<CInfinitynodeMeta> flatdb7(strDBName, "magicInfinityMeta");
+    if(!flatdb7.Load(infnodemeta)) {
+        return InitError(_("Failed to load Metatdata cache from") + "\n" + (pathDB / strDBName).string());
+    }
+
+    strDBName = "infinitynodelockinfo.dat";
+    uiInterface.InitMessage(_("Loading infinitynode LockReward info..."));
+    CFlatDB<CInfinitynodeLockInfo> flatdb8(strDBName, "magicInfinityLockInfo");
+    if(!flatdb8.Load(infnodelrinfo)) {
+        return InitError(_("Failed to load LockReward cache from") + "\n" + (pathDB / strDBName).string());
+    }
+    //END SIN
 
     fReindex = gArgs.GetBoolArg("-reindex", false);
     bool fReindexChainState = gArgs.GetBoolArg("-reindex-chainstate", false);
@@ -1796,6 +1833,17 @@ bool AppInitMain()
     fFeeEstimatesInitialized = true;
 
     // ********************************************************* Step 8: start indexers
+    //SIN
+    LogPrintf("InfinityNode last scan height: %d, Stm size for BIG node: %d, and active Height: %d\n", infnodeman.getLastScan(),
+                   infnodeman.getStatementMap(10).size(), chainActive.Height());
+    infnodeman.UpdateChainActiveHeight(chainActive.Height());
+    if(infnodeman.getLastScan() == 0 && chainActive.Height() > chainparams.GetConsensus().nInfinityNodeBeginHeight) {
+        LogPrintf("ERROR: InfinityNode is not loaded correctly\n");
+        return false;
+    }
+
+    //
+
     if (gArgs.GetBoolArg("-txindex", DEFAULT_TXINDEX)) {
         g_txindex = MakeUnique<TxIndex>(nTxIndexCache, false, fReindex);
         g_txindex->Start();
@@ -1872,8 +1920,9 @@ bool AppInitMain()
         std::string strInfinityNodePrivKey = gArgs.GetArg("-infinitynodeprivkey", "");
         if(!strInfinityNodePrivKey.empty()) {
             if(!CMessageSigner::GetKeysFromSecret(strInfinityNodePrivKey, infinitynodePeer.keyInfinitynode, infinitynodePeer.pubKeyInfinitynode))
-                return InitError(_("Invalid masternodeprivkey. Please see documentation."));
-            LogPrintf("  pubKeyInfinitynode: %s\n", infinitynodePeer.pubKeyInfinitynode.GetID().ToString());
+                return InitError(_("Invalid infinitynodeprivkey. Please see documentation."));
+            CTxDestination dest = GetDestinationForKey(infinitynodePeer.pubKeyInfinitynode, OutputType::LEGACY);
+            LogPrintf("PubKeyInfinitynode: %s, address: %s\n", infinitynodePeer.pubKeyInfinitynode.GetID().ToString(), EncodeDestination(dest));
             infinitynodePeer.ManageState(connman);
         } else {
             return InitError(_("You must specify a infinitynodeprivkey in the configuration. Please see documentation for help."));
@@ -1934,10 +1983,6 @@ bool AppInitMain()
     }
 #endif // ENABLE_WALLET
 
-    fEnableInstantSend = gArgs.GetBoolArg("-enableinstantsend", 1);
-    nInstantSendDepth = gArgs.GetArg("-instantsenddepth", DEFAULT_INSTANTSEND_DEPTH);
-    nInstantSendDepth = std::min(std::max(nInstantSendDepth, 0), 60);
-
     //lite mode disables all Masternode and Darksend related functionality
     fLiteMode = gArgs.GetBoolArg("-litemode", false);
     if(fMasterNode && fLiteMode){
@@ -1945,15 +1990,10 @@ bool AppInitMain()
     }
 
     LogPrintf("fLiteMode %d\n", fLiteMode);
-    LogPrintf("nInstantSendDepth %d\n", nInstantSendDepth);
 
     // ********************************************************* Step 11b: Load cache data
 
     // LOAD SERIALIZED DAT FILES INTO DATA CACHES FOR INTERNAL USE
-
-    boost::filesystem::path pathDB = GetDataDir();
-    std::string strDBName;
-
     strDBName = "mncache.dat";
     uiInterface.InitMessage(_("Loading masternode cache..."));
     CFlatDB<CMasternodeMan> flatdb1(strDBName, "magicMasternodeCache");
@@ -1977,44 +2017,6 @@ bool AppInitMain()
     CFlatDB<CNetFulfilledRequestManager> flatdb4(strDBName, "magicFulfilledCache");
     if(!flatdb4.Load(netfulfilledman)) {
         return InitError(_("Failed to load fulfilled requests cache from") + "\n" + (pathDB / strDBName).string());
-    }
-
-    strDBName = "infinitynode.dat";
-    uiInterface.InitMessage(_("Loading on-chain infinitynode list..."));
-    CFlatDB<CInfinitynodeMan> flatdb5(strDBName, "magicInfinityNodeCache");
-    if(!flatdb5.Load(infnodeman)) {
-        return InitError(_("Failed to load infinitynode cache from") + "\n" + (pathDB / strDBName).string());
-    }
-
-    strDBName = "infinitynodersv.dat";
-    uiInterface.InitMessage(_("Loading infinitynode RSV..."));
-    CFlatDB<CInfinitynodersv> flatdb6(strDBName, "magicInfinityRSV");
-    if(!flatdb6.Load(infnodersv)) {
-        return InitError(_("Failed to load RSV vote cache from") + "\n" + (pathDB / strDBName).string());
-    }
-
-    strDBName = "infinitynodemeta.dat";
-    uiInterface.InitMessage(_("Loading infinitynode Meta..."));
-    CFlatDB<CInfinitynodeMeta> flatdb7(strDBName, "magicInfinityMeta");
-    if(!flatdb7.Load(infnodemeta)) {
-        return InitError(_("Failed to load Metatdata cache from") + "\n" + (pathDB / strDBName).string());
-    }
-
-    LogPrintf("InfinityNode last scan height: %d and active Height: %d\n", infnodeman.getLastScan(), chainActive.Height());
-    if (infnodeman.getLastScan() == 0){
-        uiInterface.InitMessage(_("Initial on-chain infinitynode list..."));
-        // lock main here
-        LOCK(cs_main);
-        if ( chainActive.Height() < Params().GetConsensus().nInfinityNodeBeginHeight || infnodeman.initialInfinitynodeList(chainActive.Height()) == false){
-            LogPrintf("InfinityNode does not begin or error in initial list of node:\n");
-        }
-    } else {
-        uiInterface.InitMessage(_("Update on-chain infinitynode list..."));
-        // lock main here
-        LOCK(cs_main);
-        if ( chainActive.Height() < infnodeman.getLastScan() || infnodeman.updateInfinitynodeList(chainActive.Height()) == false){
-            LogPrintf("Lastscan is higher than chainActive or error in update list of node:\n");
-        }
     }
 
     // ********************************************************* Step 11b1: init and load data

@@ -19,6 +19,14 @@
   <property name="windowTitle">
    <string>Send Coins</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QFrame#frame {
+background-image: url(':/images/earnbg');
+background-repeat:none;
+background-position: right bottom;
+background-size: 500px 337px;
+}</string>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_4">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0">
@@ -181,7 +189,7 @@
              <string>Clear &amp;All</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../sin.qrc">
               <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
             </property>
             <property name="autoDefault">
@@ -198,7 +206,7 @@
              <string>Add &amp;Recipient</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../sin.qrc">
               <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
             </property>
             <property name="autoDefault">

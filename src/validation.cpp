@@ -45,9 +45,11 @@
 #include <validationinterface.h>
 #include <warnings.h>
 /*SIN*/
-#include <instantx.h>
 #include <masternodeman.h>
 #include <masternode-payments.h>
+#include <infinitynodelockreward.h>
+#include <infinitynodelockinfo.h>
+#include <infinitynodemeta.h>
 
 #include <future>
 #include <sstream>
@@ -645,22 +647,6 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         return state.Invalid(false, REJECT_DUPLICATE, "txn-already-in-mempool");
     }
 
-    // If this is a Transaction Lock Request check to see if it's valid
-    if(instantsend.HasTxLockRequest(hash) && !CTxLockRequest(tx).IsValid()) {
-        return state.DoS(10, false, REJECT_INVALID, "bad-txlockrequest");
-    }
-
-    /*SIN*/
-    // Check for conflicts with a completed Transaction Lock
-    for (const CTxIn &txin : tx.vin)
-    {
-        uint256 hashLocked;
-        if(instantsend.GetLockedOutPointTxHash(txin.prevout, hashLocked) && hash != hashLocked) {
-            return state.DoS(10, false, REJECT_INVALID, "tx-txlock-conflict");
-        }
-    }
-
-
     // Check for conflicts with in-memory transactions
     std::set<uint256> setConflicts;
     for (const CTxIn &txin : tx.vin)
@@ -671,15 +657,6 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
             const CTransaction *ptxConflicting = itConflicting->second;
             if (!setConflicts.count(ptxConflicting->GetHash()))
             {
-                /*SIN*/
-                // InstantSend txes are not replacable
-                if(instantsend.HasTxLockRequest(ptxConflicting->GetHash())) {
-                    // this tx conflicts with a Transaction Lock Request candidate
-                    return state.DoS(0, false, REJECT_INVALID, "tx-txlockreq-mempool-conflict");
-                } else if (instantsend.HasTxLockRequest(hash)) {
-                    // this tx is a tx lock request and it conflicts with a normal tx
-                    return state.DoS(0, false, REJECT_INVALID, "tx-txlockreq-mempool-conflict");
-                }
                 // Allow opt-out of transaction replacement by setting
                 // nSequence > MAX_BIP125_RBF_SEQUENCE (SEQUENCE_FINAL-2) on all inputs.
                 //
@@ -1085,17 +1062,21 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state, const CTransa
  * Return transaction in txOut, and if it was found inside a block, its hash is placed in hashBlock.
  * If blockIndex is provided, the transaction is fetched from the corresponding block.
  */
-bool GetTransaction(const uint256& hash, CTransactionRef& txOut, const Consensus::Params& consensusParams, uint256& hashBlock, bool fAllowSlow, CBlockIndex* blockIndex)
+bool GetTransaction(const uint256& hash, CTransactionRef& txOut, const Consensus::Params& consensusParams, uint256& hashBlock, bool fAllowSlow, CBlockIndex* blockIndex, bool fUseMempool)
 {
     CBlockIndex* pindexSlow = blockIndex;
 
     LOCK(cs_main);
 
     if (!blockIndex) {
-        CTransactionRef ptx = mempool.get(hash);
-        if (ptx) {
-            txOut = ptx;
-            return true;
+        
+        //default behaviour
+        if (fUseMempool) {
+            CTransactionRef ptx = mempool.get(hash);
+            if (ptx) {
+                txOut = ptx;
+                return true;
+            }
         }
 
         if (g_txindex) {
@@ -2241,28 +2222,43 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
                                REJECT_INVALID, "bad-cb-amount");
 
     // verify devfund addr and amount are correct
-    if (pindex->nHeight <= chainparams.GetConsensus().nNewDevfeeAddress) {
+    if (pindex->nHeight <= chainparams.GetConsensus().nDINActivationHeight) {
         if (block.vtx[0]->vout[1].scriptPubKey != devScript)
             return state.DoS(100, error("ConnectBlock(): coinbase does not pay to the old dev fund address."), REJECT_INVALID, "bad-cb-old-dev-fee");
     } else {
         if (block.vtx[0]->vout[1].scriptPubKey != devScript2)
             return state.DoS(100, error("ConnectBlock(): coinbase does not pay to the dev fund address."), REJECT_INVALID, "bad-cb-dev-fee");
     }
-	LogPrintf("Miner -- Dev fee paid: %d, Calcul dev fee %d\n", block.vtx[0]->vout[1].nValue, GetDevCoin(pindex->nHeight, blockReward));
+
+    LogPrintf("Miner -- Dev fee paid: %d, Calcul dev fee %d\n", block.vtx[0]->vout[1].nValue, GetDevCoin(pindex->nHeight, blockReward));
+
     if (block.vtx[0]->vout[1].nValue < GetDevCoin(pindex->nHeight, blockReward))
         return state.DoS(100, error("ConnectBlock(): coinbase does not pay enough to the dev fund address."), REJECT_INVALID, "bad-cb-dev-fee");
-    //Legacy IN payee validation
-    if (pindex->nHeight > chainparams.GetConsensus().nINActivationHeight)
-    {
-		if (!IsBlockPayeeValid(block.vtx[0], pindex->nHeight, block.vtx[0]->GetValueOut(), pindex->GetBlockHeader())) {
-			mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
-			LogPrintf("IsBlockPayeeValid -- disconnect block!\n");
-			if (pindex->nHeight >= chainparams.GetConsensus().nINEnforcementHeight) {
-				return state.DoS(0, error("ConnectBlock(SIN): couldn't find masternode or superblock payments"),
-					REJECT_INVALID, "bad-cb-payee");
-			}
-   		}
-	}
+
+    //Legacy SINOVATE validation
+    if (pindex->nHeight <= chainparams.GetConsensus().nINActivationHeight) {
+        //POW mode: do nothing
+        LogPrintf("Validation -- POW\n");
+    } else if (pindex->nHeight > chainparams.GetConsensus().nINActivationHeight && pindex->nHeight <= chainparams.GetConsensus().nDINActivationHeight) {
+        //Masternode mode: check payment
+        LogPrintf("Validation -- POW + Masternode\n");
+        if (!IsBlockPayeeValid(block.vtx[0], pindex->nHeight, block.vtx[0]->GetValueOut(), pindex->GetBlockHeader())) {
+            mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
+            LogPrintf("IsBlockPayeeValid -- disconnect block!\n");
+            if (pindex->nHeight >= chainparams.GetConsensus().nINEnforcementHeight) {
+                return state.DoS(100, error("ConnectBlock(SIN): couldn't find masternode or superblock payments"),
+                REJECT_INVALID, "bad-cb-payee");
+            }
+        }
+    } else {
+        //Infinitynode mode: validation LR
+        LogPrintf("Validation -- POW + Infinitynode\n");
+        if (!LockRewardValidation(pindex->nHeight, block.vtx[0])) {
+            mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
+            LogPrintf("LockRewardValidation -- disconnect block!\n");
+            return state.DoS(100, error("ConnectBlock(SIN): couldn't find valid LockReward"), REJECT_INVALID, "bad-lockreward");
+        }
+    }
 
     if (!control.Wait())
         return state.DoS(100, error("%s: CheckQueue failed", __func__), REJECT_INVALID, "block-validation-failed");
@@ -2522,6 +2518,15 @@ bool CChainState::DisconnectTip(CValidationState& state, const CChainParams& cha
         assert(view.GetBestBlock() == pindexDelete->GetBlockHash());
         if (DisconnectBlock(block, pindexDelete, view) != DISCONNECT_OK)
             return error("DisconnectTip(): DisconnectBlock %s failed", pindexDelete->GetBlockHash().ToString());
+        //SIN
+        std::vector<CLockRewardExtractInfo> vecLockRewardRet;
+        infnodelrinfo.ExtractLRFromBlock(block, pindexDelete, view, chainparams, vecLockRewardRet);
+        for (auto& v : vecLockRewardRet) {
+            infnodelrinfo.Remove(v);
+        }
+        infnodeman.removeNonMaturedList(pindexDelete);
+        infnodemeta.RemoveMetaFromBlock(block, pindexDelete, view, chainparams);
+        //
         bool flushed = view.Flush();
         assert(flushed);
     }
@@ -2650,9 +2655,23 @@ bool CChainState::ConnectTip(CValidationState& state, const CChainParams& chainp
     LogPrint(BCLog::BENCH, "  - Load block from disk: %.2fms [%.2fs]\n", (nTime2 - nTime1) * MILLI, nTimeReadFromDisk * MICRO);
     {
         CCoinsViewCache view(pcoinsTip.get());
+        //SIN
+        std::vector<CLockRewardExtractInfo> vecLockRewardRet;
+        infnodelrinfo.ExtractLRFromBlock(blockConnecting, pindexNew, view, chainparams, vecLockRewardRet);
+        infnodeman.buildNonMaturedListFromBlock(blockConnecting, pindexNew, view, chainparams);
+        //
         bool rv = ConnectBlock(blockConnecting, state, pindexNew, view, chainparams);
+        //SIN
+        if (rv) {
+            for (auto& v : vecLockRewardRet) {
+                infnodelrinfo.Add(v);
+            }
+            infnodeman.updateFinalList(pindexNew);
+        }
+        //
         GetMainSignals().BlockChecked(blockConnecting, state);
         if (!rv) {
+            infnodeman.removeNonMaturedList(pindexNew);
             if (state.IsInvalid())
                 InvalidBlockFound(pindexNew, state);
             return error("ConnectTip(): ConnectBlock %s failed", pindexNew->GetBlockHash().ToString());
@@ -2672,6 +2691,7 @@ bool CChainState::ConnectTip(CValidationState& state, const CChainParams& chainp
     // Remove conflicting transactions from the mempool.;
     mempool.removeForBlock(blockConnecting.vtx, pindexNew->nHeight);
     disconnectpool.removeForBlock(blockConnecting.vtx);
+
     // Update chainActive & related variables.
     chainActive.SetTip(pindexNew);
     UpdateTip(pindexNew, chainparams);
@@ -2679,7 +2699,6 @@ bool CChainState::ConnectTip(CValidationState& state, const CChainParams& chainp
     int64_t nTime6 = GetTimeMicros(); nTimePostConnect += nTime6 - nTime5; nTimeTotal += nTime6 - nTime1;
     LogPrint(BCLog::BENCH, "  - Connect postprocess: %.2fms [%.2fs (%.2fms/blk)]\n", (nTime6 - nTime5) * MILLI, nTimePostConnect * MICRO, nTimePostConnect * MILLI / nBlocksTotal);
     LogPrint(BCLog::BENCH, "- Connect block: %.2fms [%.2fs (%.2fms/blk)]\n", (nTime6 - nTime1) * MILLI, nTimeTotal * MICRO, nTimeTotal * MILLI / nBlocksTotal);
-
     connectTrace.BlockConnected(pindexNew, std::move(pthisBlock));
     return true;
 }
@@ -3398,34 +3417,6 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
     for (unsigned int i = 1; i < block.vtx.size(); i++)
         if (block.vtx[i]->IsCoinBase())
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-multiple", false, "more than one coinbase");
-    /*SIN*/
-    // DASH : CHECK TRANSACTIONS FOR INSTANTSEND
-
-    if(sporkManager.IsSporkActive(SPORK_3_INSTANTSEND_BLOCK_FILTERING)) {
-        // We should never accept block which conflicts with completed transaction lock,
-        // that's why this is in CheckBlock unlike coinbase payee/amount.
-        // Require other nodes to comply, send them some data in case they are missing it.
-        for(const auto& tx : block.vtx) {
-            // skip coinbase, it has no inputs
-            if (tx->IsCoinBase()) continue;
-            // LOOK FOR TRANSACTION LOCK IN OUR MAP OF OUTPOINTS
-            for (const auto& txin : tx->vin) {
-                uint256 hashLocked;
-                if(instantsend.GetLockedOutPointTxHash(txin.prevout, hashLocked) && hashLocked != tx->GetHash()) {
-                    // The node which relayed this will have to switch later,
-                    // relaying instantsend data won't help it.
-                    LOCK(cs_main);
-                    mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
-                    return state.DoS(100, false, REJECT_INVALID, "conflict-tx-lock", false,
-                                     strprintf("transaction %s conflicts with transaction lock %s", tx->GetHash().ToString(), hashLocked.ToString()));
-                }
-            }
-        }
-    } else {
-        LogPrintf("CheckBlock(DASH): spork is off, skipping transaction locking checks\n");
-    }
-
-    // END DASH
 
     // Check transactions
     for (const auto& tx : block.vtx)

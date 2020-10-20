@@ -37,7 +37,7 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
 {
     ui->setupUi(this);
 
-
+    
     #if defined(Q_OS_WIN)
 
     #else
@@ -49,6 +49,8 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     ui->databaseCache->setMinimum(nMinDbCache);
     ui->databaseCache->setMaximum(nMaxDbCache);
     ui->databaseCache->setSuffix(" MB");
+    ui->recordsToLoad->setMinimum(nMinRecordsToLoad);
+    ui->recordsToLoad->setMaximum(nMaxRecordsToLoad);
     static const uint64_t GiB = 1024 * 1024 * 1024;
     static const uint64_t nMinDiskSpace = MIN_DISK_SPACE_FOR_BLOCK_FILES / GiB +
                           (MIN_DISK_SPACE_FOR_BLOCK_FILES % GiB) ? 1 : 0;
@@ -182,6 +184,7 @@ void OptionsDialog::setModel(OptionsModel *_model)
     connect(ui->pruneSize, SIGNAL(valueChanged(int)), this, SLOT(showRestartWarning()));
     connect(ui->databaseCache, SIGNAL(valueChanged(int)), this, SLOT(showRestartWarning()));
     connect(ui->threadsScriptVerif, SIGNAL(valueChanged(int)), this, SLOT(showRestartWarning()));
+    connect(ui->recordsToLoad, SIGNAL(valueChanged(int)), this, SLOT(showRestartWarning()));
     /* Wallet */
     // Dash
     connect(ui->showMasternodesTab, SIGNAL(clicked(bool)), this, SLOT(showRestartWarning()));
@@ -203,6 +206,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->sinAtStartup, OptionsModel::StartAtStartup);
     mapper->addMapping(ui->threadsScriptVerif, OptionsModel::ThreadsScriptVerif);
     mapper->addMapping(ui->databaseCache, OptionsModel::DatabaseCache);
+    mapper->addMapping(ui->recordsToLoad, OptionsModel::RecordsToLoad);
     mapper->addMapping(ui->prune, OptionsModel::Prune);
     mapper->addMapping(ui->pruneSize, OptionsModel::PruneSize);
 
@@ -264,7 +268,7 @@ void OptionsDialog::on_resetButton_clicked()
     }
 }
 
-void OptionsDialog::on_openBitcoinConfButton_clicked()
+void OptionsDialog::on_openSINConfButton_clicked()
 {
     /* explain the purpose of the config file */
     QMessageBox::information(this, tr("Configuration options"),
@@ -272,7 +276,7 @@ void OptionsDialog::on_openBitcoinConfButton_clicked()
            "Additionally, any command-line options will override this configuration file."));
 
     /* show an error if there was some problem opening the file */
-    if (!GUIUtil::openBitcoinConf())
+    if (!GUIUtil::openSinConf())
         QMessageBox::critical(this, tr("Error"), tr("The configuration file could not be opened."));
 }
 

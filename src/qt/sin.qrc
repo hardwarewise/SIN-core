@@ -31,7 +31,7 @@
         <file alias="editcopy">res/icons/editcopy.svg</file>
         <file alias="add">res/icons/add.png</file>
         <file alias="add1">res/icons/add1.svg</file>
-        <file alias="edit">res/icons/edit.png</file>
+        <file alias="edit">res/icons/edit.svg</file>
         <file alias="edit1">res/icons/edit1.svg</file>
         <file alias="history">res/icons/history.png</file>
 		<file alias="history1">res/icons/history1.png</file>
@@ -45,19 +45,19 @@
         <file alias="tx_input">res/icons/tx_input.png</file>
         <file alias="tx_output">res/icons/tx_output.png</file>
         <file alias="tx_inout">res/icons/tx_inout.png</file>
-        <file alias="lock_closed">res/icons/lock_closed.png</file>
-        <file alias="lock_open">res/icons/lock_open.png</file>
+        <file alias="lock_closed">res/icons/lock_closed.svg</file>
+        <file alias="lock_open">res/icons/lock_open.svg</file>
         <file alias="lock_closed1">res/icons/lock_closed1.png</file>
         <file alias="lock_open1">res/icons/lock_open1.png</file>
         <file alias="key">res/icons/key.png</file>
-        <file alias="filesave">res/icons/filesave.png</file>
+        <file alias="filesave">res/icons/filesave.svg</file>
         <file alias="debugwindow">res/icons/debugwindow.svg</file>
-        <file alias="open">res/icons/open.png</file>
-        <file alias="info">res/icons/info.png</file>
-        <file alias="about_qt">res/icons/about_qt.png</file>
+        <file alias="open">res/icons/open.svg</file>
+        <file alias="info">res/icons/info.svg</file>
+        <file alias="about_qt">res/icons/about_qt.svg</file>
         <file alias="about">res/icons/about1.png</file>
         <file alias="about2">res/icons/about2.png</file>
-        <file alias="verify">res/icons/verify.png</file>
+        <file alias="verify">res/icons/verify.svg</file>
         <file alias="warning">res/icons/warning.png</file>
         <file alias="fontbigger">res/icons/fontbigger.png</file>
         <file alias="fontsmaller">res/icons/fontsmaller.png</file>
@@ -86,11 +86,11 @@
         <file alias="twitter1">res/icons/twitter1.png</file>
         <file alias="telegram1">res/icons/telegram1.png</file>
         <file alias="youtube1">res/icons/youtube1.png</file>
-        <file alias="explorer1">res/icons/explorer1.png</file>
+        <file alias="explorer1">res/icons/explorer1.svg</file>
         <file alias="catex">res/icons/catex.png</file>
         <file alias="chaoex">res/icons/chaoex.png</file>
         <file alias="citex">res/icons/citex.png</file>
-        <file alias="cmc">res/icons/cmc.png</file>
+        <file alias="cmc">res/icons/cmc.svg</file>
         <file alias="coinsbit">res/icons/coinsbit.png</file>
         <file alias="crex24">res/icons/crex24.png</file>
         <file alias="stex">res/icons/stex.png</file>
@@ -101,9 +101,20 @@
         <file alias="instaswap1">res/icons/instaswap1.png</file>
         <file alias="stats">res/icons/stats.png</file>
         <file alias="faq">res/icons/faq.svg</file>
+        <file alias="setupOk">res/icons/ok.svg</file>
+        <file alias="setupKo">res/icons/ko.svg</file>
+        <file alias="setupWait">res/icons/waitgif.gif</file>
         <file alias="theme-white">res/icons/theme-white.svg</file>
         <file alias="theme-light">res/icons/theme-light.svg</file>
-
+        <file alias="exit">res/icons/exit.svg</file>
+        <file alias="password">res/icons/password.svg</file>
+        <file alias="minilogo">res/icons/minilogo.svg</file>
+        <file alias="midlogo">res/icons/midlogo.svg</file>
+        <file alias="biglogo">res/icons/biglogo.svg</file>
+        <file alias="setup">res/icons/setup.svg</file>
+        <file alias="setup_top">res/icons/setup_top.svg</file>
+        <file alias="setup_res">res/icons/setup_res.svg</file>
+        <file alias="setup_con">res/icons/setup_con.svg</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>
@@ -149,6 +160,7 @@
 	 </qresource>
 	 <qresource prefix="/images">
 	 <file alias="sinbg">res/images/sinbg.png</file>
+     <file alias="earnbg">res/images/earnbg.png</file>
 	 <file alias="splash">res/images/splash.png</file>
 	 <file alias="drkblue_walletFrame_bg">res/images/drkblue_walletFrame_bg.png</file>
 	 <file alias="sinovate_logo_horizontal">res/images/sinovate_logo_horizontal.png</file>
@@ -163,16 +175,19 @@
      <file alias="about">res/images/about.png</file>
      <file alias="radio_unchecked">res/images/unchecked_radio.png</file>
      <file alias="radio_checked">res/images/checked_radio.png</file>
+     <file alias="radio_unchecked1">res/images/unchecked_radio1.png</file>
+     <file alias="radio_checked1">res/images/checked_radio1.png</file>
      <file alias="nav-logo-sin">res/images/nav-logo-sin.png</file>
      <file alias="indeterminate">res/images/indeterminate.png</file>
      <file alias="close">res/images/close.png</file>
-     <file alias="stats-nodes-header">res/images/stats-nodes-header.svg</file>
-     <file alias="stats-burncoins-header">res/images/stats-burncoins-header.svg</file>
-     <file alias="stats-address-header">res/images/stats-address-header.svg</file>
-     <file alias="stats-network-header">res/images/stats-network-header.svg</file>
-     <file alias="stats-top-header">res/images/stats-top-header.svg</file>
-
-     </qresource>
+     <file alias="stats-nodes-header">res/images/stats-nodes-header.png</file>
+     <file alias="stats-burncoins-header">res/images/stats-burncoins-header.png</file>
+     <file alias="stats-address-header">res/images/stats-address-header.png</file>
+     <file alias="stats-network-header">res/images/stats-network-header.png</file>
+     <file alias="stats-top-header">res/images/stats-top-header.png</file>
+     <file alias="setuplogo">res/images/setuplogo.svg</file>
+     <file alias="splash-loading">res/images/splash-loading.gif</file>
+</qresource>
      
    <qresource prefix="/fonts">
        <file alias="Hind-Bold">res/fonts/Hind-Bold.ttf</file>
@@ -181,6 +196,6 @@
        <file alias="Hind-Regular">res/fonts/Hind-Regular.ttf</file>
        <file alias="Hind-SemiBold">res/fonts/Hind-SemiBold.ttf</file>
        <file alias="Montserrat-Bold">res/fonts/Montserrat-Bold.ttf</file>
-       
-   </qresource>
+    
+    </qresource>
 </RCC>

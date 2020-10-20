@@ -14,8 +14,34 @@ using namespace std;
 
 class CInfinitynodeMeta;
 class CMetadata;
+class CMetahisto;
 
 extern CInfinitynodeMeta infnodemeta;
+
+class CMetahisto
+{
+public:
+    int nHeightHisto{0};
+    std::string pubkeyHisto="";
+    CService serviceHisto{};
+
+    CMetahisto() = default;
+
+    CMetahisto(int Height, std::string pubkey, CService cService):
+    nHeightHisto(Height),
+    pubkeyHisto(pubkey),
+    serviceHisto(cService){}
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(nHeightHisto);
+        READWRITE(pubkeyHisto);
+        READWRITE(serviceHisto);
+    }
+
+};
 
 class CMetadata
 {
@@ -25,21 +51,28 @@ private:
     CService metadataService;
     int nMetadataHeight;
     int activeBackupAddress;
+    std::vector<CMetahisto> vHisto;
+
 public:
     CMetadata() :
         metaID(),
         metadataPublicKey(),
         metadataService(),
         nMetadataHeight(0),
-        activeBackupAddress(0)
+        activeBackupAddress(0),
+        vHisto()
         {}
 
-    CMetadata(std::string metaIDIn, std::string sPublicKey, CService cService, int& nHeight, int& nActive) :
+    CMetadata(std::string metaIDIn, std::string sPublicKey, CService cService, int nHeight, int nActive) :
         metaID(metaIDIn),
         metadataPublicKey(sPublicKey),
         metadataService(cService),
         nMetadataHeight(nHeight),
-        activeBackupAddress(nActive){}
+        activeBackupAddress(nActive)
+    {
+        CMetahisto histo(nHeight, sPublicKey, cService);
+        vHisto.push_back(histo);
+    }
 
     ADD_SERIALIZE_METHODS;
 
@@ -50,6 +83,7 @@ public:
         READWRITE(metadataService);
         READWRITE(nMetadataHeight);
         READWRITE(activeBackupAddress);
+        READWRITE(vHisto);
     }
 
     std::string getMetaPublicKey(){return metadataPublicKey;}
@@ -57,8 +91,16 @@ public:
     int getMetadataHeight(){return nMetadataHeight;}
     int getFlagActiveBackupAddress(){return activeBackupAddress;}
     std::string getMetaID(){return metaID;}
+    std::vector<CMetahisto> getHistory(){return vHisto;}
+    int getHistoSize(){return (int)vHisto.size();}
 
-    void setBackupAddress(int& nActive){activeBackupAddress = nActive;};
+    void setMetadataHeight(int inHeight){nMetadataHeight = inHeight;};
+    void setMetaPublicKey(std::string inKey){metadataPublicKey = inKey;};
+    void setService(CService inService){metadataService = inService;};
+    void setBackupAddress(int nActive){activeBackupAddress = nActive;};
+    void addHisto(CMetahisto inHisTo){vHisto.push_back(inHisTo);}
+    void removeHisto(CMetahisto inHisTo);
+    CMetahisto getLastHisto();
 };
 
 class CInfinitynodeMeta
@@ -92,10 +134,13 @@ public:
 
     void Clear();
     bool Add(CMetadata &meta);
+    bool Remove(CMetadata &meta);
     bool Has(std::string  metaID);
     CMetadata Find(std::string  metaID);
     bool Get(std::string  nodePublicKey, CMetadata& meta);
     std::map<std::string, CMetadata> GetFullNodeMetadata() { LOCK(cs); return mapNodeMetadata; }
+
+    bool RemoveMetaFromBlock(const CBlock& block, CBlockIndex* pindex, CCoinsViewCache& view, const CChainParams& chainparams);
 
     bool metaScan(int nHeight);
     bool setActiveBKAddress(std::string  metaID);

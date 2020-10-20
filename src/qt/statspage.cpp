@@ -60,7 +60,7 @@ void StatsPage::onResult(QNetworkReply* reply)
         QString hashrateString = knownHashrateString + "/" + dataObject.value("hashrate").toVariant().toString();
         m_ui->hashrateValueLabel->setText(hashrateString);
         m_ui->difficultyValueLabel->setText(dataObject.value("difficulty").toVariant().toString());
-        m_ui->lastPriceValueLabel->setText(QString::number(dataObject.value("lastPrice").toDouble(), 'f', 8));
+        m_ui->lastPriceValueLabel->setText(QString::number(dataObject.value("lastPrice").toDouble(), 'f', 8) + QString(" BTC"));
         m_ui->heightValueLabel->setText(heightValue);
 
           
@@ -69,8 +69,8 @@ void StatsPage::onResult(QNetworkReply* reply)
         int top50 = dataObject.value("explorerTop50").toDouble();
         m_ui->addressesValueLabel->setText(dataObject.value("explorerAddresses").toVariant().toString());
         m_ui->activeValueLabel->setText(dataObject.value("explorerActiveAddresses").toVariant().toString());
-        m_ui->top10ValueLabel->setText(l.toString(top10));
-        m_ui->top50ValueLabel->setText(l.toString(top50));
+        m_ui->top10ValueLabel->setText(l.toString(top10) + " SIN");
+        m_ui->top50ValueLabel->setText(l.toString(top50) + " SIN");
 
         // Set BURNT COIN STATS strings
         int supplyNumber = dataObject.value("supply").toDouble() - dataObject.value("burnFee").toDouble();

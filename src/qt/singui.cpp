@@ -172,6 +172,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
 
     QWidget *topBar = new QWidget;
     topThemeButton = new QPushButton();
+    QPushButton *topSetupButton = new QPushButton();
     QPushButton *topConsoleButton = new QPushButton();
     QPushButton *topOptionButton = new QPushButton();
     QPushButton *topAddressButton = new QPushButton();
@@ -181,6 +182,9 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     QHBoxLayout *topBarLayout = new QHBoxLayout;
 
     topBarLayout->addWidget(topThemeButton);
+    if (settings.value("fShowMasternodesTab").toBool()) { 
+    topBarLayout->addWidget(topSetupButton);
+    }
     topBarLayout->addWidget(topConsoleButton);
     topBarLayout->addWidget(topOptionButton);
     topBarLayout->addWidget(topAddressButton);
@@ -205,36 +209,42 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     this->setStyleSheet(styleSheet);
 
     topThemeButton->setIconSize(QSize(24, 24));
-    topThemeButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
+    topThemeButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
 
-
+    topSetupButton->setIcon(QIcon(":/icons/setup_top"));
+    topSetupButton->setIconSize(QSize(58, 24));
+    topSetupButton->setToolTip( "Open SetUP Wizard"  );
+    topSetupButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent; } QPushButton:hover {border: 1px solid  #00FFFF; } ");
+    
+    
     topConsoleButton->setIcon(QIcon(":/icons/debugwindow"));
     topConsoleButton->setIconSize(QSize(20, 20));
     topConsoleButton->setToolTip( "Open Console"  );
-    topConsoleButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
+    topConsoleButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
 
 
 
     topOptionButton->setIcon(QIcon(":/icons/options"));
     topOptionButton->setIconSize(QSize(20, 20));
     topOptionButton->setToolTip( "Open Options Window"  );
-    topOptionButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
+    topOptionButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
 
     topAddressButton->setIcon(QIcon(":/icons/address-book"));
     topAddressButton->setIconSize(QSize(20, 20));
     topAddressButton->setToolTip( "Open Receiving Addresses"  );
-    topAddressButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
+    topAddressButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
 
     topFaqButton->setIcon(QIcon(":/icons/faq"));
     topFaqButton->setIconSize(QSize(20, 20));
     topFaqButton->setToolTip( "Open FAQ Window"  );
-    topFaqButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent}");
+    topFaqButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
 
     topBar->setLayout(topBarLayout);
     appMenuBar->setCornerWidget(topBar, Qt::TopRightCorner);
 
 
     connect(topThemeButton, SIGNAL (released()), this, SLOT (onThemeClicked()));
+    connect(topSetupButton, SIGNAL(released()), this, SLOT(gotoSetupTab()));
     connect(topConsoleButton, SIGNAL (released()), this, SLOT (showDebugWindowActivateConsole()));
     connect(topOptionButton, SIGNAL(released()), this, SLOT(optionsClicked()));
     connect(topAddressButton, SIGNAL(released()), walletFrame, SLOT(usedReceivingAddresses()));
@@ -282,18 +292,18 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
 #endif // QT_NO_TOOLTIP
     website->setText(QApplication::translate("OverviewPage", "<a href=\"https://sinovate.io\"><img src=\":/icons/website\" width=\"19\" height=\"19\"></a>", nullptr));
 
-            QLabel* instaswap = new QLabel();
-    instaswap->setObjectName(QStringLiteral("instaswap"));
-    instaswap->setMinimumSize(QSize(32, 32));
-    instaswap->setMaximumSize(QSize(32, 32));
-    instaswap->setBaseSize(QSize(0, 0));
-    instaswap->setCursor(QCursor(Qt::PointingHandCursor));
-    instaswap->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-    instaswap->setOpenExternalLinks(true);
-#ifndef QT_NO_TOOLTIP
-    instaswap->setToolTip(QApplication::translate("OverviewPage", "Exchange your SIN rapidly", nullptr));
-#endif // QT_NO_TOOLTIP
-    instaswap->setText(QApplication::translate("OverviewPage", "<a href=\"https://instaswap.io/\"><img src=\":/icons/instaswap1\" width=\"32\" height=\"32\"></a>", nullptr));
+            //QLabel* instaswap = new QLabel();
+    //instaswap->setObjectName(QStringLiteral("instaswap"));
+    //instaswap->setMinimumSize(QSize(32, 32));
+    //instaswap->setMaximumSize(QSize(32, 32));
+    //instaswap->setBaseSize(QSize(0, 0));
+    //instaswap->setCursor(QCursor(Qt::PointingHandCursor));
+    //instaswap->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+    //instaswap->setOpenExternalLinks(true);
+//#ifndef QT_NO_TOOLTIP
+    //instaswap->setToolTip(QApplication::translate("OverviewPage", "Exchange your SIN rapidly", nullptr));
+//#endif // QT_NO_TOOLTIP
+    //instaswap->setText(QApplication::translate("OverviewPage", "<a href=\"https://instaswap.io/\"><img src=\":/icons/instaswap1\" width=\"32\" height=\"32\"></a>", nullptr));
 
             QLabel* twitter = new QLabel();
     twitter->setObjectName(QStringLiteral("twitter"));
@@ -338,7 +348,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     frameSocialLayout->addWidget(discord);
     frameSocialLayout->addWidget(twitter);
     frameSocialLayout->addWidget(github);
-    frameSocialLayout->addWidget(instaswap);
+    //frameSocialLayout->addWidget(instaswap);
     frameSocialLayout->addWidget(explorer);
 
 
@@ -425,7 +435,6 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     connect(ResourcesWebsite5, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot5()));
     connect(ResourcesWebsite6, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot6()));
     connect(ResourcesWebsite7, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot7()));
-    connect(ResourcesWebsite8, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot8()));
     connect(ResourcesWebsite9, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot9()));
     connect(ResourcesWebsite10, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot10()));
 
@@ -605,30 +614,30 @@ void SINGUI::createActions()
 
 #endif // ENABLE_WALLET
 
-    quitAction = new QAction(platformStyle->TextColorIcon(":/icons/quit"), tr("E&xit"), this);
+    quitAction = new QAction(platformStyle->SingleColorIcon(":/icons/exit"), tr("E&xit"), this);
     quitAction->setStatusTip(tr("Quit application"));
     quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
     quitAction->setMenuRole(QAction::QuitRole);
-    aboutAction = new QAction(platformStyle->TextColorIcon(":/icons/about2"), tr("&About %1").arg(tr("SINOVATE")), this);
+    aboutAction = new QAction(platformStyle->SingleColorIcon(":/icons/sin"), tr("&About %1").arg(tr("SINOVATE")), this);
     aboutAction->setStatusTip(tr("Show information about %1").arg(tr("SINOVATE")));
     aboutAction->setMenuRole(QAction::AboutRole);
     aboutAction->setEnabled(false);
-    aboutQtAction = new QAction(platformStyle->TextColorIcon(":/icons/about_qt"), tr("About &Qt"), this);
+    aboutQtAction = new QAction(platformStyle->SingleColorIcon(":/icons/about_qt"), tr("About &Qt"), this);
     aboutQtAction->setStatusTip(tr("Show information about Qt"));
     aboutQtAction->setMenuRole(QAction::AboutQtRole);
-    optionsAction = new QAction(platformStyle->TextColorIcon(":/icons/options"), tr("&Options..."), this);
+    optionsAction = new QAction(platformStyle->SingleColorIcon(":/icons/options"), tr("&Options..."), this);
     optionsAction->setStatusTip(tr("Modify configuration options for %1").arg(tr("SINOVATE")));
     optionsAction->setMenuRole(QAction::PreferencesRole);
     optionsAction->setEnabled(false);
-    toggleHideAction = new QAction(platformStyle->TextColorIcon(":/icons/about2"), tr("&Show / Hide"), this);
+    toggleHideAction = new QAction(platformStyle->SingleColorIcon(":/icons/about2"), tr("&Show / Hide"), this);
     toggleHideAction->setStatusTip(tr("Show or hide the main Window"));
 
-    encryptWalletAction = new QAction(platformStyle->TextColorIcon(":/icons/lock_closed"), tr("&Encrypt Wallet..."), this);
+    encryptWalletAction = new QAction(platformStyle->SingleColorIcon(":/icons/lock_closed"), tr("&Encrypt Wallet..."), this);
     encryptWalletAction->setStatusTip(tr("Encrypt the private keys that belong to your wallet"));
     encryptWalletAction->setCheckable(true);
-    backupWalletAction = new QAction(platformStyle->TextColorIcon(":/icons/filesave"), tr("&Backup Wallet..."), this);
+    backupWalletAction = new QAction(platformStyle->SingleColorIcon(":/icons/filesave"), tr("&Backup Wallet..."), this);
     backupWalletAction->setStatusTip(tr("Backup wallet to another location"));
-    changePassphraseAction = new QAction(platformStyle->TextColorIcon(":/icons/key"), tr("&Change Passphrase..."), this);
+    changePassphraseAction = new QAction(platformStyle->SingleColorIcon(":/icons/password"), tr("&Change Passphrase..."), this);
     changePassphraseAction->setStatusTip(tr("Change the passphrase used for wallet encryption"));
 
     // Dash
@@ -638,9 +647,9 @@ void SINGUI::createActions()
     //-//lockWalletAction = new QAction(tr("&Lock Wallet"), this);
     //
 
-    signMessageAction = new QAction(platformStyle->TextColorIcon(":/icons/edit"), tr("Sign &message..."), this);
+    signMessageAction = new QAction(platformStyle->SingleColorIcon(":/icons/edit"), tr("Sign &message..."), this);
     signMessageAction->setStatusTip(tr("Sign messages with your SIN addresses to prove you own them"));
-    verifyMessageAction = new QAction(platformStyle->TextColorIcon(":/icons/verify"), tr("&Verify message..."), this);
+    verifyMessageAction = new QAction(platformStyle->SingleColorIcon(":/icons/verify"), tr("&Verify message..."), this);
     verifyMessageAction->setStatusTip(tr("Verify messages to ensure they were signed with specified SIN addresses"));
 
     // Dash
@@ -654,9 +663,9 @@ void SINGUI::createActions()
     //-//openPeersAction->setStatusTip(tr("Show peers info"));
     //-//openRepairAction = new QAction(QIcon(":/icons/" + theme + "/options"), tr("Wallet &Repair"), this);
     //-//openRepairAction->setStatusTip(tr("Show wallet repair options"));
-    //-//openConfEditorAction = new QAction(QIcon(":/icons/" + theme + "/edit"), tr("Open Wallet &Configuration File"), this);
-    //-//openConfEditorAction->setStatusTip(tr("Open configuration file"));
-    openMNConfEditorAction = new QAction(platformStyle->TextColorIcon(":/icons/edit"), tr("Open &Infinitynode Configuration File"), this);
+    openConfEditorAction = new QAction(QIcon(":/icons/edit"), tr("Open Wallet &Configuration File (sin.conf)"), this);
+    openConfEditorAction->setStatusTip(tr("Open configuration file (sin.conf)"));
+    openMNConfEditorAction = new QAction(platformStyle->SingleColorIcon(":/icons/edit"), tr("Open &Infinitynode Configuration File"), this);
     openMNConfEditorAction->setStatusTip(tr("Open InfinityNode configuration file"));
     //-//showBackupsAction = new QAction(QIcon(":/icons/" + theme + "/browse"), tr("Show Automatic &Backups"), this);
     //-//showBackupsAction->setStatusTip(tr("Show automatically created wallet backups"));
@@ -669,26 +678,24 @@ void SINGUI::createActions()
 
     //
 
-    openRPCConsoleAction = new QAction(platformStyle->TextColorIcon(":/icons/debugwindow"), tr("&Debug window (Console)"), this);
+    openRPCConsoleAction = new QAction(platformStyle->SingleColorIcon(":/icons/debugwindow"), tr("&Debug window (Console)"), this);
     openRPCConsoleAction->setStatusTip(tr("Open debugging and diagnostic console"));
     // initially disable the debug window menu item
     openRPCConsoleAction->setEnabled(false);
 
-    usedSendingAddressesAction = new QAction(platformStyle->TextColorIcon(":/icons/address-book"), tr("&Sending addresses..."), this);
+    usedSendingAddressesAction = new QAction(platformStyle->SingleColorIcon(":/icons/address-book"), tr("&Sending addresses..."), this);
     usedSendingAddressesAction->setStatusTip(tr("Show the list of used sending addresses and labels"));
-    usedReceivingAddressesAction = new QAction(platformStyle->TextColorIcon(":/icons/address-book"), tr("&Receiving addresses..."), this);
+    usedReceivingAddressesAction = new QAction(platformStyle->SingleColorIcon(":/icons/address-book"), tr("&Receiving addresses..."), this);
     usedReceivingAddressesAction->setStatusTip(tr("Show the list of used receiving addresses and labels"));
 
-    openAction = new QAction(platformStyle->TextColorIcon(":/icons/open"), tr("Open &URI..."), this);
+    openAction = new QAction(platformStyle->SingleColorIcon(":/icons/open"), tr("Open &URI..."), this);
     openAction->setStatusTip(tr("Open a sin: URI or payment request"));
 
-    showHelpMessageAction = new QAction(platformStyle->TextColorIcon(":/icons/info"), tr("&Command-line options"), this);
+    showHelpMessageAction = new QAction(platformStyle->SingleColorIcon(":/icons/info"), tr("&Command-line options"), this);
     showHelpMessageAction->setMenuRole(QAction::NoRole);
     showHelpMessageAction->setStatusTip(tr("Show the %1 help message to get a list with possible SIN command-line options").arg(tr("SINOVATE")));
 
-    showSpecsHelpAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation), tr("&Specifications"), this);
-    showSpecsHelpAction->setMenuRole(QAction::NoRole);
-    showSpecsHelpAction->setStatusTip(tr("Show the Specifications"));
+    
 
         // Dash
 
@@ -707,7 +714,7 @@ void SINGUI::createActions()
     //-//connect(openRepairAction, SIGNAL(triggered()), this, SLOT(showRepair()));
 
     // Open configs and backup folder from menu
-    //-//connect(openConfEditorAction, SIGNAL(triggered()), this, SLOT(showConfEditor()));
+    connect(openConfEditorAction, SIGNAL(triggered()), this, SLOT(showConfEditor()));
     connect(openMNConfEditorAction, SIGNAL(triggered()), this, SLOT(showMNConfEditor()));
     //-//connect(showBackupsAction, SIGNAL(triggered()), this, SLOT(showBackups()));
 
@@ -722,8 +729,7 @@ void SINGUI::createActions()
     connect(toggleHideAction, SIGNAL(triggered()), this, SLOT(toggleHidden()));
     connect(showHelpMessageAction, SIGNAL(triggered()), this, SLOT(showHelpMessageClicked()));
     connect(openRPCConsoleAction, SIGNAL(triggered()), this, SLOT(showDebugWindowActivateConsole()));
-    connect(showSpecsHelpAction, SIGNAL(triggered()), this, SLOT(showSpecsHelpClicked()));
-
+    
     // prevents an open debug window from becoming stuck/unusable on client shutdown
     connect(quitAction, SIGNAL(triggered()), rpcConsole, SLOT(hide()));
 
@@ -736,7 +742,6 @@ void SINGUI::createActions()
     ResourcesWebsite5 = new QAction(QIcon(":/icons/info"), tr("&Wallets"), this);
     ResourcesWebsite6 = new QAction(QIcon(":/icons/explorer1"), tr("&Explorer"), this);
     ResourcesWebsite7 = new QAction(QIcon(":/icons/info"), tr("&SIN WebTool"), this);
-    ResourcesWebsite8 = new QAction(QIcon(":/icons/info"), tr("&Infinitynode Setup Guide"), this);
     ResourcesWebsite9 = new QAction(QIcon(":/icons/cmc"), tr("&Exchanges"), this);
     ResourcesWebsite10 = new QAction(QIcon(":/icons/info"), tr("&Social Media Channels"), this);
 
@@ -828,7 +833,7 @@ void SINGUI::createMenuBar()
         //-//tools->addAction(openPeersAction);
         //-//tools->addAction(openRepairAction);
         //-//tools->addSeparator();
-        //-//tools->addAction(openConfEditorAction);
+        tools->addAction(openConfEditorAction);
         tools->addAction(openMNConfEditorAction);
         //-//tools->addAction(showBackupsAction);
     }
@@ -846,9 +851,7 @@ void SINGUI::createMenuBar()
         hyperlinks3->addAction(ResourcesWebsite5);
         hyperlinks3->addAction(ResourcesWebsite6);
         hyperlinks3->addAction(ResourcesWebsite7);
-        hyperlinks3->addAction(ResourcesWebsite8);
-        hyperlinks3->addAction(showSpecsHelpAction);
-
+                
     }
     //end Resources Links
 
@@ -890,8 +893,16 @@ void SINGUI::createToolBars()
     	mainIcon->setAlignment(Qt::AlignCenter);
     	mainIcon->show();
     	mainIcon->setStyleSheet("QLabel { margin-top: 10px; margin-bottom: 10px; }");
-    	toolbar->addWidget(mainIcon);
+    	
 
+        mainBrand = new QLabel (this);
+    	mainBrand->setText("SINOVATE");
+    	mainBrand->setAlignment(Qt::AlignCenter);
+    	mainBrand->show();
+    	mainBrand->setStyleSheet("QLabel { color:#FFFFFF; font-size:16px; font-weight:bold;}");
+    	
+        toolbar->addWidget(mainBrand);
+        toolbar->addWidget(mainIcon);
 
         toolbar->addAction(overviewAction);
         toolbar->addAction(sendCoinsAction);
@@ -940,9 +951,16 @@ void SINGUI::createToolBars()
 		empty->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 		toolbar->addWidget(empty);
 
+        QLabel* labelVersionName = new QLabel();
+        labelVersionName->setText("D.I.N.");
+        labelVersionName->setStyleSheet("margin-top: 10px; color: #00FFFF ; font-size: 16px; font-weight : bold;");
+        labelVersionName->setAlignment(Qt::AlignCenter);
+        toolbar->addWidget(labelVersionName);
+
+
 		 QLabel* labelVersion = new QLabel();
-        labelVersion->setText(QString(tr("v%1\n")).arg(QString::fromStdString(FormatVersionFriendly())));
-        labelVersion->setStyleSheet("color: white ; margin-top: 10px; margin-bottom: 2px; font-weight : bold;");
+        labelVersion->setText(QString(tr("AURORA\nv%1\n")).arg(QString::fromStdString(FormatVersionFriendly())));
+        labelVersion->setStyleSheet("color: white ; margin-bottom: 2px; font-weight : bold;");
         labelVersion->setAlignment(Qt::AlignCenter);
         toolbar->addWidget(labelVersion);
 
@@ -1148,7 +1166,6 @@ void SINGUI::createTrayIconMenu()
     trayIconMenu->addAction(ResourcesWebsite5);
     trayIconMenu->addAction(ResourcesWebsite6);
     trayIconMenu->addAction(ResourcesWebsite7);
-    trayIconMenu->addAction(ResourcesWebsite8);
     trayIconMenu->addAction(statsPageAction);
     trayIconMenu->addAction(faqPageAction);
 
@@ -1192,7 +1209,7 @@ void SINGUI::createTrayIconMenu()
     //-//trayIconMenu->addAction(openPeersAction);
     //-//trayIconMenu->addAction(openRepairAction);
     //-//trayIconMenu->addSeparator();
-    //-//trayIconMenu->addAction(openConfEditorAction);
+    trayIconMenu->addAction(openConfEditorAction);
     trayIconMenu->addAction(openMNConfEditorAction);
     //-//trayIconMenu->addAction(showBackupsAction);
     //
@@ -1281,20 +1298,18 @@ void SINGUI::showMNConfEditor()
 }
 //
 
+// open conf file
+void SINGUI::showConfEditor()
+{
+    GUIUtil::openSinConf();
+}
+//
+
 void SINGUI::showHelpMessageClicked()
 {
     helpMessageDialog->show();
 }
 
-void SINGUI::showSpecsHelpClicked()
-{
-    if(!clientModel)
-        return;
-
-    HelpMessageDialog dlg(m_node, this, HelpMessageDialog::pshelp);
-    dlg.exec();
-
-}
 
 #ifdef ENABLE_WALLET
 void SINGUI::openClicked()
@@ -1380,8 +1395,16 @@ void SINGUI::gotoSignMessageTab(QString addr)
 
 void SINGUI::gotoVerifyMessageTab(QString addr)
 {
-    if (walletFrame) walletFrame->gotoVerifyMessageTab(addr);
+    if (walletFrame) walletFrame->gotoVerifyMessageTab();
 }
+
+void SINGUI::gotoSetupTab()
+{
+    if (walletFrame) walletFrame->gotoSetupTab();
+    masternodeAction->setChecked(true);
+    
+}
+
 #endif // ENABLE_WALLET
 
 void SINGUI::updateNetworkState()

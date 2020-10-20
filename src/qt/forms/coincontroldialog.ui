@@ -56,7 +56,7 @@ background-color : #FFFFFF;
 }
 
 #treeWidget {
-    border:1px solid #2E3191;
+    border:1px solid #011552;
     background-color:#FFFFFF;
     background-position:center;
     background-repeat:no-repeat;
@@ -171,16 +171,16 @@ background-color : #FFFFFF;
 }
 
 QHeaderView::section {
-    background-color: #2E3191;
+    background-color: #011552;
     color: #FFFFFF;
     padding-top: 6px;
     padding-bottom: 6px;
     font-size:14px;
-    border:0px solid #2E3191;
+    border:0px solid #011552;
 }
 
 QRadioButton:checked {
-    color: #2E3191;
+    color: #011552;
     font-size:14px;
 }
 
@@ -211,12 +211,12 @@ QRadioButton::indicator:unchecked {
 
 
 .QLabel  #labelCoinControlAfterFeeText, #labelCoinControlAmountText, #labelCoinControlBytesText, #labelCoinControlChangeText, #labelCoinControlLowOutputText, #labelCoinControlFeeText, #labelCoinControlQuantityText {
- color:#2E3191;
+ color:#011552;
   font-size:17px;
 }
 
 .QLabel  #labelCoinControlAfterFee, #labelCoinControlAmount, #labelCoinControlBytes, #labelCoinControlChange, #labelCoinControlLowOutput, #labelCoinControlFee, labelCoinControlQuantity { 
-color:#2E3191;
+color:#011552;
     font-size:17px;
 }
 
@@ -277,7 +277,7 @@ color:#2E3191;
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">color:#2E3191;
+           <string notr="true">color:#011552;
 font-size:22px;
 padding-left:30px;</string>
           </property>
@@ -339,7 +339,7 @@ padding-left:30px;</string>
           <property name="styleSheet">
            <string notr="true">#layoutAmount {
 background-color:#FFFFFF;
-border:  1px solid #2E3191;
+border:  1px solid #011552;
 border-radius:2px;
 }</string>
           </property>
@@ -382,7 +382,7 @@ border-radius:2px;
           <property name="styleSheet">
            <string notr="true">#layoutQuantity {
 background-color:#FFFFFF;
-border:  1px solid #2E3191;
+border:  1px solid #011552;
 border-radius:2px;
 }</string>
           </property>
@@ -397,7 +397,7 @@ border-radius:2px;
            <item>
             <widget class="QLabel" name="labelCoinControlQuantity">
              <property name="styleSheet">
-              <string notr="true">color:#2E3191;
+              <string notr="true">color:#011552;
     font-size:17px;</string>
              </property>
              <property name="text">
@@ -429,7 +429,7 @@ border-radius:2px;
           <property name="styleSheet">
            <string notr="true">#layoutFee {
 background-color:#FFFFFF;
-border:  1px solid #2E3191;
+border:  1px solid #011552;
 border-radius:2px;
 }</string>
           </property>
@@ -514,12 +514,12 @@ border-radius:2px;
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">border:  1px solid #2E3191;
+              <string notr="true">border:  1px solid #011552;
 height: 20px;    
 background-color:#FFFFFF;
     padding:4px;
     font-size:16px;
-    color: 2E3191;
+    color: 011552;
     border-radius: 2px;</string>
              </property>
              <property name="text">
@@ -576,12 +576,12 @@ background-color:#FFFFFF;
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">border:  1px solid #2E3191;
+              <string notr="true">border:  1px solid #011552;
 height: 20px;    
 background-color:#FFFFFF;
     padding:4px;
     font-size:16px;
-    color: 2E3191;
+    color: 011552;
     border-radius: 2px;</string>
              </property>
              <property name="text">
@@ -661,7 +661,7 @@ background-color:#FFFFFF;
            <item>
             <widget class="QLabel" name="labelLocked">
              <property name="styleSheet">
-              <string notr="true">color:#2E3191;
+              <string notr="true">color:#011552;
     font-size:17px;</string>
              </property>
              <property name="text">
@@ -765,7 +765,7 @@ background-color:#FFFFFF;
           <property name="styleSheet">
            <string notr="true">#layoutBytes {
 background-color:#FFFFFF;
-border:  1px solid #2E3191;
+border:  1px solid #011552;
 border-radius:2px;
 }</string>
           </property>
@@ -792,7 +792,7 @@ border-radius:2px;
           <property name="styleSheet">
            <string notr="true">#layoutDust {
 background-color:#FFFFFF;
-border:  1px solid #2E3191;
+border:  1px solid #011552;
 border-radius:2px;
 }</string>
           </property>
@@ -819,7 +819,7 @@ border-radius:2px;
           <property name="styleSheet">
            <string notr="true">#layoutChange {
 background-color:#FFFFFF;
-border:  1px solid #2E3191;
+border:  1px solid #011552;
 border-radius:2px;
 }</string>
           </property>
@@ -846,7 +846,7 @@ border-radius:2px;
           <property name="styleSheet">
            <string notr="true">#layoutAfter {
 background-color:#FFFFFF;
-border:  1px solid #2E3191;
+border:  1px solid #011552;
 border-radius:2px;
 }</string>
           </property>
@@ -854,7 +854,7 @@ border-radius:2px;
            <item>
             <widget class="QLabel" name="labelCoinControlAfterFeeText">
              <property name="styleSheet">
-              <string notr="true">color:#2E3191;
+              <string notr="true">color:#011552;
     font-size:17px;</string>
              </property>
              <property name="text">
@@ -865,7 +865,7 @@ border-radius:2px;
            <item>
             <widget class="QLabel" name="labelCoinControlAfterFee">
              <property name="styleSheet">
-              <string notr="true">color:#2E3191;
+              <string notr="true">color:#011552;
 font-size:17px;</string>
              </property>
              <property name="text">
@@ -904,8 +904,8 @@ font-size:17px;</string>
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">border:  1px solid #2E3191;
-    background-color:#2E3191;
+           <string notr="true">border:  1px solid #011552;
+    background-color:#011552;
     font-size:18px;
     padding:4px 10px;
     color: #FFFFFF;

@@ -150,6 +150,7 @@ private:
     // Dash
     QAction *openMNConfEditorAction = nullptr;
     //
+    QAction *openConfEditorAction = nullptr;
     QAction* openAction = nullptr;
     QAction* showHelpMessageAction = nullptr;
     QAction* m_wallet_selector_label_action = nullptr;
@@ -164,15 +165,14 @@ private:
     QAction* ResourcesWebsite5;
     QAction* ResourcesWebsite6;
     QAction* ResourcesWebsite7;
-    QAction* ResourcesWebsite8;
     QAction* ResourcesWebsite9;
     QAction* ResourcesWebsite10;
 /// end Resources Web Links
 
 
-    QAction *showSpecsHelpAction;
-
+    
     QLabel *mainIcon;
+    QLabel *mainBrand;
     
     QLabel *m_wallet_selector_label = nullptr;
     QComboBox* m_wallet_selector = nullptr;
@@ -288,6 +288,11 @@ private Q_SLOTS:
     void gotoMasternodePage();
     //
 
+    // setUP
+    /** Switch to setUP Tab */
+    void gotoSetupTab();
+    //
+
     // Instaswap
     /** Switch to instaswap page */
     void gotoInstaswapPage();
@@ -342,14 +347,15 @@ private Q_SLOTS:
     //-//void showConfEditor();
     /** Open external (default) editor with masternode.conf */
     void showMNConfEditor();
+    /** Open external (default) editor with sin.conf */
+    void showConfEditor();
     /** Show folder with wallet backups in default file browser */
     //-//void showBackups();
     //
 
     /** Show help message dialog */
     void showHelpMessageClicked();
-    void showSpecsHelpClicked();
-#ifndef Q_OS_MAC
+    #ifndef Q_OS_MAC
     /** Handle tray icon clicked */
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
 #else

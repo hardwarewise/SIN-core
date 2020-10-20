@@ -50,9 +50,7 @@ public:
 public Q_SLOTS:
     void setBalance(const interfaces::WalletBalances& balances);
     void getPriceInfo();
-    void getPriceInfoBTC();
-    void getVersionInfo();
-
+        
 Q_SIGNALS:
     void transactionClicked(const QModelIndex &index);
     void outOfSyncWarningClicked();
@@ -65,14 +63,8 @@ private:
     QNetworkAccessManager* m_networkManager;
     interfaces::WalletBalances m_balances;
     QTimer *pricingTimer;
-    QTimer *pricingTimerBTC;
-    QTimer *versionTimer;
     QNetworkAccessManager* networkManager;
-    QNetworkAccessManager* networkManagerBTC;
-    QNetworkAccessManager* networkManagerVersion;
     QNetworkRequest* request;
-    QNetworkRequest* requestBTC;
-    QNetworkRequest* requestVersion;
     qint64 totalBalance;
     int nDisplayUnit;    
 

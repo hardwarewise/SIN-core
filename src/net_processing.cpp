@@ -1372,25 +1372,6 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& chainparams, CConnm
              // All node INV
              {
                 bool pushed = false;
-                //priority for InstantSend
-                {
-                    CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-                    {
-                        LOCK(cs_mapRelayDash);
-                        LogPrint(BCLog::NET, "ProcessGetData --InstantSend mapRelayDash: %s \n", mapRelayDash.size());
-                        map<CInv, CDataStream>::iterator mi = mapRelayDash.find(inv);
-                        if (mi != mapRelayDash.end()) {
-                            ss += (*mi).second;
-                            pushed = true;
-                            if ((*mi).first.type == MSG_TXLOCK_REQUEST){
-                                LogPrint(BCLog::NET, "CConnman::InstantSend -- PushInventory node: peer=%d addr=%s nRefCount=%d fNetworkNode=%d fInbound=%d fMasternode=%d\n",                                                                                    
-                    pfrom->GetId(), pfrom->addr.ToString(), pfrom->GetRefCount(), pfrom->fNetworkNode, pfrom->fInbound, pfrom->fMasternode);
-                            }
-                        }
-                    }
-                    if(pushed)
-                        connman->PushMessage(pfrom, msgMaker.Make(inv.GetCommand(), ss));
-                }
                 // SIN
                 if (!pushed && inv.type == MSG_LOCKREWARD_INIT) {
                     CLockRewardRequest lockRewardRequest;
@@ -1432,7 +1413,7 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& chainparams, CConnm
                         pushed = true;
                     }
                 }
-                //
+               //
                 if (!pushed && inv.type == MSG_TXLOCK_REQUEST) {
                     CTxLockRequest txLockRequest;
                     if(instantsend.GetTxLockRequest(inv.hash, txLockRequest)) {
@@ -2485,7 +2466,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
         pfrom->setAskFor.erase(inv.hash);
         mapAlreadyAskedFor.erase(inv.hash);
-
         // Dash
         // Process custom logic, no matter if tx will be accepted to mempool later or not
         if (strCommand == NetMsgType::TXLOCKREQUEST || (fTryAutoLock)) {
@@ -2498,7 +2478,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             }
         }
         //
-
         std::list<CTransactionRef> lRemovedTxn;
 
         if (!AlreadyHave(inv) &&
@@ -3250,7 +3229,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             if(!fTurnOffMasternode) {
                 mnodeman.ProcessMessage(pfrom, strCommand, vRecv, *connman);
                 mnpayments.ProcessMessage(pfrom, strCommand, vRecv, *connman);
-                instantsend.ProcessMessage(pfrom, strCommand, vRecv, *connman);
                 sporkManager.ProcessSpork(pfrom, strCommand, vRecv, *connman);
                 masternodeSync.ProcessMessage(pfrom, strCommand, vRecv);
             }
