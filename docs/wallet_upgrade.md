@@ -1,6 +1,5 @@
-# Windows QT Wallet Backup and Upgrade Guide
 
-  
+# Windows QT Wallet Backup and Upgrade Guide
 
 * First of all, don't forget to back up your current data.
 
@@ -29,7 +28,7 @@ Download the latest version of Windows Wallet at [https://github.com/SINOVATEblo
 Replace the `sin-qt.exe` file in the compressed file you downloaded with the `sin-qt.exe` file you are currently using.
 
 
-## Resync Windows wallet
+**Resync Windows wallet**
 In case you need to resync your local wallet in Windows:
 * Close wallet;
 * Create a shortcut;
@@ -79,33 +78,33 @@ Replace the `sin-qt app` file in the compressed file you downloaded with the `si
 
 # SINOVATE InfinityNode Update And Sync Guide
 
-## If running Infinity Node, stop it.
+**If running Infinity Node, stop it.**
 ``sudo systemctl stop sinovate.service``
 
-## install unzip package
+**install unzip package**
 ``sudo apt update && sudo apt install unzip``
 
-## remove old files and folders (Write this entire code on one line.)
+**remove old files and folders (Write this entire code on one line.)**
 ``rm -rf ~/.sin/{blocks,chainstate,debug.log,mnpayments.dat,mncache.dat,banlist.dat,peers.dat,netfulfilled.dat,governance.dat,fee_estimates.dat}``
 
-## download latest bootstrap archive
+**download latest bootstrap archive**
 ``wget -O ~/bootstrap.zip https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstrap.zip``
 
-## unzip the bootstrap archive
+**unzip the bootstrap archive**
 ``unzip ~/bootstrap.zip``
 
-## move bootstrap files
+**move bootstrap files**
 ``mv -t ~/.sin ~/bootstrap/blocks ~/bootstrap/chainstate``
 
-## remove unnecessary files
+**remove unnecessary files**
 ``rm -rf ~/{bootstrap,bootstrap.zip}``
 
-## Update Latest Wallet
+**Update Latest Wallet**
 ``wget -O daemon.tar.gz https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/daemon.tar.gz``
 ``tar -xzvf daemon.tar.gz``
-## Check Version
+**Check Version**
 ``./sin-cli -version``
-## reboot infinitynode
+**reboot infinitynode**
 ``sudo reboot``
 
 
