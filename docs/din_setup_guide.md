@@ -34,9 +34,9 @@ Some VPS providers may ask you to change your temporary password immediately.
   
 
 Enter the following command to download the installation script. Please enter the code as a single line.
-
+```bash
 wget -q https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/sin_install_vps_noroot.sh
-
+```
   
   
 
@@ -51,9 +51,9 @@ wget -q https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/
 Enter the code below for authorization after the script is downloaded.
 
   
-
+```bash
 chmod +x  sin_install_vps_noroot.sh
-
+```
   
   
 
@@ -66,9 +66,9 @@ Enter the code below to run the script.
 
   
   
-
+```bash
 ./sin_install_vps_noroot.sh
-
+```
   
   
   
@@ -133,9 +133,9 @@ Please save the given keys and address information. You can do this by choosing 
 ![](https://lh4.googleusercontent.com/VtXV5A4V3S5ScoO2jdbsP_AqTXrnXcJ7Z_xJX0P6oEQ86rGfdOx6IZSKOgQ9dPnwgdO_EJk7v4E-N0Qw2sSaWuT0qjPY-yVvFot55_w0xA5aTZC7pZEha1kc7RckbITdMRqi9qh1)
 
   
-
+```bash
 reboot
-
+```
   
   
 
