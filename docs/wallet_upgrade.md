@@ -78,7 +78,7 @@ Download the latest version of MAC Wallet at [https://github.com/SINOVATEblockch
 Replace the `sin-qt app` file in the compressed file you downloaded with the `sin-qt app` file you are currently using.
 
 
-# SINOVATE InfinityNode Update And Sync Guide
+# VPS Infinity Node Update And Sync Guide
 
 **If running Infinity Node, stop it.**
 ``sudo systemctl stop sinovate.service``
