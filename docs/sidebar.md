@@ -11,11 +11,10 @@
 - **Tutorials & Guides**
 - [Infinity Node tips](infinity_node_tips)
 - [MAC Wallet Backup & Upgrade](mac_wallet_backup_and_upgrade)
-- [Multiple Nodes on one VPS](multiple_nodes_on_one_vps)
+- [VPS Wallet Update Guide](vps_wallet_update)
+- [WINDOWS Wallet Backup & Upgrade](windows_wallet_backup_and_upgrade)
 - [SIN WebTool](sin_webtool_guide)
 - [SUQA Coins Conflict](suqa_conflict)
-- [Vps Wallet Update Guide](vps_wallet_update)
-- [WIN Wallet Backup & Upgrade](windows_wallet_backup_and_upgrade)
 - [X25X Pow GPU Mining](X25X-PoW-GPU-Mining)
 - **Testnet**
 - [D.I.N. Testnet setup GUIDE](din_testnet_setup_guide)
