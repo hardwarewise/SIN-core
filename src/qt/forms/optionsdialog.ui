@@ -155,7 +155,7 @@ height: 30px;
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2_Main">
+        <layout class="QHBoxLayout" name="horizontalLayout_3_Main">
          <item>
           <widget class="QLabel" name="recordsToLoadLabel">
            <property name="text">
