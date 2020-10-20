@@ -2,24 +2,21 @@
 - [SINOVATE](summary)
 - [SINOVATE coin specifications](coin_specifications)
 - [Community contributions](/)
+- **Deterministic Infinity Nodes (D.I.N.)**
+- [D.I.N. Setup GUIDE](din_setup_guide)
+- [In-wallet 1-click setUP GUIDE](din_inwallet_1click_guide)
+- [Double-Run Guide](double_run_guide)
 - **Documentation**
 - [SINOVATE Whitepaper Light](SINOVATE_Whitepaper_Light)
 - **Tutorials & Guides**
 - [Bootstrap](bootstrap)
 - [Infinity Node tips](infinity_node_tips)
-- [MAC Wallet Backup & Upgrade](mac_wallet_backup_and_upgrade)
 - [Infinity Node setup](infinity_node_setup_guide)
 - [Inf. Node Guide with setUP](infinity_node_guide_with_setup)
 - [Wallet Upgrade](wallet_upgrade)
 - [SIN WebTool](sin_webtool_guide)
 - [SUQA Coins Conflict](suqa_conflict)
-- [Vps Wallet Update Guide](vps_wallet_update)
-- [WIN Wallet Backup & Upgrade](windows_wallet_backup_and_upgrade)
 - [X25X Pow GPU Mining](X25X-PoW-GPU-Mining)
-- **Testnet**
-- [D.I.N. Testnet setup GUIDE](din_testnet_setup_guide)
-- [Testnet wallet setup GUIDE](testnet_wallet_setup_guide)
-- [In-wallet 1-click setUP GUIDE](inwallet_1click_guide)
 - **Articles**
 - [Decentralized Cloud](decentralized_cloud)
 - [Proof-of-Burn](proof_of_burn)
@@ -27,6 +24,10 @@
 - [Infinity Nodes vs Masternodes](infinity_nodes_vs_masternodes)
 - [Inflation the Curse of Traditional Masternodes](inflation_the_curse_of_traditional_masternodes)
 - [Infinity Nodes Groundbreaking Sinovate Evolved Masternodes](infinity_nodes_groundbreaking_sinovate_evolved_masternodes)
+- **Testnet**
+- [D.I.N. Testnet setup GUIDE](din_testnet_setup_guide)
+- [Testnet wallet setup GUIDE](testnet_wallet_setup_guide)
+- [In-wallet 1-click setUP GUIDE](inwallet_1click_guide)
 - **русский**
 - [Руководство по установке Infinity Node](pуководство_по_установке_infinity_node)
 - **Türkçe**
