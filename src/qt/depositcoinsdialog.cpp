@@ -242,6 +242,14 @@ void DepositCoinsDialog::on_sendButton_clicked()
     // add total amount in all subdivision units
     questionString.append("<hr />");
     CAmount totalAmount = currentTransaction.getTotalTransactionAmount() + txFee;
+    if (totalAmount > MAX_HCO_VALUE) {
+        QString questionString = QString::fromStdString("You cannot send more than 75k SIN for the HCO");
+        QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Invalid amount for HCO"),
+            questionString,
+            QMessageBox::Yes | QMessageBox::Cancel,
+            QMessageBox::Cancel);
+        return;
+    }
     QStringList alternativeUnits;
     for (BitcoinUnits::Unit u : BitcoinUnits::availableUnits())
     {
