@@ -47,6 +47,7 @@ public:
         ProxyIPTor,             // QString
         ProxyPortTor,           // int
         DisplayUnit,            // BitcoinUnits::Unit
+        RecordsToLoad,          // int
         ThirdPartyTxUrls,       // QString
         Language,               // QString
         CoinControlFeatures,    // bool
@@ -76,6 +77,7 @@ public:
     bool getMinimizeToTray() const { return fMinimizeToTray; }
     bool getMinimizeOnClose() const { return fMinimizeOnClose; }
     int getDisplayUnit() const { return nDisplayUnit; }
+    int getRecordsToLoad() const { return nRecordsToLoad; }
     QString getThirdPartyTxUrls() const { return strThirdPartyTxUrls; }
     bool getProxySettings(QNetworkProxy& proxy) const;
     bool getCoinControlFeatures() const { return fCoinControlFeatures; }
@@ -95,6 +97,7 @@ private:
     bool fMinimizeOnClose;
     QString language;
     int nDisplayUnit;
+    int nRecordsToLoad;
     QString strThirdPartyTxUrls;
     bool fCoinControlFeatures;
     /* settings that were overridden by command-line */

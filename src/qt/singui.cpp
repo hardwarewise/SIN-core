@@ -663,8 +663,8 @@ void SINGUI::createActions()
     //-//openPeersAction->setStatusTip(tr("Show peers info"));
     //-//openRepairAction = new QAction(QIcon(":/icons/" + theme + "/options"), tr("Wallet &Repair"), this);
     //-//openRepairAction->setStatusTip(tr("Show wallet repair options"));
-    //-//openConfEditorAction = new QAction(QIcon(":/icons/" + theme + "/edit"), tr("Open Wallet &Configuration File"), this);
-    //-//openConfEditorAction->setStatusTip(tr("Open configuration file"));
+    openConfEditorAction = new QAction(QIcon(":/icons/edit"), tr("Open Wallet &Configuration File (sin.conf)"), this);
+    openConfEditorAction->setStatusTip(tr("Open configuration file (sin.conf)"));
     openMNConfEditorAction = new QAction(platformStyle->SingleColorIcon(":/icons/edit"), tr("Open &Infinitynode Configuration File"), this);
     openMNConfEditorAction->setStatusTip(tr("Open InfinityNode configuration file"));
     //-//showBackupsAction = new QAction(QIcon(":/icons/" + theme + "/browse"), tr("Show Automatic &Backups"), this);
@@ -714,7 +714,7 @@ void SINGUI::createActions()
     //-//connect(openRepairAction, SIGNAL(triggered()), this, SLOT(showRepair()));
 
     // Open configs and backup folder from menu
-    //-//connect(openConfEditorAction, SIGNAL(triggered()), this, SLOT(showConfEditor()));
+    connect(openConfEditorAction, SIGNAL(triggered()), this, SLOT(showConfEditor()));
     connect(openMNConfEditorAction, SIGNAL(triggered()), this, SLOT(showMNConfEditor()));
     //-//connect(showBackupsAction, SIGNAL(triggered()), this, SLOT(showBackups()));
 
@@ -833,7 +833,7 @@ void SINGUI::createMenuBar()
         //-//tools->addAction(openPeersAction);
         //-//tools->addAction(openRepairAction);
         //-//tools->addSeparator();
-        //-//tools->addAction(openConfEditorAction);
+        tools->addAction(openConfEditorAction);
         tools->addAction(openMNConfEditorAction);
         //-//tools->addAction(showBackupsAction);
     }
@@ -1209,7 +1209,7 @@ void SINGUI::createTrayIconMenu()
     //-//trayIconMenu->addAction(openPeersAction);
     //-//trayIconMenu->addAction(openRepairAction);
     //-//trayIconMenu->addSeparator();
-    //-//trayIconMenu->addAction(openConfEditorAction);
+    trayIconMenu->addAction(openConfEditorAction);
     trayIconMenu->addAction(openMNConfEditorAction);
     //-//trayIconMenu->addAction(showBackupsAction);
     //
@@ -1295,6 +1295,13 @@ void SINGUI::onThemeClicked()
 void SINGUI::showMNConfEditor()
 {
     GUIUtil::openMNConfigfile();
+}
+//
+
+// open conf file
+void SINGUI::showConfEditor()
+{
+    GUIUtil::openSinConf();
 }
 //
 

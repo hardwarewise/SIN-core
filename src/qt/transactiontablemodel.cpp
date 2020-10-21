@@ -29,12 +29,7 @@
 #include <QtConcurrent/QtConcurrent>
 #include <QFuture>
 
-#define SINGLE_THREAD_MAX_TXES_SIZE 4000
-
-// Maximum amount of loaded records in ram in the first load.
-// If the user has more and want to load them:
-// TODO, add load on demand in pages (not every tx loaded all the time into the records list).
-#define MAX_AMOUNT_LOADED_RECORDS 20000
+#define SINGLE_THREAD_MAX_TXES_SIZE 1000
 
 // Amount column is right-aligned it contains numbers
 static int column_alignments[] = {
@@ -89,22 +84,16 @@ public:
         
         std::vector<interfaces::WalletTx> walletTxes = wallet.getWalletTxs();
 
-        // Divide the work between multiple threads to speedup the process if the vector is larger than 4k txes
+        int nRecordsToLoad = parent->walletModel->getOptionsModel()->getRecordsToLoad();
+
+        // Divide the work between multiple threads to speedup the process if the vector is larger than 1k txes
         std::size_t txesSize = walletTxes.size();
         if (txesSize > SINGLE_THREAD_MAX_TXES_SIZE) {
 
             // First check if the amount of txs exceeds the UI limit
-            if (txesSize > MAX_AMOUNT_LOADED_RECORDS) {
-                /*
-                // Sort the txs by date just to be really really sure that them are ordered.
-                // (this extra calculation should be removed in the future if can ensure that
-                // txs are stored in order in the db, which is what should be happening)
-                sort(walletTxes.begin(), walletTxes.end(), [] (const interfaces::WalletTx & a, const interfaces::WalletTx & b) -> bool {
-                        return a.time < b.time;});
-                        */
-
+            if (txesSize > nRecordsToLoad) {
                 // Only latest ones.
-                walletTxes = std::vector<interfaces::WalletTx>(walletTxes.end() - MAX_AMOUNT_LOADED_RECORDS, walletTxes.end());
+                walletTxes = std::vector<interfaces::WalletTx>(walletTxes.end() - nRecordsToLoad, walletTxes.end());
                 txesSize = walletTxes.size();
             };
 

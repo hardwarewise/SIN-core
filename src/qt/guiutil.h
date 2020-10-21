@@ -122,7 +122,7 @@ namespace GUIUtil
     void openDebugLogfile();
 
     // Open the config file
-    bool openBitcoinConf();
+    bool openSinConf();
 
     // Dash
     // Open masternode.conf
