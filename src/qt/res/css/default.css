@@ -1843,3 +1843,7 @@ font-weight:bold;
   selection-background-color: #BC8F3A;; 
 }
 
+.QTextEdit {
+  selection-color: white;
+  selection-background-color: #BC8F3A;; 
+}
