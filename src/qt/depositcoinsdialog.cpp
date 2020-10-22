@@ -496,6 +496,10 @@ void DepositCoinsDialog::processSendCoinsReturn(const WalletModel::SendCoinsRetu
         msgParams.first = tr("Transaction creation failed!");
         msgParams.second = CClientUIInterface::MSG_ERROR;
         break;
+    case WalletModel::HCOTransactionBadPeriod:
+        msgParams.first = tr("HCO Transaction creation failed: you can only lock your coins between blocks 550k and 604k");
+        msgParams.second = CClientUIInterface::MSG_ERROR;
+        break;
     case WalletModel::TransactionCommitFailed:
         msgParams.first = tr("The transaction was rejected with the following reason: %1").arg(sendCoinsReturn.reasonCommitFailed);
         msgParams.second = CClientUIInterface::MSG_ERROR;
