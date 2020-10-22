@@ -1234,6 +1234,7 @@ void MasternodeList::nodeSetupInitialize()   {
         //ui->widgetCurrent->hide();
         ui->setupButtons->hide();
         ui->labelClientId->setText("");
+        ui->labelClientIdValue->hide();
     }
     else {
         nodeSetupEnableClientId(clientId);
@@ -1287,6 +1288,7 @@ void MasternodeList::nodeSetupResetClientId( )  {
     //ui->widgetCurrent->hide();
     ui->setupButtons->hide();
     ui->labelClientId->setText("");
+    ui->labelClientIdValue->hide();
     ui->btnRestore->setText("Restore");
 
     ui->btnSetup->setEnabled(false);
@@ -1315,6 +1317,7 @@ void MasternodeList::nodeSetupEnableClientId( int clientId )  {
     //ui->widgetLogin->hide();
     //ui->widgetCurrent->show();
     ui->setupButtons->show();
+    ui->labelClientIdValue->show();
     ui->labelClientId->setText("#"+QString::number(clientId));
     ui->labelMessage->setText("Select a node Tier and press '1-Click setUP' to verify if you meet the prerequisites");
     mClientid = clientId;
