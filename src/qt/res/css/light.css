@@ -1833,3 +1833,13 @@ color: #BC8F3A;
 font-weight:bold;
 }
 
+.QValidatedLineEdit {
+  selection-color: white;
+  selection-background-color: #BC8F3A;; 
+}
+
+.QLineEdit {
+  selection-color: white;
+  selection-background-color: #BC8F3A;; 
+}
+
