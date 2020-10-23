@@ -35,7 +35,7 @@ Some VPS providers may ask you to change your temporary password immediately.
 
 Enter the following command to download the installation script. Please enter the code as a single line.
 ```bash
-wget -q https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/sin_install_vps_noroot.sh
+wget -q https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/din_install_vps_noroot.sh
 ```
   
   
@@ -43,7 +43,7 @@ wget -q https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/
   
   
 
-![](https://lh3.googleusercontent.com/i8Wz7_qwEdZxJuPTndrqcIITiqTWeLlaturarpwg9hTHyX6uub8zfSLk-FPPqsLBa8qiXbWBcudY_qN7UIoqCD7OAUMlk4r9_NIb5xJh2IV82EKq6YmzAd78_W_N5jdf9-UvltDr)
+![](assets/img/misc/din-setup-guide04.png)
 
   
   
@@ -52,12 +52,12 @@ Enter the code below for authorization after the script is downloaded.
 
   
 ```bash
-chmod +x  sin_install_vps_noroot.sh
+chmod +x  din_install_vps_noroot.sh
 ```
   
   
 
-![](https://lh6.googleusercontent.com/zjb64EVEblj8zHcZvc9EreMDyOqpKkJWp1gNGHOE-AbaA6joFiTdEyGhX1AKtDXCz9l3YVs91fYcTBopl8k5Q_fiWVZpFpvjyfv89PcaXgGJ1p1M9c0qydsRmBcPEA6m0nk7m9rx)
+![](assets/img/misc/din-setup-guide05.png)
 
   
   
@@ -67,13 +67,13 @@ Enter the code below to run the script.
   
   
 ```bash
-./sin_install_vps_noroot.sh
+./din_install_vps_noroot.sh
 ```
   
   
   
 
-![](https://lh6.googleusercontent.com/cUpXUDC74S3Az0OqRxO3lajuYlMUpUROjDw-EtZDVxte1N8XPwVMJVbIiPpZ1Sde0P45pxXcG1Yyo-gO6Uro_Qeoe95pq04WPRtdGIiVasxx5k80ZEpzL1Y4y6R-BLdE0UCmY8vE)
+![](assets/img/misc/din-setup-guide06.png)
 
 Setup will ask for a username. If you hit enter, it will name the default sinovate.  
 In our example, we used the name testuser1.
