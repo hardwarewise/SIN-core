@@ -897,7 +897,6 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
     nodeSetupAPIGetInvoice( mInvoiceid, strAmount, strStatus, paymentAddress, email, pass, strError );
 
     CAmount invoiceAmount = strAmount.toDouble();
-    ui->labelMessage->setText(QString::fromStdString(strprintf("Invoice amount %f SIN", invoiceAmount)));
     if ( strStatus == "Cancelled" || strStatus == "Refunded" )  {  // reset and call again
         nodeSetupStep( "setupWait", "Order cancelled or refunded, creating a new order");
         invoiceTimer->stop();
@@ -906,6 +905,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
     }
 
     if ( strStatus == "Unpaid" )  {
+        ui->labelMessage->setText(QString::fromStdString(strprintf("Invoice amount %f SIN", invoiceAmount)));
         if ( mPaymentTx != "" ) {   // already paid, waiting confirmations
             nodeSetupStep( "setupWait", "Invoice paid, waiting for confirmation");
             ui->btnSetup->setEnabled(false);
@@ -955,6 +955,10 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
     }
 
     if ( strStatus == "Paid" )  {           // launch node setup (RPC)
+        if (invoiceAmount==0)   {
+            ui->labelMessage->setText(QString::fromStdString("Invoice paid with balance"));
+        }
+
         invoiceTimer->stop();
 
         QString strPrivateKey, strPublicKey, strDecodePublicKey, strAddress, strNodeIp;
