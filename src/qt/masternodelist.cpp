@@ -897,7 +897,6 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
     nodeSetupAPIGetInvoice( mInvoiceid, strAmount, strStatus, paymentAddress, email, pass, strError );
 
     CAmount invoiceAmount = strAmount.toDouble();
-    ui->labelMessage->setText(QString::fromStdString(strprintf("Invoice amount %f SIN", invoiceAmount)));
     if ( strStatus == "Cancelled" || strStatus == "Refunded" )  {  // reset and call again
         nodeSetupStep( "setupWait", "Order cancelled or refunded, creating a new order");
         invoiceTimer->stop();
@@ -906,6 +905,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
     }
 
     if ( strStatus == "Unpaid" )  {
+        ui->labelMessage->setText(QString::fromStdString(strprintf("Invoice amount %f SIN", invoiceAmount)));
         if ( mPaymentTx != "" ) {   // already paid, waiting confirmations
             nodeSetupStep( "setupWait", "Invoice paid, waiting for confirmation");
             ui->btnSetup->setEnabled(false);
@@ -955,6 +955,10 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
     }
 
     if ( strStatus == "Paid" )  {           // launch node setup (RPC)
+        if (invoiceAmount==0)   {
+            ui->labelMessage->setText(QString::fromStdString("Invoice paid with balance"));
+        }
+
         invoiceTimer->stop();
 
         QString strPrivateKey, strPublicKey, strDecodePublicKey, strAddress, strNodeIp;
@@ -963,7 +967,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
         QString strSelectedBurnTx = ui->comboBurnTx->currentData().toString();
         if (strSelectedBurnTx=="WAIT")  strSelectedBurnTx = "NEW";
 
-//LogPrintf("nodeSetupCheckInvoiceStatus mBurnTx = %s \n", mBurnTx.toStdString());
+//LogPrintf("nodeSetupCheckInvoiceStatus mBurnTx = %s, selected=%s \n", mBurnTx.toStdString(), strSelectedBurnTx.toStdString());
 
         if ( mBurnTx=="" && strSelectedBurnTx!="NEW")   {
             mBurnTx = strSelectedBurnTx;
@@ -975,12 +979,19 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
             if ( !burnSendTimer->isActive() )  {
                 burnSendTimer->start(20000);    // check every 20 secs
             }
+            // amount necessary for updatemeta may be already spent, send again.
+            if (nodeSetupUnlockWallet()) {
+                QString metaTx = nodeSetupSendToAddress( mBurnAddress, NODESETUP_UPDATEMETA_AMOUNT , NULL );
+            }
         }
         else    {   // burn tx not made yet
             mBurnAddress = nodeSetupGetNewAddress();
             int nMasternodeBurn = nodeSetupGetBurnAmount();
 
-            mBurnPrepareTx = nodeSetupSendToAddress( mBurnAddress, nMasternodeBurn, burnPrepareTimer );
+            if (nodeSetupUnlockWallet()) {
+                mBurnPrepareTx = nodeSetupSendToAddress( mBurnAddress, nMasternodeBurn, burnPrepareTimer );
+            }
+
             if ( mBurnPrepareTx=="" )  {
                ui->labelMessage->setText( "ERROR: failed to prepare burn transaction." );
             }
@@ -1040,7 +1051,9 @@ void MasternodeList::nodeSetupCheckBurnPrepareConfirmations()   {
         int nMasternodeBurn = nodeSetupGetBurnAmount();
 
         mBurnTx = nodeSetupRPCBurnFund( mBurnAddress, nMasternodeBurn , strAddressBackup);
-        QString metaTx = nodeSetupSendToAddress( mBurnAddress, NODESETUP_UPDATEMETA_AMOUNT , NULL );
+        if (nodeSetupUnlockWallet()) {
+            QString metaTx = nodeSetupSendToAddress( mBurnAddress, NODESETUP_UPDATEMETA_AMOUNT , NULL );
+        }
         if ( mBurnTx!="" )  {
             nodeSetupSetBurnTx(mBurnTx);
             if ( !burnSendTimer->isActive() )  {
@@ -1350,7 +1363,7 @@ void MasternodeList::nodeSetupPopulateInvoicesCombo( )  {
 }
 
 void MasternodeList::nodeSetupPopulateBurnTxCombo( )  {
-    std::map<std::string, std::string> freeBurnTxs = nodeSetupGetUnusedBurnTxs( );
+    std::map<std::string, pair_burntx> freeBurnTxs = nodeSetupGetUnusedBurnTxs( );
 
     // preserve previous selection before clearing
     QString burnTxSelection = ui->comboBurnTx->currentData().toString();
@@ -1358,8 +1371,12 @@ void MasternodeList::nodeSetupPopulateBurnTxCombo( )  {
     ui->comboBurnTx->clear();
     ui->comboBurnTx->addItem(tr("<Create new>"),"NEW");
 
-    for(auto& itemPair : freeBurnTxs)   {
-        ui->comboBurnTx->addItem(QString::fromStdString(itemPair.second), QVariant(QString::fromStdString(itemPair.first)));
+    // sort the hashmap by confirms (desc)
+    std::vector<std::pair<string, pair_burntx> > orderedVector (freeBurnTxs.begin(), freeBurnTxs.end());
+    std::sort(orderedVector.begin(), orderedVector.end(), vectorBurnTxCompare());
+
+    for(auto& itemPair : orderedVector)   {
+        ui->comboBurnTx->addItem(QString::fromStdString(itemPair.second.second), QVariant(QString::fromStdString(itemPair.first)));
     }
 
     // restore selection (if still exists)
@@ -1831,9 +1848,9 @@ QJsonObject MasternodeList::nodeSetupAPINodeInfo( int serviceid, int clientid, Q
 
 // facilitate reusing burn txs and migration from VPS hosting to nodeSetup hosting
 // pick only burn txs less than 1yr old, and not in use by any "ready" DIN node.
-std::map<std::string, std::string> MasternodeList::nodeSetupGetUnusedBurnTxs( ) {
+std::map<std::string, pair_burntx> MasternodeList::nodeSetupGetUnusedBurnTxs( ) {
 
-    std::map<std::string, std::string> ret;
+    std::map<std::string, pair_burntx> ret;
 
     CAmount nFee;
     std::string strSentAccount;
@@ -1888,7 +1905,7 @@ std::map<std::string, std::string> MasternodeList::nodeSetupGetUnusedBurnTxs( ) 
 
                 description = strNodeType + " " + GUIUtil::dateTimeStr(pwtx->GetTxTime()).toUtf8().constData();
 //LogPrintf("nodeSetupGetUnusedBurnTxs  confirmed %s, %d, %s \n", txHash.substr(0, 16), roundAmount, description);
-                ret.insert( { txHash,  description} );
+                ret.insert( { txHash,  std::make_pair(confirms, description) } );
             }
         }
     }
