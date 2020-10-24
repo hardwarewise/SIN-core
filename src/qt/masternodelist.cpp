@@ -967,7 +967,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
         QString strSelectedBurnTx = ui->comboBurnTx->currentData().toString();
         if (strSelectedBurnTx=="WAIT")  strSelectedBurnTx = "NEW";
 
-//LogPrintf("nodeSetupCheckInvoiceStatus mBurnTx = %s \n", mBurnTx.toStdString());
+//LogPrintf("nodeSetupCheckInvoiceStatus mBurnTx = %s, selected=%s \n", mBurnTx.toStdString(), strSelectedBurnTx.toStdString());
 
         if ( mBurnTx=="" && strSelectedBurnTx!="NEW")   {
             mBurnTx = strSelectedBurnTx;
@@ -979,12 +979,19 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
             if ( !burnSendTimer->isActive() )  {
                 burnSendTimer->start(20000);    // check every 20 secs
             }
+            // amount necessary for updatemeta may be already spent, send again.
+            if (nodeSetupUnlockWallet()) {
+                QString metaTx = nodeSetupSendToAddress( mBurnAddress, NODESETUP_UPDATEMETA_AMOUNT , NULL );
+            }
         }
         else    {   // burn tx not made yet
             mBurnAddress = nodeSetupGetNewAddress();
             int nMasternodeBurn = nodeSetupGetBurnAmount();
 
-            mBurnPrepareTx = nodeSetupSendToAddress( mBurnAddress, nMasternodeBurn, burnPrepareTimer );
+            if (nodeSetupUnlockWallet()) {
+                mBurnPrepareTx = nodeSetupSendToAddress( mBurnAddress, nMasternodeBurn, burnPrepareTimer );
+            }
+
             if ( mBurnPrepareTx=="" )  {
                ui->labelMessage->setText( "ERROR: failed to prepare burn transaction." );
             }
@@ -1044,7 +1051,9 @@ void MasternodeList::nodeSetupCheckBurnPrepareConfirmations()   {
         int nMasternodeBurn = nodeSetupGetBurnAmount();
 
         mBurnTx = nodeSetupRPCBurnFund( mBurnAddress, nMasternodeBurn , strAddressBackup);
-        QString metaTx = nodeSetupSendToAddress( mBurnAddress, NODESETUP_UPDATEMETA_AMOUNT , NULL );
+        if (nodeSetupUnlockWallet()) {
+            QString metaTx = nodeSetupSendToAddress( mBurnAddress, NODESETUP_UPDATEMETA_AMOUNT , NULL );
+        }
         if ( mBurnTx!="" )  {
             nodeSetupSetBurnTx(mBurnTx);
             if ( !burnSendTimer->isActive() )  {
