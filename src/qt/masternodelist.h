@@ -37,6 +37,14 @@ QT_BEGIN_NAMESPACE
 class QModelIndex;
 QT_END_NAMESPACE
 
+typedef std::pair<unsigned int, std::string> pair_burntx;
+struct vectorBurnTxCompare {
+    bool operator()(std::pair<std::string, pair_burntx> const&left,
+      std::pair<std::string, pair_burntx> const&right) {
+        return left.second.first > right.second.first;
+    }
+};
+
 struct infinitynode_conf_t
 {
     std::string IPaddress = "";
@@ -118,7 +126,7 @@ public Q_SLOTS:
     QString nodeSetupSendToAddress( QString strAddress, int amount, QTimer* timerConfirms );
     void nodeSetupCheckBurnPrepareConfirmations();
     void nodeSetupCheckBurnSendConfirmations();
-    std::map<std::string, std::string> nodeSetupGetUnusedBurnTxs( );
+    std::map<std::string, pair_burntx> nodeSetupGetUnusedBurnTxs( );
     QString nodeSetupGetOwnerAddressFromBurnTx( QString burnTx );
     bool nodeSetupUnlockWallet();
     void nodeSetupLockWallet();

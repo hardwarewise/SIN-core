@@ -1360,7 +1360,7 @@ void MasternodeList::nodeSetupPopulateInvoicesCombo( )  {
 }
 
 void MasternodeList::nodeSetupPopulateBurnTxCombo( )  {
-    std::map<std::string, std::string> freeBurnTxs = nodeSetupGetUnusedBurnTxs( );
+    std::map<std::string, pair_burntx> freeBurnTxs = nodeSetupGetUnusedBurnTxs( );
 
     // preserve previous selection before clearing
     QString burnTxSelection = ui->comboBurnTx->currentData().toString();
@@ -1368,8 +1368,12 @@ void MasternodeList::nodeSetupPopulateBurnTxCombo( )  {
     ui->comboBurnTx->clear();
     ui->comboBurnTx->addItem(tr("<Create new>"),"NEW");
 
-    for(auto& itemPair : freeBurnTxs)   {
-        ui->comboBurnTx->addItem(QString::fromStdString(itemPair.second), QVariant(QString::fromStdString(itemPair.first)));
+    // sort the hashmap by confirms (desc)
+    std::vector<std::pair<string, pair_burntx> > orderedVector (freeBurnTxs.begin(), freeBurnTxs.end());
+    std::sort(orderedVector.begin(), orderedVector.end(), vectorBurnTxCompare());
+
+    for(auto& itemPair : orderedVector)   {
+        ui->comboBurnTx->addItem(QString::fromStdString(itemPair.second.second), QVariant(QString::fromStdString(itemPair.first)));
     }
 
     // restore selection (if still exists)
@@ -1841,9 +1845,9 @@ QJsonObject MasternodeList::nodeSetupAPINodeInfo( int serviceid, int clientid, Q
 
 // facilitate reusing burn txs and migration from VPS hosting to nodeSetup hosting
 // pick only burn txs less than 1yr old, and not in use by any "ready" DIN node.
-std::map<std::string, std::string> MasternodeList::nodeSetupGetUnusedBurnTxs( ) {
+std::map<std::string, pair_burntx> MasternodeList::nodeSetupGetUnusedBurnTxs( ) {
 
-    std::map<std::string, std::string> ret;
+    std::map<std::string, pair_burntx> ret;
 
     CAmount nFee;
     std::string strSentAccount;
@@ -1898,7 +1902,7 @@ std::map<std::string, std::string> MasternodeList::nodeSetupGetUnusedBurnTxs( ) 
 
                 description = strNodeType + " " + GUIUtil::dateTimeStr(pwtx->GetTxTime()).toUtf8().constData();
 //LogPrintf("nodeSetupGetUnusedBurnTxs  confirmed %s, %d, %s \n", txHash.substr(0, 16), roundAmount, description);
-                ret.insert( { txHash,  description} );
+                ret.insert( { txHash,  std::make_pair(confirms, description) } );
             }
         }
     }
