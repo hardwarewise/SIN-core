@@ -10,6 +10,7 @@
 - [SINOVATE Whitepaper Light](SINOVATE_Whitepaper_Light)
 - **Tutorials & Guides**
 - [Bootstrap](bootstrap)
+- [HCO Earn Guide](hco_guide)
 - [Infinity Node tips](infinity_node_tips)
 - [Infinity Node setup](infinity_node_setup_guide)
 - [Inf. Node Guide with setUP](infinity_node_guide_with_setup)
