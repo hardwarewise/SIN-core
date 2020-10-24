@@ -129,7 +129,7 @@ public:
         /*Previously used as simple constants in validation */
         consensus.nINActivationHeight = 170000; // Activation of IN payments, should also be the same as nInfinityNodeBeginHeight in primitives/block.cpp
         consensus.nINEnforcementHeight = 178000; // Enforcement of IN payments
-        consensus.nDINActivationHeight = 9999999; // Activation of DIN 1.0 payments, and new dev fee address.
+        consensus.nDINActivationHeight = 550000; // Activation of DIN 1.0 payments, and new dev fee address.
 
         consensus.nBudgetPaymentsStartBlock = 365 * 1440 * 5; // 1 common year
         consensus.nBudgetPaymentsCycleBlocks = 10958; // weekly
@@ -224,11 +224,20 @@ public:
 
         checkpointData = {
             {
-                { 0, consensus.hashGenesisBlock }
+                { 0     , uint256S("0x000032bd27c65ec42967b7854a49df222abdfae8d9350a61083af8eab2a25e03")},
+                { 100000, uint256S("0x00000000001e01fb192b33bc90a19fb4bd99bc4973ea2f766e4670ce5acb60bd")},
+                { 200000, uint256S("0x75f01eea029358a280b65b5d7e9ea3c4987a153cd1c702747ae88d811ada7c13")},
+                { 300000, uint256S("0xe0f5ecb094c6a26b3b57a259b9d4efa9903b8bae6f3194effd50c1c633c30e05")},
+                { 400000, uint256S("0x130bd010d1c8bc52637660938bfbea90f2ff6aadcb562d62ea838f2130d2dc83")},
+                { 500000, uint256S("0x9c642efedac61f56aabed01972cc5648def5a5a4c7373289f427895304d93d9a")},
             }
         };
 
         chainTxData = ChainTxData{
+            // Data from RPC: getchaintxstats 4096 7ba8d1850a54bdc3fa8863609ca44976217b59bf619f81c93d0a0c99622f1750
+            /* nTime    */ 1598428702,
+            /* nTxCount */ 1568986,
+            /* dTxRate  */ 0.017159050970158,
         };
 
         /* disable fallback fee on mainnet */

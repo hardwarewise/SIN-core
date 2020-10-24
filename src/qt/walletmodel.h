@@ -27,6 +27,9 @@
 
 #include <QObject>
 
+#define START_HCO_BLOCK 550000
+#define END_HCO_BLOCK 604000
+
 enum class OutputType;
 
 class AddressTableModel;
@@ -135,6 +138,7 @@ public:
         AmountWithFeeExceedsBalance,
         DuplicateAddress,
         TransactionCreationFailed, // Error returned when wallet is still locked
+        HCOTransactionBadPeriod, // Only returned on bad HCO txes
         TransactionCommitFailed,
         AbsurdFee,
         PaymentRequestExpired

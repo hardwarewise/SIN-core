@@ -242,6 +242,14 @@ void DepositCoinsDialog::on_sendButton_clicked()
     // add total amount in all subdivision units
     questionString.append("<hr />");
     CAmount totalAmount = currentTransaction.getTotalTransactionAmount() + txFee;
+    if (totalAmount > MAX_HCO_VALUE) {
+        QString questionString = QString::fromStdString("You cannot send more than 75k SIN for the HCO");
+        QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Invalid amount for HCO"),
+            questionString,
+            QMessageBox::Yes | QMessageBox::Cancel,
+            QMessageBox::Cancel);
+        return;
+    }
     QStringList alternativeUnits;
     for (BitcoinUnits::Unit u : BitcoinUnits::availableUnits())
     {
@@ -486,6 +494,10 @@ void DepositCoinsDialog::processSendCoinsReturn(const WalletModel::SendCoinsRetu
         break;
     case WalletModel::TransactionCreationFailed:
         msgParams.first = tr("Transaction creation failed!");
+        msgParams.second = CClientUIInterface::MSG_ERROR;
+        break;
+    case WalletModel::HCOTransactionBadPeriod:
+        msgParams.first = tr("HCO Transaction creation failed: you can only lock your coins between blocks 550k and 604k");
         msgParams.second = CClientUIInterface::MSG_ERROR;
         break;
     case WalletModel::TransactionCommitFailed:

@@ -12,6 +12,8 @@
 #include <QString>
 #include <QTimer>
 
+#define MAX_HCO_VALUE 7500000000000
+
 class ClientModel;
 class PlatformStyle;
 class SendCoinsEntry;

@@ -134,6 +134,11 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
     std::vector<CRecipient> vecSend;
     //CCoinControl coinControl;
 
+    if ((chainActive.Height() + 1 < START_HCO_BLOCK || chainActive.Height() + 1 > END_HCO_BLOCK) && termDepositLength != 0) {
+        Q_EMIT message(tr("HCO-Lock"), tr("HCO locking is enabled only between blocks 550000 and 604000."), CClientUIInterface::MSG_ERROR);
+        return HCOTransactionBadPeriod;
+    }
+
     if(recipients.empty())
     {
         return OK;
@@ -215,12 +220,6 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
     {
         return AmountExceedsBalance;
     }
-
-    if(coinControl->fUseInstantSend == true && total > sporkManager.GetSporkValue(SPORK_5_INSTANTSEND_MAX_VALUE)*COIN) {
-        Q_EMIT message(tr("Send Coins"), tr("InstantSend doesn't support sending values %1 that high yet. Transactions are currently limited to %2 SIN.").arg(total/COIN).arg(sporkManager.GetSporkValue(SPORK_5_INSTANTSEND_MAX_VALUE)), CClientUIInterface::MSG_ERROR);
-        return TransactionCreationFailed;
-    }
-
     {
         CAmount nFeeRequired = 0;
         int nChangePosRet = -1;
