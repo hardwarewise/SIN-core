@@ -820,6 +820,8 @@ bool CInfinitynodeMan::ExtractLockReward(int nBlockHeight, int depth, std::vecto
                                 i++;
                             }
 
+                            free(signerIndexes);
+
                             if(nRewardHeight != nBlockHeight +1){continue;}
                             LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::ExtractLockReward -- LR: %s.\n", stringLRRegister);
 
