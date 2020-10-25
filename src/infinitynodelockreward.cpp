@@ -1325,6 +1325,7 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
     free(pubkeys); pubkeys = NULL;
     free(commitmentpk); commitmentpk = NULL;
     free(signer_data); signer_data = NULL;
+    secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
     for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
         free(commitmenthash[c]);
     }
@@ -1786,6 +1787,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                     free(commitmenthash); commitmenthash = NULL;
                 }
             }
+            secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
         }//end number signature check
     }//end loop in mapMyPartialSigns
 
@@ -2086,6 +2088,7 @@ bool CInfinityNodeLockReward::CheckLockRewardRegisterInfo(std::string sLockRewar
 
     LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- LockReward is valid for height: %d, SINtype: %d, Outpoint: %s\n",
               nRewardHeight, nSINtype, infCheck.ToStringShort());
+    secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
     free(signerIndexes);
     free(pubkeys);
     return true;
