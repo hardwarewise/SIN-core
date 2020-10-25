@@ -110,6 +110,7 @@ bool CInfinitynodeLockInfo::ExtractLRFromBlock(const CBlock& block, CBlockIndex*
                                 CLockRewardExtractInfo lrinfo(pindex->nHeight, nSINtype, nRewardHeight, coin.out.scriptPubKey, stringLRRegister);
                                 vecLRRet.push_back(lrinfo);
                             }
+                            free(signerIndexes);
                         }
                     }
         }
