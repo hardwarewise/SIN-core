@@ -1268,39 +1268,78 @@ CAmount GetMasternodePayment(int nHeight, int sintype)
 {
     CAmount ret = 0.00;
 
-	if (sintype == 0) {
-		return 0;
-	}
+  	if (sintype == 0) {
+  		  return 0;
+  	}
 
-	if (sintype == 1) {
-		if (Params().NetworkIDString() == CBaseChainParams::FINALNET && nHeight >=105 && nHeight <  150000) return 8 * COIN;
-		if (Params().NetworkIDString() == CBaseChainParams::TESTNET && nHeight >=105 && nHeight <  150000) return 8 * COIN;
-        if (Params().NetworkIDString() == CBaseChainParams::REGTEST && nHeight >=105 && nHeight <  150000) return 8 * COIN;
+  	if (sintype == 1) {
+    	  if (Params().NetworkIDString() == CBaseChainParams::FINALNET && nHeight >=105 && nHeight <  150000) {
+            return 8 * COIN;
+        }
+    		if (Params().NetworkIDString() == CBaseChainParams::TESTNET && nHeight >=105 && nHeight <  150000) {
+            return 8 * COIN;
+        }
+        if (Params().NetworkIDString() == CBaseChainParams::REGTEST && nHeight >=105 && nHeight <  150000) {
+            return 8 * COIN;
+        }
 
-		if (nHeight <  150000) return  0 * COIN;  //testnet
-		if (nHeight <  170100) return  0 * COIN;  //hard fork
-		if (nHeight < 5000000) return  160 * COIN;
-	}
+    		if (nHeight <  150000) {
+            return  0 * COIN;  //testnet
+        }
+    		if (nHeight <  170100) {
+            return  0 * COIN;  //hard fork
+        }
+    		if (nHeight < 550000) { //hf block
+            return  160 * COIN;
+        }
+        if (nHeight < 5000000) {
+            return  560 * COIN;
+        }
+  	}
 
-	if (sintype == 5) {
-		if (Params().NetworkIDString() == CBaseChainParams::FINALNET && nHeight >=105 && nHeight <  150000) return 41 * COIN;
-		if (Params().NetworkIDString() == CBaseChainParams::TESTNET && nHeight >=105 && nHeight <  150000) return 41 * COIN;
-        if (Params().NetworkIDString() == CBaseChainParams::REGTEST && nHeight >=105 && nHeight <  150000) return 41 * COIN;
+    if (sintype == 5) {
+      	if (Params().NetworkIDString() == CBaseChainParams::FINALNET && nHeight >=105 && nHeight <  150000) {
+            return 41 * COIN;
+        }
+      	if (Params().NetworkIDString() == CBaseChainParams::TESTNET && nHeight >=105 && nHeight <  150000) {
+            return 41 * COIN;
+        }
+        if (Params().NetworkIDString() == CBaseChainParams::REGTEST && nHeight >=105 && nHeight <  150000) {
+            return 41 * COIN;
+        }
 
-		if (nHeight <  150000) return  0 * COIN;  //testnet
-		if (nHeight <  170100) return  0 * COIN;  //hard fork
-		if (nHeight < 5000000) return  838 * COIN;
-	}
+      	if (nHeight <  150000) {
+            return  0 * COIN;  //testnet
+        }
+      	if (nHeight <  170100) {
+            return  0 * COIN;  //hard fork
+        }
+      	if (nHeight < 5000000) {
+            return  838 * COIN;
+        }
+    }
 
-	if (sintype == 10) {
-		if (Params().NetworkIDString() == CBaseChainParams::FINALNET && nHeight >=105 && nHeight <  150000) return 85 * COIN;
-		if (Params().NetworkIDString() == CBaseChainParams::TESTNET && nHeight >=105 && nHeight <  150000) return 85 * COIN;
-        if (Params().NetworkIDString() == CBaseChainParams::REGTEST && nHeight >=105 && nHeight <  150000) return 85 * COIN;
+  	if (sintype == 10) {
+    		if (Params().NetworkIDString() == CBaseChainParams::FINALNET && nHeight >=105 && nHeight <  150000) {
+            return 85 * COIN;
+        }
+    		if (Params().NetworkIDString() == CBaseChainParams::TESTNET && nHeight >=105 && nHeight <  150000) {
+            return 85 * COIN;
+        }
+        if (Params().NetworkIDString() == CBaseChainParams::REGTEST && nHeight >=105 && nHeight <  150000) {
+            return 85 * COIN;
+        }
 
-		if (nHeight <  150000) return  0 * COIN;  //testnet
-		if (nHeight <  170100) return  0 * COIN;  //hard fork
-		if (nHeight < 5000000) return  1752 * COIN;
-	}
+    		if (nHeight <  150000) {
+            return  0 * COIN;  //testnet
+        }
+    		if (nHeight <  170100) {
+            return  0 * COIN;  //hard fork
+        }
+    		if (nHeight < 5000000) {
+            return  1752 * COIN;
+        }
+  	}
 
     return ret;
 }
