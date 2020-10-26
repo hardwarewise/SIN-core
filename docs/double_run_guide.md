@@ -1,14 +1,21 @@
-SINOVATE INFINITYNODE AND D.I.N. DOUBLE-RUN GUIDE
+# SINOVATE INFINITYNODE AND D.I.N. DOUBLE-RUN GUIDE
 
-  
 
 This guide assumes you already own an infinity node running.
 
-  
+**Please before applying the manual,**
+
+1- Update your node.
+
+2- Resynchronize.
+
+To do this, follow the instructions on the link below.
+
+VPS Infinity Node Update And Sync Guide [here](https://docs.sinovate.io/#/wallet_upgrade?id=vps-infinity-node-update-and-sync-guide).
+
+**If you've already followed these instructions, you can continue here.**
 
 Connect to your VPS and enter the commands below.
-
-  
 
 :~$ bash
 
