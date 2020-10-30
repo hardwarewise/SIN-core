@@ -4,7 +4,7 @@
 
   
 
-[SINOVATE : WHITEPAPER Light Version  1](https://docs.google.com/document/d/16J_B3EwMhjeOIJ6Z32zC_DWiRKDSX_y87uKvTMV5Vr4/edit#heading=h.z5xdo7vxb8nj)
+
 
 [1- Introduction  4](https://docs.google.com/document/d/16J_B3EwMhjeOIJ6Z32zC_DWiRKDSX_y87uKvTMV5Vr4/edit#heading=h.u14fbhujvq3r)
 
