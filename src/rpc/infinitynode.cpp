@@ -16,6 +16,7 @@
 #include <wallet/coincontrol.h>
 #endif // ENABLE_WALLET
 #include <rpc/server.h>
+#include <rpc/rawtransaction.h>
 #include <util.h>
 #include <utilmoneystr.h>
 #include <consensus/validation.h>
@@ -812,6 +813,120 @@ static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
     return results;
 }
 
+static UniValue infinitynodeupdatemeta_external(const JSONRPCRequest& request)
+{
+
+    if (request.fHelp || request.params.size() != 5)
+       throw std::runtime_error(
+            "infinitynodeupdatemeta_external inputs OwnerAddress PublicKey IP NodeBurnFundTx"
+            "\nPrepare a metadata update transaction with the given inputs.\n"
+            "\nArguments:\n"
+            "1. \"inputs\"                (array, required) A json array of json objects\n"
+            "     [\n"
+            "       {\n"
+            "         \"txid\":\"id\",      (string, required) The transaction id\n"
+            "         \"vout\":n,           (numeric, required) The output number\n"
+            "         \"sequence\":n        (numeric, optional) The sequence number\n"
+            "       } \n"
+            "       ,...\n"
+            "     ]\n"
+            "2. \"OwnerAddress\"          (string, required) Node owner address which burnt funds.\n"
+            "3. \"PublicKey\"             (string, required) Node publickey. \n"
+            "4. \"IP\"                    (string, required) Node IP.\n"
+            "5. \"NodeBurnFundTx\"        (string, required) First 16 characters of NodeBurnFundTx.\n"
+            "\nResult:\n"
+            "\"(UpdateInfo) Update message\"   (string) Metadata information\n"
+            "\nExamples:\n"
+            + HelpExampleCli("infinitynodeupdatemeta_external", "\"[{\\\"txid\\\":\\\"myid\\\",\\\"vout\\\":0}]\" OwnerAddress NodeAddress IP")
+        );
+
+    RPCTypeCheck(request.params, {
+        UniValue::VARR,
+        UniValue::VSTR,
+        UniValue::VSTR,
+        UniValue::VSTR,
+        UniValue::VSTR
+        }, true
+    );
+
+    std::string strOwnerAddress = request.params[1].get_str();
+    CTxDestination INFAddress = DecodeDestination(strOwnerAddress);
+    if (!IsValidDestination(INFAddress)) {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid OwnerAddress");
+    }
+
+    //limit data carrier, so we accept only 66 char
+    std::string nodePublickeyHexStr = "";
+    if(request.params[2].get_str().length() == 44){
+        nodePublickeyHexStr = request.params[2].get_str();
+    } else {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid node publickey");
+    }
+
+    std::string strService = request.params[3].get_str();
+    CService service;
+    if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+        if (!Lookup(strService.c_str(), service, 0, false)){
+               throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid IP address");
+        }
+    }
+    CAddress addMeta = CAddress(service, NODE_NETWORK);
+
+    std::string burnfundTxID = "";
+    if(request.params[4].get_str().length() == 16){
+        burnfundTxID = request.params[4].get_str();
+    } else {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "node BurnFundTx ID is invalid. Please enter first 16 characters of BurnFundTx");
+    }
+
+    std::string metaID = strprintf("%s-%s", strOwnerAddress, burnfundTxID);
+    CMetadata myMeta = infnodemeta.Find(metaID);
+    int nCurrentHeight = (int)chainActive.Height();
+    if(myMeta.getMetadataHeight() > 0 && nCurrentHeight < myMeta.getMetadataHeight() + Params().MaxReorganizationDepth() * 2){
+        int nWait = myMeta.getMetadataHeight() + Params().MaxReorganizationDepth() * 2 - nCurrentHeight;
+        std::string strError = strprintf("Error: Please wait %d blocks and try to update again.", nWait);
+        throw JSONRPCError(RPC_TYPE_ERROR, strError);
+    }
+
+    //check ip and pubkey dont exist
+    if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+        std::map<std::string, CMetadata> mapInfMetadata = infnodemeta.GetFullNodeMetadata();
+        for (auto& infmetapair : mapInfMetadata) {
+            CMetadata m = infmetapair.second;
+            CAddress add = CAddress(infmetapair.second.getService(), NODE_NETWORK);
+            //found metaID => check expire or not
+            if (m.getMetaID() != metaID && (m.getMetaPublicKey() == nodePublickeyHexStr || addMeta.ToStringIP() == add.ToStringIP())) {
+                std::map<COutPoint, CInfinitynode> mapInfinitynodes = infnodeman.GetFullInfinitynodeMap();
+                for (auto& infnodepair : mapInfinitynodes) {
+                    if (infnodepair.second.getMetaID() == m.getMetaID() && infnodepair.second.getExpireHeight() >= nCurrentHeight) {
+                        std::string strError = strprintf("Error: Pubkey or IP address already exist in network");
+                        throw JSONRPCError(RPC_TYPE_ERROR, strError);
+                    }
+                }
+            }
+        }
+    }
+
+    // cMetadataAddress
+    CTxDestination dest = DecodeDestination(Params().GetConsensus().cMetadataAddress);
+    CScript scriptPubKeyMetaAddress = GetScriptForDestination(dest);
+    std::vector<std::vector<unsigned char> > vSolutions;
+    txnouttype whichType;
+    if (!Solver(scriptPubKeyMetaAddress, whichType, vSolutions))
+            return false;
+    CKeyID keyid = CKeyID(uint160(vSolutions[0]));
+
+    std::ostringstream streamInfo;
+
+    streamInfo << nodePublickeyHexStr << ";" << strService << ";" << burnfundTxID;
+    std::string strInfo = streamInfo.str();
+    CScript script;
+    script = GetScriptForBurn(keyid, streamInfo.str());
+
+    CMutableTransaction rawMetaTx = ConstructTransactionWithScript(request.params[0], script, INFAddress);
+
+    return EncodeHexTx(rawMetaTx);
+}
 
 static UniValue infinitynodevote(const JSONRPCRequest& request)
 {
@@ -934,12 +1049,13 @@ static UniValue infinitynodevote(const JSONRPCRequest& request)
 
 
 static const CRPCCommand commands[] =
-{ //  category              name                      actor (function)         argNames
-  //  --------------------- ------------------------  -----------------------  ----------
-    { "SIN",                "infinitynodeburnfund",   &infinitynodeburnfund,   {"amount"} },
-    { "SIN",                "infinitynodeupdatemeta", &infinitynodeupdatemeta, {"owner_address","node_address","IP"} },
-    { "SIN",                "infinitynode",           &infinitynode,           {"command"}  },
-    { "SIN",                "infinitynodevote",       &infinitynodevote,       {"owner_address","proposalid","opinion"} }
+{ //  category              name                      actor (function)                              argNames
+  //  --------------------- ------------------------  -----------------------                       ----------
+    { "SIN",                "infinitynodeburnfund",   &infinitynodeburnfund,                        {"amount"} },
+    { "SIN",                "infinitynodeupdatemeta", &infinitynodeupdatemeta,                      {"owner_address","node_address","IP"} },
+    { "SIN",                "infinitynodeupdatemeta_external", &infinitynodeupdatemeta_external,    {"owner_address","node_address","IP", "inputs array"} },
+    { "SIN",                "infinitynode",           &infinitynode,                                {"command"}  },
+    { "SIN",                "infinitynodevote",       &infinitynodevote,                            {"owner_address","proposalid","opinion"} }
 };
 
 void RegisterInfinitynodeRPCCommands(CRPCTable &t)

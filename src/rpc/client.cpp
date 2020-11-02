@@ -158,6 +158,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "setgenerate", 1, "genproclimit" },
     // Dash
     { "spork", 1, "value" },
+    { "infinitynodeupdatemeta_external", 0, "inputs" },
     //
     { "getmempoolancestors", 1, "verbose" },
     { "getmempooldescendants", 1, "verbose" },
