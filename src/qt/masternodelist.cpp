@@ -1226,6 +1226,7 @@ void MasternodeList::nodeSetupInitialize()   {
 
 #if defined(Q_OS_WIN)
 #else
+    ui->payButton->setStyleSheet("font-size: 16px");
     ui->comboBilling->setStyle(QStyleFactory::create("Windows"));
     ui->comboInvoice->setStyle(QStyleFactory::create("Windows"));
     ui->comboBurnTx->setStyle(QStyleFactory::create("Windows"));
