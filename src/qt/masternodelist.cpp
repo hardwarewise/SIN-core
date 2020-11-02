@@ -1400,6 +1400,11 @@ bool MasternodeList::nodeSetupCheckFunds( CAmount invoiceAmount )   {
     int nMasternodeCollateral = Params().GetConsensus().nMasternodeCollateralMinimum;
     int nMasternodeBurn = nodeSetupGetBurnAmount();
 
+    QString strSelectedBurnTx = ui->comboBurnTx->currentData().toString();
+    if (strSelectedBurnTx!="NEW" && strSelectedBurnTx!="WAIT")   {
+        nMasternodeBurn = 0;    // burn tx re-used, no need of funds
+    }
+
     std::string strChecking = "Checking funds";
     nodeSetupStep( "setupWait", strChecking );
 
@@ -1408,18 +1413,26 @@ bool MasternodeList::nodeSetupCheckFunds( CAmount invoiceAmount )   {
     CAmount curBalance = pwallet->GetBalance();
     std::ostringstream stringStream;
     CAmount nNodeRequirement = (nMasternodeBurn + nMasternodeCollateral) * COIN ;
+    CAmount nUpdateMetaRequirement = (NODESETUP_UPDATEMETA_AMOUNT + 1) * COIN ;
 
-    if ( curBalance > invoiceAmount + nNodeRequirement )  {
+    if ( curBalance > invoiceAmount + nNodeRequirement + nUpdateMetaRequirement)  {
         nodeSetupStep( "setupOk", strChecking + " : " + "funds available.");
         bRet = true;
     }
     else    {
-        if ( curBalance > nNodeRequirement )  {
-            QString strAvailable = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), curBalance - nNodeRequirement );
+        if ( curBalance > nNodeRequirement + nUpdateMetaRequirement)  {
+            QString strAvailable = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), curBalance - nNodeRequirement - nUpdateMetaRequirement);
             QString strInvoiceAmount = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), invoiceAmount );
-            stringStream << strChecking << " : not enough funds to pay invoice. (you have " << strAvailable.toStdString() << " , need " << strInvoiceAmount.toStdString() << " )";
+            stringStream << strChecking << " : not enough funds to pay invoice amount. (you have " << strAvailable.toStdString() << " , need " << strInvoiceAmount.toStdString() << " )";
             std::string copyOfStr = stringStream.str();
                 nodeSetupStep( "setupKo", copyOfStr);
+        }
+        else if ( curBalance > nNodeRequirement  )  {
+            QString strAvailable = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), (curBalance - nNodeRequirement) );
+            QString strUpdateMeta = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), nUpdateMetaRequirement );
+            stringStream << strChecking << " : not enough amount for UpdateMeta operation (you have " <<  strAvailable.toStdString() << " , you need " << strUpdateMeta.toStdString() << " )";
+            std::string copyOfStr = stringStream.str();
+            nodeSetupStep( "setupKo", copyOfStr);
         }
         else if ( curBalance > nMasternodeBurn * COIN )  {
             QString strAvailable = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), (curBalance-(nMasternodeBurn*COIN)) );
@@ -1428,15 +1441,12 @@ bool MasternodeList::nodeSetupCheckFunds( CAmount invoiceAmount )   {
             std::string copyOfStr = stringStream.str();
             nodeSetupStep( "setupKo", copyOfStr);
         }
-        else if ( curBalance > nNodeRequirement )  {
+        else    {
             QString strAvailable = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), curBalance );
-            QString strBurnAmount = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), nMasternodeBurn*COIN );
-            stringStream << strChecking << " : not enough funds to burn. (you have " << strAvailable.toStdString() << " , need " << strBurnAmount.toStdString() << " )";
+            QString strNeed = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), invoiceAmount + nNodeRequirement + nUpdateMetaRequirement );
+            stringStream << strChecking << " : not enough funds (you have " <<  strAvailable.toStdString() << " , you need " << strNeed.toStdString() << " )";
             std::string copyOfStr = stringStream.str();
             nodeSetupStep( "setupKo", copyOfStr);
-        }
-        else    {
-
         }
     }
 
