@@ -171,6 +171,7 @@ private:
     QString mBurnPrepareTx;
     QString mBurnAddress;
     QString mBurnTx;
+    QString mMetaTx;
     QString mProductIds;
     std::string billingOptions[3] = {"Monthly", "Semiannually", "Annually"};
     QAction *mCheckNodeAction;

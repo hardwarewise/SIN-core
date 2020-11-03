@@ -981,7 +981,8 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
             }
             // amount necessary for updatemeta may be already spent, send again.
             if (nodeSetupUnlockWallet()) {
-                QString metaTx = nodeSetupSendToAddress( mBurnAddress, NODESETUP_UPDATEMETA_AMOUNT , NULL );
+                mMetaTx = nodeSetupSendToAddress( mBurnAddress, NODESETUP_UPDATEMETA_AMOUNT , NULL );
+                nodeSetupStep( "setupWait", "Maturing updatemeta amount");
             }
         }
         else    {   // burn tx not made yet
@@ -995,8 +996,8 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
             if ( mBurnPrepareTx=="" )  {
                ui->labelMessage->setText( "ERROR: failed to prepare burn transaction." );
             }
+            nodeSetupStep( "setupWait", "Preparing burn transaction");
         }
-        nodeSetupStep( "setupWait", "Preparing burn transaction");
     }
 
     return strStatus;
@@ -1018,14 +1019,25 @@ QString MasternodeList::nodeSetupGetOwnerAddressFromBurnTx( QString burnTx )    
 //LogPrintf("nodeSetupGetOwnerAddressFromBurnTx %s \n", txid.toStdString());
             if ( txid!="" ) {
                 cmd.str("");
-                cmd << "gettransaction " << txid.toUtf8().constData();
+                cmd << "getrawtransaction " << txid.toUtf8().constData() << " 1";
                 jsonVal = nodeSetupCallRPC( cmd.str() );
-                UniValue details = find_value(jsonVal.get_obj(), "details").get_array();
-                UniValue detail0 = details[0].get_obj();
-                address = QString::fromStdString(find_value(detail0, "address").get_str());
+                UniValue voutArray = find_value(jsonVal.get_obj(), "vout").get_array();
+
+                for (unsigned int idx = 0; idx < voutArray.size(); idx++) {
+                    const UniValue &vout = voutArray[idx].get_obj();
+                    CAmount value = find_value(vout, "value").get_real();
+
+                    if ( value == Params().GetConsensus().nMasternodeBurnSINNODE_1
+                      || value == Params().GetConsensus().nMasternodeBurnSINNODE_5
+                      || value == Params().GetConsensus().nMasternodeBurnSINNODE_10    )  {
+                        UniValue obj = find_value(vout, "scriptPubKey").get_obj();
+                        UniValue addressesArray = find_value(obj, "addresses").get_array();
+                        address = QString::fromStdString(addressesArray[0].get_str());
+                        break;
+                    }
+                }
 //LogPrintf("nodeSetupGetOwnerAddressFromBurnTx address %s \n", address.toStdString());
             }
-
         }
         else {
             ui->labelMessage->setText( "Error calling RPC getrawtransaction");
@@ -1052,7 +1064,7 @@ void MasternodeList::nodeSetupCheckBurnPrepareConfirmations()   {
 
         mBurnTx = nodeSetupRPCBurnFund( mBurnAddress, nMasternodeBurn , strAddressBackup);
         if (nodeSetupUnlockWallet()) {
-            QString metaTx = nodeSetupSendToAddress( mBurnAddress, NODESETUP_UPDATEMETA_AMOUNT , NULL );
+            mMetaTx = nodeSetupSendToAddress( mBurnAddress, NODESETUP_UPDATEMETA_AMOUNT , NULL );
         }
         if ( mBurnTx!="" )  {
             nodeSetupSetBurnTx(mBurnTx);
@@ -1073,8 +1085,11 @@ void MasternodeList::nodeSetupCheckBurnSendConfirmations()   {
     int clientId = nodeSetupGetClientId( email, pass );
 
     UniValue objConfirms = nodeSetupGetTxInfo( mBurnTx, "confirmations" );
+    UniValue objConfirmsMeta = nodeSetupGetTxInfo( mMetaTx, "confirmations" );
+
     int numConfirms = objConfirms.get_int();
-    if ( numConfirms>NODESETUP_CONFIRMS && pass != "" )    {
+    int numConfirmsMeta = objConfirmsMeta.get_int();
+    if ( numConfirms>NODESETUP_CONFIRMS && numConfirmsMeta>NODESETUP_CONFIRMS && pass != "" )    {
         nodeSetupStep( "setupOk", "Finishing node setup");
         burnSendTimer->stop();
 
