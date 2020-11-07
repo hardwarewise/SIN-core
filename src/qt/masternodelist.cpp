@@ -35,6 +35,7 @@
 #include <QMessageBox>
 #include <QStyleFactory>
 #include <QDesktopServices>
+#include <QTextCodec>
 
 // begin nodeSetup
 #include <boost/algorithm/string.hpp>
@@ -736,9 +737,14 @@ void MasternodeList::on_payButton_clicked()
      nodeSetupGetClientId( email, pass, true );
 
      if (invoiceToPay>0)    {
-        nodeSetupAPIGetInvoice( invoiceToPay, strAmount, strStatus, paymentAddress, email, pass, strError );
+        bool res = nodeSetupAPIGetInvoice( invoiceToPay, strAmount, strStatus, paymentAddress, email, pass, strError );
         CAmount invoiceAmount = strAmount.toDouble();
         //LogPrintf("nodeSetupCheckPendingPayments nodeSetupAPIGetInvoice %s, %d \n", strStatus.toStdString(), invoiceToPay );
+
+        if ( !res )   {
+            ui->labelMessage->setText(strError);
+            return;
+        }
 
          if ( strStatus == "Unpaid" )  {
              // Display message box
@@ -1115,22 +1121,27 @@ void MasternodeList::nodeSetupCheckBurnSendConfirmations()   {
                 nodeSetupSetBurnTx("");
 
                 nodeSetupStep( "setupOk", "Node setup finished");
-                nodeSetupUnlockWallet();
+                nodeSetupLockWallet();
+                nodeSetupResetOrderId();
+                nodeSetupEnableOrderUI(false);
             }
-            catch (const UniValue& objError)
-            {
-                ui->labelMessage->setText( QString::fromStdString(find_value(objError, "message").get_str()) );
+            catch (const UniValue& objError)    {
+                QString str = nodeSetupGetRPCErrorMessage( objError );
+                ui->labelMessage->setText( str ) ;
+                nodeSetupStep( "setupKo", "Node setup failed");
             }
             catch ( std::runtime_error e)
             {
                 ui->labelMessage->setText( QString::fromStdString( "ERROR infinitynodeupdatemeta: unexpected error " ) + QString::fromStdString( e.what() ));
+                nodeSetupStep( "setupKo", "Node setup failed");
             }
         }
         else    {
             LogPrintf("infinitynodeupdatemeta Error while obtaining node info \n");
             ui->labelMessage->setText( "ERROR: infinitynodeupdatemeta " );
+            nodeSetupStep( "setupKo", "Node setup failed");
         }
-        nodeSetupUnlockWallet();
+        nodeSetupLockWallet();
     }
 }
 
@@ -1675,6 +1686,8 @@ bool MasternodeList::nodeSetupAPIGetInvoice( int invoiceid, QString& strAmount, 
 
     QByteArray data = reply->readAll();
     QJsonDocument json = QJsonDocument::fromJson(data);
+    QString strData = QString(data);
+
     QJsonObject root = json.object();
 
     if ( root.contains("result") ) {
@@ -1708,6 +1721,9 @@ bool MasternodeList::nodeSetupAPIGetInvoice( int invoiceid, QString& strAmount, 
                 strError = root["message"].toString();
             }
         }
+    }
+    else    {
+        strError = strData;
     }
 
     return ret;
@@ -2019,4 +2035,20 @@ void MasternodeList::nodeSetupLockWallet()    {
     delete pUnlockCtx;
     pUnlockCtx = NULL;
 //LogPrintf("nodeSetupLockWallet: locked \n" );
+}
+
+QString MasternodeList::nodeSetupGetRPCErrorMessage( UniValue objError )    {
+    QString ret;
+    try // Nice formatting for standard-format error
+    {
+        int code = find_value(objError, "code").get_int();
+        std::string message = find_value(objError, "message").get_str();
+        ret = QString::fromStdString(message) + " (code " + QString::number(code) + ")";
+    }
+    catch (const std::runtime_error&) // raised when converting to invalid type, i.e. missing code or message
+    {   // Show raw JSON object
+        ret = QString::fromStdString(objError.write());
+    }
+
+    return ret;
 }
