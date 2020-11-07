@@ -130,6 +130,7 @@ public Q_SLOTS:
     QString nodeSetupGetOwnerAddressFromBurnTx( QString burnTx );
     bool nodeSetupUnlockWallet();
     void nodeSetupLockWallet();
+    QString nodeSetupGetRPCErrorMessage( UniValue objError );
 
 Q_SIGNALS:
 
