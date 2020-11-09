@@ -1120,10 +1120,10 @@ void MasternodeList::nodeSetupCheckBurnSendConfirmations()   {
                 nodeSetupResetOrderId();
                 nodeSetupSetBurnTx("");
 
-                nodeSetupStep( "setupOk", "Node setup finished");
                 nodeSetupLockWallet();
                 nodeSetupResetOrderId();
                 nodeSetupEnableOrderUI(false);
+                nodeSetupStep( "setupOk", "Node setup finished");
             }
             catch (const UniValue& objError)    {
                 QString str = nodeSetupGetRPCErrorMessage( objError );
