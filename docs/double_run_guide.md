@@ -160,3 +160,6 @@ You can get the first 16 characters of BurnTx from the infinitynode.conf file.
   
 
 ![](https://lh3.googleusercontent.com/UZOy_3Bde6AiW0MeiOul5WMb7DU0-myeJOCj-H4hARaatn7rLlpjTubOMllcbR2FT7sWXLkIPPSnQ4dEj93uMqaHDhLR3sIr0CtnN3Lv1vLh7x0B0HdPBB8-NKSKXBopqbA4GtXo)
+
+**Wait for 55 confirmations for DIN nodes to show up**
+If it still doesn't appear, on the console enter the `` infinitynode build-list`` command and wait.
