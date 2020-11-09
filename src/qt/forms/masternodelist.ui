@@ -447,7 +447,7 @@ width: 150px;
               <string notr="true"/>
              </property>
              <property name="text">
-              <string>Right click IP address to check node stats  (Wait for 55 confirmations for DIN nodes to show up)</string>
+              <string>Right click IP address to check node stats (55 updatemeta confirmations to appear in the list.)</string>
              </property>
             </widget>
            </item>
