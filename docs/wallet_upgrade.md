@@ -44,7 +44,7 @@ In case you need to resync your local wallet in Windows:
 
 ![](assets/img/misc/win_wallet_reindex.png)
 
-
+Or use [Bootstrap](https://docs.sinovate.io/#/bootstrap)
 
 # MAC QT Wallet Backup and Upgrade Guide
 
