@@ -20,6 +20,8 @@ Your wallet.dat file can be either in the wallets directory or in the SIN home d
   
 ![directory](assets/img/misc/directory.png)
 
+*Shut down the wallet. Backup wallet.dat and Remove all old files and folders. 
+
 
 Download the latest version of Windows Wallet at [https://github.com/SINOVATEblockchain/SIN-core/releases](https://github.com/SINOVATEblockchain/SIN-core/releases)
  
@@ -28,6 +30,8 @@ Download the latest version of Windows Wallet at [https://github.com/SINOVATEblo
   
 
 Replace the `sin-qt.exe` file in the compressed file you downloaded with the `sin-qt.exe` file you are currently using.
+
+*Start the new wallet and wait for synchronization.
 
 
 **Resync Windows wallet**
@@ -39,6 +43,7 @@ In case you need to resync your local wallet in Windows:
 * wait full resync
 
 ![](assets/img/misc/win_wallet_reindex.png)
+
 
 
 # MAC QT Wallet Backup and Upgrade Guide
@@ -68,6 +73,8 @@ Your wallet.dat file can be either in the wallets directory or in the SIN home d
 
 ![run5](assets/img/misc/mac_backup05.png)
 
+*Shut down the wallet. Backup wallet.dat and Remove all old files and folders. 
+
 
 Download the latest version of MAC Wallet at [https://github.com/SINOVATEblockchain/SIN-core/releases](https://github.com/SINOVATEblockchain/SIN-core/releases)
  
@@ -76,6 +83,9 @@ Download the latest version of MAC Wallet at [https://github.com/SINOVATEblockch
   
 
 Replace the `sin-qt app` file in the compressed file you downloaded with the `sin-qt app` file you are currently using.
+
+*Start the new wallet and wait for synchronization.
+
 
 
 # VPS Infinity Node Update And Sync Guide
