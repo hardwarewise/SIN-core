@@ -1933,7 +1933,7 @@ std::map<std::string, pair_burntx> MasternodeList::nodeSetupGetUnusedBurnTxs( ) 
                 CAmount roundAmount = ((int)(s.amount / COIN)+1);
 
                 if ( roundAmount == Params().GetConsensus().nMasternodeBurnSINNODE_1 )  {
-                    strNodeType = "LIL";
+                    strNodeType = "MINI";
                 }
                 else if ( roundAmount == Params().GetConsensus().nMasternodeBurnSINNODE_5 )  {
                     strNodeType = "MID";
@@ -1945,7 +1945,7 @@ std::map<std::string, pair_burntx> MasternodeList::nodeSetupGetUnusedBurnTxs( ) 
                     strNodeType = "Unknown";
                 }
 
-                description = strNodeType + " " + GUIUtil::dateTimeStr(pwtx->GetTxTime()).toUtf8().constData();
+                description = strNodeType + " " + GUIUtil::dateTimeStr(pwtx->GetTxTime()).toUtf8().constData() + " " + txHash.substr(0, 8);
 //LogPrintf("nodeSetupGetUnusedBurnTxs  confirmed %s, %d, %s \n", txHash.substr(0, 16), roundAmount, description);
                 ret.insert( { txHash,  std::make_pair(confirms, description) } );
             }
