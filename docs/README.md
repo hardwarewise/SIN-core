@@ -1,4 +1,4 @@
-# ![SINOVATE Logo](docs/assets/img/sin_background.png)
+# ![SINOVATE Logo](https://raw.githubusercontent.com/SINOVATEblockchain/SIN-core/master/docs/assets/img/sin_background.png)
 
 
 **SINOVATE (SIN)** is an open-source state of the art digital cryptocurrency. We create and build
