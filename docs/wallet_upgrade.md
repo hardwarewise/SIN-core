@@ -90,36 +90,77 @@ Replace the `sin-qt app` file in the compressed file you downloaded with the `si
 
 # VPS Infinity Node Update And Sync Guide
 
-**If running Infinity Node, stop it.**
-``sudo systemctl stop sinovate.service``
+**disable it if you are using a crontab**
+```bash
+crontab -l > my_cron_backup.txt
+crontab -r
+```
 
+**if running Infinity Node, stop it.**
+```bash
+sudo systemctl stop sinovate.service
+./sin-cli stop
+```
+
+**update Latest Wallet** 
+```bash
+wget -O daemon.tar.gz https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/daemon.tar.gz
+
+tar -xzvf daemon.tar.gz
+```
 **install unzip package**
-``sudo apt update && sudo apt install unzip``
+```bash
+sudo apt update && sudo apt install unzip
+```
+**remove old files and folders**
+```bash
+rm -rf ~/.sin/{blocks,chainstate,debug.log,mnpayments.dat,mncache.dat,banlist.dat,peers.dat,netfulfilled.dat,governance.dat,fee_estimates.dat}
+```
 
-**remove old files and folders (Write this entire code on one line.)**
-``rm -rf ~/.sin/{blocks,chainstate,debug.log,mnpayments.dat,mncache.dat,banlist.dat,peers.dat,netfulfilled.dat,governance.dat,fee_estimates.dat}``
-
+**Run the daemon**
+```bash
+./sind
+```
+* :warning: **This place is important. Please wait 3-5 minutes. Then check the block height. If you get an error message that blocks are loading, wait a little longer.**
+```bash
+./sin-cli getblockcount
+```
+**When you see a block height above 3k, go to the next step**
+**Infinity Node, stop it again**
+```bash
+./sin-cli stop
+```
 **download latest bootstrap archive**
-``wget -O ~/bootstrap.zip https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstrap.zip``
-
+```bash
+wget -O ~/bootstrap.zip https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstrap.zip
+```
+**remove old blocks and chainstate folders**
+```bash
+rm -rf ~/.sin/{blocks,chainstate}
+```
 **unzip the bootstrap archive**
-``unzip ~/bootstrap.zip``
-
+```bash
+unzip ~/bootstrap.zip
+```
 **move bootstrap files**
-``mv -t ~/.sin ~/bootstrap/blocks ~/bootstrap/chainstate``
+```bash
+mv -t ~/.sin ~/bootstrap/blocks ~/bootstrap/chainstate
+```
+**Run the daemon again**
+```bash
+./sind
+```
 
+:warning: **please wait 3-5 minutes. Then check the block height. If you get an error message that blocks are loading or rescanning, wait a little longer.**
+```bash
+./sin-cli getblockcount 
+```
+**if everything is ok and you are using crontab, re-enable it.**
+```bash
+crontab my_cron_backup.txt
+crontab -l
+```
 **remove unnecessary files**
-``rm -rf ~/{bootstrap,bootstrap.zip}``
-
-**Update Latest Wallet**
-``wget -O daemon.tar.gz https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/daemon.tar.gz``
-
-``tar -xzvf daemon.tar.gz``
-
-**Check Version**
-``./sin-cli -version``
-
-**reboot infinitynode**
-``sudo reboot``
-
-
+```bash
+rm -rf ~/{bootstrap,bootstrap.zip}
+```
