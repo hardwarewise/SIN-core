@@ -113,6 +113,7 @@ Replace the `sin-qt app` file in the compressed file you downloaded with the `si
 
 **Update Latest Wallet**
 ``wget -O daemon.tar.gz https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/daemon.tar.gz``
+
 ``tar -xzvf daemon.tar.gz``
 
 **Check Version**
