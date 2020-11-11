@@ -121,7 +121,7 @@ rm -rf ~/.sin/{blocks,chainstate,debug.log,mnpayments.dat,mncache.dat,banlist.da
 ```bash
 ./sind
 ```
-* :warning: **This place is important. Please wait 3-5 minutes. Then check the block height. If you get an error message that blocks are loading, wait a little longer.**
+:warning: **This place is important. Please wait 3-5 minutes. Then check the block height. If you get an error message that blocks are loading, wait a little longer.**
 ```bash
 ./sin-cli getblockcount
 ```
