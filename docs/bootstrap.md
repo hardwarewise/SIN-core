@@ -20,8 +20,14 @@ https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstra
 In case you need to quickly sync the blockchain of your Infinity Node or linux wallet, follow the commented steps below:
 
 ```bash
+
+# Disable it if you are using a crontab
+crontab -l > my_cron_backup.txt
+crontab -r
+
 # If running Infinity Node, stop it.
 sudo systemctl stop sinovate.service
+./sin-cli stop
 
 # install unzip package
 sudo apt update && sudo apt install unzip
@@ -40,6 +46,11 @@ mv -t ~/.sin ~/bootstrap/blocks ~/bootstrap/chainstate
 
 # remove unnecessary files
 rm -rf ~/{bootstrap,bootstrap.zip}
+
+# To restore crontab
+
+crontab my_cron_backup.txt
+crontab -l
 
 # reboot infinitynode
 sudo reboot
