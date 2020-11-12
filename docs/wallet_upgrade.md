@@ -20,35 +20,28 @@ Your wallet.dat file can be either in the wallets directory or in the SIN home d
   
 ![directory](assets/img/misc/directory.png)
 
-*Shut down the wallet. Backup wallet.dat and Remove all old files and folders. 
+*Shut down the wallet. Backup wallet.dat and infinitynode.conf file.
 
 
 Download the latest version of Windows Wallet at [https://github.com/SINOVATEblockchain/SIN-core/releases](https://github.com/SINOVATEblockchain/SIN-core/releases)
  
 
 ![release](assets/img/misc/release.png)
-  
+ 
+ Replace the sin-qt.exe file in the compressed file you downloaded with the sin-qt.exe file you are currently using.
 
-Replace the `sin-qt.exe` file in the compressed file you downloaded with the `sin-qt.exe` file you are currently using.
+:warning: For users who will upgrade from older versions to 1.0.0.0. Important Notice :
 
-*Start the new wallet and wait for synchronization.
+- Close the wallet
+- Back up
+- Delete everything except wallet.dat and infinitynode.conf
+- Start the wallet. Wait 5 minutes. Close the wallet again. Paste the two folders from Download the latest version bootstrap into the SIN folder and overwrite it. Restart the wallet. That is all.
+- Latest Bootstrap [here](https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstrap.zip)
+:warning: This is important because the system changes and a new node DB is created.
 
 
-**Resync Windows wallet**
-In case you need to resync your local wallet in Windows:
-* Close wallet;
-* Create a shortcut;
-* Rick click on shortcut and select properties;
-* add in target, at the end of the path ` -reindex` (space -reindex, see screenshot below)
-* wait full resync
-
-![](assets/img/misc/win_wallet_reindex.png)
-
-Or use [Bootstrap](https://docs.sinovate.io/#/bootstrap)
 
 # MAC QT Wallet Backup and Upgrade Guide
-
-  
 
 * First of all, don't forget to back up your current data.
 
