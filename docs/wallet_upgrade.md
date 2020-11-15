@@ -35,8 +35,9 @@ Download the latest version of Windows Wallet at [https://github.com/SINOVATEblo
 - Close the wallet
 - Back up
 - Delete everything except wallet.dat and infinitynode.conf
-- Start the wallet. Wait 5 minutes. Close the wallet again. Paste the two folders from Download the latest version bootstrap into the SIN folder and overwrite it. Restart the wallet. That is all.
-- Latest Bootstrap [here](https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstrap.zip)
+- Start the wallet.
+- Please wait for it to be fully synchronized. Do not use Bootstrap.
+- This is important because the system changes and a new node DB is created.
 :warning: This is important because the system changes and a new node DB is created.
 
 
@@ -101,53 +102,17 @@ wget -O daemon.tar.gz https://github.com/SINOVATEblockchain/SIN-core/releases/la
 
 tar -xzvf daemon.tar.gz
 ```
-**install unzip package**
-```bash
-sudo apt update && sudo apt install unzip
-```
+
 **remove old files and folders**
 ```bash
 rm -rf ~/.sin/{blocks,chainstate,debug.log,mnpayments.dat,mncache.dat,banlist.dat,peers.dat,netfulfilled.dat,governance.dat,fee_estimates.dat}
 ```
 
-**Run the daemon**
-```bash
-./sind
-```
-:warning: **This place is important. Please wait 3-5 minutes. Then check the block height. If you get an error message that blocks are loading, wait a little longer.**
-```bash
-./sin-cli getblockcount
-```
-**When you see a block height above 3k, go to the next step**
-**Infinity Node, stop it again**
-```bash
-./sin-cli stop
-```
-**download latest bootstrap archive**
-```bash
-wget -O ~/bootstrap.zip https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstrap.zip
-```
-**remove old blocks and chainstate folders**
-```bash
-rm -rf ~/.sin/{blocks,chainstate}
-```
-**unzip the bootstrap archive**
-```bash
-unzip ~/bootstrap.zip
-```
-**move bootstrap files**
-```bash
-mv -t ~/.sin ~/bootstrap/blocks ~/bootstrap/chainstate
-```
-**Run the daemon again**
+**Run the daemon. DO NOT USE BOOTSTRAP**
 ```bash
 ./sind
 ```
 
-:warning: **please wait 3-5 minutes. Then check the block height. If you get an error message that blocks are loading or rescanning, wait a little longer.**
-```bash
-./sin-cli getblockcount 
-```
 **if everything is ok and you are using crontab, re-enable it.**
 ```bash
 crontab my_cron_backup.txt
