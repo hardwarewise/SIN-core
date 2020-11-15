@@ -104,9 +104,11 @@ tar -xzvf daemon.tar.gz
 ```
 
 **remove old files and folders**
-```bash
-rm -rf ~/.sin/{blocks,chainstate,debug.log,mnpayments.dat,mncache.dat,banlist.dat,peers.dat,netfulfilled.dat,governance.dat,fee_estimates.dat}
-```
+With WinSCP or similar program
+
+Delete everything except wallet.dat (or wallets folder) and sin.conf.
+
+![delete](assets/img/misc/delete.png)
 
 **Run the daemon. DO NOT USE BOOTSTRAP**
 ```bash
