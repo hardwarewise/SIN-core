@@ -1,3 +1,6 @@
+
+:warning: **IMPORTANT!!! Please do not use Bootstrap up to the hard fork. Synchronize from scratch.**
+
 ## About the Bootstrap
 The bootstrap file contains most of the current blockchain data in a downloadable zip file. You can use this data with your **Infinity Node** or **local wallet** to quickly sync. This method is much faster because you do not need to download every block over the p2p node network, which can take many hours or days depending on internet speed.
 
