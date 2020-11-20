@@ -15,6 +15,6 @@ UniValue SignTransaction(CMutableTransaction& mtx, const UniValue& prevTxs, CBas
 /** Create a transaction from univalue parameters */
 CMutableTransaction ConstructTransaction(const UniValue& inputs_in, const UniValue& outputs_in, const UniValue& locktime, const UniValue& rbf);
 
-CMutableTransaction ConstructTransactionWithScript(const UniValue& inputs_in, const CScript& scriptMeta, const CTxDestination& INFAddress);
+CMutableTransaction ConstructTransactionWithScript(const UniValue& inputs_in, const CScript& scriptMeta);
 
 #endif // BITCOIN_RPC_RAWTRANSACTION_H
