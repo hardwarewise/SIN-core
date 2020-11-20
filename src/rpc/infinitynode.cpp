@@ -646,6 +646,102 @@ static UniValue infinitynodeburnfund(const JSONRPCRequest& request)
     return results;
 }
 
+/**
+ * @xtdevcoin co-authored by @giaki3003
+ * this function help user burn correctly their funds to run infinity node
+ * (giaki3003) from an array of inputs, without signing
+ */
+static UniValue infinitynodeburnfund_external(const JSONRPCRequest& request)
+{
+
+    if (request.fHelp || request.params.size() != 4)
+       throw std::runtime_error(
+            "infinitynodeburnfund NodeOwnerAddress amount SINBackupAddress"
+            "\nSend an amount to BurnAddress.\n"
+            "\nArguments:\n"
+            "1. \"inputs\"                (array, required) A json array of json objects\n"
+            "     [\n"
+            "       {\n"
+            "         \"txid\":\"id\",      (string, required) The transaction id\n"
+            "         \"vout\":n,           (numeric, required) The output number\n"
+            "         \"sequence\":n        (numeric, optional) The sequence number\n"
+            "       } \n"
+            "       ,...\n"
+            "     ]\n"
+            "2. \"NodeOwnerAddress\" (string, required) Address of Collateral.\n"
+            "3. \"amount\"             (numeric or string, required) The amount in " + CURRENCY_UNIT + " to send for making an InfinityNode. eg 1000000\n"
+            "4. \"SINBackupAddress\"  (string, required) The SIN address to send to when you make a notification(new feature soon).\n"
+            "\nResult:\n"
+            "\"BURNtxid\"                  (string) The burn transaction id. Needed to run infinity node\n"
+            "\"CollateralAddress\"         (string) Collateral. Please send 10000"  + CURRENCY_UNIT + " to this address.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("infinitynodeburnfund", "NodeOwnerAddress 1000000 SINBackupAddress")
+        );
+
+    std::string strError;
+
+    RPCTypeCheck(request.params, {
+        UniValue::VARR,
+        UniValue::VSTR,
+        UniValue::VSTR,
+        UniValue::VSTR
+        }, true
+    );
+
+    UniValue results(UniValue::VARR);
+    UniValue entry(UniValue::VOBJ);
+    // Amount
+
+    CTxDestination NodeOwnerAddress = DecodeDestination(request.params[1].get_str());
+    if (!IsValidDestination(NodeOwnerAddress))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid SIN address as NodeOwnerAddress");
+
+    CAmount nAmount = AmountFromValue(request.params[2]);
+    if (nAmount != Params().GetConsensus().nMasternodeBurnSINNODE_1 * COIN &&
+        nAmount != Params().GetConsensus().nMasternodeBurnSINNODE_5 * COIN &&
+        nAmount != Params().GetConsensus().nMasternodeBurnSINNODE_10 * COIN)
+    {
+        throw JSONRPCError(RPC_TYPE_ERROR, "Invalid amount to burn and run an InfinityNode");
+    }
+
+    CTxDestination BKaddress = DecodeDestination(request.params[3].get_str());
+    if (!IsValidDestination(BKaddress))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid SIN address as SINBackupAddress");
+
+    std::map<COutPoint, CInfinitynode> mapInfinitynodes = infnodeman.GetFullInfinitynodeMap();
+    int totalNode = 0, totalBIG = 0, totalMID = 0, totalLIL = 0, totalUnknown = 0;
+    for (auto& infpair : mapInfinitynodes) {
+        ++totalNode;
+        CInfinitynode inf = infpair.second;
+        int sintype = inf.getSINType();
+        if (sintype == 10) ++totalBIG;
+        else if (sintype == 5) ++totalMID;
+        else if (sintype == 1) ++totalLIL;
+        else ++totalUnknown;
+    }
+
+    // BurnAddress
+    CTxDestination dest = DecodeDestination(Params().GetConsensus().cBurnAddress);
+    CScript scriptPubKeyBurnAddress = GetScriptForDestination(dest);
+    std::vector<std::vector<unsigned char> > vSolutions;
+    txnouttype whichType;
+    if (!Solver(scriptPubKeyBurnAddress, whichType, vSolutions))
+        return false;
+    CKeyID keyid = CKeyID(uint160(vSolutions[0]));
+    CScript script;
+    script = GetScriptForBurn(keyid, request.params[3].get_str());
+
+    CMutableTransaction rawMetaTx = ConstructTransactionWithScript(request.params[0], script);
+
+    entry.pushKV("rawMetaTx", EncodeHexTx(rawMetaTx));
+    entry.pushKV("BURNADDRESS", EncodeDestination(dest));
+    entry.pushKV("BURNPUBLICKEY", HexStr(keyid.begin(), keyid.end()));
+    entry.pushKV("BURNSCRIPT", HexStr(scriptPubKeyBurnAddress.begin(), scriptPubKeyBurnAddress.end()));
+    entry.pushKV("BACKUP_ADDRESS",EncodeDestination(BKaddress));
+    results.push_back(entry);
+    return results;
+}
+
  
 static UniValue infinitynodeupdatemeta(const JSONRPCRequest& request)
 {
@@ -914,7 +1010,7 @@ static UniValue infinitynodeupdatemeta_external(const JSONRPCRequest& request)
     CScript script;
     script = GetScriptForBurn(keyid, streamInfo.str());
 
-    CMutableTransaction rawMetaTx = ConstructTransactionWithScript(request.params[0], script, INFAddress);
+    CMutableTransaction rawMetaTx = ConstructTransactionWithScript(request.params[0], script);
 
     return EncodeHexTx(rawMetaTx);
 }
