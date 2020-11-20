@@ -665,8 +665,8 @@ static UniValue infinitynodeburnfund_external(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 4)
        throw std::runtime_error(
-            "infinitynodeburnfund NodeOwnerAddress amount SINBackupAddress"
-            "\nSend an amount to BurnAddress.\n"
+            "infinitynodeburnfund_external inputs NodeOwnerAddress amount SINBackupAddress"
+            "\nPrepare a burn transaction with the given inputs.\n"
             "\nArguments:\n"
             "1. \"inputs\"                (array, required) A json array of json objects\n"
             "     [\n"
@@ -684,7 +684,7 @@ static UniValue infinitynodeburnfund_external(const JSONRPCRequest& request)
             "\"BURNtxid\"                  (string) The burn transaction id. Needed to run infinity node\n"
             "\"CollateralAddress\"         (string) Collateral. Please send 10000"  + CURRENCY_UNIT + " to this address.\n"
             "\nExamples:\n"
-            + HelpExampleCli("infinitynodeburnfund", "NodeOwnerAddress 1000000 SINBackupAddress")
+            + HelpExampleCli("infinitynodeburnfund_external", "\"[{\\\"txid\\\":\\\"myid\\\",\\\"vout\\\":0}]\" NodeOwnerAddress 1000000 SINBackupAddress")
         );
 
     std::string strError;
@@ -1148,8 +1148,9 @@ static const CRPCCommand commands[] =
 { //  category              name                      actor (function)                              argNames
   //  --------------------- ------------------------  -----------------------                       ----------
     { "SIN",                "infinitynodeburnfund",   &infinitynodeburnfund,                        {"amount"} },
+    { "SIN",                "infinitynodeburnfund_external", &infinitynodeburnfund_external,        {"inputs array", "owner_address","amount","backup_address"} },
     { "SIN",                "infinitynodeupdatemeta", &infinitynodeupdatemeta,                      {"owner_address","node_address","IP"} },
-    { "SIN",                "infinitynodeupdatemeta_external", &infinitynodeupdatemeta_external,    {"owner_address","node_address","IP", "inputs array"} },
+    { "SIN",                "infinitynodeupdatemeta_external", &infinitynodeupdatemeta_external,    {"inputs array", "owner_address","node_address","IP"} },
     { "SIN",                "infinitynode",           &infinitynode,                                {"command"}  },
     { "SIN",                "infinitynodevote",       &infinitynodevote,                            {"owner_address","proposalid","opinion"} }
 };
