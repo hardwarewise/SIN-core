@@ -1,6 +1,4 @@
 
-:warning: **IMPORTANT!!! Please do not use Bootstrap up to the hard fork. Synchronize from scratch.**
-
 ## About the Bootstrap
 The bootstrap file contains most of the current blockchain data in a downloadable zip file. You can use this data with your **Infinity Node** or **local wallet** to quickly sync. This method is much faster because you do not need to download every block over the p2p node network, which can take many hours or days depending on internet speed.
 
@@ -13,9 +11,9 @@ https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstra
 - If open, close the wallet
 - Go to your local SIN folder located at `%appdata%\SIN\`
 	- (This defaults to `C:\Documents and Settings\YourUserName\Application data\SIN\` on Windows XP and to `C:\Users\YourUserName\Appdata\Roaming\SIN\` on Windows Vista, 7, 8, and 10.)
-- Delete `blocks` and `chainstate` folders.
+- Delete `blocks`,`chainstate` and indexes folders.
 - Unzip the downloaded `bootstrap.zip` file
-- Move the `blocks` and `chainstate` folders inside the SIN folder at `%appdata%\SIN\`
+- Move the `blocks`, `chainstate`, indexes folders and infinitynode dat files inside the SIN folder at `%appdata%\SIN\`
 - Open the local wallet again.
 
 ## Linux CLI Bootstrap
