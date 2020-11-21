@@ -36,7 +36,7 @@ sudo systemctl stop sinovate.service
 sudo apt update && sudo apt install unzip
 
 # remove old files and folders
-rm -rf ~/.sin/{blocks,chainstate,debug.log,mnpayments.dat,mncache.dat,banlist.dat,peers.dat,netfulfilled.dat,governance.dat,fee_estimates.dat}
+rm -rf ~/.sin/{blocks,chainstate,indexes,debug.log,mnpayments.dat,mncache.dat,banlist.dat,peers.dat,netfulfilled.dat,governance.dat,fee_estimates.dat}
 
 # download latest bootstrap archive
 wget -O ~/bootstrap.zip https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstrap.zip
@@ -45,7 +45,7 @@ wget -O ~/bootstrap.zip https://github.com/SINOVATEblockchain/SIN-core/releases/
 unzip ~/bootstrap.zip
 
 # move bootstrap files
-mv -tf ~/.sin ~/bootstrap/blocks ~/bootstrap/chainstate ~/bootstrap/indexes ~/bootstrap/infinitynode*.dat
+mv -ft ~/.sin ~/bootstrap/blocks ~/bootstrap/chainstate ~/bootstrap/indexes ~/bootstrap/infinitynode*.dat
 
 # remove unnecessary files
 rm -rf ~/{bootstrap,bootstrap.zip}
