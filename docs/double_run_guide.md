@@ -17,9 +17,10 @@ VPS Infinity Node Update And Sync Guide [here](https://docs.sinovate.io/#/wallet
 
 Connect to your VPS and enter the commands below.
 
-:~$ bash
-
-:~$ ./sin-cli infinitynode keypair
+```bash
+bash
+/sin-cli infinitynode keypair
+```
 
 ![](https://lh6.googleusercontent.com/-gsD8Y15gVfUwOPG8uTFkHz_RGiHf_o9gPF2tesAz2Ivq4bzTRTAJkCq9eV9uZLU1s8Y0DIA4zBJWkaKnqTab7729A7C7Flbe8flBKeNr7Hpg-al3U1qC5GP6UBGJYlTZfFTJnFH)
 
@@ -61,8 +62,9 @@ Enter the following command on the VPS screen and paste the key you copied, leav
 
   
 
-:~$ ./sin-cli importprivkey [your_privatekey]  
-  
+```bash
+./sin-cli importprivkey [your_privatekey]  
+```  
 
 (Please use your own key and address. The data here is for informational purposes only.)
 
@@ -78,8 +80,9 @@ Enter the following command on the VPS screen and paste the key you copied, leav
 
 Enter the following command to open the sin.conf file.  
   
-
-:~$ sudo nano .sin/sin.conf  
+```bash
+sudo nano .sin/sin.conf  
+```
   
 ![](https://lh5.googleusercontent.com/d8TYEJHa9GFtMErfsGNYd9IR72O_k2QZ5CDQ6rof25FF8ARn0QA3xEJiM6ftohxJS5_hWsRppys5fUtp0a_YjbOCeG0EX5Zw1f2DRxrsdygHGlSxDbcc8JhxktX1RSaHTafLbBa_)
 
@@ -105,8 +108,10 @@ If you are sure that you entered the information correctly, close the sin.conf f
 Restart your VPS with the
 
   
+```bash
+sudo reboot
+```
 
-:~$ sudo reboot
 
 ![](https://lh3.googleusercontent.com/3TMlZcHvvjjQ-a6CNoo1iTWMn3MAHQotuEM4OR6qBKTY43kAEv6B4uQpfHlXqL7-APumtUhvf_DSQLyvGXIX70z2AexSDKsk2ckDWKGzFqtzud8Q4z0cMmVLx1d9Kh34T7BJO9PZ)  
 command.
