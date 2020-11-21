@@ -45,7 +45,7 @@ wget -O ~/bootstrap.zip https://github.com/SINOVATEblockchain/SIN-core/releases/
 unzip ~/bootstrap.zip
 
 # move bootstrap files
-mv -t ~/.sin ~/bootstrap/blocks ~/bootstrap/chainstate
+mv -tf ~/.sin ~/bootstrap/blocks ~/bootstrap/chainstate ~/bootstrap/indexes ~/bootstrap/infinitynode*.dat
 
 # remove unnecessary files
 rm -rf ~/{bootstrap,bootstrap.zip}
