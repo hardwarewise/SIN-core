@@ -35,10 +35,9 @@ Download the latest version of Windows Wallet at [https://github.com/SINOVATEblo
 - Close the wallet
 - Back up
 - Delete everything except wallet.dat and infinitynode.conf
+- Copy the files extracted from the [bootstrap.zip](https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstrap.zip) file to the SIN directory.
 - Start the wallet.
-- Please wait for it to be fully synchronized. Do not use Bootstrap.
-- This is important because the system changes and a new node DB is created.
-:warning: This is important because the system changes and a new node DB is created.
+ 
 
 
 
@@ -102,25 +101,44 @@ wget -O daemon.tar.gz https://github.com/SINOVATEblockchain/SIN-core/releases/la
 
 tar -xzvf daemon.tar.gz
 ```
+# install unzip package
+```bash
+sudo apt update && sudo apt install unzip
+```
+# remove old files and folders
+```bash
+rm -rf ~/.sin/{blocks,chainstate,indexes,debug.log,mnpayments.dat,mncache.dat,banlist.dat,peers.dat,netfulfilled.dat,governance.dat,fee_estimates.dat}
+```
 
-**remove old files and folders**
-With WinSCP or similar program
+# download latest bootstrap archive
+```bash
+wget -O ~/bootstrap.zip https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstrap.zip
+```
 
-Delete everything except wallet.dat (or wallets folder) and sin.conf.
+# unzip the bootstrap archive
+```
+unzip ~/bootstrap.zip
+```
 
-![delete](assets/img/misc/delete.png)
+# move bootstrap files
+```bash
+mv -ft ~/.sin ~/bootstrap/blocks ~/bootstrap/chainstate ~/bootstrap/indexes ~/bootstrap/infinitynode*.dat
+```
 
-**Run the daemon. DO NOT USE BOOTSTRAP**
+# run daemon 
 ```bash
 ./sind
 ```
 
-**if everything is ok and you are using crontab, re-enable it.**
+# To restore crontab
+
 ```bash
 crontab my_cron_backup.txt
 crontab -l
 ```
-**remove unnecessary files**
+
+# remove unnecessary files
 ```bash
 rm -rf ~/{bootstrap,bootstrap.zip}
 ```
+
