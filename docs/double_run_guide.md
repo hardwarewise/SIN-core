@@ -19,7 +19,7 @@ Connect to your VPS and enter the commands below.
 
 ```bash
 bash
-/sin-cli infinitynode keypair
+./sin-cli infinitynode keypair
 ```
 
 ![](https://lh6.googleusercontent.com/-gsD8Y15gVfUwOPG8uTFkHz_RGiHf_o9gPF2tesAz2Ivq4bzTRTAJkCq9eV9uZLU1s8Y0DIA4zBJWkaKnqTab7729A7C7Flbe8flBKeNr7Hpg-al3U1qC5GP6UBGJYlTZfFTJnFH)
