@@ -1029,19 +1029,13 @@ QString MasternodeList::nodeSetupGetOwnerAddressFromBurnTx( QString burnTx )    
                 jsonVal = nodeSetupCallRPC( cmd.str() );
                 UniValue voutArray = find_value(jsonVal.get_obj(), "vout").get_array();
 
-                for (unsigned int idx = 0; idx < voutArray.size(); idx++) {
-                    const UniValue &vout = voutArray[idx].get_obj();
-                    CAmount value = find_value(vout, "value").get_real();
+                // only first output considered for owner address. amount does not have to be exactly the burn amount (may include change amounts)
+                const UniValue &vout = voutArray[0].get_obj();
+                CAmount value = find_value(vout, "value").get_real();
 
-                    if ( value == Params().GetConsensus().nMasternodeBurnSINNODE_1
-                      || value == Params().GetConsensus().nMasternodeBurnSINNODE_5
-                      || value == Params().GetConsensus().nMasternodeBurnSINNODE_10    )  {
-                        UniValue obj = find_value(vout, "scriptPubKey").get_obj();
-                        UniValue addressesArray = find_value(obj, "addresses").get_array();
-                        address = QString::fromStdString(addressesArray[0].get_str());
-                        break;
-                    }
-                }
+                UniValue obj = find_value(vout, "scriptPubKey").get_obj();
+                UniValue addressesArray = find_value(obj, "addresses").get_array();
+                address = QString::fromStdString(addressesArray[0].get_str());
 //LogPrintf("nodeSetupGetOwnerAddressFromBurnTx address %s \n", address.toStdString());
             }
         }
