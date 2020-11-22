@@ -1022,22 +1022,23 @@ QString MasternodeList::nodeSetupGetOwnerAddressFromBurnTx( QString burnTx )    
             UniValue vinArray = find_value(jsonVal.get_obj(), "vin").get_array();
             UniValue vin0 = vinArray[0].get_obj();
             QString txid = QString::fromStdString(find_value(vin0, "txid").get_str());
-//LogPrintf("nodeSetupGetOwnerAddressFromBurnTx %s \n", txid.toStdString());
+LogPrintf("nodeSetupGetOwnerAddressFromBurnTx txid %s \n", txid.toStdString());
             if ( txid!="" ) {
-                int vOut = find_value(vin0, "vOut").get_int();
+                int vOutN = find_value(vin0, "vOut").get_int();
                 cmd.str("");
                 cmd << "getrawtransaction " << txid.toUtf8().constData() << " 1";
                 jsonVal = nodeSetupCallRPC( cmd.str() );
                 UniValue voutArray = find_value(jsonVal.get_obj(), "vout").get_array();
 
                 // take output considered for owner address. amount does not have to be exactly the burn amount (may include change amounts)
-                const UniValue &vout = voutArray[vOut].get_obj();
+                LogPrintf("nodeSetupGetOwnerAddressFromBurnTx nOut=%d \n", vOutN);
+                const UniValue &vout = voutArray[vOutN].get_obj();
                 CAmount value = find_value(vout, "value").get_real();
 
                 UniValue obj = find_value(vout, "scriptPubKey").get_obj();
                 UniValue addressesArray = find_value(obj, "addresses").get_array();
                 address = QString::fromStdString(addressesArray[0].get_str());
-//LogPrintf("nodeSetupGetOwnerAddressFromBurnTx address %s \n", address.toStdString());
+LogPrintf("nodeSetupGetOwnerAddressFromBurnTx address %s \n", address.toStdString());
             }
         }
         else {
