@@ -1421,7 +1421,6 @@ int MasternodeList::nodeSetupGetBurnAmount()    {
 bool MasternodeList::nodeSetupCheckFunds( CAmount invoiceAmount )   {
 
     bool bRet = false;
-    int nMasternodeCollateral = Params().GetConsensus().nMasternodeCollateralMinimum;
     int nMasternodeBurn = nodeSetupGetBurnAmount();
 
     QString strSelectedBurnTx = ui->comboBurnTx->currentData().toString();
@@ -1436,7 +1435,7 @@ bool MasternodeList::nodeSetupCheckFunds( CAmount invoiceAmount )   {
     CWallet * const pwallet = (wallets.size() > 0) ? wallets[0].get() : nullptr;
     CAmount curBalance = pwallet->GetBalance();
     std::ostringstream stringStream;
-    CAmount nNodeRequirement = (nMasternodeBurn + nMasternodeCollateral) * COIN ;
+    CAmount nNodeRequirement = nMasternodeBurn * COIN ;
     CAmount nUpdateMetaRequirement = (NODESETUP_UPDATEMETA_AMOUNT + 1) * COIN ;
 
     if ( curBalance > invoiceAmount + nNodeRequirement + nUpdateMetaRequirement)  {
@@ -1455,13 +1454,6 @@ bool MasternodeList::nodeSetupCheckFunds( CAmount invoiceAmount )   {
             QString strAvailable = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), (curBalance - nNodeRequirement) );
             QString strUpdateMeta = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), nUpdateMetaRequirement );
             stringStream << strChecking << " : not enough amount for UpdateMeta operation (you have " <<  strAvailable.toStdString() << " , you need " << strUpdateMeta.toStdString() << " )";
-            std::string copyOfStr = stringStream.str();
-            nodeSetupStep( "setupKo", copyOfStr);
-        }
-        else if ( curBalance > nMasternodeBurn * COIN )  {
-            QString strAvailable = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), (curBalance-(nMasternodeBurn*COIN)) );
-            QString strCollateral = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), nMasternodeCollateral*COIN );
-            stringStream << strChecking << " : not enough collateral (you have " <<  strAvailable.toStdString() << " , you need " << strCollateral.toStdString() << " )";
             std::string copyOfStr = stringStream.str();
             nodeSetupStep( "setupKo", copyOfStr);
         }
