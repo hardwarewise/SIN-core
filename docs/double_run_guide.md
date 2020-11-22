@@ -1,4 +1,4 @@
-# SINOVATE INFINITYNODE AND D.I.N. DOUBLE-RUN GUIDE
+# SINOVATE MN TO DIN MIGRATION GUIDE
 
 
 This guide assumes you already own an infinity node running.
@@ -118,7 +118,7 @@ command.
 
   
 
-Open your control wallet and send 1 SIN to your vps wallet address.
+**Open your control wallet and send 1 SIN to your vps wallet address.**
 
   
   
