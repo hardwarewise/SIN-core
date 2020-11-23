@@ -1218,6 +1218,7 @@ void MasternodeList::on_btnSetupReset_clicked()
 // END nodeSetup buttons
 
 void MasternodeList::nodeSetupInitialize()   {
+
     ConnectionManager = new QNetworkAccessManager(this);
 
     labelPic[0] = ui->labelPic_1;
@@ -1236,6 +1237,8 @@ void MasternodeList::nodeSetupInitialize()   {
     labelTxt[6] = ui->labelTxt_7;
     labelPic[7] = ui->labelPic_8;
     labelTxt[7] = ui->labelTxt_8;
+
+    ui->tableWidgetMasternodes->setSortingEnabled(false);
 
     // combo billing
     int i;
@@ -1289,6 +1292,7 @@ void MasternodeList::nodeSetupInitialize()   {
 
     nodeSetupPopulateInvoicesCombo();
     nodeSetupPopulateBurnTxCombo();
+    ui->tableWidgetMasternodes->setSortingEnabled(true);
 }
 
 void MasternodeList::nodeSetupEnableOrderUI( bool bEnable, int orderID , int invoiceID ) {
