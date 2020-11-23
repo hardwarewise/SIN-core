@@ -56,6 +56,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
                                     && strCommand != "show-metadata" && strCommand != "memory-lockreward"
                                     && strCommand != "show-lockreward" &&  strCommand != "check-lockreward"
                                     && strCommand != "show-all-infos" &&  strCommand != "getblockcount" && strCommand != "getrawblockcount"
+                                    && strCommand != "show-metapubkey" &&  strCommand != "show-online"
         ))
             throw std::runtime_error(
                 "infinitynode \"command\"...\n"
@@ -311,6 +312,58 @@ UniValue infinitynode(const JSONRPCRequest& request)
         return obj;
     }
 
+    if (strCommand == "show-online")
+    {
+
+        if (request.params.size() != 2)
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Correct usage is 'infinitynode show-online \"nHeight\"'");
+        int nextHeight = 550000;//forkHeight of DIN v1.0
+        nextHeight = atoi(strFilter);
+
+        std::map<COutPoint, CInfinitynode> mapInfinitynodes = infnodeman.GetFullInfinitynodeMap();
+        for (auto& infpair : mapInfinitynodes) {
+            std::string strOutpoint = infpair.first.ToStringShort();
+            CInfinitynode inf = infpair.second;
+
+            std::string sSINType = "NA";
+            if(inf.getSINType() == 1) {sSINType="MINI";}
+            if(inf.getSINType() == 5) {sSINType="MID";}
+            if(inf.getSINType() == 10) {sSINType="BIG";}
+
+            std::string sMetaInfo = "Missing";
+			std::string sNodeAddress = "";
+            CMetadata metaSender = infnodemeta.Find(inf.getMetaID());
+            if (metaSender.getMetadataHeight() > 0){
+                sMetaInfo = "NodeAddress:";
+                std::string metaPublicKey = metaSender.getMetaPublicKey();
+                std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
+                CPubKey pubKey(tx_data.begin(), tx_data.end());
+
+                    CTxDestination dest = GetDestinationForKey(pubKey, OutputType::LEGACY);
+                    sNodeAddress = EncodeDestination(dest);
+            }
+
+            std::string sExpire = "Alive";
+            if(inf.getExpireHeight() <= nextHeight) {
+                    sExpire = "Expired";
+            }
+
+                std::ostringstream streamInfo;
+                streamInfo << std::setw(8) <<
+                               inf.getCollateralAddress() << " " <<
+                               inf.getHeight() << " " <<
+                               inf.getExpireHeight() << " " <<
+                               inf.getRoundBurnValue() << " " <<
+                               sSINType << " " <<
+                               sExpire << " " <<
+                               sMetaInfo << sNodeAddress << " "
+                               ;
+                std::string strInfo = streamInfo.str();
+                obj.push_back(Pair(strOutpoint, strInfo));
+        }
+        return obj;
+    }
+
     if (strCommand == "show-script")
     {
         std::map<COutPoint, CInfinitynode> mapInfinitynodes = infnodeman.GetFullInfinitynodeMap();
@@ -369,6 +422,25 @@ UniValue infinitynode(const JSONRPCRequest& request)
         }
 
         return obj;
+    }
+
+    if (strCommand == "show-metapubkey"){
+        UniValue pubkeyList(UniValue::VARR);
+        std::map<std::string, CMetadata>  mapCopy = infnodemeta.GetFullNodeMetadata();
+        obj.push_back(Pair("Metadata", (int)mapCopy.size()));
+        for (auto& infpair : mapCopy) {
+            std::ostringstream streamInfo;
+            std::vector<unsigned char> tx_data = DecodeBase64(infpair.second.getMetaPublicKey().c_str());
+
+                CPubKey pubKey(tx_data.begin(), tx_data.end());
+                CTxDestination nodeDest = GetDestinationForKey(pubKey, OutputType::LEGACY);
+                streamInfo << std::setw(8) <<
+                EncodeDestination(nodeDest)
+                ;
+                std::string strInfo = streamInfo.str();
+                pubkeyList.push_back(strInfo);
+        }
+        return pubkeyList;
     }
 
     if (strCommand == "show-metadata")
