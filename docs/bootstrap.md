@@ -18,6 +18,8 @@ https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstra
 
 ## Linux CLI Bootstrap
 
+:warning: You must log in with the user you created during installation.
+
 In case you need to quickly sync the blockchain of your Infinity Node or linux wallet, follow the commented steps below:
 
 ```bash
