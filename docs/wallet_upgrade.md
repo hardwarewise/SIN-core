@@ -83,6 +83,8 @@ Replace the `sin-qt app` file in the compressed file you downloaded with the `si
 
 # VPS Infinity Node Update And Sync Guide
 
+:warning: **You must log in with the user you created during installation.**
+
 **disable it if you are using a crontab**
 ```bash
 crontab -l > my_cron_backup.txt
