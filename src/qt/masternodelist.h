@@ -68,12 +68,9 @@ public:
 
     void setClientModel(ClientModel *clientModel);
     void setWalletModel(WalletModel *walletModel);
-    void StartAlias(std::string strAlias);
-    void StartAll(std::string strCommand = "start-all");
     void showTab_setUP(bool fShow);
 
 private:
-    QMenu *contextMenu;
     QMenu *contextDINMenu;
     int64_t nTimeFilterUpdated;
     bool fFilterUpdated;
@@ -83,9 +80,6 @@ private:
     int currentStep = 0;
 
 public Q_SLOTS:
-    void updateMyMasternodeInfo(QString strAlias, QString strAddr, const COutPoint& outpoint);
-    void updateMyNodeList(bool fForce = false);
-    void updateNodeList();
     void updateDINList();
 
     // node setup functions
@@ -140,12 +134,6 @@ private:
     ClientModel *clientModel;
     WalletModel *walletModel;
 
-    // Protects tableWidgetMasternodes
-    CCriticalSection cs_mnlist;
-
-    // Protects tableWidgetMyMasternodes
-    CCriticalSection cs_mymnlist;
-
     QString strCurrentFilter;
     bool bDINNodeAPIUpdate = false;
 
@@ -179,14 +167,7 @@ private:
     WalletModel::UnlockContext *pUnlockCtx = NULL;
 
 private Q_SLOTS:
-    void showContextMenu(const QPoint &);
     void showContextDINMenu(const QPoint &);
-    void on_filterLineEdit_textChanged(const QString &strFilterIn);
-    void on_startButton_clicked();
-    void on_startAllButton_clicked();
-    //void on_startAutoSINButton_clicked();
-    void on_tableWidgetMyMasternodes_itemSelectionChanged();
-    void on_UpdateButton_clicked();
     void on_checkDINNode();
     void on_payButton_clicked();
 
