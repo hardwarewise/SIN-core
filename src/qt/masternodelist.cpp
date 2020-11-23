@@ -1109,7 +1109,7 @@ void MasternodeList::nodeSetupCheckBurnSendConfirmations()   {
                 cmd << "infinitynodeupdatemeta " << mBurnAddress.toUtf8().constData() << " " << strPublicKey.toUtf8().constData() << " " << strNodeIp.toUtf8().constData() << " " << mBurnTx.left(16).toUtf8().constData();
                 UniValue jsonVal = nodeSetupCallRPC( cmd.str() );
 
-                nodeSetupSendToAddress( strAddress, 1, NULL );  // send 1 coin as per recommendation to expedite the rewards
+                nodeSetupSendToAddress( strAddress, 3, NULL );  // send 1 coin as per recommendation to expedite the rewards
                 nodeSetupSetServiceForNodeAddress( strAddress, mServiceId); // store serviceid
                 // cleanup
                 nodeSetupResetOrderId();
