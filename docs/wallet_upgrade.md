@@ -20,35 +20,28 @@ Your wallet.dat file can be either in the wallets directory or in the SIN home d
   
 ![directory](assets/img/misc/directory.png)
 
-*Shut down the wallet. Backup wallet.dat and Remove all old files and folders. 
+*Shut down the wallet. Backup wallet.dat and infinitynode.conf file.
 
 
 Download the latest version of Windows Wallet at [https://github.com/SINOVATEblockchain/SIN-core/releases](https://github.com/SINOVATEblockchain/SIN-core/releases)
  
 
 ![release](assets/img/misc/release.png)
-  
+ 
+ Replace the sin-qt.exe file in the compressed file you downloaded with the sin-qt.exe file you are currently using.
 
-Replace the `sin-qt.exe` file in the compressed file you downloaded with the `sin-qt.exe` file you are currently using.
+:warning: For users who will upgrade from older versions to 1.0.0.0. Important Notice :
 
-*Start the new wallet and wait for synchronization.
+- Close the wallet
+- Back up
+- Delete everything except wallet.dat and infinitynode.conf
+- Copy the files extracted from the [bootstrap.zip](https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstrap.zip) file to the SIN directory.
+- Start the wallet.
+ 
 
 
-**Resync Windows wallet**
-In case you need to resync your local wallet in Windows:
-* Close wallet;
-* Create a shortcut;
-* Rick click on shortcut and select properties;
-* add in target, at the end of the path ` -reindex` (space -reindex, see screenshot below)
-* wait full resync
-
-![](assets/img/misc/win_wallet_reindex.png)
-
-Or use [Bootstrap](https://docs.sinovate.io/#/bootstrap)
 
 # MAC QT Wallet Backup and Upgrade Guide
-
-  
 
 * First of all, don't forget to back up your current data.
 
@@ -90,35 +83,64 @@ Replace the `sin-qt app` file in the compressed file you downloaded with the `si
 
 # VPS Infinity Node Update And Sync Guide
 
-**If running Infinity Node, stop it.**
-``sudo systemctl stop sinovate.service``
+:warning: **You must log in with the user you created during installation.**
 
-**install unzip package**
-``sudo apt update && sudo apt install unzip``
+**disable it if you are using a crontab**
+```bash
+crontab -l > my_cron_backup.txt
+crontab -r
+```
 
-**remove old files and folders (Write this entire code on one line.)**
-``rm -rf ~/.sin/{blocks,chainstate,debug.log,mnpayments.dat,mncache.dat,banlist.dat,peers.dat,netfulfilled.dat,governance.dat,fee_estimates.dat}``
+**if running Infinity Node, stop it.**
+```bash
+sudo systemctl stop sinovate.service
+./sin-cli stop
+```
 
-**download latest bootstrap archive**
-``wget -O ~/bootstrap.zip https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstrap.zip``
+**update Latest Wallet** 
+```bash
+wget -O daemon.tar.gz https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/daemon.tar.gz
 
-**unzip the bootstrap archive**
-``unzip ~/bootstrap.zip``
+tar -xzvf daemon.tar.gz
+```
+# install unzip package
+```bash
+sudo apt update && sudo apt install unzip
+```
+# remove old files and folders
+```bash
+rm -rf ~/.sin/{blocks,chainstate,indexes,debug.log,mnpayments.dat,mncache.dat,banlist.dat,peers.dat,netfulfilled.dat,governance.dat,fee_estimates.dat}
+```
 
-**move bootstrap files**
-``mv -t ~/.sin ~/bootstrap/blocks ~/bootstrap/chainstate``
+# download latest bootstrap archive
+```bash
+wget -O ~/bootstrap.zip https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/bootstrap.zip
+```
 
-**remove unnecessary files**
-``rm -rf ~/{bootstrap,bootstrap.zip}``
+# unzip the bootstrap archive
+```
+unzip ~/bootstrap.zip
+```
 
-**Update Latest Wallet**
-``wget -O daemon.tar.gz https://github.com/SINOVATEblockchain/SIN-core/releases/latest/download/daemon.tar.gz``
-``tar -xzvf daemon.tar.gz``
+# move bootstrap files
+```bash
+mv -ft ~/.sin ~/bootstrap/blocks ~/bootstrap/chainstate ~/bootstrap/indexes ~/bootstrap/infinitynode*.dat
+```
 
-**Check Version**
-``./sin-cli -version``
+# run daemon 
+```bash
+./sind
+```
 
-**reboot infinitynode**
-``sudo reboot``
+# To restore crontab
 
+```bash
+crontab my_cron_backup.txt
+crontab -l
+```
+
+# remove unnecessary files
+```bash
+rm -rf ~/{bootstrap,bootstrap.zip}
+```
 
