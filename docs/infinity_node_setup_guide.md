@@ -33,54 +33,21 @@ As further security, a new feature has been included with Infinity Nodes: The **
 
 Follow the steps below to create a new SIN address **to be used only for this purpose** and maximize your funds' security.
 
-* Open your local SIN wallet
-* From the wallet top menu, click on `Help` then on `Debug Window` and `Console`.
-* Enter the following command:
+* Go to [https://sinovate.io/sin-wallets/](https://sinovate.io/sin-wallets/)
+* Download the [Android](https://play.google.com/store/apps/details?id=io.sinovate.wallet) or [Apple IOS](https://apps.apple.com/gb/app/sinovate-wallet/id1483969772) wallet.
+* From the receive tab in your mobile wallet, click on `COPY`.
+![Image-bkup-001](assets/img/infinity_node_setup_guide/mobilcopy.png)
 
-  ```
-  createwallet "SIN_Backup"
-  ```
+* :warning: **This will be your backup address** See screenshot below:
 
-* :warning: **Make sure to select the new wallet before proceeding.** See screenshot below:
+![Image-bkup-002](assets/img/infinity_node_setup_guide/mobilcopied.png)
 
-![Image-bkup-01](assets/img/infinity_node_setup_guide/img_bkup_addr_01.jpg)
 
-* Now generate the new SIN address in the new wallet:
+* Send the **BACKUP** address to your PC from your MOBILE by sending to yourself via E-Mail or any other method you choose.
 
-  ```
-  getnewaddress
-  ```
+* :warning: :key: _** YOU WILL BE ABLE TO GET FULL CONTROL OF THE ADDRESS ONLY WITH THE PRIVATE KEY IN CASE YOU GET HACKED. NEVER, UNDER ANY CIRCUMSTANCES, SHARE YOUR PRIVATE KEY WITH ANY OTHER PERSON.**_ :warning: :key:
+* Once you received the SIN Backup address , you can now go to your synhcronized PC wallet. 
 
-* Select and copy the generated SIN address.
-* Now get the private key for your new SIN address:
-
-  ```
-  dumpprivkey YOUR_ADDRESS
-  ```
-
-* :warning: :key: _**SAVE AND SAFELY STORE THE NEW SIN ADDRESS AND THE PRIVATE KEY. YOU WILL BE ABLE TO GET FULL CONTROL OF THE ADDRESS ONLY WITH THE PRIVATE KEY. NEVER, UNDER ANY CIRCUMSTANCES, SHARE YOUR PRIVATE KEY WITH ANY OTHER PERSON.**_ :warning: :key:
-* Once you have stored your new SIN address and the private key in a safely place, you can now unload the second wallet. Enter the following command:
-
-  ```
-  unloadwallet
-  ```
-
-![Image-bkup-02](assets/img/infinity_node_setup_guide/img_bkup_addr_02.jpg)
-
-* **NOW IT IS EXTREMELY IMPORTANT** that you physically delete the temporary wallet folder `SIN_Backup` from your computer. Also make sure to empty the bin.
-* Close your local SIN wallet.
-* Locate the previously created temporary wallet folder on your hard drive `SIN_Backup`:
-  * Linux: `~/.sin/wallets/`
-  * MAC: `~/Library/Application Support/SIN/wallets/`
-  * Windows: `%appdata%\SIN\wallets`
-    * \(This defaults to `C:\Documents and Settings\YourUserName\Application data\SIN\wallets` on Windows XP and to `C:\Users\YourUserName\Appdata\Roaming\SIN\wallets` on Windows Vista, 7, 8, and 10.\)
-* **Delete** the **SIN\_Backup** folder.
-
-![Image-bkup-03](assets/img/infinity_node_setup_guide/img_bkup_addr_03.jpg)
-
-* Empty your bin.
-* Please **use the new generated backup SIN address during the next section** \(The Burn transaction\).
-  * _You can use the same backup address when creating multiple Infinity Nodes._
 
 ### 2. The Burn transaction
 
@@ -89,14 +56,17 @@ Open your Sinovate local wallet and create a new receiving address:
 * Top menu, click on `File`, then on `Receiving address`
 * Label the address \(for example: 01-BIG – see screenshot\).
 
-![Image 01](assets/img/infinity_node_setup_guide/img_01.jpg)
+![Image 01](assets/img/infinity_node_setup_guide/receiving.png)
+![Image 005](assets/img/infinity_node_setup_guide/01-MINI.png)
+
 
 * Copy that newly generated address.
 * Go to the `Send` tab of the wallet and paste the address in the `Pay To` field.
 * In the `Amount` field, enter the **Burn** amount you wish to build your Infinity Node with \(100,000 / 500,000 / 1,000,000\) – see screenshot below.
 * the amount has to be exact, no more, no less.
 
-![Image 02](assets/img/infinity_node_setup_guide/img_02.jpg)
+![Image 009](assets/img/infinity_node_setup_guide/send100k.png)
+
 
 :warning:**IMPORTANT:** DO NOT check the little checkbox that says `Subtract fee from amount`. Leave it as it is.
 
@@ -104,31 +74,31 @@ Open your Sinovate local wallet and create a new receiving address:
 * After the confirmations are there, return to the **Send** tab, and click on the `OPEN COIN CONTROL` button.
 * A list with balances should open. Select the amount with the BURN amount \(in our example it would be the 1,000,000 coins\). You select it by checking the little checkbox on its left and click the Ok button to confirm. This will ensure that the next process, the burn transaction, will be done only from that source.
 
-![Image 03](assets/img/infinity_node_setup_guide/img_03.jpg)
+![Image 03](assets/img/infinity_node_setup_guide/coincontrol.png)
 
-* From the wallet top menu, click on `Help` then on `Debug Window` and `Console`.
+* From the wallet top menu, click on `Settings` then on `Debug Window Console`.
   * Before you enter the burn command, make sure you unlock the wallet if your wallet have been encrypted. Open the debug console/window and enter this command: `walletpassphrase password 999` \(replace password with your wallet password\). The 999 is the number of seconds your wallet will remain unlocked, so any number will do.
 * As shown in the screenshot below, enter the burning command in the debug window's bottom field. The command will be `infinitynodeburnfund`, followed by the **BURN amount \(100000 / 500000 / 1000000\) and followed by the backup address.**
-* Please use the backup address previously generated. \(Section 1. SIN Backup Address creation\)
+* Please use the backup address previously generated from your mobile wallet. \(Section 1. SIN Backup Address creation\)
   * _The backup address must be from another wallet to receive the funds to that wallet in case of a hack of your local wallet._
 * **Make sure the command is entered properly, because you will no longer be able to recover these coins.**
-* In the screenshot below we have an example for the SIN-BIG Infinity Node, so the command in that case is
+* In the screenshot below we have an example for the SIN-MINI Infinity Node, so the command in that case is
 
   ```
-  infinitynodeburnfund 1000000 yourSINbackupaddress
+  infinitynodeburnfund yourSINaddress 100000 yourSINbackupaddress
   ```
 
-![Image 04](assets/img/infinity_node_setup_guide/img_04.jpg)
+![Image 04](assets/img/infinity_node_setup_guide/console.png)
 
 !> **REMEMBER: THE SCREENSHOT SERVES ONLY AS AN EXAMPLE! If you have any doubts at this point, it's best to contact the Sinovate Support before entering the command without fully understanding the consequences of a mistake.**
 
 * After you entered the BURN command, you will receive an output similar to the one from the screenshot below. 
 
-![Image 05](assets/img/infinity_node_setup_guide/img_05.jpg)
+![Image 05](assets/img/infinity_node_setup_guide/burnfunds.png)
 
 * From Transaction tab, get the **Burn** transaction information double clicking the transaction. **Copy the Transaction ID and Output Index in Notepad, you will need this info later.**
 
-![Image 06](assets/img/infinity_node_setup_guide/img_06.jpg)
+![Image 06](assets/img/infinity_node_setup_guide/transaction.png)
 
 ### 3. The Collateral transaction
 
@@ -137,13 +107,13 @@ Unlike the Burn transaction, which takes the coins out of reach, making them uns
 * Go to the Send tab, in your Sinovate wallet, and send exactly 10,000 SIN to the SAME ADDRESS you used for the BURN transaction.
 * From Transaction tab, get the **Collateral** transaction information double clicking the transaction. **Copy the Transaction ID and Output Index in Notepad, you will need this info later.**
 
-![Image 07](assets/img/infinity_node_setup_guide/img_07.jpg)
+![Image 07](assets/img/infinity_node_setup_guide/collateral.png)
 
 ### 4. The Infinity Node PRIVKEY
 
 * From the wallet top menu, click on `Help` then on `Debug Window` and `Console`. Type the following command to generate a new masternode privkey: `masternode genkey`. **Copy the privkey in Notepad, you will need this info later.**
 
-![Image 08](assets/img/infinity_node_setup_guide/img_08.jpg)
+![Image 08](assets/img/infinity_node_setup_guide/genkey.png)
 
 ### 5. Editing the infinitynode.conf file
 
@@ -166,7 +136,12 @@ Unlike the Burn transaction, which takes the coins out of reach, making them uns
 
 ![Image 09](assets/img/infinity_node_setup_guide/img_09.jpg)
 
+
+* **If the collateral output or the burntx index output gives an outpoint error, please try to change the output.**
+* If your output is **0** then please try **1**  or vice versa.
+
 * Save the file, then **Restart the wallet**.
+
 
 ## III. Setting up the VPS
 
@@ -250,4 +225,3 @@ watch -n 5 '~/sin-cli getblockcount && ~/sin-cli masternode status && ~/sin-cli 
 ![Image 17](assets/img/infinity_node_setup_guide/img_17.jpg)
 
 **CONGRATULATIONS! YOUR INFINITY NODE IS UP AND RUNNING!**
-

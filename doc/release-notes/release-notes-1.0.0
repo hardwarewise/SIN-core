@@ -1,0 +1,368 @@
+SIN Core version 1.0.0.0 AURORA is now available from:
+
+  <https://github.com/SINOVATEblockchain/SIN-core/releases/>
+
+
+ # Changes in Release  
+- [GUI] Multi-threaded GUI transaction indexer implemented
+
+- [GUI] Various UX-related improvements
+
+- [GUI] Added a user-defined amount of transactions to display, bringing a substantial improvement to larger wallets. Original idea from the @phorecrypto dev team, kudos to them
+
+- [Threading] Massive threading improvements to accomodate DIN-related functions
+
+- [DIN] Various QOL changes
+
+Please report bugs using the issue tracker at GitHub:
+
+  <https://github.com/SINOVATEblockchain/SIN-core/issues>
+
+To receive security and update notifications, please subscribe to:
+
+  <https://discordapp.com/invite/CWbnW5y/>
+
+How to Upgrade
+==============
+
+If you are running an older version, shut it down. Wait until it has completely
+shut down (which might take a few minutes for older versions), then run the
+installer (on Windows) or just copy over `/Applications/SIN-Qt` (on Mac)
+or `sind`/`sin-qt` (on Linux).
+
+The first time you run version 0.17.1.6 or newer, your chainstate database will be converted to a
+new format, which will take anywhere from a few minutes to half an hour,
+depending on the speed of your machine.
+
+
+Downgrading warning
+-------------------
+
+soon ...
+
+Compatibility
+==============
+
+soon ...
+
+1.0.0.0 change log
+------------------
+
+0afdf65,Cryplander,Github Update
+c7b6fe5,Cryplander,Create double_run_guide.md
+a6a4cd3,Cryplander,Update wallet_upgrade.md
+8a30b46,Cryplander,Update sidebar.md
+58af13b,Cryplander,Update wallet_upgrade.md
+cde4dda,Cryplander,Update wallet_upgrade.md
+61ec703,Giacomo Milligan,[make-release] Set fork height
+f18bda1,Giacomo Milligan,[make-release] Add chain data
+330af35,Cryplander,Update wallet_upgrade.md
+69ce34f,Giacomo Milligan,[make-release] Set release flag, bump ver
+5d7f736,Cryplander,Update wallet_upgrade,md
+3a882e7,Cryplander,Update wallet_upgrade,md
+2aa8644,Giacomo Milligan,[make-release] Added checkpoints
+91e9a81,Giacomo Milligan,[qt] Misc cleanup
+5cf725a,Giacomo Milligan,[secp256k] Misc cleanup
+6649264,Cryplander,Update sidebar.md
+81fd06e,Cryplander,Create wallet_upgrade,md
+f0cfefd,Cryplander,Update sidebar.md
+91913e3,Cryplander,Update sidebar.md
+3883c53,Cryplander,Update sidebar.md
+019a72c,Cryplander,Update windows_wallet_backup_and_upgrade.md
+03bcd35,Cryplander,Update infinity_node_tips.md
+9bf34ad,Cryplander,Update wallet.md
+abdc160,Cryplander,Create summary.md
+c26b274,Cryplander,Update sidebar.md
+90d3fe1,hardwarewise,selection-color fixed
+16f078d,MIP,nodesetup updatemeta amount for mainnet
+9a5aece,Giacomo Milligan,[qt] Add a GUI for setting the maximum amount of transactions to load
+24b4615,Giacomo Milligan,[qt] Enable proper sorting for DIN tab, with numerical ordering for ints
+5a1712f,hardwarewise,fixed typo
+700e744,hardwarewise,"Open Wallet Configuration File" link has been added under the Tools menu.
+c8a75c1,hardwarewise,Fixed an issue where the Sin.conf file does not open from the options tab.
+af3f653,hardwarewise,Update masternodelist.ui
+1169439,Giacomo Milligan,[qt] Make select all inputs aware of byte constraints
+f78a041,crptec,fix cache height
+82f9b4e,crptec,free memory and cache height
+2d67802,hardwarewise,API timer and some images have changed.
+27fd148,hardwarewise,fixed typo
+b33febd,Giacomo Milligan,[DIN] Avoiding free()ing memory we never allocated
+a8bebd0,hardwarewise,USD Price API address changed
+66ea785,Giacomo Milligan,[ix] misc cleanup
+cba7838,Giacomo Milligan,[DIN] Make sure we return early on failed MuSig sessions
+50c73c1,hardwarewise,Hover effect has been added to topbar icons.
+497d832,hardwarewise,Update faqpage.ui
+e5211fa,hardwarewise,Update qt.mk
+8e2f058,Giacomo Milligan,[qt] wip: check byte limitations before adding an input in coincontrol
+028029b,Giacomo Milligan,[qt] Added multi-threaded QList filler and limited transactions loaded
+04823f0,hardwarewise,The user has been warned that their old data is not encrypted.
+5b51051,crptec,add new RPC
+abc9bcc,hardwarewise,fixed typo
+994a091,hardwarewise,fixed typo
+1263796,hardwarewise,fixed typo
+2d783d6,hardwarewise,minor fixes
+ec08864,MIP,nodeSetup add auth parameters to AddOrder and GetInvoice
+1486dde,MIP,nodeSetup separate mainnet/testnet url parameters
+4a45d27,hardwarewise,minor visual fixes
+5c6e5ec,MIP,nodeSetup remove debug prints
+47bd035,MIP,nodeSetup wait for full sync before starting
+3682c7a,hardwarewise,some minor visual fixes
+ef68e97,crptec,testnet fork at 2880
+63336bc,hardwarewise,some minor visual fixes
+75417b2,hardwarewise,minor fixes
+1aec91e,hardwarewise,some minor visual changes
+b2efa1c,hardwarewise,Theme change part 4
+0d779c2,hardwarewise,Theme change part 3
+8fbb92a,hardwarewise,Update coincontroldialog.ui
+11daaeb,hardwarewise,Theme change part 2
+d452deb,Giacomo Milligan,[testnet] Test DIN activation rules
+477a798,Giacomo Milligan,[misc] Add turnoffmasternode as flag
+fdff9cf,hardwarewise,Update light.css
+fac94ab,hardwarewise,Theme change part 1
+8f29d93,crptec,check 6 payment of coinbasetx when validation of block
+45b18e9,crptec,memory optimisation and simulation hardfork height
+b883d0b,hardwarewise,Update sinbg.png
+533c48f,hardwarewise,Update din_testnet_setup_guide.md
+efe4197,hardwarewise,Small visual changes to the setUP tab.
+b8a8630,hardwarewise,minor fixes
+cc51cb9,hardwarewise,minor visual fixes
+12bdac3,hardwarewise,Added GIF animation for Splashscreen.
+267a75f,hardwarewise,Some visual improvements in setUP tab.
+eab89bf,MIP,node setup, maintenance mode support
+85ce1b9,hardwarewise,Update masternodelist.ui
+d12dc28,hardwarewise,The setUP tab has been reorganized.
+8a9e297,MIP,nodeSetup: remove check button, unlock wallet, support button
+e080232,crptec,show expired status
+520b75e,Giacomo Milligan,[testnet] Version bump
+6d8309f,Giacomo Milligan,[testnet] Add new dns seeder
+e481566,hardwarewise,Update masternodelist.cpp
+799d616,hardwarewise,A GIF animation has been added for the setUP steps.
+65fcf02,Giacomo Milligan,[testnet] Revert port changes for testnet seeds
+5f5f89e,Giacomo Milligan,[testnet] Bump version, revert port change
+77d19f4,Giacomo Milligan,[testnet] version bump
+aa82c6e,crptec,simulation fork height in testnet
+ad9061f,Cryplander,Update inwallet_1click_guide.md
+ae835de,Cryplander,Update din_testnet_setup_guide.md
+573c647,Cryplander,Update inwallet_1click_guide.md
+d7de1fe,Cryplander,Update testnet_wallet_setup_guide.md
+8d1ffe3,Cryplander,Update din_testnet_setup_guide.md
+80392ad,Cryplander,Update din_testnet_setup_guide.md
+ec17514,Cryplander,Update sidebar.md
+955e8bf,Cryplander,Rename inwallet_2click_guide.md to inwallet_1click_guide.md
+2c57ead,Cryplander,Update README.md
+a362d97,Cryplander,Update README.md
+308f903,Cryplander,Update README.md
+c7ec916,Cryplander,Update README.md
+6f384c6,Cryplander,Update README.md
+7910f72,hardwarewise,Add files via upload
+614eacf,hardwarewise,Delete sinovate_logo.png
+d4bb68d,Cryplander,Update din_testnet_setup_guide.md
+28f148c,Giacomo Milligan,[misc] Proper testnet versioning
+ee883ba,hardwarewise,Update masternodelist.ui
+2043e59,Cryplander,Rename inwallet_2click_guide to inwallet_2click_guide.md
+22a8bab,Cryplander,Rename testnet_wallet_setup_guide to testnet_wallet_setup_guide.md
+426ceb5,Cryplander,Rename din_testnet_setup_guide to din_testnet_setup_guide.md
+aa18958,Cryplander,Create inwallet_2click_guide
+121cdc6,Cryplander,Update sidebar.md
+98ee03d,Cryplander,Create testnet_wallet_setup_guide
+6066908,Cryplander,Update sidebar.md
+7528c2b,Cryplander,Update sidebar.md
+1b1ee14,Cryplander,Create din_testnet_setup_guide
+5b3d38d,Cryplander,Update sidebar.md
+cbd51f2,Cryplander,Update sidebar.md
+3079205,Cryplander,Update coin_specifications.md
+e0f1555,Cryplander,Update coin_specifications.md
+4052259,Cryplander,Update coin_specifications.md
+29fbd4e,Cryplander,Create coin_specifications.md
+7f13059,Cryplander,Update sidebar.md
+5850b28,Giacomo Milligan,[testnet] Added testnet DNS seeder
+5179b45,Giacomo Milligan,[testnet] Added fixed testnet IP addresses
+58d744c,Giacomo Milligan,[misc] FIxed some logging text to be more consistent
+37558c4,Samet,CSS Implement
+36f2097,hardwarewise,Update masternodelist.ui
+933dd36,hardwarewise,Update masternodelist.ui
+80fe11c,MIP,remove expired node burn tx from combo, add invoice addresses to sending list
+5e4aa11,hardwarewise,The setUP tab has been edited.
+8a44a1d,MIP,change nodeSetup login/logout flow
+f115310,hardwarewise,An information message has been added to the My Peers DIN tab
+42bf871,MIP,change login button behavior (ui side)
+dc03aa3,hardwarewise,TimeLocked status changed to Hodl Period.
+6a0710e,hardwarewise,An informative background has been added for the EARN page.
+0467aeb,MIP,reduce list invoices api call frequency
+f089a0a,MIP,fix node status check load problem
+bc505f3,MIP,nodeSetup fixes, password, flow, UI changes
+bd6063d,Giacomo Milligan,[rpc] Help text refac
+f2a4423,Giacomo Milligan,[test] misc leftover changes
+255b9f2,hardwarewise,Some visual fixes
+63888bd,crptec,update lastpaid
+557f84b,hardwarewise,Fixed issue where SetUP status icons were not visible
+1101233,crptec,change port
+e79088d,crptec,change testnet param
+33ddc64,hardwarewise,When Clicking the setUP button, has resolved the focus issue.
+f3a493a,crptec,show non matured infos
+97ed8a9,Giacomo Milligan,[tests] Complete IN deterministic and legacy test suite
+607d0ef,crptec,use histotical metadata
+c06e897,hardwarewise,The setUP icon has been changed.
+e152aee,MIP,add recover button, refresh pay timer, other nodesetup fixes
+6f4f23f,hardwarewise,Added setUP button to topbar.
+3502ea5,hardwarewise,Tooltip visibility fixed.
+82eb7ff,crptec,save blockchain state after connect block
+f6d88ac,crptec,allow Multip node for NodeWoner
+f658a4f,Giacomo Milligan,[misc] Typo
+7c4c981,Giacomo Milligan,[tests] Add full DIN support to the functional test suite
+bdbee2c,Giacomo Milligan,[regtest] Add IN support for regtest
+9a9e1a2,Giacomo Milligan,[misc] Make sure we avoid WReorder warnings
+8c96542,Giacomo Milligan,[cleanup] More IX leftovers
+16a84f3,Giacomo Milligan,[trivial] Avoid this redundant move call
+ae6b99e,Giacomo Milligan,[tests] Small steps towards more test coverage
+3dbb5fa,crptec,update metadata: check ip, pubkey
+8962cce,crptec,check IP and Pubkey unique before add to map
+9b06455,crptec,Tool to rebuild state after anormal close wallet
+89119e1,hardwarewise,Visual fixes in Infinitynode setUP tab.
+106ddff,crptec,miner pay to nodeaddress
+6c4de88,crptec,remove update map flag
+624c487,Giacomo Milligan,[misc] More map improvements
+3a20577,Giacomo Milligan,[misc] Improve initial statement mapping speed by about 20%
+1b8545c,crptec,remove metadata when disconnect block
+a7bf856,MIPPL,merge hardwarewise changes
+4cf01eb,Giacomo Milligan,[misc] make sure we return true here
+d711493,Giacomo Milligan,[misc] some code cleanup (unused vars)
+18dfbc5,Giacomo Milligan,[misc] Suppress warnings during build
+604c81e,MIP,fix login/logout UI
+9c3336f,crptec,Build list in validation
+ee1c066,MIP,prevent node check while querying api, other UI checks
+42f4d3f,MIP,reuse existing burn tx, wip
+7c527e1,MIPPL,remove bad chars
+17751fd,MIP,show pending invoices, unused burn tx, wip
+6daa8d6,crptec,call GetTransaction when it is necessary
+67cdc42,Giacomo Milligan,[ix] More IX removal and cleanup
+598fa8a,crptec,build Inf list, Stm after validation block
+6498200,crptec,fix sync from genesis
+57b3407,MIP,add DIN node status check with API
+993ebbd,MIP,complete node setup, pending UI
+a16710f,crptec,build stm at init state
+3ebab4c,crptec,build INF list before import blocks, avoid sync issue with validation
+9fa8df0,crptec,fix crash issue when connection is NULL
+6d747e6,MIP,node setup process, wip
+82ec28a,crptec,Revert "fix crash possible"
+f540d21,crptec,fix crash possible
+2db09bb,crptec,fix crash and dead lock
+14df81c,MIP,change to dev endpoint
+be323da,Giacomo Milligan,[threading] Take main here, so index parts don't risk deadlocking
+856a58c,Giacomo Milligan,[threading] Avoid locking infnodeman before we lock main
+cdd74f7,Giacomo Milligan,[threading] Avoid locking (and scanning) mempool for DIN-related funcs
+ba05d50,Giacomo Milligan,[threading] Increased granularity when picking locks //wip
+8a1cafd,Giacomo Milligan,[threading] Locking reverts (final)
+6351e41,Giacomo Milligan,[threading] Locking reverts (again)
+1a74a96,Giacomo Milligan,[threading] More locking reverts
+b5d6027,Giacomo Milligan,[threading] locking revert
+9371e85,crptec,make sure miner/validator get all lock before begin check
+fe70ec0,crptec,lock both main and cs
+c4de1d8,crptec,fix deadlock possible
+929b962,crptec,fix dead lock and warning message
+73edeb8,Giacomo Milligan,[threading] Avoid locking here while calling BlockAssembler
+00a6f50,Giacomo Milligan,[threading] Take this lock before locking mempool while mining
+4c54b15,Giacomo Milligan,[cleanup] Remove old miner leftovers (as now we use FillBlockPayee())
+b9b6ef6,Giacomo Milligan,[threading] New threading logic
+b0e4dca,Giacomo Milligan,[threading] Make infnodeman's cs public
+1f6d2ba,Giacomo Milligan,[threading] Avoid taking this lock here
+52e2140,hardwarewise,fix typo
+ac7d83a,crptec,fix crash issue
+7e17a09,crptec,fix possible dead lock
+8994e5d,crptec,fix testcase: Reject LR if it was not sent from Node address
+f775437,Cryplander,Update suqa_conflict.md
+9af7b55,Cryplander,Update suqa_conflict.md
+ac59488,crptec,check LR before payment
+c210dcb,Giacomo Milligan,[ix] More IX removal
+06fbf7b,Giacomo Milligan,[ix] Removed instantsend functionality from sendrawtransaction
+a7cb97c,crptec,not participate Musig if metadata is not matured
+1bbf26a,crptec,consensus for update - historical - call metadata: 2 * regor limit
+490a00c,crptec,historical metadata
+3fdb05a,crptec,fix sync from block genesis
+e133285,crptec,build next stm in some case
+8e374f7,crptec,optimisation, semantic the DIN node process
+6f47697,MIP,finished payment loop, rpc calls, waiting for privkey and ip from API, wip
+d444728,hardwarewise,Hide segwit checkbox
+9fc8bc4,crptec,testnet param, miner payment, historical metadata
+b6f30b2,MIP,prepare timer for invoice and install loop, wip
+d749787,MIP,recover from existing order, change to dev api, wip
+975b296,crptec,format of change address
+540f6f5,crptec,check signers in register info fix
+29891db,hardwarewise,Minor fixes
+944a1a4,crptec,not disconnect from node
+e8d8bd9,hardwarewise,Update modaloverlay.ui
+bea95d3,crptec,check score of signer
+de25e13,crptec,extract lr, owner payment, check score of signers before build Musig
+e84405b,crptec,force send Commitment
+d8f9a89,crptec,miner small reward for DIN node address optimisation DIN comminication fix some init mesage
+5cf45a2,hardwarewise,Update light.css
+0ed6fc0,crptec,change log message
+46a439e,crptec,status in VPS
+1e044d9,crptec,accept Ipv6
+c35f377,hardwarewise,Last BTC price request address has been changed.
+aad9af1,hardwarewise,Update faqpage.ui
+00e06fd,hardwarewise,The getlatestVersion request has been removed
+2e24807,crptec,set fork height for testnet.
+fc23573,hardwarewise,Show InfinityNode Tab default setting is set to enable.
+af06620,hardwarewise,Coin Control default setting is set to enable.
+0a9efb7,hardwarewise,Update optionsdialog.cpp
+6c7704b,hardwarewise,Fixed combobox issue
+8200f85,crptec,compatibility with explorer
+ebea3a1,hardwarewise,A link has been removed from the Resources Menu.
+bea0a79,hardwarewise,Update sidebar.md
+94e66da,hardwarewise,Rename SINOVATE_Whitepaper_V_2_Light.md to SINOVATE_Whitepaper_Light.md
+5e23004,hardwarewise,Update SINOVATE_Whitepaper_V_2_Light.md
+5db1a00,hardwarewise,Update sidebar.md
+b7c80d5,hardwarewise,Update sidebar.md
+2d1ad31,hardwarewise,Update vps_wallet_update.md
+fb5721a,hardwarewise,Update vps_wallet_update.md
+93c313e,hardwarewise,Add files via upload
+0950c69,Giacomo Milligan,[DIN] Add LR validation
+aa74bd3,Giacomo Milligan,[trivial] Formatting
+f814dc2,hardwarewise,Update infinity_node_setup_guide_TR.md
+c80ac91,Giacomo Milligan,[trivial] Typo
+2085554,Giacomo Milligan,[DIN] Add an error if no DIN payee is found on GBT poll
+7a7a78a,Giacomo Milligan,[misc] Disable IX msg processing directly
+c0c6bc1,Cryplander,Update README.md
+f9fe1be,hardwarewise,Update SINOVATE_Whitepaper_V_2_Light.md
+b361e3f,Cryplander,Update infinity_node_guide_with_setup.md
+ca3fed1,Cryplander,Update infinity_node_guide_with_setup.md
+3ce1754,Cryplander,Add files via upload
+fb31dea,Cryplander,Delete img_09.jpg
+1880f9e,Cryplander,Add files via upload
+09cd99b,Cryplander,Update infinity_node_guide_with_setup.md
+fe464d3,hardwarewise,Qmenu icons have been changed.
+fd5fc46,Giacomo Milligan,[DIN] Switch to paying out deterministic node winners at height
+0a3a678,Giacomo Milligan,[regtest] More compatibility changes for regtest
+614fd26,Cryplander,Update infinity_node_guide_with_setup.md
+6507d35,Cryplander,Update sidebar.md
+edc5a73,Cryplander,Create mac_wallet_backup_and_upgrade.md
+01ccf16,Cryplander,Add files via upload
+159471e,Cryplander,Update sidebar.md
+b9432c3,crptec,add remove in thread
+2715928,hardwarewise,Update sidebar.md
+9d5d425,hardwarewise,Update infinity_node_setup_guide_TR.md
+4de6014,hardwarewise,Update sidebar.md
+67e6602,hardwarewise,Add files via upload
+5553ee8,crptec,separate infinitynode RPC in new file
+d6cb7d4,hardwarewise,Add files via upload
+f26591b,crptec,remove old data from map, avoid memory issue
+
+
+Credits
+=======
+
+Thanks to everyone who directly contributed to this release:
+
+- crptec
+- Cryplander
+- Giacomo Milligan
+- Hardwarewise
+- MIPPL
+- Samet
+
+And to those that reported security issues:
+
+- 008
+
+

@@ -55,7 +55,8 @@ UniValue infinitynode(const JSONRPCRequest& request)
                                     && strCommand != "mypeerinfo" && strCommand != "checkkey" && strCommand != "scan-metadata"
                                     && strCommand != "show-metadata" && strCommand != "memory-lockreward"
                                     && strCommand != "show-lockreward" &&  strCommand != "check-lockreward"
-                                    && strCommand != "show-all-infos" &&  strCommand != "getblockcount"
+                                    && strCommand != "show-all-infos" &&  strCommand != "getblockcount" && strCommand != "getrawblockcount"
+                                    && strCommand != "show-metapubkey" &&  strCommand != "show-online"
         ))
             throw std::runtime_error(
                 "infinitynode \"command\"...\n"
@@ -68,6 +69,7 @@ UniValue infinitynode(const JSONRPCRequest& request)
                 "  check-lockreward            - Return the status of Register string\n"
                 "  mypeerinfo                  - Print InfinityNode status\n"
                 "  getblockcount               - InfinityNode current height\n"
+                "  getrawblockcount            - InfinityNode current height from an atomic raw index\n"
                 "  build-list                  - Build a list of all InfinityNodes from InfinityNode genesis block to current tip\n"
                 "  build-stm                   - Build a list of all statements from the InfinityNode genesis block to current tip\n"
                 "  show-infos                  - Print a list of all active InfinityNodes and latest information about them\n"
@@ -160,6 +162,14 @@ UniValue infinitynode(const JSONRPCRequest& request)
             throw JSONRPCError(RPC_INTERNAL_ERROR, "This is not an InfinityNode");
 
         return infinitynodePeer.getCacheHeightInf();
+    }
+
+    if (strCommand == "getrawblockcount")
+    {
+        if (!fInfinityNode)
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "This is not an InfinityNode");
+        int ret = nRawBlockCount;
+        return ret;
     }
 
     if (strCommand == "mypeerinfo")
@@ -302,6 +312,58 @@ UniValue infinitynode(const JSONRPCRequest& request)
         return obj;
     }
 
+    if (strCommand == "show-online")
+    {
+
+        if (request.params.size() != 2)
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Correct usage is 'infinitynode show-online \"nHeight\"'");
+        int nextHeight = 550000;//forkHeight of DIN v1.0
+        nextHeight = atoi(strFilter);
+
+        std::map<COutPoint, CInfinitynode> mapInfinitynodes = infnodeman.GetFullInfinitynodeMap();
+        for (auto& infpair : mapInfinitynodes) {
+            std::string strOutpoint = infpair.first.ToStringShort();
+            CInfinitynode inf = infpair.second;
+
+            std::string sSINType = "NA";
+            if(inf.getSINType() == 1) {sSINType="MINI";}
+            if(inf.getSINType() == 5) {sSINType="MID";}
+            if(inf.getSINType() == 10) {sSINType="BIG";}
+
+            std::string sMetaInfo = "Missing";
+			std::string sNodeAddress = "";
+            CMetadata metaSender = infnodemeta.Find(inf.getMetaID());
+            if (metaSender.getMetadataHeight() > 0){
+                sMetaInfo = "NodeAddress:";
+                std::string metaPublicKey = metaSender.getMetaPublicKey();
+                std::vector<unsigned char> tx_data = DecodeBase64(metaPublicKey.c_str());
+                CPubKey pubKey(tx_data.begin(), tx_data.end());
+
+                    CTxDestination dest = GetDestinationForKey(pubKey, OutputType::LEGACY);
+                    sNodeAddress = EncodeDestination(dest);
+            }
+
+            std::string sExpire = "Alive";
+            if(inf.getExpireHeight() <= nextHeight) {
+                    sExpire = "Expired";
+            }
+
+                std::ostringstream streamInfo;
+                streamInfo << std::setw(8) <<
+                               inf.getCollateralAddress() << " " <<
+                               inf.getHeight() << " " <<
+                               inf.getExpireHeight() << " " <<
+                               inf.getRoundBurnValue() << " " <<
+                               sSINType << " " <<
+                               sExpire << " " <<
+                               sMetaInfo << sNodeAddress << " "
+                               ;
+                std::string strInfo = streamInfo.str();
+                obj.push_back(Pair(strOutpoint, strInfo));
+        }
+        return obj;
+    }
+
     if (strCommand == "show-script")
     {
         std::map<COutPoint, CInfinitynode> mapInfinitynodes = infnodeman.GetFullInfinitynodeMap();
@@ -360,6 +422,25 @@ UniValue infinitynode(const JSONRPCRequest& request)
         }
 
         return obj;
+    }
+
+    if (strCommand == "show-metapubkey"){
+        UniValue pubkeyList(UniValue::VARR);
+        std::map<std::string, CMetadata>  mapCopy = infnodemeta.GetFullNodeMetadata();
+        obj.push_back(Pair("Metadata", (int)mapCopy.size()));
+        for (auto& infpair : mapCopy) {
+            std::ostringstream streamInfo;
+            std::vector<unsigned char> tx_data = DecodeBase64(infpair.second.getMetaPublicKey().c_str());
+
+                CPubKey pubKey(tx_data.begin(), tx_data.end());
+                CTxDestination nodeDest = GetDestinationForKey(pubKey, OutputType::LEGACY);
+                streamInfo << std::setw(8) <<
+                EncodeDestination(nodeDest)
+                ;
+                std::string strInfo = streamInfo.str();
+                pubkeyList.push_back(strInfo);
+        }
+        return pubkeyList;
     }
 
     if (strCommand == "show-metadata")
@@ -656,8 +737,8 @@ static UniValue infinitynodeburnfund_external(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 4)
        throw std::runtime_error(
-            "infinitynodeburnfund NodeOwnerAddress amount SINBackupAddress"
-            "\nSend an amount to BurnAddress.\n"
+            "infinitynodeburnfund_external inputs NodeOwnerAddress amount SINBackupAddress"
+            "\nPrepare a burn transaction with the given inputs.\n"
             "\nArguments:\n"
             "1. \"inputs\"                (array, required) A json array of json objects\n"
             "     [\n"
@@ -675,7 +756,7 @@ static UniValue infinitynodeburnfund_external(const JSONRPCRequest& request)
             "\"BURNtxid\"                  (string) The burn transaction id. Needed to run infinity node\n"
             "\"CollateralAddress\"         (string) Collateral. Please send 10000"  + CURRENCY_UNIT + " to this address.\n"
             "\nExamples:\n"
-            + HelpExampleCli("infinitynodeburnfund", "NodeOwnerAddress 1000000 SINBackupAddress")
+            + HelpExampleCli("infinitynodeburnfund_external", "\"[{\\\"txid\\\":\\\"myid\\\",\\\"vout\\\":0}]\" NodeOwnerAddress 1000000 SINBackupAddress")
         );
 
     std::string strError;
@@ -1139,8 +1220,9 @@ static const CRPCCommand commands[] =
 { //  category              name                      actor (function)                              argNames
   //  --------------------- ------------------------  -----------------------                       ----------
     { "SIN",                "infinitynodeburnfund",   &infinitynodeburnfund,                        {"amount"} },
+    { "SIN",                "infinitynodeburnfund_external", &infinitynodeburnfund_external,        {"inputs array", "owner_address","amount","backup_address"} },
     { "SIN",                "infinitynodeupdatemeta", &infinitynodeupdatemeta,                      {"owner_address","node_address","IP"} },
-    { "SIN",                "infinitynodeupdatemeta_external", &infinitynodeupdatemeta_external,    {"owner_address","node_address","IP", "inputs array"} },
+    { "SIN",                "infinitynodeupdatemeta_external", &infinitynodeupdatemeta_external,    {"inputs array", "owner_address","node_address","IP"} },
     { "SIN",                "infinitynode",           &infinitynode,                                {"command"}  },
     { "SIN",                "infinitynodevote",       &infinitynodevote,                            {"owner_address","proposalid","opinion"} }
 };

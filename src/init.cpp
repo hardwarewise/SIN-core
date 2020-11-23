@@ -1849,6 +1849,9 @@ bool AppInitMain()
         g_txindex->Start();
     }
 
+    // simple raw block height index: 
+    nRawBlockCount = chainActive.Height();
+
     // ********************************************************* Step 9: load wallet
     if (!g_wallet_init_interface.Open()) return false;
 

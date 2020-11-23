@@ -1,11 +1,22 @@
 - **Introduction**
+- [SINOVATE](summary)
+- [SINOVATE coin specifications](coin_specifications)
 - [Community contributions](/)
+- **Deterministic Infinity Nodes (D.I.N.)**
+- [D.I.N. Setup GUIDE](din_setup_guide)
+- [In-wallet 1-click setUP GUIDE](inwallet_1click_guide)
+- [D.I.N. setUP Migration GUIDE](din_setup_migration_guide)
+- [MN to DIN Migration Guide](mn_to_din_migration_guide)
 - **Documentation**
-- [Infinity Node setup](infinity_node_setup_guide)
-- [Bootstrap](bootstrap)
-- [Wallet](wallet)
+- [SINOVATE Whitepaper Light](SINOVATE_Whitepaper_Light)
 - **Tutorials & Guides**
+- [Bootstrap](bootstrap)
+- [HCO Earn Guide](hco_guide)
 - [Infinity Node tips](infinity_node_tips)
+- [Infinity Node setup](infinity_node_setup_guide)
+- [Inf. Node Guide with setUP](infinity_node_guide_with_setup)
+- [Wallet Upgrade](wallet_upgrade)
+- [SIN WebTool](sin_webtool_guide)
 - [SUQA Coins Conflict](suqa_conflict)
 - [X25X Pow GPU Mining](X25X-PoW-GPU-Mining)
 - **Articles**
@@ -15,12 +26,23 @@
 - [Infinity Nodes vs Masternodes](infinity_nodes_vs_masternodes)
 - [Inflation the Curse of Traditional Masternodes](inflation_the_curse_of_traditional_masternodes)
 - [Infinity Nodes Groundbreaking Sinovate Evolved Masternodes](infinity_nodes_groundbreaking_sinovate_evolved_masternodes)
+- **Testnet**
+- [D.I.N. Testnet setup GUIDE](din_testnet_setup_guide)
+- [Testnet wallet setup GUIDE](testnet_wallet_setup_guide)
+- [In-wallet 1-click setUP GUIDE](inwallet_1click_guide)
+- **русский**
+- [Руководство по установке Infinity Node](pуководство_по_установке_infinity_node)
+- **Türkçe**
+- [X25X Pow GPU Madenciliği](X25X-PoW-GPU-Mining-TR)
+- [setUP ile Inf. Node Kurulumu](infinity_node_setup_guide_TR)
+- [SIN WebTool Klavuzu](sin_webtool_guide_TR)
 - **Archived**
-- [Stuck block 350094](archive/20200214_stuck_block_350094)
+- [Stuck block solution](archive/20200214_stuck_block_350094)
 - **Links**
 - [![Home](https://icongr.am/feather/home.svg?size=16&color=808080)Sinovate Home](https://www.sinovate.io)
 - [![Explorer](https://icongr.am/feather/link.svg?size=16&color=808080)Blocks Explorer](https://explorer.sinovate.io)
-- [![Github](https://icongram.jgog.in/simple/github.svg?color=808080&size=16)Github](https://github.com/SINOVATEblockchain/SIN-core)
-- [![Discord](https://icongram.jgog.in/simple/discord.svg?color=808080&size=16)Discord](https://discord.gg/8rxutDv)
-- [![Twitter](https://icongram.jgog.in/simple/twitter.svg?color=808080&size=16)@SinovateChain](https://twitter.com/SinovateChain)
+- [![Github](https://icongr.am/devicon/github-original.svg?size=16&color=808080)Github](https://github.com/SINOVATEblockchain/SIN-core)
+- <a href="https://discord.gg/WnRExsx"><img src="https://discordapp.com/api/guilds/494460434691391509/embed.png" alt="Discord server" /></a> 
+- <a href="https://twitter.com/intent/follow?screen_name=SinovateChain"><img src="https://img.shields.io/twitter/follow/SinovateChain.svg?style=social&logo=twitter" alt="follow on Twitter"></a>
+
 

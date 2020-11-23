@@ -1022,27 +1022,22 @@ QString MasternodeList::nodeSetupGetOwnerAddressFromBurnTx( QString burnTx )    
             UniValue vinArray = find_value(jsonVal.get_obj(), "vin").get_array();
             UniValue vin0 = vinArray[0].get_obj();
             QString txid = QString::fromStdString(find_value(vin0, "txid").get_str());
-//LogPrintf("nodeSetupGetOwnerAddressFromBurnTx %s \n", txid.toStdString());
+LogPrintf("nodeSetupGetOwnerAddressFromBurnTx txid %s \n", txid.toStdString());
             if ( txid!="" ) {
+                int vOutN = find_value(vin0, "vout").get_int();
                 cmd.str("");
                 cmd << "getrawtransaction " << txid.toUtf8().constData() << " 1";
                 jsonVal = nodeSetupCallRPC( cmd.str() );
                 UniValue voutArray = find_value(jsonVal.get_obj(), "vout").get_array();
 
-                for (unsigned int idx = 0; idx < voutArray.size(); idx++) {
-                    const UniValue &vout = voutArray[idx].get_obj();
-                    CAmount value = find_value(vout, "value").get_real();
+                // take output considered for owner address. amount does not have to be exactly the burn amount (may include change amounts)
+                const UniValue &vout = voutArray[vOutN].get_obj();
+                CAmount value = find_value(vout, "value").get_real();
 
-                    if ( value == Params().GetConsensus().nMasternodeBurnSINNODE_1
-                      || value == Params().GetConsensus().nMasternodeBurnSINNODE_5
-                      || value == Params().GetConsensus().nMasternodeBurnSINNODE_10    )  {
-                        UniValue obj = find_value(vout, "scriptPubKey").get_obj();
-                        UniValue addressesArray = find_value(obj, "addresses").get_array();
-                        address = QString::fromStdString(addressesArray[0].get_str());
-                        break;
-                    }
-                }
-//LogPrintf("nodeSetupGetOwnerAddressFromBurnTx address %s \n", address.toStdString());
+                UniValue obj = find_value(vout, "scriptPubKey").get_obj();
+                UniValue addressesArray = find_value(obj, "addresses").get_array();
+                address = QString::fromStdString(addressesArray[0].get_str());
+LogPrintf("nodeSetupGetOwnerAddressFromBurnTx vout=%d, address %s \n", vOutN, address.toStdString());
             }
         }
         else {
@@ -1114,16 +1109,16 @@ void MasternodeList::nodeSetupCheckBurnSendConfirmations()   {
                 cmd << "infinitynodeupdatemeta " << mBurnAddress.toUtf8().constData() << " " << strPublicKey.toUtf8().constData() << " " << strNodeIp.toUtf8().constData() << " " << mBurnTx.left(16).toUtf8().constData();
                 UniValue jsonVal = nodeSetupCallRPC( cmd.str() );
 
-                nodeSetupSendToAddress( strAddress, 1, NULL );  // send 1 coin as per recommendation to expedite the rewards
+                nodeSetupSendToAddress( strAddress, 3, NULL );  // send 1 coin as per recommendation to expedite the rewards
                 nodeSetupSetServiceForNodeAddress( strAddress, mServiceId); // store serviceid
                 // cleanup
                 nodeSetupResetOrderId();
                 nodeSetupSetBurnTx("");
 
-                nodeSetupStep( "setupOk", "Node setup finished");
                 nodeSetupLockWallet();
                 nodeSetupResetOrderId();
                 nodeSetupEnableOrderUI(false);
+                nodeSetupStep( "setupOk", "Node setup finished");
             }
             catch (const UniValue& objError)    {
                 QString str = nodeSetupGetRPCErrorMessage( objError );
@@ -1252,6 +1247,7 @@ void MasternodeList::nodeSetupInitialize()   {
 
 #if defined(Q_OS_WIN)
 #else
+    ui->payButton->setStyleSheet("font-size: 16px");
     ui->comboBilling->setStyle(QStyleFactory::create("Windows"));
     ui->comboInvoice->setStyle(QStyleFactory::create("Windows"));
     ui->comboBurnTx->setStyle(QStyleFactory::create("Windows"));
@@ -1273,6 +1269,7 @@ void MasternodeList::nodeSetupInitialize()   {
         //ui->widgetCurrent->hide();
         ui->setupButtons->hide();
         ui->labelClientId->setText("");
+        ui->labelClientIdValue->hide();
     }
     else {
         nodeSetupEnableClientId(clientId);
@@ -1326,6 +1323,7 @@ void MasternodeList::nodeSetupResetClientId( )  {
     //ui->widgetCurrent->hide();
     ui->setupButtons->hide();
     ui->labelClientId->setText("");
+    ui->labelClientIdValue->hide();
     ui->btnRestore->setText("Restore");
 
     ui->btnSetup->setEnabled(false);
@@ -1354,6 +1352,7 @@ void MasternodeList::nodeSetupEnableClientId( int clientId )  {
     //ui->widgetLogin->hide();
     //ui->widgetCurrent->show();
     ui->setupButtons->show();
+    ui->labelClientIdValue->show();
     ui->labelClientId->setText("#"+QString::number(clientId));
     ui->labelMessage->setText("Select a node Tier and press '1-Click setUP' to verify if you meet the prerequisites");
     mClientid = clientId;
@@ -1423,7 +1422,6 @@ int MasternodeList::nodeSetupGetBurnAmount()    {
 bool MasternodeList::nodeSetupCheckFunds( CAmount invoiceAmount )   {
 
     bool bRet = false;
-    int nMasternodeCollateral = Params().GetConsensus().nMasternodeCollateralMinimum;
     int nMasternodeBurn = nodeSetupGetBurnAmount();
 
     QString strSelectedBurnTx = ui->comboBurnTx->currentData().toString();
@@ -1438,7 +1436,7 @@ bool MasternodeList::nodeSetupCheckFunds( CAmount invoiceAmount )   {
     CWallet * const pwallet = (wallets.size() > 0) ? wallets[0].get() : nullptr;
     CAmount curBalance = pwallet->GetBalance();
     std::ostringstream stringStream;
-    CAmount nNodeRequirement = (nMasternodeBurn + nMasternodeCollateral) * COIN ;
+    CAmount nNodeRequirement = nMasternodeBurn * COIN ;
     CAmount nUpdateMetaRequirement = (NODESETUP_UPDATEMETA_AMOUNT + 1) * COIN ;
 
     if ( curBalance > invoiceAmount + nNodeRequirement + nUpdateMetaRequirement)  {
@@ -1457,13 +1455,6 @@ bool MasternodeList::nodeSetupCheckFunds( CAmount invoiceAmount )   {
             QString strAvailable = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), (curBalance - nNodeRequirement) );
             QString strUpdateMeta = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), nUpdateMetaRequirement );
             stringStream << strChecking << " : not enough amount for UpdateMeta operation (you have " <<  strAvailable.toStdString() << " , you need " << strUpdateMeta.toStdString() << " )";
-            std::string copyOfStr = stringStream.str();
-            nodeSetupStep( "setupKo", copyOfStr);
-        }
-        else if ( curBalance > nMasternodeBurn * COIN )  {
-            QString strAvailable = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), (curBalance-(nMasternodeBurn*COIN)) );
-            QString strCollateral = BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), nMasternodeCollateral*COIN );
-            stringStream << strChecking << " : not enough collateral (you have " <<  strAvailable.toStdString() << " , you need " << strCollateral.toStdString() << " )";
             std::string copyOfStr = stringStream.str();
             nodeSetupStep( "setupKo", copyOfStr);
         }
