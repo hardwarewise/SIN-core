@@ -1918,7 +1918,7 @@ bool AppInitMain()
 
     // SIN
     fInfinityNode = gArgs.GetBoolArg("-infinitynode", false);
-    fTurnOffMasternode = gArgs.GetBoolArg("-turnoffmasternode", false);
+    fTurnOffMasternode = gArgs.GetBoolArg("-turnoffmasternode", true);
     if(fInfinityNode) {
         std::string strInfinityNodePrivKey = gArgs.GetArg("-infinitynodeprivkey", "");
         if(!strInfinityNodePrivKey.empty()) {
