@@ -470,9 +470,9 @@ border: 1px solid #2E3191;
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>-4275</y>
+                 <y>-2295</y>
                  <width>658</width>
-                 <height>5000</height>
+                 <height>4840</height>
                 </rect>
                </property>
                <property name="autoFillBackground">
@@ -1058,7 +1058,7 @@ color: white;</string>
                      <item>
                       <widget class="QLabel" name="labelContent6">
                        <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Name: SINOVATE&lt;/p&gt;&lt;p&gt;Ticker: SIN&lt;/p&gt;&lt;p&gt;Algorithm: X25X&lt;/p&gt;&lt;p&gt;Block Rewards: PoW-25 SIN &amp;amp; Infinity Nodes-2750 SIN&lt;/p&gt;&lt;p&gt;Block Time: 2 minutes&lt;/p&gt;&lt;p&gt;Current Blockchain Size: 1.5 GB&lt;/p&gt;&lt;p&gt;Difficulty Retargeting Algo: LWMA&lt;/p&gt;&lt;p&gt;E-Governance: R.S.V. Revolving Sovereignty Votes&lt;/p&gt;&lt;p&gt;51% Attack Solution: LWMA &amp;amp; Reorg 55 (fork rejection)&lt;/p&gt;&lt;p&gt;Infinity Nodes Collateral: 100K-500K-1000K (three-tiers)&lt;/p&gt;&lt;p&gt;Max Block Size: 16 MB&lt;/p&gt;&lt;p&gt;Max Supply: Always less than 800 million infinitely&lt;/p&gt;&lt;p&gt;Pre-Mine: No&lt;/p&gt;&lt;p&gt;P2P Port: 20970&lt;/p&gt;&lt;p&gt;RPC Port: 20971&lt;/p&gt;&lt;p&gt;Transactions per second: Up to 533 tx/s&lt;/p&gt;&lt;p&gt;Treasury: 10%&lt;/p&gt;&lt;p&gt;Use Cases: I.D.S. Incorruptible Data Storage&lt;/p&gt;&lt;p&gt;– Decentralized Cloud 3.0&lt;/p&gt;&lt;p&gt;– SIN Messenger private direct messaging and electronic mail&lt;/p&gt;&lt;p&gt;– Proof-of-integrity, proof-of-inheritance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Name: SINOVATE&lt;/p&gt;&lt;p&gt;Ticker: SIN&lt;/p&gt;&lt;p&gt;Proof-of-Burn Algorithm:  X25X&lt;/p&gt;&lt;p&gt;Collateralized Nodes: Deterministic Infinity Nodes&lt;/p&gt;&lt;p&gt;Block Rewards: PoW 12.5 SIN &amp;amp; Infinity Nodes 3150 SIN&lt;/p&gt;&lt;p&gt;Block Time: 2 minutes&lt;/p&gt;&lt;p&gt;Current Blockchain Size: 1.9 GB&lt;/p&gt;&lt;p&gt;Difficulty Retargeting Algo: LWMA&lt;/p&gt;&lt;p&gt;E-Governance: R.S.V. Revolving Sovereignty Votes&lt;/p&gt;&lt;p&gt;51% Attack Solution: LWMA &amp;amp; Reorg 55 (fork rejection)&lt;/p&gt;&lt;p&gt;Infinity Nodes Collateral: 100K-500K-1000K (three-tiers)&lt;/p&gt;&lt;p&gt;Max Supply: Yearly Deflating Supply-Proof of Burn-No Cap&lt;/p&gt;&lt;p&gt;Pre-Mine: No&lt;/p&gt;&lt;p&gt;P2P Port: 20970&lt;/p&gt;&lt;p&gt;RPC Port: 20971&lt;/p&gt;&lt;p&gt;Treasury: 10%&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                        <property name="alignment">
                         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
