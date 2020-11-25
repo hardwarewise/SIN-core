@@ -338,6 +338,7 @@ void MasternodeList::on_btnSetup_clicked()
 
     // check for chain synced...
     if (!masternodeSync.IsBlockchainSynced())    {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText("Chain is out-of-sync. Please wait until it's fully synced.");
         return;
     }
@@ -345,6 +346,7 @@ void MasternodeList::on_btnSetup_clicked()
     // check again in case they changed the tier...
     nodeSetupCleanProgress();
     if ( !nodeSetupCheckFunds() )   {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText("You didn't pass the funds check. Please review.");
         return;
     }
@@ -373,6 +375,7 @@ void MasternodeList::on_btnSetup_clicked()
         strStatus = nodeSetupCheckInvoiceStatus();
     }
     else    {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText(strError);
     }
 }
@@ -391,6 +394,7 @@ void MasternodeList::on_payButton_clicked()
         //LogPrintf("nodeSetupCheckPendingPayments nodeSetupAPIGetInvoice %s, %d \n", strStatus.toStdString(), invoiceToPay );
 
         if ( !res )   {
+            ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
             ui->labelMessage->setText(strError);
             return;
         }
@@ -473,10 +477,12 @@ QString MasternodeList::nodeSetupGetNewAddress()    {
             strAddress = QString::fromStdString(jsonVal.get_str());
         }
     } catch (UniValue& objError ) {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( "Error getting new wallet address" );
     }
     catch ( std::runtime_error e)
     {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( QString::fromStdString( "ERROR getnewaddress: unexpected error " ) + QString::fromStdString( e.what() ));
     }
 
@@ -508,6 +514,7 @@ QString MasternodeList::nodeSetupSendToAddress( QString strAddress, int amount, 
     }
     catch ( std::runtime_error e)
     {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( QString::fromStdString( "ERROR sendtoaddress: unexpected error " ) + QString::fromStdString( e.what() ));
     }
 
@@ -530,13 +537,16 @@ UniValue MasternodeList::nodeSetupGetTxInfo( QString txHash, std::string attribu
             ret = find_value(jsonVal.get_obj(), attribute);
         }
         else {
+            ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
             ui->labelMessage->setText( "Error calling RPC gettransaction");
         }
     } catch (UniValue& objError ) {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( "Error calling RPC gettransaction");
     }
     catch ( std::runtime_error e)
     {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( QString::fromStdString( "ERROR gettransaction: unexpected error " ) + QString::fromStdString( e.what() ));
     }
 
@@ -560,6 +570,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
     }
 
     if ( strStatus == "Unpaid" )  {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
         ui->labelMessage->setText(QString::fromStdString(strprintf("Invoice amount %f SIN", invoiceAmount)));
         if ( mPaymentTx != "" ) {   // already paid, waiting confirmations
             nodeSetupStep( "setupWait", "Invoice paid, waiting for confirmation");
@@ -577,6 +588,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
                 invoiceTimer->stop();
                 ui->btnSetup->setEnabled(true);
                 ui->btnSetupReset->setEnabled(true);
+                ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
                 ui->labelMessage->setText( "Press Reset Order button to cancel node setup process, or Continue setUP button to resume." );
                 return "cancelled";
             }
@@ -585,6 +597,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
                 mPaymentTx = nodeSetupSendToAddress( paymentAddress, invoiceAmount, invoiceTimer );
             }
             else   {
+                ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
                 ui->labelMessage->setText( "Unlocking wallet is required to make the payments." );
                 return "cancelled";
             }
@@ -599,6 +612,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
                 }
 
                 nodeSetupSetPaymentTx(mPaymentTx);
+                ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
                 ui->labelMessage->setText( "Payment finished, please wait until platform confirms payment to proceed to node creation." );
                 ui->btnSetup->setEnabled(false);
                 ui->btnSetupReset->setEnabled(false);
@@ -611,6 +625,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
 
     if ( strStatus == "Paid" )  {           // launch node setup (RPC)
         if (invoiceAmount==0)   {
+            ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
             ui->labelMessage->setText(QString::fromStdString("Invoice paid with balance"));
         }
 
@@ -649,6 +664,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
             }
 
             if ( mBurnPrepareTx=="" )  {
+               ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
                ui->labelMessage->setText( "ERROR: failed to prepare burn transaction." );
             }
             nodeSetupStep( "setupWait", "Preparing burn transaction");
@@ -690,13 +706,16 @@ LogPrintf("nodeSetupGetOwnerAddressFromBurnTx vout=%d, address %s \n", vOutN, ad
             }
         }
         else {
+            ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
             ui->labelMessage->setText( "Error calling RPC getrawtransaction");
         }
     } catch (UniValue& objError ) {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( "Error RPC obtaining owner address");
     }
     catch ( std::runtime_error e)
     {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( QString::fromStdString( "ERROR get owner address: unexpected error " ) + QString::fromStdString( e.what() ));
     }
     return address;
@@ -723,6 +742,7 @@ void MasternodeList::nodeSetupCheckBurnPrepareConfirmations()   {
             }
         }
         else    {
+            ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
             ui->labelMessage->setText( "ERROR: failed to create burn transaction." );
         }
     }
@@ -756,7 +776,9 @@ void MasternodeList::nodeSetupCheckBurnSendConfirmations()   {
             try {
                 cmd.str("");
                 cmd << "infinitynodeupdatemeta " << mBurnAddress.toUtf8().constData() << " " << strPublicKey.toUtf8().constData() << " " << strNodeIp.toUtf8().constData() << " " << mBurnTx.left(16).toUtf8().constData();
+LogPrintf("[nodeSetup] infinitynodeupdatemeta %s \n", cmd.str() );
                 UniValue jsonVal = nodeSetupCallRPC( cmd.str() );
+LogPrintf("[nodeSetup] infinitynodeupdatemeta SUCCESS \n" );
 
                 nodeSetupSendToAddress( strAddress, 3, NULL );  // send 1 coin as per recommendation to expedite the rewards
                 nodeSetupSetServiceForNodeAddress( strAddress, mServiceId); // store serviceid
@@ -776,12 +798,14 @@ void MasternodeList::nodeSetupCheckBurnSendConfirmations()   {
             }
             catch ( std::runtime_error e)
             {
+                ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
                 ui->labelMessage->setText( QString::fromStdString( "ERROR infinitynodeupdatemeta: unexpected error " ) + QString::fromStdString( e.what() ));
                 nodeSetupStep( "setupKo", "Node setup failed");
             }
         }
         else    {
             LogPrintf("infinitynodeupdatemeta Error while obtaining node info \n");
+            ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
             ui->labelMessage->setText( "ERROR: infinitynodeupdatemeta " );
             nodeSetupStep( "setupKo", "Node setup failed");
         }
@@ -819,15 +843,18 @@ QString MasternodeList::nodeSetupRPCBurnFund( QString collateralAddress, CAmount
             }
         }
         else {
+            ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
             ui->labelMessage->setText(QString::fromStdString( "ERROR infinitynodeburnfund: unknown response") );
         }
     }
     catch (const UniValue& objError)
     {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( QString::fromStdString(find_value(objError, "message").get_str()) );
     }
     catch ( std::runtime_error e)
     {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( QString::fromStdString( "ERROR infinitynodeburnfund: unexpected error " ) + QString::fromStdString( e.what() ));
     }
     return burnTx;
@@ -846,6 +873,7 @@ void MasternodeList::on_btnLogin_clicked()
 
     int clientId = nodeSetupAPIAddClient( "", "", ui->txtEmail->text(), ui->txtPassword->text(), strError );
     if ( strError != "" )  {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( strError );
     }
 
@@ -931,6 +959,7 @@ void MasternodeList::nodeSetupInitialize()   {
 
     mOrderid = nodeSetupGetOrderId( mInvoiceid, mProductIds );
     if ( mOrderid > 0 )    {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
         ui->labelMessage->setText(QString::fromStdString(strprintf("There is an order ongoing (#%d). Press 'Continue' or 'Reset' order.", mOrderid)));
         nodeSetupEnableOrderUI(true, mOrderid, mInvoiceid);
         mPaymentTx = nodeSetupGetPaymentTx();
@@ -982,6 +1011,7 @@ void MasternodeList::nodeSetupResetClientId( )  {
     ui->btnSetup->setEnabled(false);
     mClientid = 0;
     nodeSetupResetOrderId();
+    ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
     ui->labelMessage->setText("Enter your client data and create a new user or login an existing one.");
 }
 
@@ -993,6 +1023,7 @@ void MasternodeList::nodeSetupResetOrderId( )   {
     ui->btnSetup->setIcon(QIcon(":/icons/setup"));
     ui->btnSetup->setIconSize(QSize(200, 32));
     ui->btnSetup->setText(QString::fromStdString(""));
+    ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
     ui->labelMessage->setText("Select a node Tier and then follow below steps for setup.");
     mOrderid = mInvoiceid = mServiceId = 0;
     mPaymentTx = "";
@@ -1007,6 +1038,7 @@ void MasternodeList::nodeSetupEnableClientId( int clientId )  {
     ui->setupButtons->show();
     ui->labelClientIdValue->show();
     ui->labelClientId->setText("#"+QString::number(clientId));
+    ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
     ui->labelMessage->setText("Select a node Tier and press '1-Click setUP' to verify if you meet the prerequisites");
     mClientid = clientId;
     ui->btnRestore->setText("Support");

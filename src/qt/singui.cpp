@@ -665,8 +665,8 @@ void SINGUI::createActions()
     //-//openRepairAction->setStatusTip(tr("Show wallet repair options"));
     openConfEditorAction = new QAction(QIcon(":/icons/edit"), tr("Open Wallet &Configuration File (sin.conf)"), this);
     openConfEditorAction->setStatusTip(tr("Open configuration file (sin.conf)"));
-    openMNConfEditorAction = new QAction(platformStyle->SingleColorIcon(":/icons/edit"), tr("Open &Infinitynode Configuration File"), this);
-    openMNConfEditorAction->setStatusTip(tr("Open InfinityNode configuration file"));
+    //-//openMNConfEditorAction = new QAction(platformStyle->SingleColorIcon(":/icons/edit"), tr("Open &Infinitynode Configuration File"), this);
+    //-//openMNConfEditorAction->setStatusTip(tr("Open InfinityNode configuration file"));
     //-//showBackupsAction = new QAction(QIcon(":/icons/" + theme + "/browse"), tr("Show Automatic &Backups"), this);
     //-//showBackupsAction->setStatusTip(tr("Show automatically created wallet backups"));
     // initially disable the debug window menu items
@@ -715,7 +715,7 @@ void SINGUI::createActions()
 
     // Open configs and backup folder from menu
     connect(openConfEditorAction, SIGNAL(triggered()), this, SLOT(showConfEditor()));
-    connect(openMNConfEditorAction, SIGNAL(triggered()), this, SLOT(showMNConfEditor()));
+    //-//connect(openMNConfEditorAction, SIGNAL(triggered()), this, SLOT(showMNConfEditor()));
     //-//connect(showBackupsAction, SIGNAL(triggered()), this, SLOT(showBackups()));
 
     // Get restart command-line parameters and handle restart
@@ -834,7 +834,7 @@ void SINGUI::createMenuBar()
         //-//tools->addAction(openRepairAction);
         //-//tools->addSeparator();
         tools->addAction(openConfEditorAction);
-        tools->addAction(openMNConfEditorAction);
+        //--//tools->addAction(openMNConfEditorAction);
         //-//tools->addAction(showBackupsAction);
     }
 
@@ -1210,7 +1210,7 @@ void SINGUI::createTrayIconMenu()
     //-//trayIconMenu->addAction(openRepairAction);
     //-//trayIconMenu->addSeparator();
     trayIconMenu->addAction(openConfEditorAction);
-    trayIconMenu->addAction(openMNConfEditorAction);
+    //--//trayIconMenu->addAction(openMNConfEditorAction);
     //-//trayIconMenu->addAction(showBackupsAction);
     //
 

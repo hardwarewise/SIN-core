@@ -54,7 +54,7 @@ width: 200px;
         </size>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tab">
         <attribute name="title">
@@ -799,13 +799,13 @@ selection-background-color: #BC8F3A;;</string>
                 <property name="minimumSize">
                  <size>
                   <width>200</width>
-                  <height>27</height>
+                  <height>30</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
                   <width>210</width>
-                  <height>28</height>
+                  <height>30</height>
                  </size>
                 </property>
                 <property name="styleSheet">
@@ -881,20 +881,20 @@ min-width: 270px;
                 <property name="minimumSize">
                  <size>
                   <width>200</width>
-                  <height>28</height>
+                  <height>30</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
                   <width>200</width>
-                  <height>28</height>
+                  <height>30</height>
                  </size>
                 </property>
                 <property name="styleSheet">
                  <string notr="true"/>
                 </property>
                 <property name="text">
-                 <string>Pay to continue service</string>
+                 <string>Pay pending invoice</string>
                 </property>
                </widget>
               </item>
@@ -1452,7 +1452,6 @@ color: #011552;</string>
    </item>
   </layout>
  </widget>
-
  <resources/>
  <connections/>
 </ui>
