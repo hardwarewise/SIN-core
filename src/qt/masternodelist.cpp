@@ -84,6 +84,10 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     connect(ui->dinTable, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextDINMenu(const QPoint&)));
     connect(mCheckNodeAction, SIGNAL(triggered()), this, SLOT(on_checkDINNode()));
 
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateDINList()));
+    timer->start(1000);
+
     fFilterUpdated = false;
     nTimeFilterUpdated = GetTime();
     updateDINList();
