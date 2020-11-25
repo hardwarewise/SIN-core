@@ -472,7 +472,7 @@ void OverviewPage::onResult(QNetworkReply* replystats)
         // Set INFINITY NODE STATS strings
         int bigRoiDays = 1000000/((720/dataObject.value("inf_online_big").toDouble())*1752);
         int midRoiDays = 500000/((720/dataObject.value("inf_online_mid").toDouble())*838);
-        int lilRoiDays = 100000/((720/dataObject.value("inf_online_lil").toDouble())*160);
+        int lilRoiDays = 100000/((720/dataObject.value("inf_online_lil").toDouble())*560);
 
         QString bigROIString = "ROI: " + QString::number(bigRoiDays) + " days" ;
         QString midROIString = "ROI: " + QString::number(midRoiDays) + " days";
