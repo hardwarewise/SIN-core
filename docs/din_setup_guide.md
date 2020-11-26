@@ -227,7 +227,7 @@ Please wait for 2 confirmations!
   
   
 
-infinitynodeupdatemeta [Owner address] [node PublicKey] [node IP] [first 16 characters of BurnFundTx]
+infinitynodeupdatemeta [Owner address] [node PublicKey] [node IP]:20970 [first 16 characters of BurnFundTx]
 
   
 
