@@ -229,28 +229,29 @@ void MasternodeList::updateDINList()
                 // update used burn tx map
                 std::string burnfundTxId = infoInf.vinBurnFund.prevout.hash.ToString().substr(0, 16);
                 nodeSetupUsedBurnTxs.insert( { burnfundTxId, 1  } );
-            }
-            QString nodeTxId = QString::fromStdString(infoInf.collateralAddress);
-            ui->dinTable->setItem(k, 0, new QTableWidgetItem(QString(nodeTxId)));
-            QTableWidgetItem *itemHeight = new QTableWidgetItem;
-            itemHeight->setData(Qt::EditRole, infoInf.nHeight);
-            ui->dinTable->setItem(k, 1, itemHeight);
-            QTableWidgetItem *itemExpiryHeight = new QTableWidgetItem;
-            itemExpiryHeight->setData(Qt::EditRole, infoInf.nExpireHeight);
-            ui->dinTable->setItem(k, 2, itemExpiryHeight);
-            ui->dinTable->setItem(k, 3, new QTableWidgetItem(QString(QString::fromStdString(status))));
-            ui->dinTable->setItem(k, 4, new QTableWidgetItem(QString(QString::fromStdString(strIP))));
-            ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString(QString::fromStdString(sPeerAddress))));
-            bool flocked = mapLockRewardHeight.find(sPeerAddress) != mapLockRewardHeight.end();
-            if(flocked) {
-                ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString::number(mapLockRewardHeight[sPeerAddress])));
-                ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString("Yes"))));
             } else {
-                ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString(QString::fromStdString(""))));
-                ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString("No"))));
+                QString nodeTxId = QString::fromStdString(infoInf.collateralAddress);
+                ui->dinTable->setItem(k, 0, new QTableWidgetItem(QString(nodeTxId)));
+                QTableWidgetItem *itemHeight = new QTableWidgetItem;
+                itemHeight->setData(Qt::EditRole, infoInf.nHeight);
+                ui->dinTable->setItem(k, 1, itemHeight);
+                QTableWidgetItem *itemExpiryHeight = new QTableWidgetItem;
+                itemExpiryHeight->setData(Qt::EditRole, infoInf.nExpireHeight);
+                ui->dinTable->setItem(k, 2, itemExpiryHeight);
+                ui->dinTable->setItem(k, 3, new QTableWidgetItem(QString(QString::fromStdString(status))));
+                ui->dinTable->setItem(k, 4, new QTableWidgetItem(QString(QString::fromStdString(strIP))));
+                ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString(QString::fromStdString(sPeerAddress))));
+                bool flocked = mapLockRewardHeight.find(sPeerAddress) != mapLockRewardHeight.end();
+                if(flocked) {
+                    ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString::number(mapLockRewardHeight[sPeerAddress])));
+                    ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString("Yes"))));
+                } else {
+                    ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString(QString::fromStdString(""))));
+                    ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString("No"))));
+                }
+                ui->dinTable->setItem(k,8, new QTableWidgetItem(QString(QString::fromStdString(pair.second))));
+                k++;
             }
-            ui->dinTable->setItem(k,8, new QTableWidgetItem(QString(QString::fromStdString(pair.second))));
-            k++;
         }
 
         bDINNodeAPIUpdate = true;
