@@ -40,6 +40,10 @@
 #include <qt/masternodelist.h>
 //
 
+//SIN
+#include <infinitynodetip.h>
+//
+
 // Instaswap
 #include <qt/instaswap.h>
 //
@@ -1529,16 +1533,16 @@ void SINGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerific
     }
     // Dash
     //else
-    if(!masternodeSync.IsBlockchainSynced())
+    if(infTip.IsFinished())
     {
     //
         QString timeBehindText = GUIUtil::formatNiceTimeOffset(secs);
 
-        progressBarLabel->setVisible(true);
+        progressBarLabel->setVisible(false);
         progressBar->setFormat(tr("%1 behind").arg(timeBehindText));
         progressBar->setMaximum(1000000000);
         progressBar->setValue(nVerificationProgress * 1000000000.0 + 0.5);
-        progressBar->setVisible(true);
+        progressBar->setVisible(false);
 
         tooltip = tr("Catching up...") + QString("<br>") + tooltip;
         if(count != prevBlocks)
