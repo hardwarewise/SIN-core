@@ -216,7 +216,7 @@ font-weight:bold;
 color:#00B4B8;</string>
                   </property>
                   <property name="text">
-                   <string>0/0/0</string>
+                   <string>0/0</string>
                   </property>
                  </widget>
                 </item>

@@ -55,7 +55,7 @@ void StatsPage::onResult(QNetworkReply* reply)
 
         QLocale l = QLocale(QLocale::English);
         // Set NETWORK strings
-        QString heightValue(tr("[E] %1 / [D] %2 / [P] %3").arg(dataObject.value("explorerHeight").toVariant().toString(), dataObject.value("blockcount").toVariant().toString(), dataObject.value("poolHeight").toVariant().toString()));
+        QString heightValue(tr("[E] %1 / [D] %2").arg(dataObject.value("explorerHeight").toVariant().toString(), dataObject.value("blockcount").toVariant().toString(), dataObject.value("poolHeight").toVariant().toString()));
         QString knownHashrateString = QString::number(dataObject.value("known_hashrate").toDouble()/1000000000, 'f', 2);
         QString hashrateString = knownHashrateString + "/" + dataObject.value("hashrate").toVariant().toString();
         m_ui->hashrateValueLabel->setText(hashrateString);
