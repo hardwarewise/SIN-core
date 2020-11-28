@@ -952,7 +952,7 @@ void SINGUI::createToolBars()
 		toolbar->addWidget(empty);
 
         QLabel* labelVersionName = new QLabel();
-        labelVersionName->setText("D.I.N.");
+        labelVersionName->setText("DIN");
         labelVersionName->setStyleSheet("margin-top: 10px; color: #00FFFF ; font-size: 16px; font-weight : bold;");
         labelVersionName->setAlignment(Qt::AlignCenter);
         toolbar->addWidget(labelVersionName);
