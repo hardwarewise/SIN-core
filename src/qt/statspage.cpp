@@ -87,14 +87,24 @@ void StatsPage::onResult(QNetworkReply* reply)
         int midRoiDays = 500000/((720/dataObject.value("inf_online_mid").toDouble())*838);
         int lilRoiDays = 100000/((720/dataObject.value("inf_online_lil").toDouble())*560);
 
+        //++
+        int bigRoiDaysPercent = (365/(1000000/((720/dataObject.value("inf_online_big").toDouble())*1752)))*100-100;
+        int midRoiDaysPercent = (365/(500000/((720/dataObject.value("inf_online_mid").toDouble())*838)))*100-100;
+        int lilRoiDaysPercent = (365/(100000/((720/dataObject.value("inf_online_lil").toDouble())*560)))*100-100;
+
+        QString bigROIStringPercent = QString::number(bigRoiDaysPercent, 'f', 0);
+        QString midROIStringPercent = QString::number(midRoiDaysPercent, 'f', 0);
+        QString lilROIStringPercent = QString::number(lilRoiDaysPercent, 'f', 0);
+        //--
+
         QString bigROIString = "ROI: " + QString::number(bigRoiDays) + " days" ;
         QString midROIString = "ROI: " + QString::number(midRoiDays) + " days";
         QString lilROIString = "ROI: " + QString::number(lilRoiDays) + " days";
         QString totalNodesString = QString::number(dataObject.value("inf_online_big").toInt() + dataObject.value("inf_online_mid").toInt() + dataObject.value("inf_online_lil").toInt()) + " nodes";
     
-        QString bigString = dataObject.value("inf_burnt_big").toVariant().toString() + "/" + dataObject.value("inf_online_big").toVariant().toString() + "/" + bigROIString;
-        QString midString = dataObject.value("inf_burnt_mid").toVariant().toString() + "/" + dataObject.value("inf_online_mid").toVariant().toString() + "/" + midROIString;
-        QString lilString = dataObject.value("inf_burnt_lil").toVariant().toString() + "/" + dataObject.value("inf_online_lil").toVariant().toString() + "/"  + lilROIString;
+        QString bigString = dataObject.value("inf_burnt_big").toVariant().toString() + "/" + dataObject.value("inf_online_big").toVariant().toString() + "/" + bigROIString + "/" + bigROIStringPercent + " %";
+        QString midString = dataObject.value("inf_burnt_mid").toVariant().toString() + "/" + dataObject.value("inf_online_mid").toVariant().toString() + "/" + midROIString + "/" + midROIStringPercent + " %";
+        QString lilString = dataObject.value("inf_burnt_lil").toVariant().toString() + "/" + dataObject.value("inf_online_lil").toVariant().toString() + "/"  + lilROIString + "/" + lilROIStringPercent + " %";
         m_ui->bigValueLabel->setText(bigString);
         m_ui->midValueLabel->setText(midString);
         m_ui->lilValueLabel->setText(lilString);
