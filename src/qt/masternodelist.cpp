@@ -49,6 +49,7 @@
 #include <QUrl>
 #include <QUrlQuery>
 #include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QMovie>
 
 UniValue nodeSetupCallRPC(std::string args);
@@ -67,11 +68,24 @@ int GetOffsetFromUtc()
 
 MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *parent) :
     QWidget(parent),
+    // ++ DIN ROI Stats
+    m_timer(nullptr),
+    // --
     ui(new Ui::MasternodeList),
+    m_networkManager(new QNetworkAccessManager(this)),
     clientModel(0),
     walletModel(0)
 {
     ui->setupUi(this);
+
+    // ++ DIN ROI Stats
+    m_timer = new QTimer(this);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(getStatistics()));
+    m_timer->start(30000);
+    connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onResult(QNetworkReply*)));
+    getStatistics();
+    // --
+
 
     ui->btnSetup->setIcon(QIcon(":/icons/setup"));
     ui->btnSetup->setIconSize(QSize(177, 26));
@@ -1726,3 +1740,54 @@ QString MasternodeList::nodeSetupGetRPCErrorMessage( UniValue objError )    {
 
     return ret;
 }
+
+// ++ DIN ROI Stats
+void MasternodeList::onResult(QNetworkReply* replystats)
+{
+    QVariant statusCode = replystats->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+
+    if( statusCode == 200)
+    {
+        QString replyString = (QString) replystats->readAll();
+
+        QJsonDocument jsonResponse = QJsonDocument::fromJson(replyString.toUtf8());
+        QJsonObject jsonObject = jsonResponse.object();
+
+        QJsonObject dataObject = jsonObject.value("data").toArray()[0].toObject();
+
+        QLocale l = QLocale(QLocale::English);
+
+          // Set INFINITY NODE STATS strings
+        int bigRoiDays = (365/(1000000/((720/dataObject.value("inf_online_big").toDouble())*1752)))*100-100;
+        int midRoiDays = (365/(500000/((720/dataObject.value("inf_online_mid").toDouble())*838)))*100-100;
+        int lilRoiDays = (365/(100000/((720/dataObject.value("inf_online_lil").toDouble())*560)))*100-100;
+
+        QString bigROIString = QString::number(bigRoiDays, 'f', 0);
+        QString midROIString = QString::number(midRoiDays, 'f', 0);
+        QString lilROIString = QString::number(lilRoiDays, 'f', 0);
+
+        ui->bigRoiLabel->setText("ROI " + bigROIString + "%");
+        ui->midRoiLabel->setText("ROI " + midROIString + "%");
+        ui->miniRoiLabel->setText("ROI " + lilROIString + "%");
+        
+       
+    }
+    else
+    {
+        const QString noValue = "NaN";
+       
+        ui->bigRoiLabel->setText(noValue);
+        ui->midRoiLabel->setText(noValue);
+        ui->miniRoiLabel->setText(noValue);
+       
+    }
+}
+    
+void MasternodeList::getStatistics()
+{
+    QUrl summaryUrl("https://explorer.sinovate.io/ext/summary");
+    QNetworkRequest request;
+    request.setUrl(summaryUrl);
+    m_networkManager->get(request);
+}
+// --
