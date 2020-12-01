@@ -1311,8 +1311,10 @@ bool CInfinitynodeMan::getScoreVector(const uint256& nBlockHash, int nSinType, i
 
     AssertLockHeld(cs);
 
-    if (mapInfinitynodes.empty())
+    if (mapInfinitynodes.empty()) {
+        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::getScoreVector -- Infinitynode map is empty.\n");
         return false;
+    }
 
     // calculate scores for SIN type 10
     for (auto& infpair : mapInfinitynodes) {
@@ -1323,6 +1325,7 @@ bool CInfinitynodeMan::getScoreVector(const uint256& nBlockHash, int nSinType, i
     }
 
     sort(vecScoresRet.rbegin(), vecScoresRet.rend(), CompareNodeScore());
+    LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::getScoreVector -- %d scores calculed at height: %d, for SINType %d\n", vecScoresRet.size(), nBlockHeight, nSinType);
     return !vecScoresRet.empty();
 }
 
