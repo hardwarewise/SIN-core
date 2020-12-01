@@ -19,6 +19,7 @@
 #include <QWidget>
 #include <QJsonObject>
 #include <univalue.h>
+#include <QNetworkReply>
 
 #define MY_MASTERNODELIST_UPDATE_SECONDS                 60
 #define MASTERNODELIST_UPDATE_SECONDS                    15
@@ -129,6 +130,8 @@ public Q_SLOTS:
 Q_SIGNALS:
 
 private:
+    QTimer* m_timer;
+    QNetworkAccessManager* m_networkManager;
     QTimer *timer;
     Ui::MasternodeList *ui;
     ClientModel *clientModel;
@@ -176,6 +179,8 @@ private Q_SLOTS:
     void on_btnLogin_clicked();
     void on_btnSetupReset_clicked();
     void on_btnRestore_clicked();
+    void onResult(QNetworkReply* replystats);
+    void getStatistics();
 };
 
 #endif // FXTC_QT_MASTERNODELIST_H

@@ -57,7 +57,7 @@ public:
     //! Return number of connections, default is in- and outbound (total)
     int getNumConnections(unsigned int flags = CONNECTIONS_ALL) const;
     // Dash
-    QString getMasternodeCountString() const;
+    QString getInfinitynodeCountString() const;
     int getNumBlocks() const;
     //
     int getHeaderTipHeight() const;

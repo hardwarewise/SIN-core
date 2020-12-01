@@ -26,6 +26,7 @@
 // Dash
 #include <masternodeman.h>
 #include <masternode-sync.h>
+#include <infinitynodeman.h>
 #include <instantx.h>
 //
 
@@ -82,19 +83,11 @@ int ClientModel::getNumConnections(unsigned int flags) const
     return m_node.getNodeCount(connections);
 }
 
-// Dash
-QString ClientModel::getMasternodeCountString() const
+QString ClientModel::getInfinitynodeCountString() const
 {
-    // return tr("Total: %1 (PS compatible: %2 / Enabled: %3) (IPv4: %4, IPv6: %5, TOR: %6)").arg(QString::number((int)mnodeman.size()))
-    return tr("Total: %1 (PS compatible: %2 / Enabled: %3)")
-            .arg(QString::number((int)mnodeman.size()))
-            .arg(QString::number((int)mnodeman.CountEnabled(MIN_INSTANTSEND_PROTO_VERSION)))
-            .arg(QString::number((int)mnodeman.CountEnabled()));
-            // .arg(QString::number((int)mnodeman.CountByIP(NET_IPV4)))
-            // .arg(QString::number((int)mnodeman.CountByIP(NET_IPV6)))
-            // .arg(QString::number((int)mnodeman.CountByIP(NET_TOR)));
+    return tr("Total: %1")
+            .arg(QString::number((int)infnodeman.Count()));
 }
-//
 
 int ClientModel::getNumBlocks() const
 {
@@ -141,7 +134,7 @@ void ClientModel::updateTimer()
 // Dash
 void ClientModel::updateMnTimer()
 {
-    QString newMasternodeCountString = getMasternodeCountString();
+    QString newMasternodeCountString = getInfinitynodeCountString();
 
     if (cachedMasternodeCountString != newMasternodeCountString)
     {
