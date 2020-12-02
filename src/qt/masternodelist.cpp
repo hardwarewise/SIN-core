@@ -1690,7 +1690,7 @@ void MasternodeList::nodeSetupCleanProgress()   {
 
 void MasternodeList::showTab_setUP(bool fShow)
 {
-    ui->tabWidget->setCurrentIndex(3);
+    ui->tabWidget->setCurrentIndex(1);
     
 }
 
