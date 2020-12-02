@@ -160,10 +160,52 @@ width: 200px;
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,0,10,50,0">
+          <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,0,0,0,0,0,0,0,10,50,0">
            <property name="bottomMargin">
             <number>0</number>
            </property>
+           <item>
+            <widget class="QLabel" name="ReadyNodes_label">
+             <property name="text">
+              <string>Nodes Ready:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="ReadyNodesLabel">
+             <property name="text">
+              <string>0</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="ExpiredNodes_label">
+             <property name="text">
+              <string>Nodes Expired:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="ExpiredNodesLabel">
+             <property name="text">
+              <string>0</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="IncompleteNodes_label">
+             <property name="text">
+              <string>Nodes Incomplete:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="IncompleteNodesLabel">
+             <property name="text">
+              <string>0</string>
+             </property>
+            </widget>
+           </item>
            <item>
             <widget class="QLabel" name="currentheight_label">
              <property name="text">

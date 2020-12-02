@@ -208,6 +208,7 @@ void MasternodeList::updateDINList()
         bool bNeedToQueryAPIServiceId = false;
         int serviceId;
         int k=0;
+        int nIncomplete = 0, nExpired = 0, nReady = 0;
         for(auto &pair : mapMynode){
             infinitynode_info_t infoInf;
             std::string status = "Unknown", sPeerAddress = "", strIP = "---";
@@ -217,6 +218,7 @@ void MasternodeList::updateDINList()
             CMetadata metadata = infnodemeta.Find(infoInf.metadataID);
             if (metadata.getMetadataHeight() == 0 || metadata.getMetaPublicKey() == "" ){
                 status="Incomplete";
+                nIncomplete++;
             } else {
                 status="Ready";
 
@@ -237,12 +239,14 @@ void MasternodeList::updateDINList()
                         nodeSetupSetServiceForNodeAddress( QString::fromStdString(sPeerAddress), serviceValue );  // -1 = reset to checked, not queried
                     }
                 }
+                nReady++;
             }
             if(infoInf.nExpireHeight < nCurrentHeight){
                 status="Expired";
                 // update used burn tx map
                 std::string burnfundTxId = infoInf.vinBurnFund.prevout.hash.ToString().substr(0, 16);
                 nodeSetupUsedBurnTxs.insert( { burnfundTxId, 1  } );
+                nExpired++;
             } else {
                 QString nodeTxId = QString::fromStdString(infoInf.collateralAddress);
                 ui->dinTable->setItem(k, 0, new QTableWidgetItem(QString(nodeTxId)));
@@ -281,6 +285,9 @@ void MasternodeList::updateDINList()
             nodeSetupPopulateBurnTxCombo();
         }
         ui->dinTable->setSortingEnabled(true);
+        ui->ReadyNodesLabel->setText(QString::number(nReady));
+        ui->IncompleteNodesLabel->setText(QString::number(nIncomplete));
+        ui->ExpiredNodesLabel->setText(QString::number(nExpired));
     }
 }
 
