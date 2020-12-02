@@ -259,6 +259,8 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
 
 
  // Social Media icons
+    QLabel* spacerLabel = new QLabel();
+    spacerLabel->setFixedWidth(100);
     QFrame* frameSocial = new QFrame();
     frameSocial->setContentsMargins(0, 0, 0, 0);
     frameSocial->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
@@ -405,6 +407,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     }
 
 
+    statusBar()->addWidget(spacerLabel);
     statusBar()->addWidget(frameSocial);
     statusBar()->addWidget(progressBarLabel);
     progressBarLabel->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 1px solid white; } QLabel {color: #fff; }");
