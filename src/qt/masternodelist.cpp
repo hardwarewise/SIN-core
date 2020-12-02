@@ -218,7 +218,6 @@ void MasternodeList::updateDINList()
             CMetadata metadata = infnodemeta.Find(infoInf.metadataID);
             if (metadata.getMetadataHeight() == 0 || metadata.getMetaPublicKey() == "" ){
                 status="Incomplete";
-                nIncomplete++;
             } else {
                 status="Ready";
 
@@ -239,14 +238,12 @@ void MasternodeList::updateDINList()
                         nodeSetupSetServiceForNodeAddress( QString::fromStdString(sPeerAddress), serviceValue );  // -1 = reset to checked, not queried
                     }
                 }
-                nReady++;
             }
             if(infoInf.nExpireHeight < nCurrentHeight){
                 status="Expired";
                 // update used burn tx map
                 std::string burnfundTxId = infoInf.vinBurnFund.prevout.hash.ToString().substr(0, 16);
                 nodeSetupUsedBurnTxs.insert( { burnfundTxId, 1  } );
-                nExpired++;
             } else {
                 QString nodeTxId = QString::fromStdString(infoInf.collateralAddress);
                 ui->dinTable->insertRow(k);
@@ -269,6 +266,15 @@ void MasternodeList::updateDINList()
                     ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString("No"))));
                 }
                 ui->dinTable->setItem(k,8, new QTableWidgetItem(QString(QString::fromStdString(pair.second))));
+                if (status == "Incomplete") {
+                    nIncomplete++;
+                }
+                if (status == "Ready") {
+                    nReady++;
+                }
+                if (status == "Expired") {
+                    nExpired++;
+                }
                 k++;
             }
         }
@@ -283,7 +289,7 @@ void MasternodeList::updateDINList()
             nodeSetupPopulateBurnTxCombo();
         }
         ui->dinTable->setSortingEnabled(true);
-        ui->ReadyNodesLabel->setText(QString::number(nReady - nExpired));
+        ui->ReadyNodesLabel->setText(QString::number(nReady));
         ui->IncompleteNodesLabel->setText(QString::number(nIncomplete));
         ui->ExpiredNodesLabel->setText(QString::number(nExpired));
     }
