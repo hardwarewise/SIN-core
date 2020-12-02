@@ -268,6 +268,9 @@ void MasternodeList::updateDINList()
             }
         }
 
+        // avoid including empty rows
+        ui->dinTable->resizeColumnsToContents();
+
         bDINNodeAPIUpdate = true;
 
         // use as nodeSetup combo refresh too
