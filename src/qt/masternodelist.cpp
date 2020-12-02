@@ -291,12 +291,15 @@ void MasternodeList::updateDINList()
         ui->IncompleteNodesLabel->setText(QString::number(nIncomplete));
         ui->ExpiredNodesLabel->setText(QString::number(nExpired));
         if (nReady == 0) {
+            ui->ReadyNodes_label->hide();
             ui->ReadyNodesLabel->hide();
         }
         if (nIncomplete == 0) {
+            ui->IncompleteNodes_label->hide();
             ui->IncompleteNodesLabel->hide();
         }
         if (nExpired == 0) {
+            ui->ExpiredNodes_label->hide();
             ui->ExpiredNodesLabel->hide();
         }
     }
