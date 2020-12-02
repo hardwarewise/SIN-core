@@ -244,6 +244,7 @@ void MasternodeList::updateDINList()
                 // update used burn tx map
                 std::string burnfundTxId = infoInf.vinBurnFund.prevout.hash.ToString().substr(0, 16);
                 nodeSetupUsedBurnTxs.insert( { burnfundTxId, 1  } );
+                nExpired++;
             } else {
                 QString nodeTxId = QString::fromStdString(infoInf.collateralAddress);
                 ui->dinTable->insertRow(k);
@@ -272,9 +273,6 @@ void MasternodeList::updateDINList()
                 if (status == "Ready") {
                     nReady++;
                 }
-                if (status == "Expired") {
-                    nExpired++;
-                }
                 k++;
             }
         }
@@ -292,6 +290,15 @@ void MasternodeList::updateDINList()
         ui->ReadyNodesLabel->setText(QString::number(nReady));
         ui->IncompleteNodesLabel->setText(QString::number(nIncomplete));
         ui->ExpiredNodesLabel->setText(QString::number(nExpired));
+        if (nReady == 0) {
+            ui->ReadyNodesLabel->hide();
+        }
+        if (nIncomplete == 0) {
+            ui->IncompleteNodesLabel->hide();
+        }
+        if (nExpired == 0) {
+            ui->ExpiredNodesLabel->hide();
+        }
     }
 }
 
