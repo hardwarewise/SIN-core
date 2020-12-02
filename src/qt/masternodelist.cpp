@@ -269,7 +269,7 @@ void MasternodeList::updateDINList()
         }
 
         // avoid including empty rows
-        ui->dinTable->resizeColumnsToContents();
+        ui->dinTable->resizeRowsToContents();
 
         bDINNodeAPIUpdate = true;
 
