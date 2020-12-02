@@ -1326,7 +1326,7 @@ bool CInfinitynodeMan::getScoreVector(const uint256& nBlockHash, int nSinType, i
 
     sort(vecScoresRet.rbegin(), vecScoresRet.rend(), CompareNodeScore());
     LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::getScoreVector -- %d scores calculed at height: %d, for SINType %d\n", vecScoresRet.size(), nBlockHeight, nSinType);
-    return !vecScoresRet.empty();
+    return vecScoresRet.size() > 0;
 }
 
 /*
