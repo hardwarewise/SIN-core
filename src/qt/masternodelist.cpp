@@ -273,7 +273,7 @@ void MasternodeList::updateDINList()
         }
 
         // avoid including empty rows
-        ui->dinTable->resizeRowsToContents();
+        ui->dinTable->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
 
         bDINNodeAPIUpdate = true;
 
