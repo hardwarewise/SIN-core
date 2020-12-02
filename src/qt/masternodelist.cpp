@@ -200,7 +200,7 @@ void MasternodeList::updateDINList()
             }
         }
 
-        ui->dinTable->setRowCount(mapMynode.size());
+        ui->dinTable->setRowCount(0);
 
         // update used burn tx map
         nodeSetupUsedBurnTxs.clear();
@@ -249,6 +249,7 @@ void MasternodeList::updateDINList()
                 nExpired++;
             } else {
                 QString nodeTxId = QString::fromStdString(infoInf.collateralAddress);
+                ui->dinTable->insertRow(k);
                 ui->dinTable->setItem(k, 0, new QTableWidgetItem(QString(nodeTxId)));
                 QTableWidgetItem *itemHeight = new QTableWidgetItem;
                 itemHeight->setData(Qt::EditRole, infoInf.nHeight);
@@ -272,9 +273,6 @@ void MasternodeList::updateDINList()
             }
         }
 
-        // avoid including empty rows
-        ui->dinTable->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
-
         bDINNodeAPIUpdate = true;
 
         // use as nodeSetup combo refresh too
@@ -285,7 +283,7 @@ void MasternodeList::updateDINList()
             nodeSetupPopulateBurnTxCombo();
         }
         ui->dinTable->setSortingEnabled(true);
-        ui->ReadyNodesLabel->setText(QString::number(nReady));
+        ui->ReadyNodesLabel->setText(QString::number(nReady - nExpired));
         ui->IncompleteNodesLabel->setText(QString::number(nIncomplete));
         ui->ExpiredNodesLabel->setText(QString::number(nExpired));
     }
