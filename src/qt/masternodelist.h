@@ -131,9 +131,9 @@ Q_SIGNALS:
 
 private:
     QTimer* m_timer;
+    Ui::MasternodeList *ui;
     QNetworkAccessManager* m_networkManager;
     QTimer *timer;
-    Ui::MasternodeList *ui;
     ClientModel *clientModel;
     WalletModel *walletModel;
 
