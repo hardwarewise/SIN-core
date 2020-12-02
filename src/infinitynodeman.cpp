@@ -127,6 +127,24 @@ int CInfinitynodeMan::Count()
     return mapInfinitynodes.size();
 }
 
+int CInfinitynodeMan::CountEnabled()
+{
+    LOCK(cs);
+
+    if (mapInfinitynodes.empty()) {
+        return 0;
+    }
+    int i = 0;
+    // calculate scores for SIN type 10
+    for (auto& infpair : mapInfinitynodes) {
+        CInfinitynode inf = infpair.second;
+        if (inf.getExpireHeight() >= nLastScanHeight) {
+            i++;
+        }
+    }
+    return i;
+}
+
 std::string CInfinitynodeMan::ToString() const
 {
     std::ostringstream info;
