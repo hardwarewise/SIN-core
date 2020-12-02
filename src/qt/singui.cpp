@@ -985,10 +985,6 @@ void SINGUI::setClientModel(ClientModel *_clientModel)
         setNumBlocks(m_node.getNumBlocks(), QDateTime::fromTime_t(m_node.getLastBlockTime()), m_node.getVerificationProgress(), false);
         connect(_clientModel, SIGNAL(numBlocksChanged(int,QDateTime,double,bool)), this, SLOT(setNumBlocks(int,QDateTime,double,bool)));
 
-        // Dash
-        connect(clientModel, SIGNAL(additionalDataSyncProgressChanged(double)), this, SLOT(setAdditionalDataSyncProgress(double)));
-        //
-
         // Receive and report messages from client model
         connect(_clientModel, SIGNAL(message(QString,QString,unsigned int)), this, SLOT(message(QString,QString,unsigned int)));
 
@@ -1507,9 +1503,11 @@ void SINGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerific
     tooltip = tr("Processed %n block(s) of transaction history.", "", count);
 
     // Set icon state: spinning if catching up, tick otherwise
-    if(secs < 90*60)
+    if(secs < 18 * 60) //Allow blocks to not appear for 18 minutes
     {
         tooltip = tr("Up to date") + QString(".<br>") + tooltip;
+        progressBarLabel->setVisible(false);
+        progressBar->setVisible(false);
         labelBlocksIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/synced").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
 
 #ifdef ENABLE_WALLET
@@ -1518,20 +1516,9 @@ void SINGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerific
             walletFrame->showOutOfSyncWarning(false);
             modalOverlay->showHide(true, true);
 
-            if(secs < 25*60)
-                modalOverlay->hideForever();
         }
 #endif // ENABLE_WALLET
-        // Dash
-        //progressBarLabel->setVisible(false);
-        //progressBar->setVisible(false);
-        //
-    }
-    // Dash
-    //else
-    if(!masternodeSync.IsBlockchainSynced())
-    {
-    //
+    } else {
         QString timeBehindText = GUIUtil::formatNiceTimeOffset(secs);
 
         progressBarLabel->setVisible(true);
@@ -1572,7 +1559,7 @@ void SINGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerific
     progressBar->setToolTip(tooltip);
 }
 
-// Dash
+/*
 void SINGUI::setAdditionalDataSyncProgress(double nSyncProgress)
 {
     if(!clientModel)
@@ -1626,8 +1613,7 @@ void SINGUI::setAdditionalDataSyncProgress(double nSyncProgress)
     labelBlocksIcon->setToolTip(tooltip);
     progressBarLabel->setToolTip(tooltip);
     progressBar->setToolTip(tooltip);
-}
-//
+}*/
 
 void SINGUI::message(const QString &title, const QString &message, unsigned int style, bool *ret)
 {
