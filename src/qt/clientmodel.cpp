@@ -86,7 +86,7 @@ int ClientModel::getNumConnections(unsigned int flags) const
 QString ClientModel::getInfinitynodeCountString() const
 {
     return tr("Total: %1")
-            .arg(QString::number((int)infnodeman.Count()));
+            .arg(QString::number((int)infnodeman.CountEnabled()));
 }
 
 int ClientModel::getNumBlocks() const
