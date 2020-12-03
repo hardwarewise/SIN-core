@@ -134,6 +134,7 @@ private:
     Ui::MasternodeList *ui;
     QNetworkAccessManager* m_networkManager;
     QTimer *timer;
+    QTimer* timerSingleShot;
     ClientModel *clientModel;
     WalletModel *walletModel;
 

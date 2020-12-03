@@ -98,13 +98,17 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     connect(ui->dinTable, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextDINMenu(const QPoint&)));
     connect(mCheckNodeAction, SIGNAL(triggered()), this, SLOT(on_checkDINNode()));
 
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(updateDINList()));
-    updateDINList();
-    timer->start(60000);
+    timerSingleShot = new QTimer(this);
+    connect(timerSingleShot, SIGNAL(timeout()), this, SLOT(updateDINList()));
+    timerSingleShot->setSingleShot(true);
+    timerSingleShot->start(1000);
 
     fFilterUpdated = false;
     nTimeFilterUpdated = GetTime();
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateDINList()));
+    timer->start(60000);
+    updateDINList();
 
     // node setup
     std::string baseURL = ( Params().NetworkIDString() == CBaseChainParams::TESTNET ) ? "https://setup2dev.sinovate.io" : "https://setup.sinovate.io";
