@@ -100,7 +100,8 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateDINList()));
-    timer->start(1000);
+    this->update();
+    timer->start(60000);
 
     fFilterUpdated = false;
     nTimeFilterUpdated = GetTime();
