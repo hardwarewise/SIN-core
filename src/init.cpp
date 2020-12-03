@@ -1935,6 +1935,9 @@ bool AppInitMain()
     // Dash
     // ********************************************************* Step 11a: setup InfinityNode
     fMasterNode = gArgs.GetBoolArg("-masternode", false);
+    if (fTurnOffMasternode) {
+        fMasterNode = false;
+    }
     // TODO: masternode should have no wallet
 
     if((fMasterNode || masternodeConfig.getCount() > -1) && gArgs.GetBoolArg("-txindex", DEFAULT_TXINDEX) == false) {
