@@ -99,6 +99,13 @@ infinitynodeprivkey=[your_infinitynodeprivkey]
 
 ![](assets/img/misc/double-run-01.png)
 
+Next
+
+``masternode = 1``
+
+``masternodeprivkey = your_masternodeprivkey``
+
+delete lines. Because you won't need it anymore.
   
 
 If you are sure that you entered the information correctly, close the sin.conf file with the key combinations Ctrl + O ENTER and Ctrl + X ENTER.
