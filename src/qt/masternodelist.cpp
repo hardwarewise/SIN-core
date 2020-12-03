@@ -100,12 +100,11 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateDINList()));
-    this->update();
+    updateDINList();
     timer->start(60000);
 
     fFilterUpdated = false;
     nTimeFilterUpdated = GetTime();
-    updateDINList();
 
     // node setup
     std::string baseURL = ( Params().NetworkIDString() == CBaseChainParams::TESTNET ) ? "https://setup2dev.sinovate.io" : "https://setup.sinovate.io";
