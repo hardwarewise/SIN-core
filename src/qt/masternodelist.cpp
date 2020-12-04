@@ -8,6 +8,7 @@
 #include <qt/forms/ui_masternodelist.h>
 
 #include <activemasternode.h>
+#include <clientversion.h>
 #include <qt/sinunits.h>
 #include <interfaces/wallet.h>
 #include <interfaces/node.h>
@@ -1300,6 +1301,7 @@ void MasternodeList::nodeSetupSetPaymentTx( QString txHash )  {
 int MasternodeList::nodeSetupAPIAddClient( QString firstName, QString lastName, QString email, QString password, QString& strError )  {
     int ret = 0;
 
+    QString commit = QString::fromStdString(getGitCommitId());
     QString Service = QString::fromStdString("AddClient");
     QUrl url( MasternodeList::NODESETUP_ENDPOINT_BASIC );
     QUrlQuery urlQuery( url );
@@ -1308,9 +1310,11 @@ int MasternodeList::nodeSetupAPIAddClient( QString firstName, QString lastName, 
     urlQuery.addQueryItem("lastname", lastName);
     urlQuery.addQueryItem("email", email);
     urlQuery.addQueryItem("password2", password);
+    urlQuery.addQueryItem("ver", commit);
     url.setQuery( urlQuery );
 
     QNetworkRequest request( url );
+//LogPrintf("nodeSetupAPIAddClient -- %s\n", url.toString().toStdString());
 
     QNetworkReply *reply = ConnectionManager->get(request);
     QEventLoop loop;
