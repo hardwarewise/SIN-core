@@ -575,7 +575,7 @@ void RPCConsole::setClientModel(ClientModel *model)
         connect(model, SIGNAL(networkActiveChanged(bool)), this, SLOT(setNetworkActive(bool)));
 
         // Dash
-        setMasternodeCount(model->getMasternodeCountString());
+        setMasternodeCount(model->getInfinitynodeCountString());
         connect(model, SIGNAL(strMasternodesChanged(QString)), this, SLOT(setMasternodeCount(QString)));
         //
 

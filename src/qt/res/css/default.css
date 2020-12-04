@@ -337,6 +337,9 @@ padding-left:1px;
 
 QComboBox QAbstractItemView::item { margin:4px; }
 
+/* It was expanded for Burntx's first 8 characters.*/
+QComboBox#comboBurnTx QAbstractItemView { min-width:250px; }
+
 QComboBox::item {
 color:#90caf9;
 }

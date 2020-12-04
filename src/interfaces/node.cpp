@@ -283,12 +283,6 @@ class NodeImpl : public Node
                     GuessVerificationProgress(Params().TxData(), block));
             }));
     }
-    // Dash
-    std::unique_ptr<Handler> handleNotifyAdditionalDataSyncProgressChanged(NotifyAdditionalDataSyncProgressChangedFn fn) override
-    {
-        return MakeHandler(::uiInterface.NotifyAdditionalDataSyncProgressChanged.connect(fn));
-    }
-    //
 };
 
 } // namespace

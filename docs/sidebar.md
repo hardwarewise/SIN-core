@@ -5,7 +5,8 @@
 - **Deterministic Infinity Nodes (D.I.N.)**
 - [D.I.N. Setup GUIDE](din_setup_guide)
 - [In-wallet 1-click setUP GUIDE](inwallet_1click_guide)
-- [Double-Run Guide](double_run_guide)
+- [D.I.N. setUP Migration GUIDE](din_setup_migration_guide)
+- [MN to DIN Migration Guide](mn_to_din_migration_guide)
 - **Documentation**
 - [SINOVATE Whitepaper Light](SINOVATE_Whitepaper_Light)
 - **Tutorials & Guides**

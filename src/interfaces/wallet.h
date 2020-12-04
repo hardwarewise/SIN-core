@@ -291,12 +291,6 @@ public:
     //! Register handler for watchonly changed messages.
     using WatchOnlyChangedFn = std::function<void(bool have_watch_only)>;
     virtual std::unique_ptr<Handler> handleWatchOnlyChanged(WatchOnlyChangedFn fn) = 0;
-
-    // Dash
-    //! Register handler for additional sync data progress messages.
-    using NotifyAdditionalDataSyncProgressChangedFn = std::function<void(double nSyncProgress)>;
-    virtual std::unique_ptr<Handler> handleNotifyAdditionalDataSyncProgressChanged(NotifyAdditionalDataSyncProgressChangedFn fn) = 0;
-    //
 };
 
 //! Tracking object returned by CreateTransaction and passed to CommitTransaction.

@@ -127,6 +127,24 @@ int CInfinitynodeMan::Count()
     return mapInfinitynodes.size();
 }
 
+int CInfinitynodeMan::CountEnabled()
+{
+    LOCK(cs);
+
+    if (mapInfinitynodes.empty()) {
+        return 0;
+    }
+    int i = 0;
+    // calculate scores for SIN type 10
+    for (auto& infpair : mapInfinitynodes) {
+        CInfinitynode inf = infpair.second;
+        if (inf.getExpireHeight() >= nLastScanHeight) {
+            i++;
+        }
+    }
+    return i;
+}
+
 std::string CInfinitynodeMan::ToString() const
 {
     std::ostringstream info;
@@ -1311,8 +1329,10 @@ bool CInfinitynodeMan::getScoreVector(const uint256& nBlockHash, int nSinType, i
 
     AssertLockHeld(cs);
 
-    if (mapInfinitynodes.empty())
+    if (mapInfinitynodes.empty()) {
+        LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::getScoreVector -- Infinitynode map is empty.\n");
         return false;
+    }
 
     // calculate scores for SIN type 10
     for (auto& infpair : mapInfinitynodes) {
@@ -1323,7 +1343,8 @@ bool CInfinitynodeMan::getScoreVector(const uint256& nBlockHash, int nSinType, i
     }
 
     sort(vecScoresRet.rbegin(), vecScoresRet.rend(), CompareNodeScore());
-    return !vecScoresRet.empty();
+    LogPrint(BCLog::INFINITYMAN,"CInfinitynodeMan::getScoreVector -- %d scores calculed at height: %d, for SINType %d\n", vecScoresRet.size(), nBlockHeight, nSinType);
+    return vecScoresRet.size() > 0;
 }
 
 /*

@@ -476,12 +476,6 @@ public:
     {
         return MakeHandler(m_wallet.NotifyWatchonlyChanged.connect(fn));
     }
-    // Dash
-    std::unique_ptr<Handler> handleNotifyAdditionalDataSyncProgressChanged(NotifyAdditionalDataSyncProgressChangedFn fn) override
-    {
-        return MakeHandler(m_wallet.NotifyAdditionalDataSyncProgressChanged.connect(fn));
-    }
-    //
 
     std::shared_ptr<CWallet> m_shared_wallet;
     CWallet& m_wallet;

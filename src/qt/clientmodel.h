@@ -57,7 +57,7 @@ public:
     //! Return number of connections, default is in- and outbound (total)
     int getNumConnections(unsigned int flags = CONNECTIONS_ALL) const;
     // Dash
-    QString getMasternodeCountString() const;
+    QString getInfinitynodeCountString() const;
     int getNumBlocks() const;
     //
     int getHeaderTipHeight() const;
@@ -113,7 +113,6 @@ Q_SIGNALS:
     void strMasternodesChanged(const QString &strMasternodes);
     //
     void numBlocksChanged(int count, const QDateTime& blockDate, double nVerificationProgress, bool header);
-    void additionalDataSyncProgressChanged(double nSyncProgress);
     void mempoolSizeChanged(long count, size_t mempoolSizeInBytes);
     void networkActiveChanged(bool networkActive);
     void alertsChanged(const QString &warnings);

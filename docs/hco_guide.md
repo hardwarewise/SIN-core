@@ -10,8 +10,8 @@
 - Three-month lock interest is 3% yearly and monthly 0.25%.
 
 **Here are examples:**  
-- If you have 10,000 coins and send your coins to a new address, and the coins will stay there for three months (64800 blocks), you will receive 300 SIN.  
-- If you have 10,000 coins and send your coins to a new address, and the coins will stay there for six months (129,600 blocks), you will receive 600 SIN.  
+- If you have 10,000 coins and send your coins to a new address, and the coins will stay there for three months (64800 blocks), you will receive 75 SIN.  
+- If you have 10,000 coins and send your coins to a new address, and the coins will stay there for six months (129,600 blocks), you will receive 300 SIN.  
 - If you have 10,000 coins and send your coins to a new address, and the coins will stay there for twelve months (262,800 blocks), you will receive 1,500 SIN.
 
 **Rules for HODL Coin Offering:**  

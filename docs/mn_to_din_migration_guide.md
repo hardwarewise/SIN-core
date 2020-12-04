@@ -1,4 +1,4 @@
-# SINOVATE INFINITYNODE AND D.I.N. DOUBLE-RUN GUIDE
+# SINOVATE MN TO DIN MIGRATION GUIDE
 
 
 This guide assumes you already own an infinity node running.
@@ -17,9 +17,10 @@ VPS Infinity Node Update And Sync Guide [here](https://docs.sinovate.io/#/wallet
 
 Connect to your VPS and enter the commands below.
 
-:~$ bash
-
-:~$ ./sin-cli infinitynode keypair
+```bash
+bash
+./sin-cli infinitynode keypair
+```
 
 ![](https://lh6.googleusercontent.com/-gsD8Y15gVfUwOPG8uTFkHz_RGiHf_o9gPF2tesAz2Ivq4bzTRTAJkCq9eV9uZLU1s8Y0DIA4zBJWkaKnqTab7729A7C7Flbe8flBKeNr7Hpg-al3U1qC5GP6UBGJYlTZfFTJnFH)
 
@@ -61,8 +62,9 @@ Enter the following command on the VPS screen and paste the key you copied, leav
 
   
 
-:~$ ./sin-cli importprivkey [your_privatekey]  
-  
+```bash
+./sin-cli importprivkey [your_privatekey]  
+```  
 
 (Please use your own key and address. The data here is for informational purposes only.)
 
@@ -78,8 +80,9 @@ Enter the following command on the VPS screen and paste the key you copied, leav
 
 Enter the following command to open the sin.conf file.  
   
-
-:~$ sudo nano .sin/sin.conf  
+```bash
+sudo nano .sin/sin.conf  
+```
   
 ![](https://lh5.googleusercontent.com/d8TYEJHa9GFtMErfsGNYd9IR72O_k2QZ5CDQ6rof25FF8ARn0QA3xEJiM6ftohxJS5_hWsRppys5fUtp0a_YjbOCeG0EX5Zw1f2DRxrsdygHGlSxDbcc8JhxktX1RSaHTafLbBa_)
 
@@ -105,15 +108,17 @@ If you are sure that you entered the information correctly, close the sin.conf f
 Restart your VPS with the
 
   
+```bash
+sudo reboot
+```
 
-:~$ sudo reboot
 
 ![](https://lh3.googleusercontent.com/3TMlZcHvvjjQ-a6CNoo1iTWMn3MAHQotuEM4OR6qBKTY43kAEv6B4uQpfHlXqL7-APumtUhvf_DSQLyvGXIX70z2AexSDKsk2ckDWKGzFqtzud8Q4z0cMmVLx1d9Kh34T7BJO9PZ)  
 command.
 
   
 
-Open your control wallet and send 1 SIN to your vps wallet address.
+**Open your control wallet and send 1 SIN to your vps wallet address.**
 
   
   
@@ -160,3 +165,15 @@ You can get the first 16 characters of BurnTx from the infinitynode.conf file.
   
 
 ![](https://lh3.googleusercontent.com/UZOy_3Bde6AiW0MeiOul5WMb7DU0-myeJOCj-H4hARaatn7rLlpjTubOMllcbR2FT7sWXLkIPPSnQ4dEj93uMqaHDhLR3sIr0CtnN3Lv1vLh7x0B0HdPBB8-NKSKXBopqbA4GtXo)
+
+**Wait for 55 confirmations for DIN nodes to show up**
+
+On vps Enter the command 
+
+```bash
+./sin-cli infinitynode mypeerinfo
+```
+
+If you are not getting an error and it still doesn't appear, on the console enter the `` infinitynode build-list`` command and wait.
+
+:warning: This command will scan the entire chain from the beginning. In the meantime, your wallet may not respond. This process can take a few hours, depending on the number of transactions in your wallet. Please be patient.

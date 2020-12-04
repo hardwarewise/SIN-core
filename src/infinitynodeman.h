@@ -110,6 +110,7 @@ public:
     bool Has(const COutPoint& outpoint);
     bool HasPayee(CScript scriptPubKey);
     int Count();
+    int CountEnabled();
     std::map<COutPoint, CInfinitynode> GetFullInfinitynodeMap() { LOCK(cs); return mapInfinitynodes; }
     std::map<COutPoint, CInfinitynode> GetFullInfinitynodeNonMaturedMap() { LOCK(cs); return mapInfinitynodesNonMatured; }
     std::map<int, int> getStatementMap(int nSinType){

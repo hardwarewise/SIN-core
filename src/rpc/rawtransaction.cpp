@@ -450,7 +450,7 @@ CMutableTransaction ConstructTransaction(const UniValue& inputs_in, const UniVal
     return rawTx;
 }
 
-CMutableTransaction ConstructTransactionWithScript(const UniValue& inputs_in, const CScript& scriptMeta, const CTxDestination& INFAddress)
+CMutableTransaction ConstructTransactionWithScript(const UniValue& inputs_in, const CScript& scriptMeta)
 {
     if (inputs_in.isNull())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter, argument must be non-null");

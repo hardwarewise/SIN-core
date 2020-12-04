@@ -237,7 +237,10 @@ infinitynodeupdatemeta [Owner address] [node PublicKey] [node IP] [first 16 char
   
 ![](https://lh3.googleusercontent.com/G1SJ9fWetyv2x7hBYXWIf5UTPODdVgY4G95UhIMkETZAVWD_e5XtqNcL_7vFBib4OazyeHqe_Sph9T6O2FmZGD86CPzwAIWFIkmYE__hPIdtVWK23CVHlKQaU6wzTmfTn3wsClUk)
 
-Please wait for your peer address to show up.
+**Wait for 55 confirmations for DIN nodes to show up**
+
+If it still doesn't appear, on the console enter the `` infinitynode build-list`` command and wait.
+
 
   
   

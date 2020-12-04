@@ -307,7 +307,7 @@ public:
         consensus.nMinerConfirmationWindow = 2016;
         consensus.devAddressPubKey = "841e6bf56b99a59545da932de2efb23ab93b4f44";
         consensus.devAddress = "SZLafuDjnjqh2tAfTrG9ZAGzbP8HkzNXvB";
-        consensus.devAddress2PubKey = "413395a3a8fedfc2a06f645ad40151412d414544";
+        consensus.devAddress2PubKey = "c07290a27153f8adaf01e6f5817405a32f569f61";
         consensus.devAddress2 = "STEkkU29v5rjb6CMUdGciF1e4STZ6jx7aq";
         consensus.cBurnAddress = "SinBurnAddress123456789SuqaXbx3AMC";
         consensus.cBurnAddressPubKey = "ebaf5ec74cb2e2342dfda0229111738ff4dc742d";
