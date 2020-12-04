@@ -231,11 +231,6 @@ public Q_SLOTS:
     /** Set number of blocks and last block date shown in the UI */
     void setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool headers);
 
-    // Dash
-    /** Set additional data sync status shown in the UI */
-    void setAdditionalDataSyncProgress(double nSyncProgress);
-    //
-
     /** Notify the user of an event from the core network or transaction handling code.
        @param[in] title     the message box / notification title
        @param[in] message   the displayed text

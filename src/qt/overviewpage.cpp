@@ -207,8 +207,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                                     
                             }
                             ui->labelCurrentPrice->setText(QString("%1").arg(QString().setNum(next, 'f', 8)));
-                            //ui->labelCurrentPrice->setToolTip(tr("Brought to you by coinmarketcap.com"));
-
+                            
                             QString total;
                             double current2 = (current * totalBalance / 100000000);
                             total = QString::number(current2, 'f', 2);
@@ -450,7 +449,7 @@ void OverviewPage::getPriceInfo()
     networkManager->get(*request);
 }
 
-// ++ Explorer Stats
+// ++ BTC Value Stats and Available BTC Total
 void OverviewPage::onResult(QNetworkReply* replystats)
 {
     QVariant statusCode = replystats->attribute(QNetworkRequest::HttpStatusCodeAttribute);
@@ -467,39 +466,21 @@ void OverviewPage::onResult(QNetworkReply* replystats)
         QLocale l = QLocale(QLocale::English);
 
         // Set LatestBTC strings
-        ui->labelCurrentPriceBTC->setText(QString::number(dataObject.value("lastPrice").toDouble(), 'f', 8));           
+        ui->labelCurrentPriceBTC->setText(QString::number(dataObject.value("lastPrice").toDouble(), 'f', 8)); 
 
-        // Set INFINITY NODE STATS strings
-        int bigRoiDays = 1000000/((720/dataObject.value("inf_online_big").toDouble())*1752);
-        int midRoiDays = 500000/((720/dataObject.value("inf_online_mid").toDouble())*838);
-        int lilRoiDays = 100000/((720/dataObject.value("inf_online_lil").toDouble())*160);
-
-        QString bigROIString = "ROI: " + QString::number(bigRoiDays) + " days" ;
-        QString midROIString = "ROI: " + QString::number(midRoiDays) + " days";
-        QString lilROIString = "ROI: " + QString::number(lilRoiDays) + " days";
-        QString totalNodesString = QString::number(dataObject.value("inf_online_big").toInt() + dataObject.value("inf_online_mid").toInt() + dataObject.value("inf_online_lil").toInt()) + " nodes";
-    
-        QString bigString = dataObject.value("inf_burnt_big").toVariant().toString() + "/" + dataObject.value("inf_online_big").toVariant().toString() + "/" + bigROIString;
-        QString midString = dataObject.value("inf_burnt_mid").toVariant().toString() + "/" + dataObject.value("inf_online_mid").toVariant().toString() + "/" + midROIString;
-        QString lilString = dataObject.value("inf_burnt_lil").toVariant().toString() + "/" + dataObject.value("inf_online_lil").toVariant().toString() + "/"  + lilROIString;
-        
-        // Set supply string
-        int supplyNumber = dataObject.value("supply").toDouble() - dataObject.value("burnFee").toDouble();
-
-        ui->totalValueLabel->setText(totalNodesString);
-        ui->totalSupplyValueLabel->setText(l.toString(supplyNumber) + " SIN");
-        ui->addressesValueLabel->setText(dataObject.value("explorerAddresses").toVariant().toString());
-        ui->bigValueLabel->setText(bigString);
-        ui->midValueLabel->setText(midString);
-        ui->lilValueLabel->setText(lilString);
+        double currentBTC = dataObject.value("lastPrice").toDouble();
+        double availableBTC = (currentBTC * totalBalance / 100000000);
+        ui->labelBTCTotal->setText(QString::number(availableBTC, 'f', 8) + " BTC");
+       
     }
     else
     {
         const QString noValue = "NaN";
        
-        ui->totalValueLabel->setText(noValue);
-        ui->totalSupplyValueLabel->setText(noValue);
+        ui->labelCurrentPriceBTC->setText(noValue);
+       
     }
+
     replystats->deleteLater();
 }
 // --

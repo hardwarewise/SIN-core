@@ -56,6 +56,9 @@ const std::string CLIENT_NAME("SIN");
 #define BUILD_DESC_FROM_UNKNOWN(maj, min, rev, build) \
     "v" DO_STRINGIZE(maj) "." DO_STRINGIZE(min) "." DO_STRINGIZE(rev) "." DO_STRINGIZE(build) "-unk"
 
+#define BUILD_COMMIT(suffix) \
+    DO_STRINGIZE(suffix)
+
 #ifndef BUILD_DESC
 #ifdef BUILD_SUFFIX
 #define BUILD_DESC BUILD_DESC_WITH_SUFFIX(CLIENT_VERSION_MAJOR, CLIENT_VERSION_MINOR, CLIENT_VERSION_REVISION, CLIENT_VERSION_BUILD, BUILD_SUFFIX)
@@ -67,6 +70,7 @@ const std::string CLIENT_NAME("SIN");
 #endif
 
 const std::string CLIENT_BUILD(BUILD_DESC CLIENT_VERSION_SUFFIX);
+const std::string COMMIT_ID(BUILD_COMMIT(BUILD_SUFFIX));
 
 static std::string FormatVersion(int nVersion)
 {
@@ -86,6 +90,10 @@ std::string FormatVersionFriendly()
     return FormatVersion(CLIENT_VERSION);
 }
 
+std::string getGitCommitId()
+{
+    return COMMIT_ID;
+}
 
 /**
  * Format the subversion field according to BIP 14 spec (https://github.com/bitcoin/bips/blob/master/bip-0014.mediawiki)

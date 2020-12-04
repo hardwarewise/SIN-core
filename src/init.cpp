@@ -1918,7 +1918,7 @@ bool AppInitMain()
 
     // SIN
     fInfinityNode = gArgs.GetBoolArg("-infinitynode", false);
-    fTurnOffMasternode = gArgs.GetBoolArg("-turnoffmasternode", false);
+    fTurnOffMasternode = gArgs.GetBoolArg("-turnoffmasternode", true);
     if(fInfinityNode) {
         std::string strInfinityNodePrivKey = gArgs.GetArg("-infinitynodeprivkey", "");
         if(!strInfinityNodePrivKey.empty()) {
@@ -1935,6 +1935,9 @@ bool AppInitMain()
     // Dash
     // ********************************************************* Step 11a: setup InfinityNode
     fMasterNode = gArgs.GetBoolArg("-masternode", false);
+    if (fTurnOffMasternode) {
+        fMasterNode = false;
+    }
     // TODO: masternode should have no wallet
 
     if((fMasterNode || masternodeConfig.getCount() > -1) && gArgs.GetBoolArg("-txindex", DEFAULT_TXINDEX) == false) {

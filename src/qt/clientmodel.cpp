@@ -26,6 +26,7 @@
 // Dash
 #include <masternodeman.h>
 #include <masternode-sync.h>
+#include <infinitynodeman.h>
 #include <instantx.h>
 //
 
@@ -82,19 +83,11 @@ int ClientModel::getNumConnections(unsigned int flags) const
     return m_node.getNodeCount(connections);
 }
 
-// Dash
-QString ClientModel::getMasternodeCountString() const
+QString ClientModel::getInfinitynodeCountString() const
 {
-    // return tr("Total: %1 (PS compatible: %2 / Enabled: %3) (IPv4: %4, IPv6: %5, TOR: %6)").arg(QString::number((int)mnodeman.size()))
-    return tr("Total: %1 (PS compatible: %2 / Enabled: %3)")
-            .arg(QString::number((int)mnodeman.size()))
-            .arg(QString::number((int)mnodeman.CountEnabled(MIN_INSTANTSEND_PROTO_VERSION)))
-            .arg(QString::number((int)mnodeman.CountEnabled()));
-            // .arg(QString::number((int)mnodeman.CountByIP(NET_IPV4)))
-            // .arg(QString::number((int)mnodeman.CountByIP(NET_IPV6)))
-            // .arg(QString::number((int)mnodeman.CountByIP(NET_TOR)));
+    return tr("Total: %1")
+            .arg(QString::number((int)infnodeman.CountEnabled()));
 }
-//
 
 int ClientModel::getNumBlocks() const
 {
@@ -141,7 +134,7 @@ void ClientModel::updateTimer()
 // Dash
 void ClientModel::updateMnTimer()
 {
-    QString newMasternodeCountString = getMasternodeCountString();
+    QString newMasternodeCountString = getInfinitynodeCountString();
 
     if (cachedMasternodeCountString != newMasternodeCountString)
     {
@@ -291,12 +284,6 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, int heig
     }
 }
 
-static void NotifyAdditionalDataSyncProgressChanged(ClientModel *clientmodel, double nSyncProgress)
-{
-    QMetaObject::invokeMethod(clientmodel, "additionalDataSyncProgressChanged", Qt::QueuedConnection,
-                              Q_ARG(double, nSyncProgress));
-}
-
 void ClientModel::subscribeToCoreSignals()
 {
     // Connect signals to client
@@ -307,9 +294,6 @@ void ClientModel::subscribeToCoreSignals()
     m_handler_banned_list_changed = m_node.handleBannedListChanged(boost::bind(BannedListChanged, this));
     m_handler_notify_block_tip = m_node.handleNotifyBlockTip(boost::bind(BlockTipChanged, this, _1, _2, _3, _4, false));
     m_handler_notify_header_tip = m_node.handleNotifyHeaderTip(boost::bind(BlockTipChanged, this, _1, _2, _3, _4, true));
-    // Dash
-    m_handler_notify_additional_data_sync_progress_changed = m_node.handleNotifyAdditionalDataSyncProgressChanged(boost::bind(NotifyAdditionalDataSyncProgressChanged, this, _1));
-    //
 }
 
 void ClientModel::unsubscribeFromCoreSignals()
@@ -322,9 +306,6 @@ void ClientModel::unsubscribeFromCoreSignals()
     m_handler_banned_list_changed->disconnect();
     m_handler_notify_block_tip->disconnect();
     m_handler_notify_header_tip->disconnect();
-    // Dash
-    m_handler_notify_additional_data_sync_progress_changed->disconnect();
-    //
 }
 
 bool ClientModel::getProxyInfo(std::string& ip_port) const

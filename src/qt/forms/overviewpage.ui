@@ -228,374 +228,86 @@ QPushButton {color:#f84444; font-weight: bold; font-size:14px; background-color:
             <height>135</height>
            </size>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout">
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_7">
-             <property name="rightMargin">
-              <number>20</number>
-             </property>
-             <property name="bottomMargin">
-              <number>9</number>
-             </property>
+            <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_17">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>20</number>
-               </property>
+              <layout class="QHBoxLayout" name="blancesLayout">
                <item>
-                <layout class="QVBoxLayout" name="verticalLayout_18">
-                 <item>
-                  <widget class="QLabel" name="labelTitle1">
-                   <property name="font">
-                    <font>
-                     <family>OpenSans</family>
-                     <pointsize>-1</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">font-size:16px;
-color:#000000;</string>
-                   </property>
-                   <property name="text">
-                    <string>Available SIN</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="labelBalance">
-                   <property name="font">
-                    <font>
-                     <family>OpenSans</family>
-                     <pointsize>-1</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">font-size:28px;
-font-weight:bold;
-color:#00B4B8;</string>
-                   </property>
-                   <property name="text">
-                    <string notr="true">00.00 SIN</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_8">
-                 <property name="spacing">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_19">
-                   <item>
-                    <widget class="QLabel" name="labelTitle3">
-                     <property name="styleSheet">
-                      <string notr="true">font-size:16px;
-color:#000000;</string>
-                     </property>
-                     <property name="text">
-                      <string>Pending</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="labelUnconfirmed">
-                     <property name="styleSheet">
-                      <string notr="true">font-size:18px;
-color:#000000;</string>
-                     </property>
-                     <property name="text">
-                      <string notr="true">0.00 SIN</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <spacer name="horizontalSpacer_4">
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="sizeType">
-                    <enum>QSizePolicy::Fixed</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>40</width>
-                     <height>20</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                 <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_20">
-                   <item>
-                    <widget class="QLabel" name="labelImmatureText">
-                     <property name="styleSheet">
-                      <string notr="true">font-size:16px;
-color:#000000;
-background-color: transparent;</string>
-                     </property>
-                     <property name="text">
-                      <string>Immature</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="labelImmature">
-                     <property name="styleSheet">
-                      <string notr="true">font-size:18px;
-color:#000000;</string>
-                     </property>
-                     <property name="text">
-                      <string notr="true">0.00 SIN</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <widget class="QLabel" name="typeSpacerExpanded_3">
-               <property name="minimumSize">
-                <size>
-                 <width>1</width>
-                 <height>100</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>1</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">background-color:black;
-padding:0px;
-border:none;</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QWidget" name="marketValue" native="true">
-               <layout class="QVBoxLayout" name="verticalLayout_21">
-                <property name="spacing">
-                 <number>0</number>
-                </property>
-                <property name="leftMargin">
-                 <number>20</number>
-                </property>
-                <property name="topMargin">
-                 <number>0</number>
-                </property>
-                <property name="rightMargin">
-                 <number>0</number>
-                </property>
-                <property name="bottomMargin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <layout class="QVBoxLayout" name="verticalLayout_22">
-                  <item>
-                   <widget class="QLabel" name="labelTitleAvailableUSD">
-                    <property name="font">
-                     <font>
-                      <family>OpenSans</family>
-                      <pointsize>-1</pointsize>
-                      <weight>75</weight>
-                      <bold>true</bold>
-                     </font>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">font-size:16px;
-color:#000000;</string>
-                    </property>
-                    <property name="text">
-                     <string>Available USD</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="labelUSDTotal">
-                    <property name="styleSheet">
-                     <string notr="true">font-size:28px;
-font-weight:bold;
-color:#00B4B8;</string>
-                    </property>
-                    <property name="text">
-                     <string notr="true">0.000 USD</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-                <item>
-                 <layout class="QHBoxLayout" name="horizontalLayout_9">
-                  <property name="spacing">
-                   <number>0</number>
-                  </property>
-                  <item>
-                   <layout class="QVBoxLayout" name="verticalLayout_23">
-                    <item>
-                     <widget class="QLabel" name="labelMarketValueUsd">
-                      <property name="styleSheet">
-                       <string notr="true">font-size:16px;
-color:#000000;</string>
-                      </property>
-                      <property name="text">
-                       <string>Value USD</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="labelCurrentPrice">
-                      <property name="styleSheet">
-                       <string notr="true">font-size:18px;
-color:#000000;</string>
-                      </property>
-                      <property name="text">
-                       <string notr="true">0.00 USD</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <spacer name="horizontalSpacer_8">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                     <enum>QSizePolicy::Fixed</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>40</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                  <item>
-                   <layout class="QVBoxLayout" name="verticalLayout_24">
-                    <item>
-                     <widget class="QLabel" name="labelMarketValueBtc">
-                      <property name="styleSheet">
-                       <string notr="true">font-size:16px;
-color:#000000;</string>
-                      </property>
-                      <property name="text">
-                       <string>Value BTC</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="labelCurrentPriceBTC">
-                      <property name="styleSheet">
-                       <string notr="true">font-size:18px;
-color:#000000;</string>
-                      </property>
-                      <property name="text">
-                       <string notr="true">0.00 BTC</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                 </layout>
-                </item>
-               </layout>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_10">
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_4">
-               <property name="spacing">
-                <number>6</number>
-               </property>
-               <property name="leftMargin">
-                <number>10</number>
-               </property>
-               <property name="rightMargin">
-                <number>20</number>
-               </property>
-               <property name="bottomMargin">
-                <number>9</number>
-               </property>
-               <item>
-                <widget class="QLabel" name="label_8">
-                 <property name="minimumSize">
-                  <size>
-                   <width>1</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>1</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background-color:black;
-padding:0px;
-border:none;</string>
-                 </property>
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <layout class="QVBoxLayout" name="nodeStatsLayout">
+                <layout class="QVBoxLayout" name="verticalLayout_17">
                  <property name="spacing">
                   <number>0</number>
                  </property>
                  <property name="leftMargin">
                   <number>0</number>
                  </property>
-                 <property name="bottomMargin">
-                  <number>0</number>
+                 <property name="rightMargin">
+                  <number>20</number>
                  </property>
                  <item>
-                  <layout class="QVBoxLayout" name="verticalLayout">
+                  <layout class="QVBoxLayout" name="verticalLayout_18">
                    <item>
-                    <layout class="QVBoxLayout" name="verticalLayout_2">
+                    <widget class="QLabel" name="labelTitle1">
+                     <property name="font">
+                      <font>
+                       <family>OpenSans</family>
+                       <pointsize>-1</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">font-size:16px;
+color:#011552;</string>
+                     </property>
+                     <property name="text">
+                      <string>Available SIN</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="labelBalance">
+                     <property name="font">
+                      <font>
+                       <family>OpenSans</family>
+                       <pointsize>-1</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">font-size:28px;
+font-weight:bold;
+color:#011552;</string>
+                     </property>
+                     <property name="text">
+                      <string notr="true">00.00 SIN</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_8">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <layout class="QVBoxLayout" name="verticalLayout_19">
                      <item>
-                      <widget class="QLabel" name="label_2">
-                       <property name="font">
-                        <font>
-                         <pointsize>-1</pointsize>
-                         <weight>75</weight>
-                         <bold>true</bold>
-                        </font>
-                       </property>
+                      <widget class="QLabel" name="labelTitle3">
                        <property name="styleSheet">
                         <string notr="true">font-size:16px;
-color:#000000;</string>
+color:#011552;</string>
                        </property>
                        <property name="text">
-                        <string>Total Addresses</string>
+                        <string>Pending</string>
                        </property>
                        <property name="alignment">
                         <set>Qt::AlignCenter</set>
@@ -603,34 +315,48 @@ color:#000000;</string>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLabel" name="addressesValueLabel">
+                      <widget class="QLabel" name="labelUnconfirmed">
                        <property name="styleSheet">
                         <string notr="true">font-size:18px;
-color:#00B4B8;</string>
+color:#011552;</string>
                        </property>
                        <property name="text">
-                        <string>0</string>
+                        <string notr="true">0.00 SIN</string>
                        </property>
                        <property name="alignment">
                         <set>Qt::AlignCenter</set>
                        </property>
                       </widget>
                      </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <spacer name="horizontalSpacer_4">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Fixed</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item>
+                    <layout class="QVBoxLayout" name="verticalLayout_20">
                      <item>
-                      <widget class="QLabel" name="label_3">
-                       <property name="font">
-                        <font>
-                         <pointsize>-1</pointsize>
-                         <weight>75</weight>
-                         <bold>true</bold>
-                        </font>
-                       </property>
+                      <widget class="QLabel" name="labelImmatureText">
                        <property name="styleSheet">
                         <string notr="true">font-size:16px;
-color:#000000;</string>
+color:#011552;
+background-color: transparent;</string>
                        </property>
                        <property name="text">
-                        <string>Circulating Supply</string>
+                        <string>Immature</string>
                        </property>
                        <property name="alignment">
                         <set>Qt::AlignCenter</set>
@@ -638,20 +364,13 @@ color:#000000;</string>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLabel" name="totalSupplyValueLabel">
-                       <property name="font">
-                        <font>
-                         <pointsize>-1</pointsize>
-                         <weight>50</weight>
-                         <bold>false</bold>
-                        </font>
-                       </property>
+                      <widget class="QLabel" name="labelImmature">
                        <property name="styleSheet">
                         <string notr="true">font-size:18px;
-color:#00B4B8;</string>
+color:#011552;</string>
                        </property>
                        <property name="text">
-                        <string>0</string>
+                        <string notr="true">0.00 SIN</string>
                        </property>
                        <property name="alignment">
                         <set>Qt::AlignCenter</set>
@@ -665,11 +384,11 @@ color:#00B4B8;</string>
                 </layout>
                </item>
                <item>
-                <widget class="QLabel" name="label_10">
+                <widget class="QLabel" name="typeSpacerExpanded_4">
                  <property name="minimumSize">
                   <size>
                    <width>1</width>
-                   <height>0</height>
+                   <height>100</height>
                   </size>
                  </property>
                  <property name="maximumSize">
@@ -684,132 +403,235 @@ padding:0px;
 border:none;</string>
                  </property>
                  <property name="text">
-                  <string>TextLabel</string>
+                  <string/>
                  </property>
                 </widget>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_5">
-                 <property name="leftMargin">
-                  <number>15</number>
+                <widget class="QWidget" name="marketValueUSD" native="true">
+                 <layout class="QVBoxLayout" name="verticalLayout_21">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>20</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_22">
+                    <item>
+                     <widget class="QLabel" name="labelTitleAvailableUSD">
+                      <property name="font">
+                       <font>
+                        <family>OpenSans</family>
+                        <pointsize>-1</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">font-size:16px;
+color:#011552;</string>
+                      </property>
+                      <property name="text">
+                       <string>Available USD</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="labelUSDTotal">
+                      <property name="styleSheet">
+                       <string notr="true">font-size:28px;
+font-weight:bold;
+color:#011552;</string>
+                      </property>
+                      <property name="text">
+                       <string notr="true">0.000 USD</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_9">
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <layout class="QVBoxLayout" name="verticalLayout_23">
+                      <item>
+                       <widget class="QLabel" name="labelMarketValueUsd">
+                        <property name="styleSheet">
+                         <string notr="true">font-size:16px;
+color:#011552;</string>
+                        </property>
+                        <property name="text">
+                         <string>Value USD</string>
+                        </property>
+                        <property name="alignment">
+                         <set>Qt::AlignCenter</set>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLabel" name="labelCurrentPrice">
+                        <property name="styleSheet">
+                         <string notr="true">font-size:18px;
+color:#011552;</string>
+                        </property>
+                        <property name="text">
+                         <string notr="true">0.00 USD</string>
+                        </property>
+                        <property name="alignment">
+                         <set>Qt::AlignCenter</set>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="typeSpacerExpanded_3">
+                 <property name="minimumSize">
+                  <size>
+                   <width>1</width>
+                   <height>100</height>
+                  </size>
                  </property>
-                 <property name="bottomMargin">
-                  <number>9</number>
+                 <property name="maximumSize">
+                  <size>
+                   <width>1</width>
+                   <height>16777215</height>
+                  </size>
                  </property>
-                 <item>
-                  <layout class="QGridLayout" name="gridLayout">
-                   <item row="4" column="0">
-                    <widget class="QLabel" name="label_7">
-                     <property name="styleSheet">
-                      <string notr="true">font-size:16px;
-color:#000000;</string>
-                     </property>
-                     <property name="text">
-                      <string>Total</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="0">
-                    <widget class="QLabel" name="label_6">
-                     <property name="styleSheet">
-                      <string notr="true">font-size:16px;
-color: #2E3191;</string>
-                     </property>
-                     <property name="text">
-                      <string>MINI</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_4">
-                     <property name="styleSheet">
-                      <string notr="true">font-size:16px;
-color:#000000;</string>
-                     </property>
-                     <property name="text">
-                      <string>BIG</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0">
-                    <widget class="QLabel" name="label_5">
-                     <property name="styleSheet">
-                      <string notr="true">font-size:16px;
-color: grey;</string>
-                     </property>
-                     <property name="text">
-                      <string>MID</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
-                    <widget class="QLabel" name="bigValueLabel">
-                     <property name="styleSheet">
-                      <string notr="true">font-size:16px;
-color:#00B4B8;</string>
-                     </property>
-                     <property name="text">
-                      <string>0</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="1">
-                    <widget class="QLabel" name="midValueLabel">
-                     <property name="styleSheet">
-                      <string notr="true">font-size:16px;
-color: grey;</string>
-                     </property>
-                     <property name="text">
-                      <string>0</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="1">
-                    <widget class="QLabel" name="lilValueLabel">
-                     <property name="styleSheet">
-                      <string notr="true">font-size:16px;
-color: #2E3191;</string>
-                     </property>
-                     <property name="text">
-                      <string>0</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="1">
-                    <widget class="QLabel" name="totalValueLabel">
-                     <property name="styleSheet">
-                      <string notr="true">font-size:16px;
-color:#00B4B8;</string>
-                     </property>
-                     <property name="text">
-                      <string>0</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="0" colspan="2">
-                    <widget class="QLabel" name="label">
-                     <property name="font">
-                      <font>
-                       <pointsize>-1</pointsize>
-                       <weight>75</weight>
-                       <bold>true</bold>
-                      </font>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">font-size:16px;
-color:#000000;</string>
-                     </property>
-                     <property name="text">
-                      <string>Total Infinity Nodes</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
+                 <property name="styleSheet">
+                  <string notr="true">background-color:black;
+padding:0px;
+border:none;</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QWidget" name="marketValueBTC" native="true">
+                 <layout class="QVBoxLayout" name="verticalLayout_25">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>20</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_26">
+                    <item>
+                     <widget class="QLabel" name="labelTitleAvailableBTC">
+                      <property name="font">
+                       <font>
+                        <family>OpenSans</family>
+                        <pointsize>-1</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">font-size:16px;
+color:#011552;</string>
+                      </property>
+                      <property name="text">
+                       <string>Available BTC</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="labelBTCTotal">
+                      <property name="styleSheet">
+                       <string notr="true">font-size:28px;
+font-weight:bold;
+color:#011552;</string>
+                      </property>
+                      <property name="text">
+                       <string notr="true">0.000 BTC</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_10">
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <layout class="QVBoxLayout" name="verticalLayout_27">
+                      <item>
+                       <widget class="QLabel" name="labelMarketValueBtc">
+                        <property name="styleSheet">
+                         <string notr="true">font-size:16px;
+color:#011552;</string>
+                        </property>
+                        <property name="text">
+                         <string>Value BTC</string>
+                        </property>
+                        <property name="alignment">
+                         <set>Qt::AlignCenter</set>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLabel" name="labelCurrentPriceBTC">
+                        <property name="styleSheet">
+                         <string notr="true">font-size:18px;
+color:#011552;</string>
+                        </property>
+                        <property name="text">
+                         <string notr="true">0.00 USD</string>
+                        </property>
+                        <property name="alignment">
+                         <set>Qt::AlignCenter</set>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
                </item>
               </layout>
              </item>

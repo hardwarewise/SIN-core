@@ -259,6 +259,8 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
 
 
  // Social Media icons
+    QLabel* spacerLabel = new QLabel();
+    spacerLabel->setFixedWidth(100);
     QFrame* frameSocial = new QFrame();
     frameSocial->setContentsMargins(0, 0, 0, 0);
     frameSocial->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
@@ -405,6 +407,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     }
 
 
+    statusBar()->addWidget(spacerLabel);
     statusBar()->addWidget(frameSocial);
     statusBar()->addWidget(progressBarLabel);
     progressBarLabel->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 1px solid white; } QLabel {color: #fff; }");
@@ -665,8 +668,8 @@ void SINGUI::createActions()
     //-//openRepairAction->setStatusTip(tr("Show wallet repair options"));
     openConfEditorAction = new QAction(QIcon(":/icons/edit"), tr("Open Wallet &Configuration File (sin.conf)"), this);
     openConfEditorAction->setStatusTip(tr("Open configuration file (sin.conf)"));
-    openMNConfEditorAction = new QAction(platformStyle->SingleColorIcon(":/icons/edit"), tr("Open &Infinitynode Configuration File"), this);
-    openMNConfEditorAction->setStatusTip(tr("Open InfinityNode configuration file"));
+    //-//openMNConfEditorAction = new QAction(platformStyle->SingleColorIcon(":/icons/edit"), tr("Open &Infinitynode Configuration File"), this);
+    //-//openMNConfEditorAction->setStatusTip(tr("Open InfinityNode configuration file"));
     //-//showBackupsAction = new QAction(QIcon(":/icons/" + theme + "/browse"), tr("Show Automatic &Backups"), this);
     //-//showBackupsAction->setStatusTip(tr("Show automatically created wallet backups"));
     // initially disable the debug window menu items
@@ -715,7 +718,7 @@ void SINGUI::createActions()
 
     // Open configs and backup folder from menu
     connect(openConfEditorAction, SIGNAL(triggered()), this, SLOT(showConfEditor()));
-    connect(openMNConfEditorAction, SIGNAL(triggered()), this, SLOT(showMNConfEditor()));
+    //-//connect(openMNConfEditorAction, SIGNAL(triggered()), this, SLOT(showMNConfEditor()));
     //-//connect(showBackupsAction, SIGNAL(triggered()), this, SLOT(showBackups()));
 
     // Get restart command-line parameters and handle restart
@@ -834,7 +837,7 @@ void SINGUI::createMenuBar()
         //-//tools->addAction(openRepairAction);
         //-//tools->addSeparator();
         tools->addAction(openConfEditorAction);
-        tools->addAction(openMNConfEditorAction);
+        //--//tools->addAction(openMNConfEditorAction);
         //-//tools->addAction(showBackupsAction);
     }
 
@@ -952,7 +955,7 @@ void SINGUI::createToolBars()
 		toolbar->addWidget(empty);
 
         QLabel* labelVersionName = new QLabel();
-        labelVersionName->setText("D.I.N.");
+        labelVersionName->setText("DIN");
         labelVersionName->setStyleSheet("margin-top: 10px; color: #00FFFF ; font-size: 16px; font-weight : bold;");
         labelVersionName->setAlignment(Qt::AlignCenter);
         toolbar->addWidget(labelVersionName);
@@ -984,10 +987,6 @@ void SINGUI::setClientModel(ClientModel *_clientModel)
         modalOverlay->setKnownBestHeight(_clientModel->getHeaderTipHeight(), QDateTime::fromTime_t(_clientModel->getHeaderTipTime()));
         setNumBlocks(m_node.getNumBlocks(), QDateTime::fromTime_t(m_node.getLastBlockTime()), m_node.getVerificationProgress(), false);
         connect(_clientModel, SIGNAL(numBlocksChanged(int,QDateTime,double,bool)), this, SLOT(setNumBlocks(int,QDateTime,double,bool)));
-
-        // Dash
-        connect(clientModel, SIGNAL(additionalDataSyncProgressChanged(double)), this, SLOT(setAdditionalDataSyncProgress(double)));
-        //
 
         // Receive and report messages from client model
         connect(_clientModel, SIGNAL(message(QString,QString,unsigned int)), this, SLOT(message(QString,QString,unsigned int)));
@@ -1210,7 +1209,7 @@ void SINGUI::createTrayIconMenu()
     //-//trayIconMenu->addAction(openRepairAction);
     //-//trayIconMenu->addSeparator();
     trayIconMenu->addAction(openConfEditorAction);
-    trayIconMenu->addAction(openMNConfEditorAction);
+    //--//trayIconMenu->addAction(openMNConfEditorAction);
     //-//trayIconMenu->addAction(showBackupsAction);
     //
 
@@ -1507,9 +1506,11 @@ void SINGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerific
     tooltip = tr("Processed %n block(s) of transaction history.", "", count);
 
     // Set icon state: spinning if catching up, tick otherwise
-    if(secs < 90*60)
+    if(secs < 18 * 60) //Allow blocks to not appear for 18 minutes
     {
         tooltip = tr("Up to date") + QString(".<br>") + tooltip;
+        progressBarLabel->setVisible(false);
+        progressBar->setVisible(false);
         labelBlocksIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/synced").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
 
 #ifdef ENABLE_WALLET
@@ -1518,20 +1519,9 @@ void SINGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerific
             walletFrame->showOutOfSyncWarning(false);
             modalOverlay->showHide(true, true);
 
-            if(secs < 25*60)
-                modalOverlay->hideForever();
         }
 #endif // ENABLE_WALLET
-        // Dash
-        //progressBarLabel->setVisible(false);
-        //progressBar->setVisible(false);
-        //
-    }
-    // Dash
-    //else
-    if(!masternodeSync.IsBlockchainSynced())
-    {
-    //
+    } else {
         QString timeBehindText = GUIUtil::formatNiceTimeOffset(secs);
 
         progressBarLabel->setVisible(true);
@@ -1572,7 +1562,7 @@ void SINGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerific
     progressBar->setToolTip(tooltip);
 }
 
-// Dash
+/*
 void SINGUI::setAdditionalDataSyncProgress(double nSyncProgress)
 {
     if(!clientModel)
@@ -1626,8 +1616,7 @@ void SINGUI::setAdditionalDataSyncProgress(double nSyncProgress)
     labelBlocksIcon->setToolTip(tooltip);
     progressBarLabel->setToolTip(tooltip);
     progressBar->setToolTip(tooltip);
-}
-//
+}*/
 
 void SINGUI::message(const QString &title, const QString &message, unsigned int style, bool *ret)
 {

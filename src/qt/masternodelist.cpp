@@ -8,6 +8,7 @@
 #include <qt/forms/ui_masternodelist.h>
 
 #include <activemasternode.h>
+#include <clientversion.h>
 #include <qt/sinunits.h>
 #include <interfaces/wallet.h>
 #include <interfaces/node.h>
@@ -49,6 +50,7 @@
 #include <QUrl>
 #include <QUrlQuery>
 #include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QMovie>
 
 UniValue nodeSetupCallRPC(std::string args);
@@ -67,56 +69,28 @@ int GetOffsetFromUtc()
 
 MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *parent) :
     QWidget(parent),
+    // ++ DIN ROI Stats
+    m_timer(nullptr),
+    // --
     ui(new Ui::MasternodeList),
+    m_networkManager(new QNetworkAccessManager(this)),
     clientModel(0),
     walletModel(0)
 {
     ui->setupUi(this);
 
+    // ++ DIN ROI Stats
+    m_timer = new QTimer(this);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(getStatistics()));
+    m_timer->start(30000);
+    connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onResult(QNetworkReply*)));
+    getStatistics();
+    // --
+
+
     ui->btnSetup->setIcon(QIcon(":/icons/setup"));
     ui->btnSetup->setIconSize(QSize(177, 26));
     
-    ui->startButton->setEnabled(false);
-
-    int columnAliasWidth = 100;
-    int columnAddressWidth = 180;
-    int columnProtocolWidth = 80;
-    int columnStatusWidth = 80;
-    int columnActiveWidth = 130;
-    int columnLastSeenWidth = 130;
-
-    ui->tableWidgetMyMasternodes->setColumnWidth(0, columnAliasWidth);
-    ui->tableWidgetMyMasternodes->setColumnWidth(1, columnAddressWidth);
-    ui->tableWidgetMyMasternodes->setColumnWidth(2, columnProtocolWidth);
-    ui->tableWidgetMyMasternodes->setColumnWidth(3, columnStatusWidth);
-    ui->tableWidgetMyMasternodes->setColumnWidth(4, columnActiveWidth);
-    ui->tableWidgetMyMasternodes->setColumnWidth(5, columnLastSeenWidth);
-
-    ui->tableWidgetMasternodes->setColumnWidth(0, columnAddressWidth);
-    ui->tableWidgetMasternodes->setColumnWidth(1, columnProtocolWidth);
-    ui->tableWidgetMasternodes->setColumnWidth(2, columnStatusWidth);
-    ui->tableWidgetMasternodes->setColumnWidth(3, columnActiveWidth);
-    ui->tableWidgetMasternodes->setColumnWidth(4, columnLastSeenWidth);
-
-    ui->dinTable->setColumnWidth(0, 250);
-    ui->dinTable->setColumnWidth(1, 60);
-    ui->dinTable->setColumnWidth(2, 60);
-    ui->dinTable->setColumnWidth(3, 60);
-    ui->dinTable->setColumnWidth(4, 250);
-    ui->dinTable->setColumnWidth(5, 90);
-    ui->dinTable->setColumnWidth(6, 60);
-    ui->dinTable->setColumnWidth(7, 60);
-    ui->dinTable->setColumnWidth(8, 200);
-    ui->dinTable->setColumnWidth(9, 100);
-
-    ui->tableWidgetMyMasternodes->setContextMenuPolicy(Qt::CustomContextMenu);
-
-    QAction *startAliasAction = new QAction(tr("Start alias"), this);
-    contextMenu = new QMenu();
-    contextMenu->addAction(startAliasAction);
-    connect(ui->tableWidgetMyMasternodes, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
-    connect(startAliasAction, SIGNAL(triggered()), this, SLOT(on_startButton_clicked()));
-
     ui->dinTable->setContextMenuPolicy(Qt::CustomContextMenu);
 
     mCheckNodeAction = new QAction(tr("Check node status"), this);
@@ -125,14 +99,16 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     connect(ui->dinTable, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextDINMenu(const QPoint&)));
     connect(mCheckNodeAction, SIGNAL(triggered()), this, SLOT(on_checkDINNode()));
 
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(updateNodeList()));
-    connect(timer, SIGNAL(timeout()), this, SLOT(updateMyNodeList()));
-    timer->start(1000);
+    timerSingleShot = new QTimer(this);
+    connect(timerSingleShot, SIGNAL(timeout()), this, SLOT(updateDINList()));
+    timerSingleShot->setSingleShot(true);
+    timerSingleShot->start(1000);
 
     fFilterUpdated = false;
     nTimeFilterUpdated = GetTime();
-    updateNodeList();
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateDINList()));
+    timer->start(60000);
     updateDINList();
 
     // node setup
@@ -173,21 +149,11 @@ MasternodeList::~MasternodeList()
 void MasternodeList::setClientModel(ClientModel *model)
 {
     this->clientModel = model;
-    if(model) {
-        // try to update list when masternode count changes
-        connect(clientModel, SIGNAL(strMasternodesChanged(QString)), this, SLOT(updateNodeList()));
-    }
 }
 
 void MasternodeList::setWalletModel(WalletModel *model)
 {
     this->walletModel = model;
-}
-
-void MasternodeList::showContextMenu(const QPoint &point)
-{
-    QTableWidgetItem *item = ui->tableWidgetMyMasternodes->itemAt(point);
-    if(item) contextMenu->exec(QCursor::pos());
 }
 
 void MasternodeList::showContextDINMenu(const QPoint &point)
@@ -196,222 +162,6 @@ void MasternodeList::showContextDINMenu(const QPoint &point)
     if(item)    {
         contextDINMenu->exec(QCursor::pos());
     }
-}
-
-void MasternodeList::StartAlias(std::string strAlias)
-{
-    std::string strStatusHtml;
-    strStatusHtml += "<center>Alias: " + strAlias;
-
-    for (CMasternodeConfig::CMasternodeEntry mne : masternodeConfig.getEntries()) {
-        if(mne.getAlias() == strAlias) {
-            std::string strError;
-            CMasternodeBroadcast mnb;
-
-            bool fSuccess = CMasternodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(), mne.getOutputIndex(), mne.getTxHashBurnFund(), mne.getOutputIndexBurnFund(), strError, mnb);
-
-            if(fSuccess) {
-                strStatusHtml += "<br>Successfully started infinitynode.";
-                mnodeman.UpdateMasternodeList(mnb, *g_connman);
-                mnb.Relay(*g_connman);
-                mnodeman.NotifyMasternodeUpdates(*g_connman);
-            } else {
-                strStatusHtml += "<br>Failed to start infinitynode.<br>Error: " + strError;
-            }
-            break;
-        }
-    }
-    strStatusHtml += "</center>";
-
-    QMessageBox msg;
-    msg.setText(QString::fromStdString(strStatusHtml));
-    msg.exec();
-
-    updateMyNodeList(true);
-}
-
-void MasternodeList::StartAll(std::string strCommand)
-{
-    int nCountSuccessful = 0;
-    int nCountFailed = 0;
-    std::string strFailedHtml;
-
-    for (CMasternodeConfig::CMasternodeEntry mne : masternodeConfig.getEntries()) {
-        std::string strError;
-        CMasternodeBroadcast mnb;
-
-        int32_t nOutputIndex = 0;
-        if(!ParseInt32(mne.getOutputIndex(), &nOutputIndex)) {
-            continue;
-        }
-
-        COutPoint outpoint = COutPoint(uint256S(mne.getTxHash()), nOutputIndex);
-
-        if(strCommand == "start-missing" && mnodeman.Has(outpoint)) continue;
-
-        bool fSuccess = CMasternodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(), mne.getOutputIndex(), mne.getTxHashBurnFund(), mne.getOutputIndexBurnFund(), strError, mnb);
-
-        if(fSuccess) {
-            nCountSuccessful++;
-            mnodeman.UpdateMasternodeList(mnb, *g_connman);
-            mnb.Relay(*g_connman);
-            mnodeman.NotifyMasternodeUpdates(*g_connman);
-        } else {
-            nCountFailed++;
-            strFailedHtml += "\nFailed to start " + mne.getAlias() + ". Error: " + strError;
-        }
-    }
-    std::vector<std::shared_ptr<CWallet>> wallets = GetWallets();
-    CWallet * const pwallet = (wallets.size() > 0) ? wallets[0].get() : nullptr;
-    pwallet->Lock();
-
-    std::string returnObj;
-    returnObj = strprintf("Successfully started %d infinitynodes, failed to start %d, total %d", nCountSuccessful, nCountFailed, nCountFailed + nCountSuccessful);
-    if (nCountFailed > 0) {
-        returnObj += strFailedHtml;
-    }
-
-    QMessageBox msg;
-    msg.setText(QString::fromStdString(returnObj));
-    msg.exec();
-
-    updateMyNodeList(true);
-}
-
-void MasternodeList::updateMyMasternodeInfo(QString strAlias, QString strAddr, const COutPoint& outpoint)
-{
-    bool fOldRowFound = false;
-    int nNewRow = 0;
-
-    for(int i = 0; i < ui->tableWidgetMyMasternodes->rowCount(); i++) {
-        if(ui->tableWidgetMyMasternodes->item(i, 0)->text() == strAlias) {
-            fOldRowFound = true;
-            nNewRow = i;
-            break;
-        }
-    }
-
-    if(nNewRow == 0 && !fOldRowFound) {
-        nNewRow = ui->tableWidgetMyMasternodes->rowCount();
-        ui->tableWidgetMyMasternodes->insertRow(nNewRow);
-    }
-
-    masternode_info_t infoMn;
-    bool fFound = mnodeman.GetMasternodeInfo(outpoint, infoMn);
-
-    QTableWidgetItem *aliasItem = new QTableWidgetItem(strAlias);
-    QTableWidgetItem *addrItem = new QTableWidgetItem(fFound ? QString::fromStdString(infoMn.addr.ToString()) : strAddr);
-    QTableWidgetItem *protocolItem = new QTableWidgetItem(QString::number(fFound ? infoMn.nProtocolVersion : -1));
-    QTableWidgetItem *statusItem = new QTableWidgetItem(QString::fromStdString(fFound ? CMasternode::StateToString(infoMn.nActiveState) : "MISSING"));
-    QTableWidgetItem *activeSecondsItem = new QTableWidgetItem(QString::fromStdString(DurationToDHMS(fFound ? (infoMn.nTimeLastPing - infoMn.sigTime) : 0)));
-    QTableWidgetItem *lastSeenItem = new QTableWidgetItem(QString::fromStdString(FormatISO8601DateTime(fFound ? infoMn.nTimeLastPing + GetOffsetFromUtc() : 0)));
-    QTableWidgetItem *pubkeyItem = new QTableWidgetItem(QString::fromStdString(fFound ? EncodeDestination(infoMn.pubKeyCollateralAddress.GetID()) : ""));
-
-    ui->tableWidgetMyMasternodes->setItem(nNewRow, 0, aliasItem);
-    ui->tableWidgetMyMasternodes->setItem(nNewRow, 1, addrItem);
-    ui->tableWidgetMyMasternodes->setItem(nNewRow, 2, protocolItem);
-    ui->tableWidgetMyMasternodes->setItem(nNewRow, 3, statusItem);
-    ui->tableWidgetMyMasternodes->setItem(nNewRow, 4, activeSecondsItem);
-    ui->tableWidgetMyMasternodes->setItem(nNewRow, 5, lastSeenItem);
-    ui->tableWidgetMyMasternodes->setItem(nNewRow, 6, pubkeyItem);
-}
-
-void MasternodeList::updateMyNodeList(bool fForce)
-{
-    TRY_LOCK(cs_mymnlist, fLockAcquired);
-    if(!fLockAcquired) {
-        return;
-    }
-    static int64_t nTimeMyListUpdated = 0;
-
-    // automatically update my masternode list only once in MY_MASTERNODELIST_UPDATE_SECONDS seconds,
-    // this update still can be triggered manually at any time via button click
-    int64_t nSecondsTillUpdate = nTimeMyListUpdated + MY_MASTERNODELIST_UPDATE_SECONDS - GetTime();
-    ui->secondsLabel->setText(QString::number(nSecondsTillUpdate));
-
-    if(nSecondsTillUpdate > 0 && !fForce) return;
-    nTimeMyListUpdated = GetTime();
-
-    ui->tableWidgetMasternodes->setSortingEnabled(false);
-    for (CMasternodeConfig::CMasternodeEntry mne : masternodeConfig.getEntries()) {
-        int32_t nOutputIndex = 0;
-        if(!ParseInt32(mne.getOutputIndex(), &nOutputIndex)) {
-            continue;
-        }
-
-        updateMyMasternodeInfo(QString::fromStdString(mne.getAlias()), QString::fromStdString(mne.getIp()), COutPoint(uint256S(mne.getTxHash()), nOutputIndex));
-    }
-    ui->tableWidgetMasternodes->setSortingEnabled(true);
-
-    // reset "timer"
-    ui->secondsLabel->setText("0");
-}
-
-void MasternodeList::updateNodeList()
-{
-    TRY_LOCK(cs_mnlist, fLockAcquired);
-    if(!fLockAcquired) {
-        return;
-    }
-
-    static int64_t nTimeListUpdated = GetTime();
-
-    // to prevent high cpu usage update only once in MASTERNODELIST_UPDATE_SECONDS seconds
-    // or MASTERNODELIST_FILTER_COOLDOWN_SECONDS seconds after filter was last changed
-    int64_t nSecondsToWait = fFilterUpdated
-                            ? nTimeFilterUpdated - GetTime() + MASTERNODELIST_FILTER_COOLDOWN_SECONDS
-                            : nTimeListUpdated - GetTime() + MASTERNODELIST_UPDATE_SECONDS;
-
-    if(fFilterUpdated) ui->countLabel->setText(QString::fromStdString(strprintf("Please wait... %d", nSecondsToWait)));
-    if(nSecondsToWait > 0) return;
-
-    nTimeListUpdated = GetTime();
-    fFilterUpdated = false;
-
-    QString strToFilter;
-    ui->countLabel->setText("Updating...");
-    ui->tableWidgetMasternodes->setSortingEnabled(false);
-    ui->tableWidgetMasternodes->clearContents();
-    ui->tableWidgetMasternodes->setRowCount(0);
-    std::map<COutPoint, CMasternode> mapMasternodes = mnodeman.GetFullMasternodeMap();
-    int offsetFromUtc = GetOffsetFromUtc();
-
-    for(auto& mnpair : mapMasternodes)
-    {
-        CMasternode mn = mnpair.second;
-        // populate list
-        // Address, Protocol, Status, Active Seconds, Last Seen, Pub Key
-        QTableWidgetItem *addressItem = new QTableWidgetItem(QString::fromStdString(mn.addr.ToString()));
-        QTableWidgetItem *protocolItem = new QTableWidgetItem(QString::number(mn.nProtocolVersion));
-        QTableWidgetItem *statusItem = new QTableWidgetItem(QString::fromStdString(mn.GetStatus()));
-        QTableWidgetItem *activeSecondsItem = new QTableWidgetItem(QString::fromStdString(DurationToDHMS(mn.lastPing.sigTime - mn.sigTime)));
-        QTableWidgetItem *lastSeenItem = new QTableWidgetItem(QString::fromStdString(FormatISO8601DateTime(mn.lastPing.sigTime + offsetFromUtc)));
-        QTableWidgetItem *pubkeyItem = new QTableWidgetItem(QString::fromStdString(EncodeDestination(mn.pubKeyCollateralAddress.GetID())));
-
-        if (strCurrentFilter != "")
-        {
-            strToFilter =   addressItem->text() + " " +
-                            protocolItem->text() + " " +
-                            statusItem->text() + " " +
-                            activeSecondsItem->text() + " " +
-                            lastSeenItem->text() + " " +
-                            pubkeyItem->text();
-            if (!strToFilter.contains(strCurrentFilter)) continue;
-        }
-
-        ui->tableWidgetMasternodes->insertRow(0);
-        ui->tableWidgetMasternodes->setItem(0, 0, addressItem);
-        ui->tableWidgetMasternodes->setItem(0, 1, protocolItem);
-        ui->tableWidgetMasternodes->setItem(0, 2, statusItem);
-        ui->tableWidgetMasternodes->setItem(0, 3, activeSecondsItem);
-        ui->tableWidgetMasternodes->setItem(0, 4, lastSeenItem);
-        ui->tableWidgetMasternodes->setItem(0, 5, pubkeyItem);
-    }
-
-    ui->countLabel->setText(QString::number(ui->tableWidgetMasternodes->rowCount()));
-    ui->tableWidgetMasternodes->setSortingEnabled(true);
-
-    updateDINList();
 }
 
 void MasternodeList::updateDINList()
@@ -455,7 +205,7 @@ void MasternodeList::updateDINList()
             }
         }
 
-        ui->dinTable->setRowCount(mapMynode.size());
+        ui->dinTable->setRowCount(0);
 
         // update used burn tx map
         nodeSetupUsedBurnTxs.clear();
@@ -463,6 +213,7 @@ void MasternodeList::updateDINList()
         bool bNeedToQueryAPIServiceId = false;
         int serviceId;
         int k=0;
+        int nIncomplete = 0, nExpired = 0, nReady = 0;
         for(auto &pair : mapMynode){
             infinitynode_info_t infoInf;
             std::string status = "Unknown", sPeerAddress = "", strIP = "---";
@@ -498,28 +249,37 @@ void MasternodeList::updateDINList()
                 // update used burn tx map
                 std::string burnfundTxId = infoInf.vinBurnFund.prevout.hash.ToString().substr(0, 16);
                 nodeSetupUsedBurnTxs.insert( { burnfundTxId, 1  } );
-            }
-            QString nodeTxId = QString::fromStdString(infoInf.collateralAddress);
-            ui->dinTable->setItem(k, 0, new QTableWidgetItem(QString(nodeTxId)));
-            QTableWidgetItem *itemHeight = new QTableWidgetItem;
-            itemHeight->setData(Qt::EditRole, infoInf.nHeight);
-            ui->dinTable->setItem(k, 1, itemHeight);
-            QTableWidgetItem *itemExpiryHeight = new QTableWidgetItem;
-            itemExpiryHeight->setData(Qt::EditRole, infoInf.nExpireHeight);
-            ui->dinTable->setItem(k, 2, itemExpiryHeight);
-            ui->dinTable->setItem(k, 3, new QTableWidgetItem(QString(QString::fromStdString(status))));
-            ui->dinTable->setItem(k, 4, new QTableWidgetItem(QString(QString::fromStdString(strIP))));
-            ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString(QString::fromStdString(sPeerAddress))));
-            bool flocked = mapLockRewardHeight.find(sPeerAddress) != mapLockRewardHeight.end();
-            if(flocked) {
-                ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString::number(mapLockRewardHeight[sPeerAddress])));
-                ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString("Yes"))));
+                nExpired++;
             } else {
-                ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString(QString::fromStdString(""))));
-                ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString("No"))));
+                QString nodeTxId = QString::fromStdString(infoInf.collateralAddress);
+                ui->dinTable->insertRow(k);
+                ui->dinTable->setItem(k, 0, new QTableWidgetItem(QString(nodeTxId)));
+                QTableWidgetItem *itemHeight = new QTableWidgetItem;
+                itemHeight->setData(Qt::EditRole, infoInf.nHeight);
+                ui->dinTable->setItem(k, 1, itemHeight);
+                QTableWidgetItem *itemExpiryHeight = new QTableWidgetItem;
+                itemExpiryHeight->setData(Qt::EditRole, infoInf.nExpireHeight);
+                ui->dinTable->setItem(k, 2, itemExpiryHeight);
+                ui->dinTable->setItem(k, 3, new QTableWidgetItem(QString(QString::fromStdString(status))));
+                ui->dinTable->setItem(k, 4, new QTableWidgetItem(QString(QString::fromStdString(strIP))));
+                ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString(QString::fromStdString(sPeerAddress))));
+                bool flocked = mapLockRewardHeight.find(sPeerAddress) != mapLockRewardHeight.end();
+                if(flocked) {
+                    ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString::number(mapLockRewardHeight[sPeerAddress])));
+                    ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString("Yes"))));
+                } else {
+                    ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString(QString::fromStdString(""))));
+                    ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString("No"))));
+                }
+                ui->dinTable->setItem(k,8, new QTableWidgetItem(QString(QString::fromStdString(pair.second))));
+                if (status == "Incomplete") {
+                    nIncomplete++;
+                }
+                if (status == "Ready") {
+                    nReady++;
+                }
+                k++;
             }
-            ui->dinTable->setItem(k,8, new QTableWidgetItem(QString(QString::fromStdString(pair.second))));
-            k++;
         }
 
         bDINNodeAPIUpdate = true;
@@ -532,89 +292,22 @@ void MasternodeList::updateDINList()
             nodeSetupPopulateBurnTxCombo();
         }
         ui->dinTable->setSortingEnabled(true);
+        ui->ReadyNodesLabel->setText(QString::number(nReady));
+        ui->IncompleteNodesLabel->setText(QString::number(nIncomplete));
+        ui->ExpiredNodesLabel->setText(QString::number(nExpired));
+        if (nReady == 0) {
+            ui->ReadyNodes_label->hide();
+            ui->ReadyNodesLabel->hide();
+        }
+        if (nIncomplete == 0) {
+            ui->IncompleteNodes_label->hide();
+            ui->IncompleteNodesLabel->hide();
+        }
+        if (nExpired == 0) {
+            ui->ExpiredNodes_label->hide();
+            ui->ExpiredNodesLabel->hide();
+        }
     }
-}
-
-void MasternodeList::on_filterLineEdit_textChanged(const QString &strFilterIn)
-{
-    strCurrentFilter = strFilterIn;
-    nTimeFilterUpdated = GetTime();
-    fFilterUpdated = true;
-    ui->countLabel->setText(QString::fromStdString(strprintf("Please wait... %d", MASTERNODELIST_FILTER_COOLDOWN_SECONDS)));
-}
-
-void MasternodeList::on_startButton_clicked()
-{
-    std::string strAlias;
-    {
-        LOCK(cs_mymnlist);
-        // Find selected node alias
-        QItemSelectionModel* selectionModel = ui->tableWidgetMyMasternodes->selectionModel();
-        QModelIndexList selected = selectionModel->selectedRows();
-
-        if(selected.count() == 0) return;
-
-        QModelIndex index = selected.at(0);
-        int nSelectedRow = index.row();
-        strAlias = ui->tableWidgetMyMasternodes->item(nSelectedRow, 0)->text().toStdString();
-    }
-
-    // Display message box
-    QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm infinitynode start"),
-        tr("Are you sure you want to start infinitynode %1?").arg(QString::fromStdString(strAlias)),
-        QMessageBox::Yes | QMessageBox::Cancel,
-        QMessageBox::Cancel);
-
-    if(retval != QMessageBox::Yes) return;
-
-    WalletModel::EncryptionStatus encStatus = walletModel->getEncryptionStatus();
-
-    if(encStatus == walletModel->Locked) {
-        WalletModel::UnlockContext ctx(walletModel->requestUnlock());
-
-        if(!ctx.isValid()) return; // Unlock wallet was cancelled
-
-        StartAlias(strAlias);
-        return;
-    }
-
-    StartAlias(strAlias);
-}
-
-void MasternodeList::on_startAllButton_clicked()
-{
-    // Display message box
-    QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm all Infinitynodes start"),
-        tr("Are you sure you want to start ALL InfinityNodes?"),
-        QMessageBox::Yes | QMessageBox::Cancel,
-        QMessageBox::Cancel);
-
-    if(retval != QMessageBox::Yes) return;
-
-    WalletModel::EncryptionStatus encStatus = walletModel->getEncryptionStatus();
-
-    if(encStatus == walletModel->Locked) {
-        WalletModel::UnlockContext ctx(walletModel->requestUnlock());
-
-        if(!ctx.isValid()) return; // Unlock wallet was cancelled
-
-        StartAll();
-        return;
-    }
-
-    StartAll();
-}
-
-void MasternodeList::on_tableWidgetMyMasternodes_itemSelectionChanged()
-{
-    if(ui->tableWidgetMyMasternodes->selectedItems().count() > 0) {
-        ui->startButton->setEnabled(true);
-    }
-}
-
-void MasternodeList::on_UpdateButton_clicked()
-{
-    updateMyNodeList(true);
 }
 
 void MasternodeList::on_checkDINNode()
@@ -689,6 +382,7 @@ void MasternodeList::on_btnSetup_clicked()
 
     // check for chain synced...
     if (!masternodeSync.IsBlockchainSynced())    {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText("Chain is out-of-sync. Please wait until it's fully synced.");
         return;
     }
@@ -696,6 +390,7 @@ void MasternodeList::on_btnSetup_clicked()
     // check again in case they changed the tier...
     nodeSetupCleanProgress();
     if ( !nodeSetupCheckFunds() )   {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText("You didn't pass the funds check. Please review.");
         return;
     }
@@ -724,6 +419,7 @@ void MasternodeList::on_btnSetup_clicked()
         strStatus = nodeSetupCheckInvoiceStatus();
     }
     else    {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText(strError);
     }
 }
@@ -742,6 +438,7 @@ void MasternodeList::on_payButton_clicked()
         //LogPrintf("nodeSetupCheckPendingPayments nodeSetupAPIGetInvoice %s, %d \n", strStatus.toStdString(), invoiceToPay );
 
         if ( !res )   {
+            ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
             ui->labelMessage->setText(strError);
             return;
         }
@@ -824,10 +521,12 @@ QString MasternodeList::nodeSetupGetNewAddress()    {
             strAddress = QString::fromStdString(jsonVal.get_str());
         }
     } catch (UniValue& objError ) {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( "Error getting new wallet address" );
     }
     catch ( std::runtime_error e)
     {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( QString::fromStdString( "ERROR getnewaddress: unexpected error " ) + QString::fromStdString( e.what() ));
     }
 
@@ -859,6 +558,7 @@ QString MasternodeList::nodeSetupSendToAddress( QString strAddress, int amount, 
     }
     catch ( std::runtime_error e)
     {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( QString::fromStdString( "ERROR sendtoaddress: unexpected error " ) + QString::fromStdString( e.what() ));
     }
 
@@ -881,13 +581,16 @@ UniValue MasternodeList::nodeSetupGetTxInfo( QString txHash, std::string attribu
             ret = find_value(jsonVal.get_obj(), attribute);
         }
         else {
+            ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
             ui->labelMessage->setText( "Error calling RPC gettransaction");
         }
     } catch (UniValue& objError ) {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( "Error calling RPC gettransaction");
     }
     catch ( std::runtime_error e)
     {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( QString::fromStdString( "ERROR gettransaction: unexpected error " ) + QString::fromStdString( e.what() ));
     }
 
@@ -911,6 +614,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
     }
 
     if ( strStatus == "Unpaid" )  {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
         ui->labelMessage->setText(QString::fromStdString(strprintf("Invoice amount %f SIN", invoiceAmount)));
         if ( mPaymentTx != "" ) {   // already paid, waiting confirmations
             nodeSetupStep( "setupWait", "Invoice paid, waiting for confirmation");
@@ -928,6 +632,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
                 invoiceTimer->stop();
                 ui->btnSetup->setEnabled(true);
                 ui->btnSetupReset->setEnabled(true);
+                ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
                 ui->labelMessage->setText( "Press Reset Order button to cancel node setup process, or Continue setUP button to resume." );
                 return "cancelled";
             }
@@ -936,6 +641,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
                 mPaymentTx = nodeSetupSendToAddress( paymentAddress, invoiceAmount, invoiceTimer );
             }
             else   {
+                ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
                 ui->labelMessage->setText( "Unlocking wallet is required to make the payments." );
                 return "cancelled";
             }
@@ -950,6 +656,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
                 }
 
                 nodeSetupSetPaymentTx(mPaymentTx);
+                ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
                 ui->labelMessage->setText( "Payment finished, please wait until platform confirms payment to proceed to node creation." );
                 ui->btnSetup->setEnabled(false);
                 ui->btnSetupReset->setEnabled(false);
@@ -962,6 +669,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
 
     if ( strStatus == "Paid" )  {           // launch node setup (RPC)
         if (invoiceAmount==0)   {
+            ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
             ui->labelMessage->setText(QString::fromStdString("Invoice paid with balance"));
         }
 
@@ -1000,6 +708,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
             }
 
             if ( mBurnPrepareTx=="" )  {
+               ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
                ui->labelMessage->setText( "ERROR: failed to prepare burn transaction." );
             }
             nodeSetupStep( "setupWait", "Preparing burn transaction");
@@ -1041,13 +750,16 @@ LogPrintf("nodeSetupGetOwnerAddressFromBurnTx vout=%d, address %s \n", vOutN, ad
             }
         }
         else {
+            ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
             ui->labelMessage->setText( "Error calling RPC getrawtransaction");
         }
     } catch (UniValue& objError ) {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( "Error RPC obtaining owner address");
     }
     catch ( std::runtime_error e)
     {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( QString::fromStdString( "ERROR get owner address: unexpected error " ) + QString::fromStdString( e.what() ));
     }
     return address;
@@ -1074,6 +786,7 @@ void MasternodeList::nodeSetupCheckBurnPrepareConfirmations()   {
             }
         }
         else    {
+            ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
             ui->labelMessage->setText( "ERROR: failed to create burn transaction." );
         }
     }
@@ -1107,7 +820,9 @@ void MasternodeList::nodeSetupCheckBurnSendConfirmations()   {
             try {
                 cmd.str("");
                 cmd << "infinitynodeupdatemeta " << mBurnAddress.toUtf8().constData() << " " << strPublicKey.toUtf8().constData() << " " << strNodeIp.toUtf8().constData() << " " << mBurnTx.left(16).toUtf8().constData();
+LogPrintf("[nodeSetup] infinitynodeupdatemeta %s \n", cmd.str() );
                 UniValue jsonVal = nodeSetupCallRPC( cmd.str() );
+LogPrintf("[nodeSetup] infinitynodeupdatemeta SUCCESS \n" );
 
                 nodeSetupSendToAddress( strAddress, 3, NULL );  // send 1 coin as per recommendation to expedite the rewards
                 nodeSetupSetServiceForNodeAddress( strAddress, mServiceId); // store serviceid
@@ -1127,12 +842,14 @@ void MasternodeList::nodeSetupCheckBurnSendConfirmations()   {
             }
             catch ( std::runtime_error e)
             {
+                ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
                 ui->labelMessage->setText( QString::fromStdString( "ERROR infinitynodeupdatemeta: unexpected error " ) + QString::fromStdString( e.what() ));
                 nodeSetupStep( "setupKo", "Node setup failed");
             }
         }
         else    {
             LogPrintf("infinitynodeupdatemeta Error while obtaining node info \n");
+            ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
             ui->labelMessage->setText( "ERROR: infinitynodeupdatemeta " );
             nodeSetupStep( "setupKo", "Node setup failed");
         }
@@ -1170,15 +887,18 @@ QString MasternodeList::nodeSetupRPCBurnFund( QString collateralAddress, CAmount
             }
         }
         else {
+            ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
             ui->labelMessage->setText(QString::fromStdString( "ERROR infinitynodeburnfund: unknown response") );
         }
     }
     catch (const UniValue& objError)
     {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( QString::fromStdString(find_value(objError, "message").get_str()) );
     }
     catch ( std::runtime_error e)
     {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( QString::fromStdString( "ERROR infinitynodeburnfund: unexpected error " ) + QString::fromStdString( e.what() ));
     }
     return burnTx;
@@ -1197,6 +917,7 @@ void MasternodeList::on_btnLogin_clicked()
 
     int clientId = nodeSetupAPIAddClient( "", "", ui->txtEmail->text(), ui->txtPassword->text(), strError );
     if ( strError != "" )  {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: red}");
         ui->labelMessage->setText( strError );
     }
 
@@ -1218,6 +939,7 @@ void MasternodeList::on_btnSetupReset_clicked()
 // END nodeSetup buttons
 
 void MasternodeList::nodeSetupInitialize()   {
+
     ConnectionManager = new QNetworkAccessManager(this);
 
     labelPic[0] = ui->labelPic_1;
@@ -1236,6 +958,8 @@ void MasternodeList::nodeSetupInitialize()   {
     labelTxt[6] = ui->labelTxt_7;
     labelPic[7] = ui->labelPic_8;
     labelTxt[7] = ui->labelTxt_8;
+
+    ui->dinTable->setSortingEnabled(false);
 
     // combo billing
     int i;
@@ -1279,6 +1003,7 @@ void MasternodeList::nodeSetupInitialize()   {
 
     mOrderid = nodeSetupGetOrderId( mInvoiceid, mProductIds );
     if ( mOrderid > 0 )    {
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
         ui->labelMessage->setText(QString::fromStdString(strprintf("There is an order ongoing (#%d). Press 'Continue' or 'Reset' order.", mOrderid)));
         nodeSetupEnableOrderUI(true, mOrderid, mInvoiceid);
         mPaymentTx = nodeSetupGetPaymentTx();
@@ -1289,6 +1014,7 @@ void MasternodeList::nodeSetupInitialize()   {
 
     nodeSetupPopulateInvoicesCombo();
     nodeSetupPopulateBurnTxCombo();
+    ui->dinTable->setSortingEnabled(true);
 }
 
 void MasternodeList::nodeSetupEnableOrderUI( bool bEnable, int orderID , int invoiceID ) {
@@ -1329,6 +1055,7 @@ void MasternodeList::nodeSetupResetClientId( )  {
     ui->btnSetup->setEnabled(false);
     mClientid = 0;
     nodeSetupResetOrderId();
+    ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
     ui->labelMessage->setText("Enter your client data and create a new user or login an existing one.");
 }
 
@@ -1340,6 +1067,7 @@ void MasternodeList::nodeSetupResetOrderId( )   {
     ui->btnSetup->setIcon(QIcon(":/icons/setup"));
     ui->btnSetup->setIconSize(QSize(200, 32));
     ui->btnSetup->setText(QString::fromStdString(""));
+    ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
     ui->labelMessage->setText("Select a node Tier and then follow below steps for setup.");
     mOrderid = mInvoiceid = mServiceId = 0;
     mPaymentTx = "";
@@ -1354,6 +1082,7 @@ void MasternodeList::nodeSetupEnableClientId( int clientId )  {
     ui->setupButtons->show();
     ui->labelClientIdValue->show();
     ui->labelClientId->setText("#"+QString::number(clientId));
+    ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
     ui->labelMessage->setText("Select a node Tier and press '1-Click setUP' to verify if you meet the prerequisites");
     mClientid = clientId;
     ui->btnRestore->setText("Support");
@@ -1572,6 +1301,7 @@ void MasternodeList::nodeSetupSetPaymentTx( QString txHash )  {
 int MasternodeList::nodeSetupAPIAddClient( QString firstName, QString lastName, QString email, QString password, QString& strError )  {
     int ret = 0;
 
+    QString commit = QString::fromStdString(getGitCommitId());
     QString Service = QString::fromStdString("AddClient");
     QUrl url( MasternodeList::NODESETUP_ENDPOINT_BASIC );
     QUrlQuery urlQuery( url );
@@ -1580,9 +1310,11 @@ int MasternodeList::nodeSetupAPIAddClient( QString firstName, QString lastName, 
     urlQuery.addQueryItem("lastname", lastName);
     urlQuery.addQueryItem("email", email);
     urlQuery.addQueryItem("password2", password);
+    urlQuery.addQueryItem("ver", commit);
     url.setQuery( urlQuery );
 
     QNetworkRequest request( url );
+//LogPrintf("nodeSetupAPIAddClient -- %s\n", url.toString().toStdString());
 
     QNetworkReply *reply = ConnectionManager->get(request);
     QEventLoop loop;
@@ -1966,7 +1698,7 @@ void MasternodeList::nodeSetupCleanProgress()   {
 
 void MasternodeList::showTab_setUP(bool fShow)
 {
-    ui->tabWidget->setCurrentIndex(3);
+    ui->tabWidget->setCurrentIndex(1);
     
 }
 
@@ -2040,3 +1772,54 @@ QString MasternodeList::nodeSetupGetRPCErrorMessage( UniValue objError )    {
 
     return ret;
 }
+
+// ++ DIN ROI Stats
+void MasternodeList::onResult(QNetworkReply* replystats)
+{
+    QVariant statusCode = replystats->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+
+    if( statusCode == 200)
+    {
+        QString replyString = (QString) replystats->readAll();
+
+        QJsonDocument jsonResponse = QJsonDocument::fromJson(replyString.toUtf8());
+        QJsonObject jsonObject = jsonResponse.object();
+
+        QJsonObject dataObject = jsonObject.value("data").toArray()[0].toObject();
+
+        QLocale l = QLocale(QLocale::English);
+
+          // Set INFINITY NODE STATS strings
+        int bigRoiDays = (365/(1000000/((720/dataObject.value("inf_online_big").toDouble())*1752)))*100-100;
+        int midRoiDays = (365/(500000/((720/dataObject.value("inf_online_mid").toDouble())*838)))*100-100;
+        int lilRoiDays = (365/(100000/((720/dataObject.value("inf_online_lil").toDouble())*560)))*100-100;
+
+        QString bigROIString = QString::number(bigRoiDays, 'f', 0);
+        QString midROIString = QString::number(midRoiDays, 'f', 0);
+        QString lilROIString = QString::number(lilRoiDays, 'f', 0);
+
+        ui->bigRoiLabel->setText("ROI " + bigROIString + "%");
+        ui->midRoiLabel->setText("ROI " + midROIString + "%");
+        ui->miniRoiLabel->setText("ROI " + lilROIString + "%");
+        
+       
+    }
+    else
+    {
+        const QString noValue = "NaN";
+       
+        ui->bigRoiLabel->setText(noValue);
+        ui->midRoiLabel->setText(noValue);
+        ui->miniRoiLabel->setText(noValue);
+       
+    }
+}
+    
+void MasternodeList::getStatistics()
+{
+    QUrl summaryUrl("https://explorer.sinovate.io/ext/summary");
+    QNetworkRequest request;
+    request.setUrl(summaryUrl);
+    m_networkManager->get(request);
+}
+// --

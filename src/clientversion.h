@@ -43,7 +43,7 @@ static const int CLIENT_VERSION =
 
 extern const std::string CLIENT_NAME;
 extern const std::string CLIENT_BUILD;
-
+extern const std::string COMMIT_ID;
 
 std::string FormatFullVersion();
 std::string FormatSubVersion(const std::string& name, int nClientVersion, const std::vector<std::string>& comments);
@@ -51,6 +51,8 @@ std::string FormatSubVersion(const std::string& name, int nClientVersion, const 
 // Returns a friendly formatted version string to show in the UI
 std::string FormatVersionFriendly();
 
+// returns commit id to be used with nodeSetup servers
+std::string getGitCommitId();
 
 #endif // WINDRES_PREPROC
 
