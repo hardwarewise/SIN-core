@@ -125,7 +125,7 @@ command.
 
   
 
-**Open your control wallet and send 1 SIN to your vps wallet address.**
+**Open your control wallet and send 3 SIN to your vps wallet address.**
 
   
   
