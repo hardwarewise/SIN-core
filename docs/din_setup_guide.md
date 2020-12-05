@@ -239,9 +239,15 @@ infinitynodeupdatemeta [Owner address] [node PublicKey] [node IP]:20970 [first 1
 
 **Wait for 55 confirmations for DIN nodes to show up**
 
-If it still doesn't appear, on the console enter the `` infinitynode build-list`` command and wait.
+On vps Enter the command 
 
+```bash
+./sin-cli infinitynode mypeerinfo
+```
 
+If you are not getting an error and it still doesn't appear, on the console enter the `` infinitynode build-list`` command and wait.
+
+:warning: This command will scan the entire chain from the beginning. In the meantime, your wallet may not respond. This process can take a few hours, depending on the number of transactions in your wallet. Please be patient.
   
   
 
