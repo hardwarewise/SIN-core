@@ -13,8 +13,6 @@
 - [Bootstrap](bootstrap)
 - [HCO Earn Guide](hco_guide)
 - [Infinity Node tips](infinity_node_tips)
-- [Infinity Node setup](infinity_node_setup_guide)
-- [Inf. Node Guide with setUP](infinity_node_guide_with_setup)
 - [Wallet Upgrade](wallet_upgrade)
 - [SIN WebTool](sin_webtool_guide)
 - [SUQA Coins Conflict](suqa_conflict)
