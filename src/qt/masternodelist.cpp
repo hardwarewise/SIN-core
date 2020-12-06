@@ -696,7 +696,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
             // amount necessary for updatemeta may be already spent, send again.
             if (nodeSetupUnlockWallet()) {
                 mMetaTx = nodeSetupSendToAddress( mBurnAddress, NODESETUP_UPDATEMETA_AMOUNT , NULL );
-                nodeSetupStep( "setupWait", "Maturing updatemeta amount");
+                nodeSetupStep( "setupWait", "Maturing, please wait...");
             }
         }
         else    {   // burn tx not made yet
