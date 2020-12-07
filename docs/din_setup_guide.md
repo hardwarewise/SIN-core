@@ -190,6 +190,8 @@ walletpassphrase [passphrase] [timeout]
 
 infinitynodeburnfund [YourAddress] [Amount 1M / 500K / 100K] [YourBackupAddress]
 
+> :information_source:
+> YourBackupAddress will let the node owner change the receiving address of the node if the user node gets in the hands of malicious actors.
   
 
 ![](https://lh3.googleusercontent.com/ziXM81BBEJm5UNE616GVJp97yphj6OWUAH-cAK-jHPOLtBPtVngkg2RMkU6Gj43d6Sma45akLybz-2rB4XMBSTgOuz6C5iOJ0keP38DCIZefnH1T-1d9sv2nUs5wL6WyP2H0HcWf)
