@@ -27,11 +27,19 @@
 #include <QMovie>
 #include <QLabel>
 
+#include <univalue/include/univalue.h>
+#include <QDebug>
+#include <QMessageBox>
+#include <QDesktopServices>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
+#include <QUrl>
+
 SplashScreen::SplashScreen(interfaces::Node& node, Qt::WindowFlags f, const NetworkStyle *networkStyle) :
-    QWidget(0, f), curAlignment(0), m_node(node)
+    QWidget(0, f), curAlignment(0), m_node(node), networkVersionManager(0), versionRequest(0)
 {
-    
     setWindowFlags(Qt::FramelessWindowHint);
+    
 
     // set sizes
     int versionTextHeight       = 30;
@@ -44,6 +52,109 @@ SplashScreen::SplashScreen(interfaces::Node& node, Qt::WindowFlags f, const Netw
 
     float fontFactor            = 1.0;
     float devicePixelRatio      = 1.0;
+
+    //++
+    networkVersionManager = new QNetworkAccessManager();
+    versionRequest = new QNetworkRequest();
+    
+      // Get the latest SIN-core release and let the user know if they are using the latest version
+        // Network request code for the header widget
+        QObject::connect(networkVersionManager, &QNetworkAccessManager::finished,
+                         this, [=](QNetworkReply *reply) {
+                    if (reply->error()) {
+                        qDebug() << reply->errorString();
+                        return;
+                    }
+
+                    // Get the data from the network request
+                    QString answer = reply->readAll();
+
+                    UniValue releases(UniValue::VARR);
+                    releases.read(answer.toStdString());
+
+                    if (!releases.isArray()) {
+                        return;
+                    }
+
+                    if (!releases.size()) {
+                        return;
+                    }
+
+                    // Latest release lives in the first index of the array return from github v3 api
+                    auto latestRelease = releases[0];
+
+                    auto keys = latestRelease.getKeys();
+                    for (auto key : keys) {
+                       if (key == "tag_name") {
+                           auto latestVersion = latestRelease["tag_name"].get_str();
+
+                           QRegExp rx("(\\d+).(\\d+).(\\d+).(\\d+)");
+                           rx.indexIn(QString::fromStdString(latestVersion));
+
+                           // List the found values
+                           QStringList list = rx.capturedTexts();
+                           static const int CLIENT_VERSION_MAJOR_INDEX = 1;
+                           static const int CLIENT_VERSION_MINOR_INDEX = 2;
+                           static const int CLIENT_VERSION_REVISION_INDEX = 3;
+                           static const int CLIENT_VERSION_BUILD_INDEX = 4;
+                           bool fNewSoftwareFound = false;
+                           bool fStopSearch = false;
+                           if (list.size() >= 4) {
+                               if (CLIENT_VERSION_MAJOR < list[CLIENT_VERSION_MAJOR_INDEX].toInt()) {
+                                   fNewSoftwareFound = true;
+                               } else {
+                                   if (CLIENT_VERSION_MAJOR > list[CLIENT_VERSION_MAJOR_INDEX].toInt()) {
+                                       fStopSearch = true;
+                                   }
+                               }
+
+                               if (!fStopSearch) {
+                                   if (CLIENT_VERSION_MINOR < list[CLIENT_VERSION_MINOR_INDEX].toInt()) {
+                                       fNewSoftwareFound = true;
+                                   } else {
+                                       if (CLIENT_VERSION_MINOR > list[CLIENT_VERSION_MINOR_INDEX].toInt()) {
+                                           fStopSearch = true;
+                                       }
+                                   }
+                               }
+
+                               if (!fStopSearch) {
+                                   if (CLIENT_VERSION_REVISION < list[CLIENT_VERSION_REVISION_INDEX].toInt()) {
+                                       fNewSoftwareFound = true;
+                                   }else {
+                                       if (CLIENT_VERSION_REVISION > list[CLIENT_VERSION_REVISION_INDEX].toInt()) {
+                                           fStopSearch = true;
+                                       }
+                                 }
+
+                               }
+
+                                if (!fStopSearch) {
+                                   if (CLIENT_VERSION_BUILD < list[CLIENT_VERSION_BUILD_INDEX].toInt()) {
+                                       fNewSoftwareFound = true;
+                                   }
+                               }
+                           }
+
+                           if (fNewSoftwareFound) {
+                               
+                             
+                               QMessageBox msgBox;
+                               msgBox.setWindowTitle("SIN-CORE");
+                               msgBox.setTextFormat(Qt::RichText);  
+                               msgBox.setText("New wallet version found <br> <br> <a href=\"https://github.com/SINOVATEblockchain/SIN-core/releases/\">Please click here to download the latest version.</a>");
+                               msgBox.setWindowModality(Qt::NonModal);
+                               msgBox.exec();
+                                
+                           } 
+                       }
+                    }
+                }
+        );
+
+        getLatestVersion();
+    
+    //--
 
     // define text to place
     QString titleText       = tr("SIN Core");
@@ -216,4 +327,9 @@ void SplashScreen::closeEvent(QCloseEvent *event)
 {
     m_node.startShutdown(); // allows an "emergency" shutdown during startup
     event->ignore();
+}
+void SplashScreen::getLatestVersion()
+{
+    versionRequest->setUrl(QUrl("https://api.github.com/repos/SINOVATEblockchain/SIN-core/releases"));
+    networkVersionManager->get(*versionRequest);
 }

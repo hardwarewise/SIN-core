@@ -12,6 +12,12 @@
 
 class NetworkStyle;
 
+
+QT_BEGIN_NAMESPACE
+class QNetworkAccessManager;
+class QNetworkRequest;
+QT_END_NAMESPACE
+
 namespace interfaces {
 class Handler;
 class Node;
@@ -53,7 +59,12 @@ private:
     void unsubscribeFromCoreSignals();
     /** Connect wallet signals to splash screen */
     void ConnectWallet(std::unique_ptr<interfaces::Wallet> wallet);
+    void getLatestVersion();
 
+    
+    QNetworkAccessManager* networkVersionManager;
+    QNetworkRequest* versionRequest;
+    
     QPixmap pixmap;
     QString curMessage;
     QColor curColor;
