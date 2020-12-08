@@ -1,4 +1,4 @@
-Please follow the below guide in order to set up a testnet Deterministic Infinity Node using the in-wallet SINOVATE setUP:
+Please follow the below guide in order to set up a Deterministic Infinity Node using the in-wallet SINOVATE setUP:
 
 > **Send all coins to one internal address using coin control**
 
