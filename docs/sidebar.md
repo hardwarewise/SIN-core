@@ -3,7 +3,7 @@
 - [SINOVATE coin specifications](coin_specifications)
 - [Community contributions](/)
 - **Deterministic Infinity Nodes (DIN)**
-- [DIN Manual VPS Conf. Setup](din_manual_vps_ configuration setup)
+- [DIN Manual VPS Conf. Setup](din_manual_vps_ configuration_setup)
 - [In-wallet 1-click setUP GUIDE](inwallet_1click_guide)
 - [DIN setUP Migration GUIDE](din_setup_migration_guide)
 - **Documentation**
