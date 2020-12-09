@@ -2,10 +2,10 @@
 - [SINOVATE](summary)
 - [SINOVATE coin specifications](coin_specifications)
 - [Community contributions](/)
-- **Deterministic Infinity Nodes (D.I.N.)**
-- [D.I.N. Setup GUIDE](din_setup_guide)
+- **Deterministic Infinity Nodes (DIN)**
+- [DIN Manual VPS Conf. Setup](din_manual_vps_ configuration setup)
 - [In-wallet 1-click setUP GUIDE](inwallet_1click_guide)
-- [D.I.N. setUP Migration GUIDE](din_setup_migration_guide)
+- [DIN setUP Migration GUIDE](din_setup_migration_guide)
 - **Documentation**
 - [SINOVATE Whitepaper Light](SINOVATE_Whitepaper_Light)
 - **Tutorials & Guides**
@@ -23,7 +23,7 @@
 - [Inflation the Curse of Traditional Masternodes](inflation_the_curse_of_traditional_masternodes)
 - [Infinity Nodes Groundbreaking Sinovate Evolved Masternodes](infinity_nodes_groundbreaking_sinovate_evolved_masternodes)
 - **Testnet**
-- [D.I.N. Testnet setup GUIDE](din_testnet_setup_guide)
+- [DIN Testnet setup GUIDE](din_testnet_setup_guide)
 - [Testnet wallet setup GUIDE](testnet_wallet_setup_guide)
 - [In-wallet 1-click setUP GUIDE](inwallet_1click_guide)
 - **русский**
