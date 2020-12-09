@@ -1,4 +1,3 @@
-# New Document
 # DIN Manual VPS Configuration Setup : For SINOVATE Mainnet
 
 **An Ubuntu 18.04 VPS with 1 Cpu and  1GB MB Ram is needed.**
