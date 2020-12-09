@@ -2,16 +2,16 @@
 
 
 
-*Before Hardfork, If you are Active SetUP client, please contact support for refund on system balance to pay for in-wallet setUP from system ballance.*
+*Before Hardfork, If you are Active SetUP client, please contact support for refund on system balance to pay for in-wallet SetUP from system ballance.*
 
 
 
 
-- This guide allows you to migrate to DIN system via setUP using the burnTXs of the old Masternode system.
+- This guide allows you to migrate to DIN system, via 1click SetUP using the BurnTXs of the old Masternode system, or migrate from any hosting (VPS) with BurnTX your wallet have.
 
 
 
-- Open the Infinitynode setUP tab under Infinitynodes in your fully synchronized and updated wallet. If you are not yet a member, login with mail and password. (Please use a valid email address.)
+- Open the Infinitynode SetUP tab under Infinitynodes in your fully synchronized and updated wallet. If you are not yet a member, login with mail and password. (Please use a valid email address and Eng symbols password.)
 
 
 
@@ -30,14 +30,14 @@
 
 
 
-- Invoice will be paid from setUP system ballance.
+- Invoice will be auto paid from SetUP system ballance if you have it or wallet will ask YES/NO to pay with coins.
 
-(“Invoice paid from credit ballance” message youll see)
+(“Invoice paid from credit ballance” message youll see in first case)
 
   
 
 - SetUP will now make the necessary adjustments for you.  
-Please wait.
+Please wait till "Finished" and do not close wallet or send transactions.
 
   
 
@@ -57,7 +57,7 @@ Please wait.
 
 
 
-- This tab will need up to 55 confirmations to update. You can see your new node in the My Peers DIN tab.
+- This tab will need up to 55 confirmations to update. You can see your new node in the My Peers DIN tab. (IPv6 and IPv4 can be used)
 
   
 
