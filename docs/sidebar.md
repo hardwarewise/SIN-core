@@ -23,7 +23,7 @@
 - [SIN WebTool Klavuzu](sin_webtool_guide_TR)
 - **Links**
 - [![Home ](https://icongr.am/feather/home.svg?size=16&color=808080)Sinovate Home](https://www.sinovate.io)
-- [![Blog ](https://icongr.am/feather/link.svg?size=16&color=808080)Blog](https://sinovate.io/blog/)
+- [![Blog ](https://icongr.am/entypo/documents.svg?size=16&color=808080)Blog](https://sinovate.io/blog/)
 - [![Explorer ](https://icongr.am/clarity/block.svg?size=16&color=808080)Block Explorer](https://explorer.sinovate.io)
 - [![Github ](https://icongr.am/devicon/github-original.svg?size=16&color=808080)Github](https://github.com/SINOVATEblockchain/SIN-core)
 - <a href="https://discord.gg/WnRExsx"><img src="https://discordapp.com/api/guilds/494460434691391509/embed.png" alt="Discord server" /></a> 
