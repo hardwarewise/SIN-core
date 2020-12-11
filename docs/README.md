@@ -22,8 +22,8 @@ SINOVATE (SIN) combines its brand new **X25X Proof of Work (PoW)** algorithm wit
 
 X25X proof-of-work (PoW) algorithm is GPU mineable and ensures temporary (until optimized) ASIC, FPGA, and QUANTUM resistance, solidifying the decentralized consensus mechanism in the process.
 
-## Coin Specifications
 
+## Coin Specifications
 
 |Specification| Value |
 |--|--|
@@ -65,6 +65,7 @@ X25X proof-of-work (PoW) algorithm is GPU mineable and ensures temporary (until 
 
 # Roadmap
 https://sinovate.io/roadmap/
+
 
 
 # Community Contributions
