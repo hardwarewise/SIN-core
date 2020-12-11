@@ -4,8 +4,10 @@
 - [DIN Manual VPS Configuration Setup](din_manual_vps_configuration_setup)
 - [In-wallet 1-click setUP GUIDE](inwallet_1click_guide)
 - [DIN setUP Migration GUIDE](din_setup_migration_guide)
-- **Documentation**
+- **Whitepapers**
 - [SINOVATE Whitepaper Light](SINOVATE_Whitepaper_Light)
+- [SINOVATE X25X Whitepaper](SINOVATE_X25X_Whitepaper)
+
 - **Tutorials & Guides**
 - [Bootstrap](bootstrap)
 - [HCO Earn Guide](hco_guide)
