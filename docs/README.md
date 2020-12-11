@@ -13,19 +13,17 @@ proof-of-integrity, proof-of-inheritance, and inflation-control are some of the 
 
 # Features and Innovations
 
- - **X25X GPU Mining Algorithm:** Leading-edge, in-house built, custom GPU mining algorithm. More complex,less power-hungry.
+ - **X25X GPU Mining Algorithm:** Leading-edge, in-house built, custom GPU mining algorithm. More complex, less power-hungry.
  - **Deterministic Infinity Nodes:** Explicitly designed to overcome the hyperinflation all cryptocurrency projects face. Infinity nodes burn the collateral for  unprecedented network security and stability.
  - **Incorruptible Data Storage:** Incorruptible Data Storage. DataSend, DataStore and Blockchain-mail. Proof-of-Integrity. Unlimited private networking of big data storage.
 
 SINOVATE (SIN) combines its brand new **X25X Proof of Work (PoW)** algorithm with LWMA difficulty retargeting algorithm, Reorg fork reject solution merged with P.O.B., establishes a 51% attack protection.
 
-X25X is  GPU mineable and ensures **ASIC, FPGA and QUANTUM resistance**,  solidifying the decentralised consensus mechanism in the process. 
 
-
+X25X proof-of-work (PoW) algorithm is GPU mineable and ensures temporary (until optimized) ASIC, FPGA, and QUANTUM resistance, solidifying the decentralized consensus mechanism in the process.
 
 ## Coin Specifications
 
-SINOVATE’s X25X proof-of-work (PoW) algorithm is GPU mineable and ensures temporary(until optimized) ASIC, FPGA, and QUANTUM resistance, solidifying the decentralized consensus mechanism in the process.
 
 |Specification| Value |
 |--|--|
