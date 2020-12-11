@@ -5,7 +5,7 @@
 * [x] make a wallet backup.
 
 
-### 2. 
+### 2. Coin Control
 Go to SEND tab and open coin control
 
 ![img_01](assets/img/misc/suqa_conflict_01.png)
