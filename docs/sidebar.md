@@ -5,8 +5,8 @@
 - [In-wallet 1-click setUP GUIDE](inwallet_1click_guide)
 - [DIN setUP Migration GUIDE](din_setup_migration_guide)
 - **Whitepapers**
-- [SINOVATE Whitepaper Light](SINOVATE_Whitepaper_Light)
-- [SINOVATE X25X Whitepaper](SINOVATE_X25X_Whitepaper)
+- [![Whitepaper Light](https://icongr.am/entypo/documents.svg?size=16&color=808080)Whitepaper Light(https://sinovate.io/light-whitepaper/)
+- [![X25X PoW Algorithm Whitepaper](https://icongr.am/entypo/documents.svg?size=16&color=808080)X25X PoW Algorithm Whitepaper(https://sinovate.io/x25x.pdf)
 
 - **Tutorials & Guides**
 - [Bootstrap](bootstrap)
