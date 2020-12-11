@@ -27,7 +27,7 @@ Please follow the below guide in order to set up a Deterministic Infinity Node u
 
 >  4. Once determined, select your preferred payment plan from the drop-down menu. Annualy plan is most profitable price per month.
 
-**Please make sure you have enough extra funds for the hosting!**
+   :warning: **Please make sure to have enough extra funds for the hosting!**
 
   
   
