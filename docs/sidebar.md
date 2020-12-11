@@ -13,13 +13,6 @@
 - [SIN WebTool](sin_webtool_guide)
 - [SUQA Coins Conflict](suqa_conflict)
 - [X25X Pow GPU Mining](X25X-PoW-GPU-Mining)
-- **Articles**
-- [Decentralized Cloud](decentralized_cloud)
-- [Proof-of-Burn](proof_of_burn)
-- [Infinity Nodes](infinity_nodes)
-- [Infinity Nodes vs Masternodes](infinity_nodes_vs_masternodes)
-- [Inflation the Curse of Traditional Masternodes](inflation_the_curse_of_traditional_masternodes)
-- [Infinity Nodes Groundbreaking Sinovate Evolved Masternodes](infinity_nodes_groundbreaking_sinovate_evolved_masternodes)
 - **Testnet**
 - [DIN Testnet setup GUIDE](din_testnet_setup_guide)
 - [Testnet wallet setup GUIDE](testnet_wallet_setup_guide)
@@ -29,10 +22,10 @@
 - [X25X Pow GPU Madenciliği](X25X-PoW-GPU-Mining-TR)
 - [SIN WebTool Klavuzu](sin_webtool_guide_TR)
 - **Links**
-- [![Home](https://icongr.am/feather/home.svg?size=16&color=808080)Sinovate Home](https://www.sinovate.io)
-- [![Blog](https://icongr.am/feather/link.svg?size=16&color=808080)Blog](https://sinovate.io/blog/)
-- [![Explorer](https://icongr.am/clarity/block.svg?size=16&color=808080)Block Explorer](https://explorer.sinovate.io)
-- [![Github](https://icongr.am/devicon/github-original.svg?size=16&color=808080)Github](https://github.com/SINOVATEblockchain/SIN-core)
+- [![Home ](https://icongr.am/feather/home.svg?size=16&color=808080)Sinovate Home](https://www.sinovate.io)
+- [![Blog ](https://icongr.am/feather/link.svg?size=16&color=808080)Blog](https://sinovate.io/blog/)
+- [![Explorer ](https://icongr.am/clarity/block.svg?size=16&color=808080)Block Explorer](https://explorer.sinovate.io)
+- [![Github ](https://icongr.am/devicon/github-original.svg?size=16&color=808080)Github](https://github.com/SINOVATEblockchain/SIN-core)
 - <a href="https://discord.gg/WnRExsx"><img src="https://discordapp.com/api/guilds/494460434691391509/embed.png" alt="Discord server" /></a> 
 - <a href="https://twitter.com/intent/follow?screen_name=SinovateChain"><img src="https://img.shields.io/twitter/follow/SinovateChain.svg?style=social&logo=twitter" alt="follow on Twitter"></a>
 
