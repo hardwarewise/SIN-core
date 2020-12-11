@@ -12,9 +12,6 @@
 - [SIN WebTool](sin_webtool_guide)
 - [SUQA Coins Conflict](suqa_conflict)
 - [X25X Pow GPU Mining](X25X-PoW-GPU-Mining)
-- **Testnet**
-- [DIN Testnet Node setup GUIDE](din_testnet_setup_guide)
-- [Testnet wallet setup GUIDE](testnet_wallet_setup_guide)
 - **Whitepapers**
 - [Whitepaper Light](https://sinovate.io/light-whitepaper/)
 - [X25X PoW Algorithm Whitepaper](https://sinovate.io/x25x.pdf)
