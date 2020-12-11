@@ -1,7 +1,5 @@
 - **Introduction**
-- [SINOVATE](summary)
-- [SINOVATE coin specifications](coin_specifications)
-- [Community contributions](/)
+- [What is SINOVATE?](/)
 - **Deterministic Infinity Nodes (DIN)**
 - [DIN Manual VPS Configuration Setup](din_manual_vps_configuration_setup)
 - [In-wallet 1-click setUP GUIDE](inwallet_1click_guide)
