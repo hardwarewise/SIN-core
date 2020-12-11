@@ -4,9 +4,6 @@
 - [DIN Manual VPS Configuration Setup](din_manual_vps_configuration_setup)
 - [In-wallet 1-click setUP GUIDE](inwallet_1click_guide)
 - [DIN setUP Migration GUIDE](din_setup_migration_guide)
-- **Whitepapers**
-- [![Whitepaper Light](https://icongr.am/entypo/documents.svg?size=16&color=808080)Whitepaper Light(https://sinovate.io/light-whitepaper/)
-- [![X25X PoW Algorithm Whitepaper](https://icongr.am/entypo/documents.svg?size=16&color=808080)X25X PoW Algorithm Whitepaper(https://sinovate.io/x25x.pdf)
 
 - **Tutorials & Guides**
 - [Bootstrap](bootstrap)
@@ -18,10 +15,9 @@
 - **Testnet**
 - [DIN Testnet Node setup GUIDE](din_testnet_setup_guide)
 - [Testnet wallet setup GUIDE](testnet_wallet_setup_guide)
-- **русский**
-- **Türkçe**
-- [X25X Pow GPU Madenciliği](X25X-PoW-GPU-Mining-TR)
-- [SIN WebTool Klavuzu](sin_webtool_guide_TR)
+- **Whitepapers**
+- [Whitepaper Light](https://sinovate.io/light-whitepaper/)
+- [X25X PoW Algorithm Whitepaper](https://sinovate.io/x25x.pdf)
 - **Links**
 - [![Home ](https://icongr.am/feather/home.svg?size=16&color=808080)Sinovate Home](https://www.sinovate.io)
 - [![Blog ](https://icongr.am/entypo/documents.svg?size=16&color=808080)Blog](https://sinovate.io/blog/)
