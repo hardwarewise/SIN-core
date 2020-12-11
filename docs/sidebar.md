@@ -14,9 +14,8 @@
 - [SUQA Coins Conflict](suqa_conflict)
 - [X25X Pow GPU Mining](X25X-PoW-GPU-Mining)
 - **Testnet**
-- [DIN Testnet setup GUIDE](din_testnet_setup_guide)
+- [DIN Testnet Node setup GUIDE](din_testnet_setup_guide)
 - [Testnet wallet setup GUIDE](testnet_wallet_setup_guide)
-- [In-wallet 1-click setUP GUIDE](inwallet_1click_guide)
 - **русский**
 - **Türkçe**
 - [X25X Pow GPU Madenciliği](X25X-PoW-GPU-Mining-TR)
