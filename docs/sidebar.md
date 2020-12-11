@@ -8,9 +8,9 @@
 - **Tutorials & Guides**
 - [Bootstrap](bootstrap)
 - [HCO Earn Guide](hco_guide)
-- [Wallet Upgrade](wallet_upgrade)
-- [SIN WebTool](sin_webtool_guide)
 - [SUQA Coins Conflict](suqa_conflict)
+- [Wallet Upgrade](wallet_upgrade)
+- [WebTool](sin_webtool_guide)
 - [X25X Pow GPU Mining](X25X-PoW-GPU-Mining)
 - **Whitepapers**
 - [Whitepaper Light](https://sinovate.io/light-whitepaper/)
