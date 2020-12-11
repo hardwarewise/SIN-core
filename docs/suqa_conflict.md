@@ -17,3 +17,4 @@ Go to SEND tab and open coin control
 * [x] select some inputs
 * [x] send to yourself
 * [x] send all funds as "subtract fee from amount".
+* [x] select custom fee of 0.17 SIN".
