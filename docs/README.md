@@ -68,7 +68,7 @@ SINOVATE’s X25X proof-of-work (PoW) algorithm is GPU mineable and ensures temp
 https://sinovate.io/roadmap/
 
 
-# What is SINOVATE?
+# Community Contributions
 
 A big part of what makes Sinovate great is each and every one of you in the community. Your contributions enrich the Sinovate experience and make it better every day. We want contributing to Sinovate to be fun, enjoyable, and educational for anyone and everyone. All contributions are welcome, including issues, new docs, tweaks, and more.   
   
