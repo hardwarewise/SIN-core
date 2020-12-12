@@ -143,6 +143,7 @@ namespace GUIUtil
     void hyperlinks3_slot8();
     void hyperlinks3_slot9();
     void hyperlinks3_slot10();
+    void hyperlinks3_slot11();
     // end Resources Web links
 
     /** Qt event filter that intercepts ToolTipChange events, and replaces the tooltip with a rich text

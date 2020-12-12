@@ -440,6 +440,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     connect(ResourcesWebsite7, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot7()));
     connect(ResourcesWebsite9, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot9()));
     connect(ResourcesWebsite10, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot10()));
+    connect(ResourcesWebsite11, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot11()));
 
 
     ///end Exhange, Resources and Web Links
@@ -741,12 +742,13 @@ void SINGUI::createActions()
     ResourcesWebsite1 = new QAction(QIcon(":/icons/info"), tr("&Whitepaper"), this);
     ResourcesWebsite2 = new QAction(QIcon(":/icons/info"), tr("&Roadmap"), this);
     ResourcesWebsite3 = new QAction(QIcon(":/icons/info"), tr("&Documents"), this);
-    ResourcesWebsite4 = new QAction(QIcon(":/icons/info"), tr("&sin.conf "), this);
+    ResourcesWebsite4 = new QAction(QIcon(":/icons/info"), tr("&Download sin.conf "), this);
     ResourcesWebsite5 = new QAction(QIcon(":/icons/info"), tr("&Wallets"), this);
     ResourcesWebsite6 = new QAction(QIcon(":/icons/explorer1"), tr("&Explorer"), this);
     ResourcesWebsite7 = new QAction(QIcon(":/icons/info"), tr("&SIN WebTool"), this);
     ResourcesWebsite9 = new QAction(QIcon(":/icons/cmc"), tr("&Exchanges"), this);
     ResourcesWebsite10 = new QAction(QIcon(":/icons/info"), tr("&Social Media Channels"), this);
+    ResourcesWebsite11 = new QAction(QIcon(":/icons/info"), tr("&Download Bootstrap"), this);
 
 
 //end Resources Web Links
@@ -802,6 +804,9 @@ void SINGUI::createMenuBar()
         file->addAction(usedSendingAddressesAction);
         file->addAction(usedReceivingAddressesAction);
         file->addSeparator();
+        file->addAction(ResourcesWebsite4); //Download sin.conf
+        file->addAction(ResourcesWebsite11); //Download Bootstrap
+        file->addSeparator();
     }
     file->addAction(quitAction);
 
@@ -850,7 +855,6 @@ void SINGUI::createMenuBar()
         hyperlinks3->addAction(ResourcesWebsite1);
         hyperlinks3->addAction(ResourcesWebsite2);
         hyperlinks3->addAction(ResourcesWebsite3);
-        hyperlinks3->addAction(ResourcesWebsite4);
         hyperlinks3->addAction(ResourcesWebsite5);
         hyperlinks3->addAction(ResourcesWebsite6);
         hyperlinks3->addAction(ResourcesWebsite7);
@@ -1167,6 +1171,7 @@ void SINGUI::createTrayIconMenu()
     trayIconMenu->addAction(ResourcesWebsite7);
     trayIconMenu->addAction(statsPageAction);
     trayIconMenu->addAction(faqPageAction);
+    trayIconMenu->addAction(ResourcesWebsite11);
 
 //end Exchange and Web Links
 

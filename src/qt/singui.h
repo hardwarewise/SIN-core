@@ -167,6 +167,7 @@ private:
     QAction* ResourcesWebsite7;
     QAction* ResourcesWebsite9;
     QAction* ResourcesWebsite10;
+    QAction* ResourcesWebsite11;
 /// end Resources Web Links
 
 
