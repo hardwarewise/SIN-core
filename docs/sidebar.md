@@ -16,6 +16,7 @@
 - [Whitepaper Light](https://sinovate.io/light-whitepaper/)
 - [X25X PoW Algorithm Whitepaper](https://sinovate.io/x25x.pdf)
 - **Links**
+- [![Edit Docs ](https://icongr.am/feather/edit.svg?size=16&color=808080)Edit Docs](https://github.com/SINOVATEblockchain/SIN-core/tree/master/docs)
 - [![Home ](https://icongr.am/feather/home.svg?size=16&color=808080)Sinovate Home](https://www.sinovate.io)
 - [![Explorer ](https://icongr.am/clarity/block.svg?size=16&color=808080)Block Explorer](https://explorer.sinovate.io)
 - [![Blog ](https://icongr.am/entypo/documents.svg?size=16&color=808080)Blog](https://sinovate.io/blog/)
