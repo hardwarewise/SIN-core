@@ -1049,6 +1049,7 @@ void RPCConsole::hyperlinks3_slot7(){ GUIUtil::hyperlinks3_slot7();}
 void RPCConsole::hyperlinks3_slot8(){ GUIUtil::hyperlinks3_slot8();}
 void RPCConsole::hyperlinks3_slot9(){ GUIUtil::hyperlinks3_slot9();}
 void RPCConsole::hyperlinks3_slot10(){ GUIUtil::hyperlinks3_slot10();}
+void RPCConsole::hyperlinks3_slot11(){ GUIUtil::hyperlinks3_slot11();}
 /// end Resources Web Links
 
 void RPCConsole::peerSelected(const QItemSelection &selected, const QItemSelection &deselected)
