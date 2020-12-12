@@ -358,14 +358,14 @@ void MasternodeList::on_checkDINNode()
                 }
             }
             else    {
-                msg.setText("Could not recover node's client ID\nPlease log in with your user email and password in the Node Setup tab");
+                msg.setText("Only for SetUP hosted nodes\nCould not recover node's client ID\nPlease log in with your user email and password in the Node SetUP tab");
                 msg.exec();
                 ui->dinTable->setItem(nSelectedRow, 9, new QTableWidgetItem(""));
                 ui->dinTable->setItem(nSelectedRow, 10, new QTableWidgetItem(""));
             }
         }
         else    {
-            msg.setText("Could not recover node's service ID\nPlease log in with your user email and password in the Node Setup tab");
+            msg.setText("Only for SetUP hosted nodes\nCould not recover node's service ID\nPlease log in with your user email and password in the Node SetUP tab");
             msg.exec();
             ui->dinTable->setItem(nSelectedRow, 9, new QTableWidgetItem(""));
             ui->dinTable->setItem(nSelectedRow, 10, new QTableWidgetItem(""));
