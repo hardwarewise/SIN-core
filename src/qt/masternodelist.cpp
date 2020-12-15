@@ -99,6 +99,11 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     connect(ui->dinTable, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextDINMenu(const QPoint&)));
     connect(mCheckNodeAction, SIGNAL(triggered()), this, SLOT(on_checkDINNode()));
 
+    mCheckAllNodesAction = new QAction(tr("Check ALL nodes status"), this);
+    contextDINMenu->addAction(mCheckAllNodesAction);
+    connect(ui->dinTable, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextDINMenu(const QPoint&)));
+    connect(mCheckAllNodesAction, SIGNAL(triggered()), this, SLOT(nodeSetupCheckAllDINNodes()));
+
     timerSingleShot = new QTimer(this);
     connect(timerSingleShot, SIGNAL(timeout()), this, SLOT(updateDINList()));
     timerSingleShot->setSingleShot(true);
@@ -136,6 +141,9 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     pendingPaymentsTimer = new QTimer(this);
     connect(pendingPaymentsTimer, SIGNAL(timeout()), this, SLOT(nodeSetupCheckPendingPayments()));
 
+    checkAllNodesTimer = new QTimer(this);
+    connect(checkAllNodesTimer, SIGNAL(timeout()), this, SLOT(nodeSetupCheckDINNodeTimer()));
+
     nodeSetupInitialize();
 }
 
@@ -144,6 +152,7 @@ MasternodeList::~MasternodeList()
     delete ui;
     delete ConnectionManager;
     delete mCheckNodeAction;
+    delete mCheckAllNodesAction;
 }
 
 void MasternodeList::setClientModel(ClientModel *model)
@@ -346,21 +355,31 @@ void MasternodeList::on_checkDINNode()
 
     QModelIndex index = selected.at(0);
     int nSelectedRow = index.row();
+    mCheckNodeAction->setEnabled(false);
+    nodeSetupCheckDINNode(nSelectedRow, true);
+    mCheckNodeAction->setEnabled(true);
+
+}
+
+void MasternodeList::nodeSetupCheckDINNode(int nSelectedRow, bool bShowMsg )    {
+
     QString strAddress = ui->dinTable->item(nSelectedRow, 5)->text();
     QString strError;
     QString strStatus = ui->dinTable->item(nSelectedRow, 3)->text();
     QMessageBox msg;
 
-    if ( strStatus!="Ready")    {
-        msg.setText(tr("DIN node must be in Ready status"));
-        msg.exec();
+//LogPrintf("nodeSetupCheckDINNode %d, %s \n", nSelectedRow, strStatus.toStdString());
+    if ( strStatus!="Ready" )    {
+        if (bShowMsg)   {
+            msg.setText(tr("DIN node must be in Ready status"));
+            msg.exec();
+        }
     }
     else    {
         QString email, pass, strError;
         int clientId = nodeSetupGetClientId( email, pass, true );
         ui->dinTable->setItem(nSelectedRow, 11, new QTableWidgetItem("Loading..."));
         ui->dinTable->setItem(nSelectedRow, 12, new QTableWidgetItem("Loading..."));
-        mCheckNodeAction->setEnabled(false);
         int serviceId = nodeSetupGetServiceForNodeAddress( strAddress );
         if (serviceId <= 0)   {     // retry load nodes' service data
             if (clientId>0 && pass != "") {
@@ -379,27 +398,60 @@ void MasternodeList::on_checkDINNode()
                     ui->dinTable->setItem(nSelectedRow, 12, new QTableWidgetItem(peerInfo));
                 }
                 else    {
-                    msg.setText("Node status check timeout:\nCheck if your Node Setup password is correct, then try again.");
-                    msg.exec();
-                    ui->dinTable->setItem(nSelectedRow, 11, new QTableWidgetItem(""));
+                    if (bShowMsg)   {
+                        msg.setText("Node status check timeout:\nCheck if your Node Setup password is correct, then try again.");
+                        msg.exec();
+                    }
+                    ui->dinTable->setItem(nSelectedRow, 11, new QTableWidgetItem("Error 1"));
                     ui->dinTable->setItem(nSelectedRow, 12, new QTableWidgetItem(""));
                 }
             }
             else    {
-                msg.setText("Only for SetUP hosted nodes\nCould not recover node's client ID\nPlease log in with your user email and password in the Node SetUP tab");
-                msg.exec();
-                ui->dinTable->setItem(nSelectedRow, 11, new QTableWidgetItem(""));
+                if (bShowMsg)   {
+                    msg.setText("Only for SetUP hosted nodes\nCould not recover node's client ID\nPlease log in with your user email and password in the Node SetUP tab");
+                    msg.exec();
+                }
+                ui->dinTable->setItem(nSelectedRow, 11, new QTableWidgetItem("Error 2"));
                 ui->dinTable->setItem(nSelectedRow, 12, new QTableWidgetItem(""));
             }
         }
         else    {
-            msg.setText("Only for SetUP hosted nodes\nCould not recover node's service ID\nPlease log in with your user email and password in the Node SetUP tab");
-            msg.exec();
-            ui->dinTable->setItem(nSelectedRow, 11, new QTableWidgetItem(""));
+            if (bShowMsg)   {
+                msg.setText("Only for SetUP hosted nodes\nCould not recover node's service ID\nPlease log in with your user email and password in the Node SetUP tab");
+                msg.exec();
+            }
+            ui->dinTable->setItem(nSelectedRow, 11, new QTableWidgetItem("Login required"));
             ui->dinTable->setItem(nSelectedRow, 12, new QTableWidgetItem(""));
         }
-        mCheckNodeAction->setEnabled(true);
+    }
+}
 
+void MasternodeList::nodeSetupCheckAllDINNodes()    {
+    int rows = ui->dinTable->rowCount();
+    if (rows == 0)  return;
+
+    nCheckAllNodesCurrentRow = 0;
+    if ( checkAllNodesTimer !=NULL && !checkAllNodesTimer->isActive() )  {
+        checkAllNodesTimer->start(1000);
+    }
+    mCheckAllNodesAction->setEnabled(false);
+    mCheckNodeAction->setEnabled(false);
+}
+
+void MasternodeList::nodeSetupCheckDINNodeTimer()    {
+    int rows = ui->dinTable->rowCount();
+
+    if ( nCheckAllNodesCurrentRow >= rows )  {
+        if ( checkAllNodesTimer !=NULL && checkAllNodesTimer->isActive() )  {
+            checkAllNodesTimer->stop();
+        }
+//LogPrintf("nodeSetupCheckDINNode stop timer %d, %d \n", nCheckAllNodesCurrentRow, rows);
+        mCheckAllNodesAction->setEnabled(true);
+        mCheckNodeAction->setEnabled(true);
+    }
+    else    {
+        nodeSetupCheckDINNode(nCheckAllNodesCurrentRow, false);
+        nCheckAllNodesCurrentRow++;
     }
 }
 

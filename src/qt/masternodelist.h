@@ -127,6 +127,9 @@ public Q_SLOTS:
     void nodeSetupLockWallet();
     QString nodeSetupGetRPCErrorMessage( UniValue objError );
     QString nodeSetupGetNodeType(CAmount amount);
+    void nodeSetupCheckDINNode(int nSelectedRow, bool bShowMsg = false );
+    void nodeSetupCheckAllDINNodes();
+    void nodeSetupCheckDINNodeTimer();
 
 Q_SIGNALS:
 
@@ -147,6 +150,9 @@ private:
     QTimer *burnPrepareTimer;
     QTimer *burnSendTimer;
     QTimer *pendingPaymentsTimer;
+    QTimer *checkAllNodesTimer;
+
+    int nCheckAllNodesCurrentRow;
     QNetworkAccessManager *ConnectionManager;
     QString NODESETUP_ENDPOINT_BASIC;
     QString NODESETUP_ENDPOINT_NODE;
@@ -170,6 +176,7 @@ private:
     QString mProductIds;
     std::string billingOptions[3] = {"Monthly", "Semiannually", "Annually"};
     QAction *mCheckNodeAction;
+    QAction *mCheckAllNodesAction;
     WalletModel::UnlockContext *pUnlockCtx = NULL;
 
 private Q_SLOTS:
