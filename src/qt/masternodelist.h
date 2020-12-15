@@ -121,11 +121,12 @@ public Q_SLOTS:
     QString nodeSetupSendToAddress( QString strAddress, int amount, QTimer* timerConfirms );
     void nodeSetupCheckBurnPrepareConfirmations();
     void nodeSetupCheckBurnSendConfirmations();
-    std::map<std::string, pair_burntx> nodeSetupGetUnusedBurnTxs( );
+    std::map<std::string, pair_burntx> nodeSetupGetUnusedBurnTxs( );;    
     QString nodeSetupGetOwnerAddressFromBurnTx( QString burnTx );
     bool nodeSetupUnlockWallet();
     void nodeSetupLockWallet();
     QString nodeSetupGetRPCErrorMessage( UniValue objError );
+    QString nodeSetupGetNodeType(CAmount amount);
 
 Q_SIGNALS:
 
@@ -160,6 +161,7 @@ private:
     bool bNodeSetupLogged = false;
     std::map<std::string, int> nodeSetupUsedBurnTxs;
     std::map<std::string, int> nodeSetupPendingPayments;
+    std::map<QString, QString> nodeSetupTempIPInfo;     // burntx -> IP from API
     QString mPaymentTx;
     QString mBurnPrepareTx;
     QString mBurnAddress;

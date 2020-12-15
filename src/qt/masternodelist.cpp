@@ -216,11 +216,15 @@ void MasternodeList::updateDINList()
         int nIncomplete = 0, nExpired = 0, nReady = 0;
         for(auto &pair : mapMynode){
             infinitynode_info_t infoInf;
-            std::string status = "Unknown", sPeerAddress = "", strIP = "---";
+            std::string status = "Unknown", sPeerAddress = "";
+            QString strIP = "---";
             if(!infnodeman.GetInfinitynodeInfo(pair.first, infoInf)){
                 continue;
             }
             CMetadata metadata = infnodemeta.Find(infoInf.metadataID);
+            std::string burnfundTxId = infoInf.vinBurnFund.prevout.hash.ToString().substr(0, 16);
+            QString strBurnTx = QString::fromStdString(burnfundTxId).left(16);
+
             if (metadata.getMetadataHeight() == 0 || metadata.getMetaPublicKey() == "" ){
                 status="Incomplete";
             } else {
@@ -233,7 +237,7 @@ void MasternodeList::updateDINList()
                     CTxDestination dest = GetDestinationForKey(pubKey, DEFAULT_ADDRESS_TYPE);
                     sPeerAddress = EncodeDestination(dest);
                 }
-                strIP = metadata.getService().ToString();
+                strIP = QString::fromStdString(metadata.getService().ToString());
                 if (sPeerAddress!="")   {
                     int serviceValue = (bDINNodeAPIUpdate) ? -1 : 0;
                     serviceId = nodeSetupGetServiceForNodeAddress( QString::fromStdString(sPeerAddress) );
@@ -244,10 +248,32 @@ void MasternodeList::updateDINList()
                     }
                 }
             }
+
+            if (strIP=="" && nodeSetupTempIPInfo.find(strBurnTx) != nodeSetupTempIPInfo.end() )  {
+                strIP = nodeSetupTempIPInfo[strBurnTx];
+            }
+
+            // get node type info
+            QString strNodeType = "";
+            CTransactionRef txr;
+            uint256 hashblock;
+            if(!GetTransaction(infoInf.vinBurnFund.prevout.hash, txr, Params().GetConsensus(), hashblock, false)) {
+                LogPrintf("nodeSetUp: updateDINNode GetTransaction -- BurnFund tx is not in block\n");
+            }
+            else    {
+                CTransaction tx = *txr;
+                for (unsigned int i = 0; i < tx.vout.size(); i++) {
+                    const CTxOut& txout = tx.vout[i];
+
+                    CAmount roundAmount = ((int)(txout.nValue / COIN)+1);
+                    strNodeType = nodeSetupGetNodeType(roundAmount);
+                    if (strNodeType!="")    break;  // found, leave
+                }
+            }
+
             if(infoInf.nExpireHeight < nCurrentHeight){
                 status="Expired";
                 // update used burn tx map
-                std::string burnfundTxId = infoInf.vinBurnFund.prevout.hash.ToString().substr(0, 16);
                 nodeSetupUsedBurnTxs.insert( { burnfundTxId, 1  } );
                 nExpired++;
             } else {
@@ -261,17 +287,19 @@ void MasternodeList::updateDINList()
                 itemExpiryHeight->setData(Qt::EditRole, infoInf.nExpireHeight);
                 ui->dinTable->setItem(k, 2, itemExpiryHeight);
                 ui->dinTable->setItem(k, 3, new QTableWidgetItem(QString(QString::fromStdString(status))));
-                ui->dinTable->setItem(k, 4, new QTableWidgetItem(QString(QString::fromStdString(strIP))));
+                ui->dinTable->setItem(k, 4, new QTableWidgetItem(strIP) );
                 ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString(QString::fromStdString(sPeerAddress))));
+                ui->dinTable->setItem(k, 6, new QTableWidgetItem(strBurnTx) );
+                ui->dinTable->setItem(k, 7, new QTableWidgetItem(strNodeType) );
                 bool flocked = mapLockRewardHeight.find(sPeerAddress) != mapLockRewardHeight.end();
                 if(flocked) {
-                    ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString::number(mapLockRewardHeight[sPeerAddress])));
-                    ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString("Yes"))));
+                    ui->dinTable->setItem(k, 8, new QTableWidgetItem(QString::number(mapLockRewardHeight[sPeerAddress])));
+                    ui->dinTable->setItem(k, 9, new QTableWidgetItem(QString(QString::fromStdString("Yes"))));
                 } else {
-                    ui->dinTable->setItem(k, 6, new QTableWidgetItem(QString(QString::fromStdString(""))));
-                    ui->dinTable->setItem(k, 7, new QTableWidgetItem(QString(QString::fromStdString("No"))));
+                    ui->dinTable->setItem(k, 8, new QTableWidgetItem(QString(QString::fromStdString(""))));
+                    ui->dinTable->setItem(k, 9, new QTableWidgetItem(QString(QString::fromStdString("No"))));
                 }
-                ui->dinTable->setItem(k,8, new QTableWidgetItem(QString(QString::fromStdString(pair.second))));
+                ui->dinTable->setItem(k,10, new QTableWidgetItem(QString(QString::fromStdString(pair.second))));
                 if (status == "Incomplete") {
                     nIncomplete++;
                 }
@@ -330,8 +358,8 @@ void MasternodeList::on_checkDINNode()
     else    {
         QString email, pass, strError;
         int clientId = nodeSetupGetClientId( email, pass, true );
-        ui->dinTable->setItem(nSelectedRow, 9, new QTableWidgetItem("Loading..."));
-        ui->dinTable->setItem(nSelectedRow, 10, new QTableWidgetItem("Loading..."));
+        ui->dinTable->setItem(nSelectedRow, 11, new QTableWidgetItem("Loading..."));
+        ui->dinTable->setItem(nSelectedRow, 12, new QTableWidgetItem("Loading..."));
         mCheckNodeAction->setEnabled(false);
         int serviceId = nodeSetupGetServiceForNodeAddress( strAddress );
         if (serviceId <= 0)   {     // retry load nodes' service data
@@ -347,28 +375,28 @@ void MasternodeList::on_checkDINNode()
                 if (obj.contains("Blockcount") && obj.contains("MyPeerInfo"))   {
                     int blockCount = obj["Blockcount"].toInt();
                     QString peerInfo = obj["MyPeerInfo"].toString();
-                    ui->dinTable->setItem(nSelectedRow, 9, new QTableWidgetItem(QString::number(blockCount)));
-                    ui->dinTable->setItem(nSelectedRow, 10, new QTableWidgetItem(peerInfo));
+                    ui->dinTable->setItem(nSelectedRow, 11, new QTableWidgetItem(QString::number(blockCount)));
+                    ui->dinTable->setItem(nSelectedRow, 12, new QTableWidgetItem(peerInfo));
                 }
                 else    {
                     msg.setText("Node status check timeout:\nCheck if your Node Setup password is correct, then try again.");
                     msg.exec();
-                    ui->dinTable->setItem(nSelectedRow, 9, new QTableWidgetItem(""));
-                    ui->dinTable->setItem(nSelectedRow, 10, new QTableWidgetItem(""));
+                    ui->dinTable->setItem(nSelectedRow, 11, new QTableWidgetItem(""));
+                    ui->dinTable->setItem(nSelectedRow, 12, new QTableWidgetItem(""));
                 }
             }
             else    {
                 msg.setText("Only for SetUP hosted nodes\nCould not recover node's client ID\nPlease log in with your user email and password in the Node SetUP tab");
                 msg.exec();
-                ui->dinTable->setItem(nSelectedRow, 9, new QTableWidgetItem(""));
-                ui->dinTable->setItem(nSelectedRow, 10, new QTableWidgetItem(""));
+                ui->dinTable->setItem(nSelectedRow, 11, new QTableWidgetItem(""));
+                ui->dinTable->setItem(nSelectedRow, 12, new QTableWidgetItem(""));
             }
         }
         else    {
             msg.setText("Only for SetUP hosted nodes\nCould not recover node's service ID\nPlease log in with your user email and password in the Node SetUP tab");
             msg.exec();
-            ui->dinTable->setItem(nSelectedRow, 9, new QTableWidgetItem(""));
-            ui->dinTable->setItem(nSelectedRow, 10, new QTableWidgetItem(""));
+            ui->dinTable->setItem(nSelectedRow, 11, new QTableWidgetItem(""));
+            ui->dinTable->setItem(nSelectedRow, 12, new QTableWidgetItem(""));
         }
         mCheckNodeAction->setEnabled(true);
 
@@ -815,6 +843,7 @@ void MasternodeList::nodeSetupCheckBurnSendConfirmations()   {
             QString strAddress = root["Address"].toString();
             QString strNodeIp = root["Nodeip"].toString();
 
+            nodeSetupTempIPInfo[mBurnTx.left(16)] = strNodeIp;
             std::ostringstream cmd;
 
             try {
@@ -1635,7 +1664,7 @@ std::map<std::string, pair_burntx> MasternodeList::nodeSetupGetUnusedBurnTxs( ) 
         if (pwtx == nullptr)    continue;
 
         int confirms = pwtx->GetDepthInMainChain(false);
-        if (confirms>720*365)   break;  // expired
+        if (confirms>720*365)   continue;  // expired
 
         pwtx->GetAmounts(listReceived, listSent, nFee, strSentAccount, filter);
         for (const COutputEntry& s : listSent)
@@ -1648,23 +1677,11 @@ std::map<std::string, pair_burntx> MasternodeList::nodeSetupGetUnusedBurnTxs( ) 
             if (destAddress == Params().GetConsensus().cBurnAddress && confirms<720*365 && nodeSetupUsedBurnTxs.find(txHash.substr(0, 16)) == nodeSetupUsedBurnTxs.end() )  {
 
                 std::string description = "";
-                std::string strNodeType = "";
+                QString strNodeType = "";
                 CAmount roundAmount = ((int)(s.amount / COIN)+1);
+                strNodeType = nodeSetupGetNodeType(roundAmount);
 
-                if ( roundAmount == Params().GetConsensus().nMasternodeBurnSINNODE_1 )  {
-                    strNodeType = "MINI";
-                }
-                else if ( roundAmount == Params().GetConsensus().nMasternodeBurnSINNODE_5 )  {
-                    strNodeType = "MID";
-                }
-                else if ( roundAmount == Params().GetConsensus().nMasternodeBurnSINNODE_10 )  {
-                    strNodeType = "BIG";
-                }
-                else    {
-                    strNodeType = "Unknown";
-                }
-
-                description = strNodeType + " " + GUIUtil::dateTimeStr(pwtx->GetTxTime()).toUtf8().constData() + " " + txHash.substr(0, 8);
+                description = strNodeType.toStdString() + " " + GUIUtil::dateTimeStr(pwtx->GetTxTime()).toUtf8().constData() + " " + txHash.substr(0, 8);
 //LogPrintf("nodeSetupGetUnusedBurnTxs  confirmed %s, %d, %s \n", txHash.substr(0, 16), roundAmount, description);
                 ret.insert( { txHash,  std::make_pair(confirms, description) } );
             }
@@ -1672,6 +1689,24 @@ std::map<std::string, pair_burntx> MasternodeList::nodeSetupGetUnusedBurnTxs( ) 
     }
 
     return ret;
+}
+
+QString MasternodeList::nodeSetupGetNodeType( CAmount amount )   {
+    QString strNodeType;
+
+    if ( amount == Params().GetConsensus().nMasternodeBurnSINNODE_1 )  {
+        strNodeType = "MINI";
+    }
+    else if ( amount == Params().GetConsensus().nMasternodeBurnSINNODE_5 )  {
+        strNodeType = "MID";
+    }
+    else if ( amount == Params().GetConsensus().nMasternodeBurnSINNODE_10 )  {
+        strNodeType = "BIG";
+    }
+    else    {
+        strNodeType = "Unknown";
+    }
+    return strNodeType;
 }
 
 void MasternodeList::nodeSetupStep( std::string icon , std::string text )   {
