@@ -121,11 +121,15 @@ public Q_SLOTS:
     QString nodeSetupSendToAddress( QString strAddress, int amount, QTimer* timerConfirms );
     void nodeSetupCheckBurnPrepareConfirmations();
     void nodeSetupCheckBurnSendConfirmations();
-    std::map<std::string, pair_burntx> nodeSetupGetUnusedBurnTxs( );
+    std::map<std::string, pair_burntx> nodeSetupGetUnusedBurnTxs( );;    
     QString nodeSetupGetOwnerAddressFromBurnTx( QString burnTx );
     bool nodeSetupUnlockWallet();
     void nodeSetupLockWallet();
     QString nodeSetupGetRPCErrorMessage( UniValue objError );
+    QString nodeSetupGetNodeType(CAmount amount);
+    void nodeSetupCheckDINNode(int nSelectedRow, bool bShowMsg = false );
+    void nodeSetupCheckAllDINNodes();
+    void nodeSetupCheckDINNodeTimer();
 
 Q_SIGNALS:
 
@@ -146,6 +150,9 @@ private:
     QTimer *burnPrepareTimer;
     QTimer *burnSendTimer;
     QTimer *pendingPaymentsTimer;
+    QTimer *checkAllNodesTimer;
+
+    int nCheckAllNodesCurrentRow;
     QNetworkAccessManager *ConnectionManager;
     QString NODESETUP_ENDPOINT_BASIC;
     QString NODESETUP_ENDPOINT_NODE;
@@ -160,6 +167,7 @@ private:
     bool bNodeSetupLogged = false;
     std::map<std::string, int> nodeSetupUsedBurnTxs;
     std::map<std::string, int> nodeSetupPendingPayments;
+    std::map<QString, QString> nodeSetupTempIPInfo;     // burntx -> IP from API
     QString mPaymentTx;
     QString mBurnPrepareTx;
     QString mBurnAddress;
@@ -168,6 +176,7 @@ private:
     QString mProductIds;
     std::string billingOptions[3] = {"Monthly", "Semiannually", "Annually"};
     QAction *mCheckNodeAction;
+    QAction *mCheckAllNodesAction;
     WalletModel::UnlockContext *pUnlockCtx = NULL;
 
 private Q_SLOTS:

@@ -125,6 +125,16 @@ width: 200px;
            </column>
            <column>
             <property name="text">
+             <string>Burn Tx ID</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Node tier</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
              <string>Next reward</string>
             </property>
             <property name="textAlignment">
