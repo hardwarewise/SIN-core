@@ -4,6 +4,7 @@
 - [DIN Manual VPS Configuration Setup](din_manual_vps_configuration_setup)
 - [In-wallet 1-click setUP GUIDE](inwallet_1click_guide)
 - [DIN setUP Migration GUIDE](din_setup_migration_guide)
+- [DIN setUP Tips & Help](din_setup_tips_and_help)
 
 - **Tutorials & Guides**
 - [Bootstrap](bootstrap)
