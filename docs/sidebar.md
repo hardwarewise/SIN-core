@@ -5,7 +5,7 @@
 - [In-wallet 1-click setUP GUIDE](inwallet_1click_guide)
 - [DIN setUP Migration GUIDE](din_setup_migration_guide)
 - [DIN setUP Tips & Help](din_setup_tips_and_help)
-- [DIN VPS Setup Troubleshoot(din_vps_setup_ troubleshoot)
+- [DIN VPS Setup Troubleshoot(din_vps_setup_troubleshoot)
 
 - **Tutorials & Guides**
 - [Bootstrap](bootstrap)
