@@ -1409,7 +1409,6 @@ int MasternodeList::nodeSetupAPIAddClient( QString firstName, QString lastName, 
     urlQuery.addQueryItem("lastname", lastName);
     urlQuery.addQueryItem("email", email);
     urlQuery.addQueryItem("password2", password);
-commit = "75e9f97";
     urlQuery.addQueryItem("ver", commit);
     url.setQuery( urlQuery );
 
