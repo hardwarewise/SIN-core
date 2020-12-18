@@ -39,6 +39,8 @@ class QModelIndex;
 QT_END_NAMESPACE
 
 typedef std::pair<unsigned int, std::string> pair_burntx;
+typedef std::pair<QString, QString> pair_nodestatus;
+
 struct vectorBurnTxCompare {
     bool operator()(std::pair<std::string, pair_burntx> const&left,
       std::pair<std::string, pair_burntx> const&right) {
@@ -168,6 +170,7 @@ private:
     std::map<std::string, int> nodeSetupUsedBurnTxs;
     std::map<std::string, int> nodeSetupPendingPayments;
     std::map<QString, QString> nodeSetupTempIPInfo;     // burntx -> IP from API
+    std::map<QString, pair_nodestatus> nodeSetupNodeInfoCache;     // address ->  pair(blockcount, status)
     QString mPaymentTx;
     QString mBurnPrepareTx;
     QString mBurnAddress;

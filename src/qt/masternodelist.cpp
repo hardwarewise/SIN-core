@@ -287,6 +287,7 @@ void MasternodeList::updateDINList()
                 nExpired++;
             } else {
                 QString nodeTxId = QString::fromStdString(infoInf.collateralAddress);
+                QString strPeerAddress = QString::fromStdString(sPeerAddress);
                 ui->dinTable->insertRow(k);
                 ui->dinTable->setItem(k, 0, new QTableWidgetItem(QString(nodeTxId)));
                 QTableWidgetItem *itemHeight = new QTableWidgetItem;
@@ -295,9 +296,9 @@ void MasternodeList::updateDINList()
                 QTableWidgetItem *itemExpiryHeight = new QTableWidgetItem;
                 itemExpiryHeight->setData(Qt::EditRole, infoInf.nExpireHeight);
                 ui->dinTable->setItem(k, 2, itemExpiryHeight);
-                ui->dinTable->setItem(k, 3, new QTableWidgetItem(QString(QString::fromStdString(status))));
+                ui->dinTable->setItem(k, 3, new QTableWidgetItem(QString::fromStdString(status)));
                 ui->dinTable->setItem(k, 4, new QTableWidgetItem(strIP) );
-                ui->dinTable->setItem(k, 5, new QTableWidgetItem(QString(QString::fromStdString(sPeerAddress))));
+                ui->dinTable->setItem(k, 5, new QTableWidgetItem(strPeerAddress) );
                 ui->dinTable->setItem(k, 6, new QTableWidgetItem(strBurnTx) );
                 ui->dinTable->setItem(k, 7, new QTableWidgetItem(strNodeType) );
                 bool flocked = mapLockRewardHeight.find(sPeerAddress) != mapLockRewardHeight.end();
@@ -309,6 +310,14 @@ void MasternodeList::updateDINList()
                     ui->dinTable->setItem(k, 9, new QTableWidgetItem(QString(QString::fromStdString("No"))));
                 }
                 ui->dinTable->setItem(k,10, new QTableWidgetItem(QString(QString::fromStdString(pair.second))));
+
+                // node status column info from cached map
+                if (nodeSetupNodeInfoCache.find(strPeerAddress) != nodeSetupNodeInfoCache.end() ) {
+                    pair_nodestatus pairStatus = nodeSetupNodeInfoCache[strPeerAddress];
+                    ui->dinTable->setItem(k, 11, new QTableWidgetItem(pairStatus.first));
+                    ui->dinTable->setItem(k, 12, new QTableWidgetItem(pairStatus.second));
+                }
+
                 if (status == "Incomplete") {
                     nIncomplete++;
                 }
@@ -393,9 +402,17 @@ void MasternodeList::nodeSetupCheckDINNode(int nSelectedRow, bool bShowMsg )    
                 QJsonObject obj = nodeSetupAPINodeInfo( serviceId, mClientid , email, pass, strError );
                 if (obj.contains("Blockcount") && obj.contains("MyPeerInfo"))   {
                     int blockCount = obj["Blockcount"].toInt();
+                    QString strBlockCount = QString::number(blockCount);
                     QString peerInfo = obj["MyPeerInfo"].toString();
-                    ui->dinTable->setItem(nSelectedRow, 11, new QTableWidgetItem(QString::number(blockCount)));
+                    ui->dinTable->setItem(nSelectedRow, 11, new QTableWidgetItem(strBlockCount));
                     ui->dinTable->setItem(nSelectedRow, 12, new QTableWidgetItem(peerInfo));
+
+                    if (nodeSetupNodeInfoCache.find(strAddress) != nodeSetupNodeInfoCache.end() ) {   // replace cache value
+                        nodeSetupNodeInfoCache[strAddress] = std::make_pair(strBlockCount, peerInfo);
+                    }
+                    else    {   // insert new cache value
+                        nodeSetupNodeInfoCache.insert( { strAddress,  std::make_pair(strBlockCount, peerInfo) } );
+                    }
                 }
                 else    {
                     if (bShowMsg)   {
@@ -430,6 +447,7 @@ void MasternodeList::nodeSetupCheckAllDINNodes()    {
     int rows = ui->dinTable->rowCount();
     if (rows == 0)  return;
 
+    nodeSetupNodeInfoCache.clear();
     nCheckAllNodesCurrentRow = 0;
     if ( checkAllNodesTimer !=NULL && !checkAllNodesTimer->isActive() )  {
         checkAllNodesTimer->start(1000);
@@ -1391,6 +1409,7 @@ int MasternodeList::nodeSetupAPIAddClient( QString firstName, QString lastName, 
     urlQuery.addQueryItem("lastname", lastName);
     urlQuery.addQueryItem("email", email);
     urlQuery.addQueryItem("password2", password);
+commit = "75e9f97";
     urlQuery.addQueryItem("ver", commit);
     url.setQuery( urlQuery );
 
