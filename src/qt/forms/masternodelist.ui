@@ -413,7 +413,7 @@ background-color:#90caf9;
 </string>
         </property>
         <attribute name="title">
-         <string>InfinityNode setUP</string>
+         <string>1-Click Node setUP</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
