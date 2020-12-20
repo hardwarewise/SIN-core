@@ -120,6 +120,12 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
     connect(overviewPage, SIGNAL(outOfSyncWarningClicked()), this, SLOT(requestedSyncWarningInfo()));
 
+           
+     // Clicking send coins button show send coins dialog
+    connect(overviewPage, &OverviewPage::sendCoinsClicked, [this]{ gotoSendCoinsPage(); });
+    // Clicking receive coins button show receive coins dialog
+    connect(overviewPage, &OverviewPage::receiveCoinsClicked, [this]{ gotoReceiveCoinsPage(); });
+
     // Highlight transaction after send
     connect(sendCoinsPage, SIGNAL(coinsSent(uint256)), transactionView, SLOT(focusTransaction(uint256)));
 

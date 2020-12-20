@@ -22,7 +22,6 @@ class PlatformStyle;
 class WalletModel;
 
 
-
 namespace Ui {
     class OverviewPage;
 }
@@ -46,7 +45,7 @@ public:
     void setWalletModel(WalletModel *walletModel);
     void showOutOfSyncWarning(bool fShow);
     std::vector<COutput> termDepositInfo;
-
+    
 public Q_SLOTS:
     void setBalance(const interfaces::WalletBalances& balances);
     void getPriceInfo();
@@ -54,6 +53,8 @@ public Q_SLOTS:
 Q_SIGNALS:
     void transactionClicked(const QModelIndex &index);
     void outOfSyncWarningClicked();
+    void sendCoinsClicked(QString addr = "");
+    void receiveCoinsClicked();
 
 private:
     Ui::OverviewPage *ui;
@@ -81,10 +82,9 @@ private Q_SLOTS:
     void handleOutOfSyncWarningClicks();
     void onResult(QNetworkReply* replystats);
     void getStatistics();
-
+    void on_buttonSend_clicked();
+    void on_buttonReceive_clicked();
     
-    
-
 };
 
 #endif // BITCOIN_QT_OVERVIEWPAGE_H

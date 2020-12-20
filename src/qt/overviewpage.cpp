@@ -24,6 +24,8 @@
 #include <instantx.h>
 #include <masternode-sync.h>
 
+
+#include <QAction>
 #include <QAbstractItemDelegate>
 #include <QPainter>
 #include <QSettings>
@@ -35,7 +37,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
-
 
 #define ICON_OFFSET 16
 #define DECORATION_SIZE 38
@@ -155,6 +156,10 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     request = new QNetworkRequest();
     ui->setupUi(this);
 
+    ui->buttonSend->setIcon(QIcon(":/icons/send1"));
+    ui->buttonReceive->setIcon(QIcon(":/icons/receiving_addresses1"));
+
+
     // ++ Explorer Stats
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(getStatistics()));
@@ -185,13 +190,13 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                     // List the found values
                     QStringList list = rx.capturedTexts();
 
-                    QString currentPriceStyleSheet = ".QLabel{color: %1; font-size:18px;}";
+                    QString currentPriceStyleSheet = ".QLabel{color: %1; font-size:14px;}";
                     // Evaluate the current and next numbers and assign a color (green for positive, red for negative)
                     bool ok;
                     if (!list.isEmpty()) {
                         double next = list.first().toDouble(&ok);
                         if (!ok) {
-                            ui->labelCurrentPrice->setStyleSheet(currentPriceStyleSheet.arg("#4960ad"));
+                            ui->labelCurrentPrice->setStyleSheet(currentPriceStyleSheet.arg("#011552"));
                             ui->labelCurrentPrice->setText("");
                         } else {
                             double current = ui->labelCurrentPrice->text().toDouble(&ok);
@@ -203,7 +208,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                                 else if (next > current)
                                     ui->labelCurrentPrice->setStyleSheet(currentPriceStyleSheet.arg("green"));
                                 else
-                                    ui->labelCurrentPrice->setStyleSheet(currentPriceStyleSheet.arg("black"));
+                                    ui->labelCurrentPrice->setStyleSheet(currentPriceStyleSheet.arg("#011552;"));
                                     
                             }
                             ui->labelCurrentPrice->setText(QString("%1").arg(QString().setNum(next, 'f', 8)));
@@ -229,13 +234,13 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     ui->labelWalletStatus->setIcon(icon);
 
     // Recent transactions
-    ui->listTransactions->setItemDelegate(txdelegate);
-    ui->listTransactions->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
-    ui->listTransactions->setMinimumHeight(NUM_ITEMS * (DECORATION_SIZE + 2));
-    ui->listTransactions->setAttribute(Qt::WA_MacShowFocusRect, false);
+    //ui->listTransactions->setItemDelegate(txdelegate);
+    //ui->listTransactions->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
+    //ui->listTransactions->setMinimumHeight(NUM_ITEMS * (DECORATION_SIZE + 2));
+    //ui->listTransactions->setAttribute(Qt::WA_MacShowFocusRect, false);
       
        
-    connect(ui->listTransactions, SIGNAL(clicked(QModelIndex)), this, SLOT(handleTransactionClicked(QModelIndex)));
+    //connect(ui->listTransactions, SIGNAL(clicked(QModelIndex)), this, SLOT(handleTransactionClicked(QModelIndex)));
 
     // init "out of sync" warning labels
     ui->labelWalletStatus->setText( tr("Please wait until the wallet is fully synced to see your correct balance"));
@@ -289,8 +294,8 @@ void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
     m_balances = balances;
     totalBalance = balances.balance + balances.unconfirmed_balance + balances.immature_balance;
     ui->labelBalance->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.balance, false, BitcoinUnits::separatorAlways));
-    ui->labelUnconfirmed->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.unconfirmed_balance, false, BitcoinUnits::separatorAlways));
-    ui->labelImmature->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.immature_balance, false, BitcoinUnits::separatorAlways));
+    ui->labelUnconfirmed->setText(BitcoinUnits::format(unit, balances.unconfirmed_balance, false, BitcoinUnits::separatorAlways));
+    ui->labelImmature->setText(BitcoinUnits::format(unit, balances.immature_balance, false, BitcoinUnits::separatorAlways));
     //to do
     //ui->labelTotal->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.balance + balances.unconfirmed_balance + balances.immature_balance, false, BitcoinUnits::separatorAlways));
     ui->labelWatchAvailable->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.watch_only_balance, false, BitcoinUnits::separatorAlways));
@@ -322,7 +327,7 @@ void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
 
     if(cachedTxLocks != nCompleteTXLocks){
         cachedTxLocks = nCompleteTXLocks;
-        ui->listTransactions->update();
+        //ui->listTransactions->update();
     }
 }
 
@@ -375,8 +380,8 @@ void OverviewPage::setWalletModel(WalletModel *model)
         filter->setShowInactive(false);
         filter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
 
-        ui->listTransactions->setModel(filter.get());
-        ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);
+        //ui->listTransactions->setModel(filter.get());
+        //ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);
 
         // Keep up to date with wallet
         interfaces::Wallet& wallet = model->wallet();
@@ -406,7 +411,7 @@ void OverviewPage::updateDisplayUnit()
         // Update txdelegate->unit with the current unit
         txdelegate->unit = walletModel->getOptionsModel()->getDisplayUnit();
 
-        ui->listTransactions->update();
+        //ui->listTransactions->update();
     }
 }
 
@@ -425,7 +430,7 @@ void OverviewPage::showOutOfSyncWarning(bool fShow)
 }
 
 void OverviewPage::SetupTransactionList(int nNumItems) {
-    ui->listTransactions->setMinimumHeight(nNumItems * (DECORATION_SIZE + 2));
+    //ui->listTransactions->setMinimumHeight(nNumItems * (DECORATION_SIZE + 2));
 
     if(walletModel && walletModel->getOptionsModel()) {
         // Set up transaction list
@@ -437,8 +442,8 @@ void OverviewPage::SetupTransactionList(int nNumItems) {
         filter->setShowInactive(false);
         filter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
 
-        ui->listTransactions->setModel(filter.get());
-        ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);
+        //ui->listTransactions->setModel(filter.get());
+        //ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);
     }
 }
 
@@ -483,4 +488,18 @@ void OverviewPage::onResult(QNetworkReply* replystats)
 
     replystats->deleteLater();
 }
+
+
+/////////////////////////////test
+
+void OverviewPage::on_buttonSend_clicked()
+{
+    Q_EMIT sendCoinsClicked();
+}
+
+void OverviewPage::on_buttonReceive_clicked()
+{
+    Q_EMIT receiveCoinsClicked();
+}
+/////////////////////////////end test
 // --
