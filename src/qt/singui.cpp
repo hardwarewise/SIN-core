@@ -168,95 +168,6 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     statusBar();
 
 
-    //// Set widget topBar on the top right corner ////
-
-    QWidget *topBar = new QWidget;
-    topThemeButton = new QPushButton();
-    QPushButton *topSetupButton = new QPushButton();
-    QPushButton *topConsoleButton = new QPushButton();
-    QPushButton *topOptionButton = new QPushButton();
-    QPushButton *topAddressButton = new QPushButton();
-    QPushButton *topFaqButton = new QPushButton();
-
-
-    QHBoxLayout *topBarLayout = new QHBoxLayout;
-
-    topBarLayout->addWidget(topThemeButton);
-    if (settings.value("fShowMasternodesTab").toBool()) { 
-    topBarLayout->addWidget(topSetupButton);
-    }
-    topBarLayout->addWidget(topConsoleButton);
-    topBarLayout->addWidget(topOptionButton);
-    topBarLayout->addWidget(topAddressButton);
-    topBarLayout->addWidget(topFaqButton);
-
-
-    bool lightTheme = settings.value("lightTheme", false).toBool();
-
-    QString cssFileName = lightTheme ? ":/css/light" : ":/css/default";
-    QFile cssFile(cssFileName);
-
-    if (lightTheme) {
-        topThemeButton->setIcon(QIcon(":/icons/theme-light"));
-        topThemeButton->setToolTip( "White Theme"  );
-    } else {
-        topThemeButton->setIcon(QIcon(":/icons/theme-white"));
-        topThemeButton->setToolTip( "Light Theme"  );
-    }
-
-    cssFile.open(QFile::ReadOnly);
-    QString styleSheet = QLatin1String(cssFile.readAll());
-    this->setStyleSheet(styleSheet);
-
-    topThemeButton->setIconSize(QSize(24, 24));
-    topThemeButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
-
-    topSetupButton->setIcon(QIcon(":/icons/setup_top"));
-    topSetupButton->setIconSize(QSize(58, 24));
-    topSetupButton->setToolTip( "Open SetUP Wizard"  );
-    topSetupButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent; } QPushButton:hover {border: 1px solid  #00FFFF; } ");
-    
-    
-    topConsoleButton->setIcon(QIcon(":/icons/debugwindow"));
-    topConsoleButton->setIconSize(QSize(20, 20));
-    topConsoleButton->setToolTip( "Open Console"  );
-    topConsoleButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
-
-
-
-    topOptionButton->setIcon(QIcon(":/icons/options"));
-    topOptionButton->setIconSize(QSize(20, 20));
-    topOptionButton->setToolTip( "Open Options Window"  );
-    topOptionButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
-
-    topAddressButton->setIcon(QIcon(":/icons/address-book"));
-    topAddressButton->setIconSize(QSize(20, 20));
-    topAddressButton->setToolTip( "Open Receiving Addresses"  );
-    topAddressButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
-
-    topFaqButton->setIcon(QIcon(":/icons/faq"));
-    topFaqButton->setIconSize(QSize(20, 20));
-    topFaqButton->setToolTip( "Open FAQ Window"  );
-    topFaqButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
-
-    topBar->setLayout(topBarLayout);
-    appMenuBar->setCornerWidget(topBar, Qt::TopRightCorner);
-
-
-    connect(topThemeButton, SIGNAL (released()), this, SLOT (onThemeClicked()));
-    connect(topSetupButton, SIGNAL(released()), this, SLOT(gotoSetupTab()));
-    connect(topConsoleButton, SIGNAL (released()), this, SLOT (showDebugWindowActivateConsole()));
-    connect(topOptionButton, SIGNAL(released()), this, SLOT(optionsClicked()));
-    connect(topAddressButton, SIGNAL(released()), walletFrame, SLOT(usedReceivingAddresses()));
-    connect(topFaqButton, SIGNAL (released()), this, SLOT (gotoFaqPage()));
-
-
-    //// topBar end ////
-
-
-
-
-
 
  // Social Media icons
     QLabel* spacerLabel = new QLabel();
@@ -407,8 +318,8 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     }
 
 
-    statusBar()->addWidget(spacerLabel);
-    statusBar()->addWidget(frameSocial);
+    //statusBar()->addWidget(spacerLabel);
+    //statusBar()->addWidget(frameSocial);
     statusBar()->addWidget(progressBarLabel);
     progressBarLabel->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 1px solid white; } QLabel {color: #fff; }");
     statusBar()->addWidget(progressBar);
@@ -478,14 +389,14 @@ void SINGUI::createActions()
 {
     QActionGroup *tabGroup = new QActionGroup(this);
 
-    overviewAction = new QAction(platformStyle->SingleColorIcon(":/icons/overview1"), tr("&HOME\n"), this);
+    overviewAction = new QAction(platformStyle->SingleColorIcon(":/icons/overview1"), tr(" &My Wallet\n"), this);
     overviewAction->setStatusTip(tr("Show general overview of wallet"));
     overviewAction->setToolTip(overviewAction->statusTip());
     overviewAction->setCheckable(true);
     overviewAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_1));
     tabGroup->addAction(overviewAction);
 
-    sendCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/send1"), tr("&SEND\n"), this);
+    sendCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/send1"), tr(" &Send\n"), this);
     sendCoinsAction->setStatusTip(tr("Send coins to a SIN address"));
     sendCoinsAction->setToolTip(sendCoinsAction->statusTip());
     sendCoinsAction->setCheckable(true);
@@ -496,7 +407,7 @@ void SINGUI::createActions()
     sendCoinsMenuAction->setStatusTip(sendCoinsAction->statusTip());
     sendCoinsMenuAction->setToolTip(sendCoinsMenuAction->statusTip());
 
-    depositCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/deposit"), tr("&EARN\n"), this);
+    depositCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/deposit"), tr(" &Earn\n"), this);
     depositCoinsAction->setStatusTip(tr("Timelock coins to a SIN address"));
     depositCoinsAction->setToolTip(depositCoinsAction->statusTip());
     depositCoinsAction->setCheckable(true);
@@ -506,7 +417,7 @@ void SINGUI::createActions()
     depositCoinsMenuAction->setStatusTip(depositCoinsAction->statusTip());
     depositCoinsMenuAction->setToolTip(depositCoinsMenuAction->statusTip());
 
-    receiveCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/receiving_addresses1"), tr("&RECEIVE\n"), this);
+    receiveCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/receiving_addresses1"), tr(" &Receive\n"), this);
     receiveCoinsAction->setStatusTip(tr("Request payments (generates QR codes and sin: URIs)"));
     receiveCoinsAction->setToolTip(receiveCoinsAction->statusTip());
     receiveCoinsAction->setCheckable(true);
@@ -517,7 +428,9 @@ void SINGUI::createActions()
     receiveCoinsMenuAction->setStatusTip(receiveCoinsAction->statusTip());
     receiveCoinsMenuAction->setToolTip(receiveCoinsMenuAction->statusTip());
 
-    historyAction = new QAction(platformStyle->SingleColorIcon(":/icons/history1"), tr("&HISTORY\n"), this);
+
+
+    historyAction = new QAction(platformStyle->SingleColorIcon(":/icons/history1"), tr(" &History\n"), this);
     historyAction->setStatusTip(tr("Browse transaction history"));
     historyAction->setToolTip(historyAction->statusTip());
     historyAction->setCheckable(true);
@@ -529,7 +442,7 @@ void SINGUI::createActions()
     // Dash
     QSettings settings;
     if (settings.value("fShowMasternodesTab").toBool()) {
-        masternodeAction = new QAction(platformStyle->SingleColorIcon(":/icons/masternodes"), tr("&INFINITY\r\nNODES\n"), this);
+        masternodeAction = new QAction(platformStyle->SingleColorIcon(":/icons/masternodes"), tr(" &Infinity Nodes"), this);
         masternodeAction->setStatusTip(tr("Browse Infinitynodes"));
         masternodeAction->setToolTip(masternodeAction->statusTip());
         masternodeAction->setCheckable(true);
@@ -562,7 +475,7 @@ void SINGUI::createActions()
 
 
     // StatsPage
-    statsPageAction = new QAction(platformStyle->SingleColorIcon(":/icons/stats"), tr("&STATS\n"), this);
+    statsPageAction = new QAction(platformStyle->SingleColorIcon(":/icons/stats"), tr(" &Stats\n"), this);
     statsPageAction->setStatusTip(tr("Statistics"));
     statsPageAction->setToolTip(statsPageAction->statusTip());
     statsPageAction->setCheckable(true);
@@ -601,18 +514,34 @@ void SINGUI::createActions()
     // can be triggered from the tray menu, and need to show the GUI to be useful.
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
-    connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(gotoSendCoinsPage()));
-    connect(sendCoinsMenuAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    connect(sendCoinsMenuAction, SIGNAL(triggered()), this, SLOT(gotoSendCoinsPage()));
+    
+    //connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    //connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(gotoSendCoinsPage()));
+    //connect(sendCoinsMenuAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    //connect(sendCoinsMenuAction, SIGNAL(triggered()), this, SLOT(gotoSendCoinsPage()));
+    
+    
+    connect(sendCoinsAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
+    connect(sendCoinsAction, &QAction::triggered, [this]{ gotoSendCoinsPage(); });
+    connect(sendCoinsMenuAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
+    connect(sendCoinsMenuAction, &QAction::triggered, [this]{ gotoSendCoinsPage(); });
+
+    
     connect(depositCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(depositCoinsAction, SIGNAL(triggered()), this, SLOT(gotoDepositCoinsPage()));
     connect(depositCoinsMenuAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(depositCoinsMenuAction, SIGNAL(triggered()), this, SLOT(gotoDepositCoinsPage()));
-    connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(gotoReceiveCoinsPage()));
-    connect(receiveCoinsMenuAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    connect(receiveCoinsMenuAction, SIGNAL(triggered()), this, SLOT(gotoReceiveCoinsPage()));
+    
+    //connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    //connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(gotoReceiveCoinsPage()));
+    //connect(receiveCoinsMenuAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    //connect(receiveCoinsMenuAction, SIGNAL(triggered()), this, SLOT(gotoReceiveCoinsPage()));
+    
+    connect(receiveCoinsAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
+    connect(receiveCoinsAction, &QAction::triggered, this, &SINGUI::gotoReceiveCoinsPage);
+    connect(receiveCoinsMenuAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
+    connect(receiveCoinsMenuAction, &QAction::triggered, this, &SINGUI::gotoReceiveCoinsPage);
+    
     connect(historyAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
 
@@ -894,7 +823,8 @@ void SINGUI::createToolBars()
         toolbar->setContextMenuPolicy(Qt::PreventContextMenu);
         toolbar->setMovable(false);
         toolbar->setOrientation(Qt::Vertical);
-        toolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+        toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        toolbar->setMinimumWidth(160);
         mainIcon = new QLabel (this);
     	mainIcon->setPixmap(QPixmap(":images/nav-logo-sin"));
     	mainIcon->setAlignment(Qt::AlignCenter);
@@ -902,19 +832,27 @@ void SINGUI::createToolBars()
     	mainIcon->setStyleSheet("QLabel { margin-top: 10px; margin-bottom: 10px; }");
     	
 
+        QWidget* empty3 = new QWidget();
+		empty3->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+		toolbar->addWidget(empty3); //1
+        
         mainBrand = new QLabel (this);
     	mainBrand->setText("SINOVATE");
     	mainBrand->setAlignment(Qt::AlignCenter);
     	mainBrand->show();
     	mainBrand->setStyleSheet("QLabel { color:#FFFFFF; font-size:16px; font-weight:bold;}");
     	
-        toolbar->addWidget(mainBrand);
-        toolbar->addWidget(mainIcon);
+        toolbar->addWidget(mainIcon);  //2
+        toolbar->addWidget(mainBrand); //3
 
-        toolbar->addAction(overviewAction);
-        toolbar->addAction(sendCoinsAction);
+              
+        QWidget* empty2 = new QWidget();
+		empty2->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+		toolbar->addWidget(empty2); //4
+        toolbar->addAction(overviewAction);  
+        //toolbar->addAction(sendCoinsAction);
         toolbar->addAction(depositCoinsAction);
-        toolbar->addAction(receiveCoinsAction);
+        //toolbar->addAction(receiveCoinsAction);
         toolbar->addAction(historyAction);
 
         // Dash
@@ -934,6 +872,13 @@ void SINGUI::createToolBars()
 
 
         overviewAction->setChecked(true);
+
+        //toolbar->setOrientation(Qt::Vertical);
+        //toolbar->setIconSize(QSize(16, 16));
+
+        QLayout* lay = toolbar->layout();
+        for(int i = 4; i < lay->count(); ++i)
+            lay->itemAt(i)->setAlignment(Qt::AlignLeft);
 
 #ifdef ENABLE_WALLET
         QWidget *spacer = new QWidget();
@@ -962,13 +907,102 @@ void SINGUI::createToolBars()
         labelVersionName->setText("DIN");
         labelVersionName->setStyleSheet("margin-top: 10px; color: #00FFFF ; font-size: 16px; font-weight : bold;");
         labelVersionName->setAlignment(Qt::AlignCenter);
-        toolbar->addWidget(labelVersionName);
-
+        //toolbar->addWidget(labelVersionName);
 
 		 QLabel* labelVersion = new QLabel();
-        labelVersion->setText(QString(tr("AURORA\nv%1\n")).arg(QString::fromStdString(FormatVersionFriendly())));
+        labelVersion->setText(QString(tr("BETELGEUSE\nv%1\n")).arg(QString::fromStdString(FormatVersionFriendly())));
         labelVersion->setStyleSheet("color: white ; margin-bottom: 2px; font-weight : bold;");
         labelVersion->setAlignment(Qt::AlignCenter);
+        
+        /////////////////
+
+         //// Set widget topBar on the top right corner ////
+
+    QWidget *topBar = new QWidget;
+    topThemeButton = new QPushButton();
+    QPushButton *topSetupButton = new QPushButton();
+    QPushButton *topConsoleButton = new QPushButton();
+    QPushButton *topOptionButton = new QPushButton();
+    QPushButton *topAddressButton = new QPushButton();
+    QPushButton *topFaqButton = new QPushButton();
+
+
+    QHBoxLayout *topBarLayout = new QHBoxLayout;
+
+    topBarLayout->addWidget(topThemeButton);
+    if (settings.value("fShowMasternodesTab").toBool()) { 
+    topBarLayout->addWidget(topSetupButton);
+    }
+    topBarLayout->addWidget(topConsoleButton);
+    //topBarLayout->addWidget(topOptionButton);
+    //topBarLayout->addWidget(topAddressButton);
+    //topBarLayout->addWidget(topFaqButton);
+
+
+    bool lightTheme = settings.value("lightTheme", false).toBool();
+
+    QString cssFileName = lightTheme ? ":/css/light" : ":/css/default";
+    QFile cssFile(cssFileName);
+
+    if (lightTheme) {
+        topThemeButton->setIcon(QIcon(":/icons/theme-light"));
+        topThemeButton->setToolTip( "White Theme"  );
+    } else {
+        topThemeButton->setIcon(QIcon(":/icons/theme-white"));
+        topThemeButton->setToolTip( "Light Theme"  );
+    }
+
+    cssFile.open(QFile::ReadOnly);
+    QString styleSheet = QLatin1String(cssFile.readAll());
+    this->setStyleSheet(styleSheet);
+
+    topThemeButton->setIconSize(QSize(16, 16));
+    topThemeButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
+
+    topSetupButton->setIcon(QIcon(":/icons/setup_top"));
+    topSetupButton->setIconSize(QSize(38, 16));
+    topSetupButton->setToolTip( "Open SetUP Wizard"  );
+    topSetupButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent; } QPushButton:hover {border: 1px solid  #00FFFF; } ");
+    
+    
+    topConsoleButton->setIcon(QIcon(":/icons/debugwindow"));
+    topConsoleButton->setIconSize(QSize(16, 16));
+    topConsoleButton->setToolTip( "Open Console"  );
+    topConsoleButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
+
+
+
+    topOptionButton->setIcon(QIcon(":/icons/options"));
+    topOptionButton->setIconSize(QSize(16, 16));
+    topOptionButton->setToolTip( "Open Options Window"  );
+    topOptionButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
+
+    topAddressButton->setIcon(QIcon(":/icons/address-book"));
+    topAddressButton->setIconSize(QSize(16, 16));
+    topAddressButton->setToolTip( "Open Receiving Addresses"  );
+    topAddressButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
+
+    topFaqButton->setIcon(QIcon(":/icons/faq"));
+    topFaqButton->setIconSize(QSize(16, 16));
+    topFaqButton->setToolTip( "Open FAQ Window"  );
+    topFaqButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
+
+    topBar->setLayout(topBarLayout);
+    toolbar->addWidget(topBar);
+
+
+    connect(topThemeButton, SIGNAL (released()), this, SLOT (onThemeClicked()));
+    connect(topSetupButton, SIGNAL(released()), this, SLOT(gotoSetupTab()));
+    connect(topConsoleButton, SIGNAL (released()), this, SLOT (showDebugWindowActivateConsole()));
+    connect(topOptionButton, SIGNAL(released()), this, SLOT(optionsClicked()));
+    connect(topAddressButton, SIGNAL(released()), walletFrame, SLOT(usedReceivingAddresses()));
+    connect(topFaqButton, SIGNAL (released()), this, SLOT (gotoFaqPage()));
+
+
+    //// topBar end ////
+
+        ////////////////
+        
         toolbar->addWidget(labelVersion);
 
     }
