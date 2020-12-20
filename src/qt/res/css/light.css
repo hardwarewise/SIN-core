@@ -1,10 +1,10 @@
 /* BGcolor #FFFFFF */
-/* Menu BG Color #011552 */
+/* Menu BG Color #01094C */
 
 /********* Main Window ***********/
 
 WalletFrame {
-	background-color: #EAEAEA;
+	background-color: #EAEAEA;;
 	border-top:0px solid #000;
 	margin:0;
 	padding:0;
@@ -19,28 +19,48 @@ WalletFrame {
 
 /*******   SATUSBAR *********/
 
-QStatusBar {
-    background-color: #011552;
+/*QStatusBar {
+    background-color: #01094C;
     color: #ffffff;
     padding-left:4px;
+}*/
+
+/*--------------------------------------------
+Status Bar CSS
+--------------------------------------------*/
+QStatusBar{
+  background: #e4ebf5;
+  color: #6b80af;
+}
+QStatusBar QLabel{
+  border: 1px solid transparent;
+  color: #6b80af;
+  font: 10pt;
+}
+QStatusBar::item {
+  border: none;
+}
+QStatusBar QLabel::disabled{
+  border: 1px solid transparent;
+  color: rgba(107, 128, 175, 20%);
 }
 
 
 /*******   MENUBAR *********/
 
-QMenuBar {
-	background-color: #011552;
+/*QMenuBar {
+	background-color: #01094C;
 }
 QMenuBar::item {
-	background-color: #011552;
+	background-color: #01094C;
 	color: #CCCCCC;
 	
 }
 QMenuBar::item:selected {
-	background-color: #011552;
+	background-color: #01094C;
 }
 QMenu {
-	background-color: #011552;
+	background-color: #01094C;
 }
 QMenu::item {
 	color: #CCCCCC;
@@ -50,11 +70,57 @@ QMenu::item:selected {
 	color: #333;
 }
 
+*/
 
+/*--------------------------------------------
+MenuBar CSS
+--------------------------------------------*/
+QMenuBar {
+  background: #e4ebf5;
+}
+QMenuBar::item {
+  background-color: transparent;
+  padding: 5px 6px;
+  border-radius: 4px;
+  color: #6b80af;
+}
+QMenuBar::item:selected {
+  border: none;
+  color: #26a1e3;
+}
+QMenuBar::item:disabled {
+  color: rgba(107, 128, 175, 20%);
+}
+/*--------------------------------------------
+Menu CSS
+--------------------------------------------*/
+QMenu{
+  border: none;
+}
+QMenu::item {
+  border: none;
+  padding: 5px 32px;
+  background-color: #d5dde9;
+  color: #6b80af;
+}
+QMenu::item:selected {
+  background-color: #6b80af;
+  color:#ffffff;
+}
+QMenu::separator{
+  height: 1px;
+  background-color: #c3cdd9;
+}
+QMenu::icon{
+  margin-left: 15px;
+}
+QMenu::item:disabled {
+  color: rgba(107, 128, 175, 30%);
+}
 /*******   TOOLBAR *********/
 
 QToolBar {
-background-color: #011552;
+background-color: #01094C;
 border:none;
 height:100%;
 padding-top:20px
@@ -62,39 +128,39 @@ padding-top:20px
 
 QToolBar > QToolButton {
 background-color:transparent;
-font-size:14px;
-font-weight: bold;
-color: #938da5;
-min-width:60px;
+font-size:12px;
+font-weight: normal;
+color: #FFFFFF;
+min-width:160px;
 border: none;
-padding-left: 0px;
+padding-left: 20px;
 padding-right: 0px;
-padding-top:5px;
+padding-top:10px;
 width:100%;
-padding-bottom:5px;
+padding-bottom:10px;
 
 
 }
 
 QToolBar > QToolButton:checked {
-background-color: #0f0b16;
-font-size:14px;
-color: #BC8F3A;
+background-color: #0088D0;
+font-size:12px;
+color: #FFFFFF;
 }
 
 QToolBar > QToolButton:checked:hover {
-background-color: #0f0b16;
-    color: #BC8F3A;
+background-color: #0088D0;
+    color: #FFFFFF;
 }
 
 
 QToolBar > QToolButton:hover {
-background-color: #1A000000;
-    color: #938da5;
+background-color:#58A7E6;
+    color: #FFFFFF;
 }
 
 QMessageBox {
-background-color: #EAEAEA;
+background-color: #FFFFFF;
 }
 
 /*******************************************************/
@@ -118,7 +184,7 @@ QCheckBox {
 QCheckBox:checked  {
     spacing: 5px;
     font-size:18px;
-    color:#011552;
+    color:#01094C;
 }
 
 QCheckBox::indicator {
@@ -153,7 +219,7 @@ font-size:16px;
 }
 
 .QValidatedLineEdit:disabled, .QLineEdit:disabled {
-background-color: #EAEAEA;
+background-color: #FFFFFF;
 }
 
 /***** BUTTONS *****/
@@ -164,12 +230,12 @@ QPushButton {
     background-color:#FFFFFF;
     font-size:18px;
     padding:4px 6px;
-    color: #011552;
+    color: #01094C;
     border-radius: 2px;
 	
 }
 QPushButton:hover {
-	border:  1px solid #011552;
+	border:  1px solid #01094C;
     background-color:#FFFFFF;
     font-size:18px;
     padding:4px 6px;
@@ -179,11 +245,11 @@ QPushButton:hover {
 }
 
 QPushButton:pressed {
-	border:  1px solid #011552;
+	border:  1px solid #01094C;
     background-color:#707070;
     font-size:18px;
     padding:4px 6px;
-    color: #011552;
+    color: #01094C;
     border-radius: 2px;
 }
 
@@ -246,7 +312,7 @@ background-color:transparent;
 }
 
 QHeaderView::section { /* Table Header Sections */
-background-color: #011552;
+background-color: #01094C;
 color: #ffffff;
 min-height:30px;
 font-size: 14px;
@@ -295,7 +361,7 @@ QComboBox { /* Dropdown Menus */
 
 font-size: 16px;
 border-color:#bababa;
-border: 1px solid #011552;
+border: 1px solid #01094C;
 border-radius:0px;
 padding: 3px 5px 3px 5px;
 background:#90caf9;
@@ -537,7 +603,7 @@ QDialog .QTabWidget QTabBar::tab:selected {
  }
 
 QDialog .QTabWidget .QWidget {
-background-color: #EAEAEA;
+background-color: #FFFFFF;
 color:#fff;
 }
 
@@ -566,7 +632,7 @@ outline: 0;
 
 /* Dialog: Open URI */
 QDialog#OpenURIDialog {
-background-color: #EAEAEA;
+background-color: #ffffff;
 }
 
 QDialog#OpenURIDialog QLabel#label { /* URI Label */
@@ -576,7 +642,7 @@ font-weight:bold;
 }
 
 QDialog#OpenURIDialog QPushButton#selectFileButton { /* ... Button */
-	background-color: #011552;
+	background-color: #01094C;
 	background-repeat: no-repeat;
     background-size: 1000% 1000%;
  	padding: 0.85em 2em;
@@ -600,14 +666,14 @@ background-color: #191c8a;
 }
 
 QDialog#OpenURIDialog QLabel#label_2 { /* Open payment request from URI or file */
-	color: #011552;
+	color: #01094C;
 	font-size: 16px;
 }
 
 
 /* Dialog: Sign / Verify Message */
 QDialog#SignVerifyMessageDialog {
-background-color: #EAEAEA;
+background-color: #FFFFFF;
 }
 
 QDialog#SignVerifyMessageDialog QPushButton#addressBookButton_SM { /* Address Book Button */
@@ -619,7 +685,7 @@ padding-right:10px;
 
 QDialog#SignVerifyMessageDialog QPlainTextEdit { /* Message Signing Text */
 font-size: 14px;
-border: 1px solid #011552;
+border: 1px solid #01094C;
 border-radius: 5px;
 background-color: transparent;
 color: #000;
@@ -668,29 +734,29 @@ QDialog#SignVerifyMessageDialog QPushButton#clearButton_VM { /* Verify Message -
 
 
 QDialog#SignVerifyMessageDialog QLabel#signatureLabel_SM { 
-  	color: #011552;
+  	color: #01094C;
 	font-size: 16px;
 }
 
 
 QDialog#SignVerifyMessageDialog QLabel#infoLabel_SM { 
-  	color: #011552;
+  	color: #01094C;
 	font-size: 14px;
 }
 
 QDialog#SignVerifyMessageDialog QLabel#infoLabel_VM { 
-  	color: #011552;
+  	color: #01094C;
 	font-size: 14px;
 }
 
 /* Dialog: Send and Receive */
 QWidget#AddressBookPage {
-background-color: #EAEAEA;
+background-color: #FFFFFF;
 }
 
 
 QWidget#AddressBookPage QTableView { /* Address Listing */
-background-color: #EAEAEA;
+background-color: #FFFFFF;
 font-size:14px;
 color: #000000;
 }
@@ -705,12 +771,12 @@ min-width:260px;
 
 /* Encrypt Wallet and Change Passphrase Dialog */
 QDialog#AskPassphraseDialog {
-background-color: #EAEAEA;
+background-color: #FFFFFF;
 }
 
 QDialog#AskPassphraseDialog QLabel#passLabel1, QDialog#AskPassphraseDialog QLabel#passLabel2, QDialog#AskPassphraseDialog QLabel#passLabel3 {
 qproperty-alignment: 'AlignVCenter | AlignRight';
-color: #011552;
+color: #01094C;
 font-size: 16px;
 min-width:170px;
 min-height:33px; /* base width of 25px for QLineEdit, plus padding and border */
@@ -718,7 +784,7 @@ min-height:33px; /* base width of 25px for QLineEdit, plus padding and border */
 
 
 QDialog#AskPassphraseDialog QLabel#warningLabel {
-	color: #011552;
+	color: #01094C;
 	font-size: 16px;
 }
 
@@ -729,12 +795,12 @@ QDialog#AskPassphraseDialog QLabel#warningLabel {
 
 QDialog#OptionsDialog QGroupBox {
 	font-size: 16px;
-	color : #011552;
+	color : #01094C;
 
 }
 
 QDialog#OptionsDialog {
-background-color: #EAEAEA;
+background-color: #FFFFFF;
 }
 
   QDialog#OptionsDialog QSpinBox {
@@ -742,8 +808,8 @@ background-color: #EAEAEA;
     padding:10px 20px 10px 10px;
     font-size:16px;
     border:1px solid #bababa;
-    color: #011552;
-    selection-background-color: #011552;
+    color: #01094C;
+    selection-background-color: #01094C;
     selection-color: #FFFFFF;
 }
 
@@ -893,7 +959,7 @@ QDialog#OptionsDialog QPushButton#resetButton {
 	font-family: "Montserrat";
 	letter-spacing: 1px;
 	border: 1px solid #bababa;
-	color: #011552;
+	color: #01094C;
 	font-size: 14px;
 	
 	
@@ -918,7 +984,7 @@ QDialog#OptionsDialog QPushButton#resetButton:pressed {
 /* TOOLS MENU */
 
 QWidget#RPCConsole QTabWidget {
-background-color: #EAEAEA;
+background-color: #FFFFFF;
 }
 
 
@@ -926,7 +992,7 @@ background-color: #EAEAEA;
 
 /* Command Line Options Dialog */
 QDialog#HelpMessageDialog {
-  background-color: #EAEAEA;
+  background-color: #FFFFFF;
   }
 
   QTextEdit#helpMessage {
@@ -937,7 +1003,7 @@ QDialog#HelpMessageDialog {
   }
 
 QDialog#HelpMessageDialog QScrollArea#scrollArea {
-	background-color: #EAEAEA;
+	background-color: #FFFFFF;
 }
 
 QDialog#HelpMessageDialog QScrollBar:vertical,
@@ -947,7 +1013,7 @@ QDialog#HelpMessageDialog QScrollBar:horizontal {
 
 /* About SIN Dialog */
 QDialog#AboutDialog {
-background-color: #EAEAEA;
+background-color: #FFFFFF;
 color : #333333;
 }
 
@@ -956,23 +1022,23 @@ margin-left:10px;
 }
 
 QDialog#AboutDialog QLabel#label_2 { /* Margin for About Sinovate text */
-background-color: #EAEAEA;
+background-color: #FFFFFF;
 margin-right:10px;
 }
 
 QDialog#HelpMessageDialog QLabel#aboutMessage { /* Margin for About Sinovate text */
-background-color: #EAEAEA;
+background-color: #FFFFFF;
 margin-right:10px;
 }
 
 QDialog#HelpMessageDialog QWidget#scrollAreaWidgetContents { /* Margin for About Sinovate text */
-background-color: #EAEAEA;
+background-color: #FFFFFF;
 
 }
 
 /* Edit Address Dialog */
 QDialog#EditAddressDialog {
-background-color: #EAEAEA;
+background-color: #FFFFFF;
 }
 
 QDialog#EditAddressDialog QLabel {
@@ -986,7 +1052,7 @@ padding-right:5px;
 /* MODAL OVERLAY */
 
   QWidget#bgWidget { /* The 'frame' overlaying the overview-page */
-    background-color: #EAEAEA;
+    background-color: #FFFFFF;
       color:#ffffff;
       padding-left:10px;
       padding-right:10px;
@@ -1014,7 +1080,7 @@ padding-right:5px;
 /* SEND DIALOG */
 
 QDialog#SendCoinsDialog .QLabel#label_3 { /* Send Title Label */
-color:#011552;
+color:#01094C;
 font-size:18px;
 }
 
@@ -1054,16 +1120,16 @@ color: #707070;
 
 QDialog#SendCoinsDialog .QLabel#labelFeeHeadline{
 font-size: 14px;
-color: #011552;
+color: #01094C;
 }
 
 QDialog#SendCoinsDialog .QLabel#labelCoinControlAutomaticallySelected{
-color: #011552;
+color: #01094C;
 font-size: 14px;
 }
 
 QDialog#SendCoinsDialog .QLabel#labelMinFeeWarning{
-color: #011552;
+color: #01094C;
 font-size: 14px;
 }
 
@@ -1073,12 +1139,12 @@ font-size: 14px;
 }
 
 QDialog#SendCoinsDialog .QLabel#labelCustomPerKilobyte{
-color: #011552;
+color: #01094C;
 font-size: 14px;
 }
 
 QDialog#SendCoinsDialog .QLabel#labelSmartFee3{
-color: #011552;
+color: #01094C;
 font-size: 14px;
 }
 
@@ -1118,8 +1184,8 @@ background:transparent;
 }
 
 QDialog#SendCoinsDialog .QPushButton#sendButton { /* Send Button */
-border:  1px solid #011552;
-    background-color:#011552;
+border:  1px solid #01094C;
+    background-color:#01094C;
     font-size:18px;
     padding:4px 6px;
     color: #FFFFFF;
@@ -1128,7 +1194,7 @@ border:  1px solid #011552;
 
 
 QDialog#SendCoinsDialog .QPushButton#sendButton:hover { /* Send Button hover */
-border:  1px solid #011552;
+border:  1px solid #01094C;
     background-color:#0e1163;
     font-size:18px;
     padding:4px 6px;
@@ -1177,7 +1243,7 @@ min-height:27px;
 QStackedWidget#SendCoinsEntry .QFrame#SendCoins > .QLabel { /* Send Coin Entry Labels */
 min-width:160px;
   font-size:16px;
-  color:#011552;
+  color:#01094C;
   border-radius: 0px;
   background-color:transparent;
   margin-right:5px;
@@ -1187,7 +1253,7 @@ min-width:160px;
 QStackedWidget#SendCoinsEntry .QFrame#SendCoins .QLabel#amountLabel {
 min-width:160px;
   font-size:16px;
-  color:#011552;
+  color:#01094C;
   border-radius: 0px;
   background-color:transparent;
   margin-right:5px;
@@ -1239,7 +1305,7 @@ color:#000000;
 /* DEPOSIT COINS (EARN) PAGE */
 
 QDialog#DepositCoinsDialog .QLabel#label_3 { /* Deposit Title Label */
-background-color:#011552;
+background-color:#01094C;
 color: #ffffff;
 font-size:18px;
 border-radius: 5px;
@@ -1282,16 +1348,16 @@ color: #707070;
 
 QDialog#DepositCoinsDialog .QLabel#labelFeeHeadline{
 font-size: 14px;
-color: #011552;
+color: #01094C;
 }
 
 QDialog#DepositCoinsDialog .QLabel#labelCoinControlAutomaticallySelected{
-color: #011552;
+color: #01094C;
 font-size: 14px;
 }
 
 QDialog#DepositCoinsDialog .QLabel#labelMinFeeWarning{
-color: #011552;
+color: #01094C;
 font-size: 14px;
 }
 
@@ -1301,12 +1367,12 @@ font-size: 14px;
 }
 
 QDialog#DepositCoinsDialog .QLabel#labelCustomPerKilobyte{
-color: #011552;
+color: #01094C;
 font-size: 14px;
 }
 
 QDialog#DepositCoinsDialog .QLabel#labelSmartFee3{
-color: #011552;
+color: #01094C;
 font-size: 14px;
 }
 
@@ -1346,8 +1412,8 @@ background:transparent;
 }
 
 QDialog#DepositCoinsDialog .QPushButton#sendButton { /* Send Button */
-border:  1px solid #011552;
-    background-color:#011552;
+border:  1px solid #01094C;
+    background-color:#01094C;
     font-size:18px;
     padding:4px 6px;
     color: #FFFFFF;
@@ -1356,7 +1422,7 @@ border:  1px solid #011552;
 
 
 QDialog#DepositCoinsDialog .QPushButton#sendButton:hover { /* Send Button hover */
-border:  1px solid #011552;
+border:  1px solid #01094C;
     background-color:#0e1163;
     font-size:18px;
     padding:4px 6px;
@@ -1406,7 +1472,7 @@ min-height:27px;
 QWidget#ReceiveCoinsDialog .QFrame#frame2 .QLabel#label_2 { /* Label Label */
   min-width:160px;
   font-size:16px;
-  color:#011552;
+  color:#01094C;
   border-radius: 0px;
   background-color:transparent;
   margin-right:5px;
@@ -1416,7 +1482,7 @@ QWidget#ReceiveCoinsDialog .QFrame#frame2 .QLabel#label_2 { /* Label Label */
 QWidget#ReceiveCoinsDialog .QFrame#frame2 .QLabel#label { /* Amount Label */
    min-width:160px;
   font-size:16px;
-  color:#011552;
+  color:#01094C;
   border-radius: 0px;
   background-color:transparent;
   margin-right:5px;
@@ -1426,7 +1492,7 @@ QWidget#ReceiveCoinsDialog .QFrame#frame2 .QLabel#label { /* Amount Label */
 QWidget#ReceiveCoinsDialog .QFrame#frame2 .QLabel#label_3 { /* Message Label  */
    min-width:160px;
   font-size:16px;
-  color:#011552;
+  color:#01094C;
   border-radius: 0px;
   background-color:transparent;
   margin-right:5px;
@@ -1435,12 +1501,12 @@ QWidget#ReceiveCoinsDialog .QFrame#frame2 .QLabel#label_3 { /* Message Label  */
 
 
 QWidget#ReceiveCoinsDialog .QFrame#frame .QLabel#label_6 { /* Requested Payments History Label */
-color:#011552;
+color:#01094C;
 font-size:16px;
 }
 
 QWidget#ReceiveCoinsDialog .QFrame#frame2 .QLabel#label_4 { /* Receive Title Label */
-color:#011552;
+color:#01094C;
 font-size:18px;
 }
 
@@ -1451,8 +1517,8 @@ font-size:16px;
 
 
 QWidget#ReceiveCoinsDialog .QPushButton#receiveButton { /* receive Button */
-border:  1px solid #011552;
-    background-color:#011552;
+border:  1px solid #01094C;
+    background-color:#01094C;
     font-size:18px;
     padding:4px 6px;
     color: #FFFFFF;
@@ -1461,7 +1527,7 @@ border:  1px solid #011552;
 
 
 QWidget#ReceiveCoinsDialog .QPushButton#receiveButton:hover { /* receive Button hover */
-border:  1px solid #011552;
+border:  1px solid #01094C;
     background-color:#0e1163;
     font-size:18px;
     padding:4px 6px;
@@ -1484,7 +1550,7 @@ border:  1px solid #0e1163;
 
 /**************************** RECEIVE COINS DIALOG **************************************/
 QDialog#ReceiveRequestDialog {
-  background-color: #EAEAEA;
+  background-color: #FFFFFF;
 }
 
 QDialog#ReceiveRequestDialog QTextEdit {
@@ -1545,7 +1611,7 @@ margin-right:1px;
 }
 
 QLabel#transactionSumLabel { /* Example of setObjectName for widgets without name */
-color:#011552;
+color:#01094C;
 font-size: 16px;
 }
 
@@ -1558,7 +1624,7 @@ font-size: 16px;
 
 
 QDialog#TransactionDescDialog QTextEdit {
-background-color: #EAEAEA;
+background-color: #FFFFFF;background-color: #FFFFFF;
 border:1px solid #d7d7d7;
 color: #333;
 }
@@ -1640,7 +1706,7 @@ QLabel#labelSubmittedDenom {
 
 
 QWidget {
-	selection-background-color: #011552CC;
+	selection-background-color: #01094CCC;
 	/* Object highlight color */
 	selection-color: #707070;
 	outline: 1;
@@ -1692,17 +1758,17 @@ QWidget#tabAllMasternodes {
 
  QLabel#label_count {
  	font-size: 16px;
- 	color: #011552 ;
+ 	color: #01094C ;
  }
 
 QLabel#label_filter {
 	font-size: 16px;
- 	color: #011552 ;
+ 	color: #01094C ;
 }
 
 QLabel#autoupdate_label {
 	font-size: 16px;
- 	color: #011552 ;
+ 	color: #01094C ;
 }
 
 
@@ -1714,7 +1780,7 @@ QLabel#secondsLabel {
 
 
 QRadioButton:checked {
-    color: #011552;
+    color: #01094C;
     font-size:14px;
 }
 
@@ -1750,7 +1816,9 @@ QGroupBox {
     border:0;
     outline:0;
   }
-QProgressBar {
+
+
+ /*QProgressBar {
      border: none;
      border-radius: 10px;
      background-color: #2392CB;
@@ -1761,6 +1829,26 @@ QProgressBar {
  QProgressBar::chunk {
   background-color: #BC8F3A;
                 }
+*/
+
+
+/*--------------------------------------------
+Progress Bar CSS
+--------------------------------------------*/
+QProgressBar {
+  background-color: #f2f7fd;
+  font: 10pt;
+  color: #94ccf2;
+  border-radius: 0px;
+  text-align: center;
+}
+QProgressBar::chunk {
+  background-color: #26a1e3;
+  border-radius: 0px;
+}
+QProgressBar::disabled {
+  color: rgba(107, 128, 175, 20%);
+}
 QToolTip { 
 	color: #000000; background-color: #ffffff; border: 1px solid white; 
 }
