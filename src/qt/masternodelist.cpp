@@ -116,6 +116,28 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     timer->start(60000);
     updateDINList();
 
+    // DIN list filtering
+    // Delay before filtering transactions in ms
+    static const int input_filter_delay = 500;
+
+    QTimer* prefix_typing_delay = new QTimer(this);
+    prefix_typing_delay->setSingleShot(true);
+    prefix_typing_delay->setInterval(input_filter_delay);
+
+    connect(ui->searchOwnerAddr, SIGNAL(textChanged(QString)), prefix_typing_delay, SLOT(start()));
+    connect(prefix_typing_delay, SIGNAL(timeout()), this, SLOT(updateDINList()));
+    connect(ui->searchIP, SIGNAL(textChanged(QString)), prefix_typing_delay, SLOT(start()));
+    connect(prefix_typing_delay, SIGNAL(timeout()), this, SLOT(updateDINList()));
+    connect(ui->searchPeerAddr, SIGNAL(textChanged(QString)), prefix_typing_delay, SLOT(start()));
+    connect(prefix_typing_delay, SIGNAL(timeout()), this, SLOT(updateDINList()));
+    connect(ui->searchBurnTx, SIGNAL(textChanged(QString)), prefix_typing_delay, SLOT(start()));
+    connect(prefix_typing_delay, SIGNAL(timeout()), this, SLOT(updateDINList()));
+    connect(ui->searchBackupAddr, SIGNAL(textChanged(QString)), prefix_typing_delay, SLOT(start()));
+    connect(prefix_typing_delay, SIGNAL(timeout()), this, SLOT(updateDINList()));
+
+    connect(ui->comboStatus, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(updateDINList()));
+    connect(ui->comboTier, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(updateDINList()));
+
     // node setup
     std::string baseURL = ( Params().NetworkIDString() == CBaseChainParams::TESTNET ) ? "https://setup2dev.sinovate.io" : "https://setup.sinovate.io";
     NODESETUP_ENDPOINT_NODE = QString::fromStdString(gArgs.GetArg("-nodesetupurl", baseURL + "/includes/api/nodecp.php"));
@@ -324,7 +346,13 @@ void MasternodeList::updateDINList()
                 if (status == "Ready") {
                     nReady++;
                 }
-                k++;
+
+                if ( filterNodeRow(k) ) {
+                    k++;
+                }
+                else    {
+                    ui->dinTable->removeRow(k);
+                }
             }
         }
 
@@ -354,6 +382,46 @@ void MasternodeList::updateDINList()
             ui->ExpiredNodesLabel->hide();
         }
     }
+}
+
+bool MasternodeList::filterNodeRow( int nRow )    {
+
+    if (ui->searchOwnerAddr->text() != "" && !ui->dinTable->item(nRow, 0)->text().contains(ui->searchOwnerAddr->text(), Qt::CaseInsensitive) )  {
+//LogPrintf("filterNodeRow owner %d, #%s#, %s \n", nRow, ui->searchOwnerAddr->text().toStdString(), ui->dinTable->item(nRow, 0)->text().toStdString());
+        return false;
+    }
+
+    if (ui->comboStatus->currentText() != "<Status>" && ui->dinTable->item(nRow, 3)->text() != ui->comboStatus->currentText() )  {
+//LogPrintf("filterNodeRow status %d, %s, %s \n", nRow, ui->comboStatus->currentText().toStdString(), ui->dinTable->item(nRow, 3)->text().toStdString());
+        return false;
+    }
+
+    if (ui->searchIP->text() != "" && !ui->dinTable->item(nRow, 4)->text().contains(ui->searchIP->text(), Qt::CaseInsensitive) )  {
+//LogPrintf("filterNodeRow IP %d, %s \n", nRow, ui->dinTable->item(nRow, 4)->text().toStdString());
+        return false;
+    }
+
+    if (ui->searchPeerAddr->text() != "" && !ui->dinTable->item(nRow, 5)->text().contains(ui->searchPeerAddr->text(), Qt::CaseInsensitive) )  {
+//LogPrintf("filterNodeRow Peer addr %d, %s \n", nRow, ui->dinTable->item(nRow, 5)->text().toStdString());
+        return false;
+    }
+
+    if (ui->searchBurnTx->text() != "" && !ui->dinTable->item(nRow, 6)->text().contains(ui->searchBurnTx->text(), Qt::CaseInsensitive) )  {
+//LogPrintf("filterNodeRow burntx %d, %s \n", nRow, ui->dinTable->item(nRow, 6)->text().toStdString());
+        return false;
+    }
+
+    if (ui->comboTier->currentText() != "<Node Tier>" && ui->dinTable->item(nRow, 7)->text() != ui->comboTier->currentText() )  {
+//LogPrintf("filterNodeRow tier %d, %s \n", nRow, ui->dinTable->item(nRow, 7)->text().toStdString());
+        return false;
+    }
+
+    if (ui->searchBackupAddr->text() != "" && !ui->dinTable->item(nRow, 10)->text().contains(ui->searchBackupAddr->text(), Qt::CaseInsensitive) )  {
+//LogPrintf("filterNodeRow backup addr %d, %s \n", nRow, ui->dinTable->item(nRow, 10)->text().toStdString());
+        return false;
+    }
+
+    return true;
 }
 
 void MasternodeList::on_checkDINNode()
@@ -1074,6 +1142,9 @@ void MasternodeList::nodeSetupInitialize()   {
     ui->comboBilling->setStyle(QStyleFactory::create("Windows"));
     ui->comboInvoice->setStyle(QStyleFactory::create("Windows"));
     ui->comboBurnTx->setStyle(QStyleFactory::create("Windows"));
+
+    ui->comboStatus->setStyle(QStyleFactory::create("Windows"));
+    ui->comboTier->setStyle(QStyleFactory::create("Windows"));
 #endif
 
     // buttons
