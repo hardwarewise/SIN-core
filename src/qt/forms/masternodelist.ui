@@ -62,6 +62,98 @@ width: 200px;
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QLineEdit" name="searchOwnerAddr">
+             <property name="placeholderText">
+              <string>Filter by owner address</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="comboStatus">
+             <item>
+              <property name="text">
+               <string>&lt;Status&gt;</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Expired</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Incomplete</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Ready</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Unknown</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="searchIP">
+             <property name="placeholderText">
+              <string>Filter by IP</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="searchPeerAddr">
+             <property name="placeholderText">
+              <string>Filter by peer address</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="searchBurnTx">
+             <property name="placeholderText">
+              <string>Filter by burn tx</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="comboTier">
+             <item>
+              <property name="text">
+               <string>&lt;Node Tier&gt;</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>MINI</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>MID</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>BIG</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="searchBackupAddr">
+             <property name="placeholderText">
+              <string>Filter by backup addres</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
           <widget class="QTableWidget" name="dinTable">
            <property name="enabled">
             <bool>true</bool>

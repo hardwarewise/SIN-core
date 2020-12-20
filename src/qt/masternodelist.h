@@ -84,6 +84,7 @@ private:
 
 public Q_SLOTS:
     void updateDINList();
+    bool filterNodeRow( int nRow );
 
     // node setup functions
     void nodeSetupInitialize();
