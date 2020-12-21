@@ -79,7 +79,7 @@ public:
     void removeAllWallets();
 #endif // ENABLE_WALLET
     bool enableWallet = false;
-
+        
 protected:
     void changeEvent(QEvent *e);
     void closeEvent(QCloseEvent *event);
@@ -109,6 +109,7 @@ private:
     QMenuBar* subMenu = nullptr;
     QToolBar* appToolBar = nullptr;
     QAction* overviewAction = nullptr;
+    QAction* homeAction = nullptr;
     QAction* historyAction = nullptr;
     // Dash
     QAction *masternodeAction = nullptr;
@@ -276,6 +277,7 @@ private Q_SLOTS:
 #ifdef ENABLE_WALLET
     /** Switch to overview (home) page */
     void gotoOverviewPage();
+    void gotoHomePage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
 

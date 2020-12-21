@@ -395,6 +395,13 @@ void SINGUI::createActions()
     overviewAction->setCheckable(true);
     overviewAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_1));
     tabGroup->addAction(overviewAction);
+    
+    homeAction =new QAction(overviewAction);
+    homeAction->setText("Home");
+    homeAction->setIcon(QIcon(":/icons/deposit"));
+    homeAction->setToolTip(homeAction->statusTip());
+    homeAction->setCheckable(true);
+    tabGroup->addAction(homeAction);
 
     sendCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/send1"), tr(" &Send\n"), this);
     sendCoinsAction->setStatusTip(tr("Send coins to a SIN address"));
@@ -514,6 +521,7 @@ void SINGUI::createActions()
     // can be triggered from the tray menu, and need to show the GUI to be useful.
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
+    connect(homeAction, SIGNAL(triggered()), this, SLOT(gotoHomePage()));
     
     //connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     //connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(gotoSendCoinsPage()));
@@ -849,6 +857,7 @@ void SINGUI::createToolBars()
         QWidget* empty2 = new QWidget();
 		empty2->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 		toolbar->addWidget(empty2); //4
+        toolbar->addAction(homeAction);
         toolbar->addAction(overviewAction);  
         //toolbar->addAction(sendCoinsAction);
         toolbar->addAction(depositCoinsAction);
@@ -871,7 +880,7 @@ void SINGUI::createToolBars()
         //
 
 
-        overviewAction->setChecked(true);
+        homeAction->setChecked(true);
 
         //toolbar->setOrientation(Qt::Vertical);
         //toolbar->setIconSize(QSize(16, 16));
@@ -1362,6 +1371,15 @@ void SINGUI::openClicked()
 void SINGUI::gotoOverviewPage()
 {
     overviewAction->setChecked(true);
+    
+    if (walletFrame) walletFrame->gotoOverviewPage();
+}
+
+
+void SINGUI::gotoHomePage()
+{
+    homeAction->setChecked(true);
+    
     if (walletFrame) walletFrame->gotoOverviewPage();
 }
 
