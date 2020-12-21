@@ -1115,6 +1115,19 @@ color:#011552;</string>
         <number>10</number>
        </property>
        <item>
+        <spacer name="horizontalSpacer_13">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <widget class="QLabel" name="label_3">
          <property name="styleSheet">
           <string notr="true">font-size:14px;
@@ -1185,6 +1198,93 @@ color:#011552;</string>
          </property>
          <property name="text">
           <string>0.00 USD</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_12">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_5">
+         <property name="styleSheet">
+          <string notr="true">font-size:14px;
+font-weight: bold;
+color:#011552;</string>
+         </property>
+         <property name="text">
+          <string>EUR Balance :</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelEURTotal">
+         <property name="styleSheet">
+          <string notr="true">font-size:14px;
+color:#011552;</string>
+         </property>
+         <property name="text">
+          <string>0.00 EUR</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>1</width>
+           <height>16</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>1</width>
+           <height>16</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color:#011552;</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="styleSheet">
+          <string notr="true">font-size:14px;
+color:#011552;
+font-weight: bold;</string>
+         </property>
+         <property name="text">
+          <string>Value EUR:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelCurrentEURPrice">
+         <property name="styleSheet">
+          <string notr="true">font-size:14px;
+color:#011552;</string>
+         </property>
+         <property name="text">
+          <string>0.00 EUR</string>
          </property>
         </widget>
        </item>
