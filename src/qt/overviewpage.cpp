@@ -145,21 +145,27 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     // ++ Explorer Stats
     m_timer(nullptr),
     // --
+    
     ui(new Ui::OverviewPage),
+    
     m_networkManager(new QNetworkAccessManager(this)),
     clientModel(0),
     walletModel(0),
     txdelegate(new TxViewDelegate(platformStyle, this))
 {
     pricingTimer = new QTimer();
+    pricingTimerEUR = new QTimer();
     networkManager = new QNetworkAccessManager();
+    networkManagerEUR = new QNetworkAccessManager();
     request = new QNetworkRequest();
+    requestEUR = new QNetworkRequest();
+    
     ui->setupUi(this);
 
+    
     ui->buttonSend->setIcon(QIcon(":/icons/send1"));
     ui->buttonReceive->setIcon(QIcon(":/icons/receiving_addresses1"));
-
-
+    
     // ++ Explorer Stats
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(getStatistics()));
@@ -222,7 +228,62 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                 }
         );
 
+     //--
+
+     // Set the EUR pricing information
        
+
+        // Network request code 
+        QObject::connect(networkManagerEUR, &QNetworkAccessManager::finished,
+                         this, [=](QNetworkReply *replyEUR) {  
+                         
+                    if (replyEUR->error()) {
+                        ui->labelCurrentEURPrice->setText("");
+                        qDebug() << replyEUR->errorString();
+                        return;
+                    }
+                    // Get the data from the network request
+                    QString answerEUR = replyEUR->readAll();
+
+                    // Create regex expression to find the value with 8 decimals
+                    QRegExp rxEUR("\\d*.\\d\\d\\d\\d\\d\\d\\d\\d");
+                    rxEUR.indexIn(answerEUR);
+
+                    // List the found values
+                    QStringList listEUR = rxEUR.capturedTexts();
+
+                    QString currentPriceStyleSheet = ".QLabel{color: %1; font-size:14px;}";
+                    // Evaluate the current and next numbers and assign a color (green for positive, red for negative)
+                    bool okEUR;
+                    if (!listEUR.isEmpty()) {
+                        double next = listEUR.first().toDouble(&okEUR);
+                        if (!okEUR) {
+                            ui->labelCurrentEURPrice->setStyleSheet(currentPriceStyleSheet.arg("#011552"));
+                            ui->labelCurrentEURPrice->setText("");
+                        } else {
+                            double currentEUR = ui->labelCurrentEURPrice->text().toDouble(&okEUR);
+                            if (!okEUR) {
+                                currentEUR = 0.00000000;
+                            } else {
+                                if (next < currentEUR)
+                                    ui->labelCurrentEURPrice->setStyleSheet(currentPriceStyleSheet.arg("red"));
+                                else if (next > currentEUR)
+                                    ui->labelCurrentEURPrice->setStyleSheet(currentPriceStyleSheet.arg("green"));
+                                else
+                                    ui->labelCurrentEURPrice->setStyleSheet(currentPriceStyleSheet.arg("#011552;"));
+                                    
+                            }
+                            ui->labelCurrentEURPrice->setText(QString("%1").arg(QString().setNum(next, 'f', 8)));
+                            
+                            QString totalEUR;
+                            double current2EUR = (currentEUR * totalBalance / 100000000);
+                            totalEUR = QString::number(current2EUR, 'f', 2);
+                            ui->labelEURTotal->setText("€" + totalEUR + " EUR");
+                        }
+                    }
+                }
+        );
+//--  
 
     m_balances.balance = -1;
 
@@ -308,6 +369,12 @@ void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
         pricingTimer->start(300000);
         getPriceInfo();
         /** pricing USD END */
+
+        // Create the timer
+        connect(pricingTimerEUR, SIGNAL(timeout()), this, SLOT(getPriceInfoEur()));
+        pricingTimerEUR->start(300000);
+        getPriceInfoEur();
+        /** pricing EUR END */
 
     // only show immature (newly mined) balance if it's non-zero, so as not to complicate things
     // for the non-mining users
@@ -449,10 +516,18 @@ void OverviewPage::SetupTransactionList(int nNumItems) {
 
 void OverviewPage::getPriceInfo()
 {
-        request->setUrl(QUrl("https://stats.sinovate.io/priceUSD.php"));
+        request->setUrl(QUrl("http://stats.sinovate.io/priceUSD.php"));
     
     networkManager->get(*request);
 }
+
+void OverviewPage::getPriceInfoEur()
+{
+        requestEUR->setUrl(QUrl("http://stats.sinovate.io/priceEUR.php"));
+    
+    networkManagerEUR->get(*requestEUR);
+}
+
 
 // ++ BTC Value Stats and Available BTC Total
 void OverviewPage::onResult(QNetworkReply* replystats)

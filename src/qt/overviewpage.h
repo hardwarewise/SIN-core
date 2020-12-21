@@ -45,10 +45,11 @@ public:
     void setWalletModel(WalletModel *walletModel);
     void showOutOfSyncWarning(bool fShow);
     std::vector<COutput> termDepositInfo;
-    
+        
 public Q_SLOTS:
     void setBalance(const interfaces::WalletBalances& balances);
     void getPriceInfo();
+    void getPriceInfoEur();
         
 Q_SIGNALS:
     void transactionClicked(const QModelIndex &index);
@@ -64,8 +65,11 @@ private:
     QNetworkAccessManager* m_networkManager;
     interfaces::WalletBalances m_balances;
     QTimer *pricingTimer;
+    QTimer *pricingTimerEUR;
     QNetworkAccessManager* networkManager;
+    QNetworkAccessManager* networkManagerEUR;
     QNetworkRequest* request;
+    QNetworkRequest* requestEUR;
     qint64 totalBalance;
     int nDisplayUnit;    
 
