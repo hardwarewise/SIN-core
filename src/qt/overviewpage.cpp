@@ -162,7 +162,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     
     ui->setupUi(this);
 
-    
+        
     ui->buttonSend->setIcon(QIcon(":/icons/send1"));
     ui->buttonReceive->setIcon(QIcon(":/icons/receiving_addresses1"));
     
@@ -295,13 +295,13 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     ui->labelWalletStatus->setIcon(icon);
 
     // Recent transactions
-    //ui->listTransactions->setItemDelegate(txdelegate);
-    //ui->listTransactions->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
-    //ui->listTransactions->setMinimumHeight(NUM_ITEMS * (DECORATION_SIZE + 2));
-    //ui->listTransactions->setAttribute(Qt::WA_MacShowFocusRect, false);
+    ui->listTransactions->setItemDelegate(txdelegate);
+    ui->listTransactions->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
+    ui->listTransactions->setMinimumHeight(NUM_ITEMS * (DECORATION_SIZE + 2));
+    ui->listTransactions->setAttribute(Qt::WA_MacShowFocusRect, false);
       
        
-    //connect(ui->listTransactions, SIGNAL(clicked(QModelIndex)), this, SLOT(handleTransactionClicked(QModelIndex)));
+    connect(ui->listTransactions, SIGNAL(clicked(QModelIndex)), this, SLOT(handleTransactionClicked(QModelIndex)));
 
     // init "out of sync" warning labels
     ui->labelWalletStatus->setText( tr("Please wait until the wallet is fully synced to see your correct balance"));
@@ -447,8 +447,8 @@ void OverviewPage::setWalletModel(WalletModel *model)
         filter->setShowInactive(false);
         filter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
 
-        //ui->listTransactions->setModel(filter.get());
-        //ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);
+        ui->listTransactions->setModel(filter.get());
+        ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);
 
         // Keep up to date with wallet
         interfaces::Wallet& wallet = model->wallet();
@@ -478,7 +478,7 @@ void OverviewPage::updateDisplayUnit()
         // Update txdelegate->unit with the current unit
         txdelegate->unit = walletModel->getOptionsModel()->getDisplayUnit();
 
-        //ui->listTransactions->update();
+        ui->listTransactions->update();
     }
 }
 
@@ -497,7 +497,7 @@ void OverviewPage::showOutOfSyncWarning(bool fShow)
 }
 
 void OverviewPage::SetupTransactionList(int nNumItems) {
-    //ui->listTransactions->setMinimumHeight(nNumItems * (DECORATION_SIZE + 2));
+    ui->listTransactions->setMinimumHeight(nNumItems * (DECORATION_SIZE + 2));
 
     if(walletModel && walletModel->getOptionsModel()) {
         // Set up transaction list
@@ -509,21 +509,21 @@ void OverviewPage::SetupTransactionList(int nNumItems) {
         filter->setShowInactive(false);
         filter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
 
-        //ui->listTransactions->setModel(filter.get());
-        //ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);
+        ui->listTransactions->setModel(filter.get());
+        ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);
     }
 }
 
 void OverviewPage::getPriceInfo()
 {
-        request->setUrl(QUrl("http://stats.sinovate.io/priceUSD.php"));
+        request->setUrl(QUrl("https://stats.sinovate.io/priceUSD.php"));
     
     networkManager->get(*request);
 }
 
 void OverviewPage::getPriceInfoEur()
 {
-        requestEUR->setUrl(QUrl("http://stats.sinovate.io/priceEUR.php"));
+        requestEUR->setUrl(QUrl("https://stats.sinovate.io/priceEUR.php"));
     
     networkManagerEUR->get(*requestEUR);
 }
@@ -565,7 +565,27 @@ void OverviewPage::onResult(QNetworkReply* replystats)
 }
 
 
-/////////////////////////////test
+void OverviewPage::showTransactionWidget(bool bShow)   {
+    if (bShow)  {
+    ui->transactionWidget->show();
+    ui->buttonWidget->show();
+    }
+    else {        
+        ui->transactionWidget->hide();
+        ui->buttonWidget->hide();
+    }
+}
+
+void OverviewPage::showToolBoxWidget(bool bShow)   {
+    if (bShow) {  
+        ui->toolBoxWidget->show();
+        ui->buttonWidget->hide();
+    }
+    else {         
+        ui->toolBoxWidget->hide();
+        ui->buttonWidget->show();
+    }
+}
 
 void OverviewPage::on_buttonSend_clicked()
 {
@@ -576,5 +596,4 @@ void OverviewPage::on_buttonReceive_clicked()
 {
     Q_EMIT receiveCoinsClicked();
 }
-/////////////////////////////end test
 // --

@@ -45,6 +45,9 @@ public:
     void setWalletModel(WalletModel *walletModel);
     void showOutOfSyncWarning(bool fShow);
     std::vector<COutput> termDepositInfo;
+
+    void showTransactionWidget(bool bShow);
+    void showToolBoxWidget(bool bShow);
         
 public Q_SLOTS:
     void setBalance(const interfaces::WalletBalances& balances);

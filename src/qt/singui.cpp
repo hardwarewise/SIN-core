@@ -1380,7 +1380,8 @@ void SINGUI::gotoHomePage()
 {
     homeAction->setChecked(true);
     
-    if (walletFrame) walletFrame->gotoOverviewPage();
+    //if (walletFrame) walletFrame->gotoOverviewPage();
+    if (walletFrame) walletFrame->gotoHomePage();
 }
 
 void SINGUI::gotoHistoryPage()
