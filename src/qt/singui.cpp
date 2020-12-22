@@ -167,107 +167,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     // Create status bar
     statusBar();
 
-
-
- // Social Media icons
-    QLabel* spacerLabel = new QLabel();
-    spacerLabel->setFixedWidth(100);
-    QFrame* frameSocial = new QFrame();
-    frameSocial->setContentsMargins(0, 0, 0, 0);
-    frameSocial->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-    QHBoxLayout* frameSocialLayout = new QHBoxLayout(frameSocial);
-    frameSocialLayout->setContentsMargins(16, 0, 16, 0);
-    frameSocialLayout->setSpacing(16);
-
-    QLabel* explorer = new QLabel();
-    explorer->setObjectName(QStringLiteral("explorer"));
-    explorer->setMinimumSize(QSize(32, 32));
-    explorer->setMaximumSize(QSize(32, 32));
-    explorer->setBaseSize(QSize(0, 0));
-    explorer->setCursor(QCursor(Qt::PointingHandCursor));
-    explorer->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-    explorer->setOpenExternalLinks(true);
-#ifndef QT_NO_TOOLTIP
-    explorer->setToolTip(QApplication::translate("OverviewPage", "Visit SINOVATE Block Explorer.", nullptr));
-#endif // QT_NO_TOOLTIP
-    explorer->setText(QApplication::translate("OverviewPage", "<a href=\"https://sinovate.io/links/explorer\"><img src=\":/icons/explorer\" width=\"32\" height=\"32\"></a>", nullptr));
-
-            QLabel* website = new QLabel();
-    website->setObjectName(QStringLiteral("website"));
-    website->setMinimumSize(QSize(19, 19));
-    website->setMaximumSize(QSize(19, 19));
-    website->setBaseSize(QSize(0, 0));
-    website->setCursor(QCursor(Qt::PointingHandCursor));
-    website->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-    website->setOpenExternalLinks(true);
-#ifndef QT_NO_TOOLTIP
-    website->setToolTip(QApplication::translate("OverviewPage", "Visit SINOVATE Website", nullptr));
-#endif // QT_NO_TOOLTIP
-    website->setText(QApplication::translate("OverviewPage", "<a href=\"https://sinovate.io\"><img src=\":/icons/website\" width=\"19\" height=\"19\"></a>", nullptr));
-
-            //QLabel* instaswap = new QLabel();
-    //instaswap->setObjectName(QStringLiteral("instaswap"));
-    //instaswap->setMinimumSize(QSize(32, 32));
-    //instaswap->setMaximumSize(QSize(32, 32));
-    //instaswap->setBaseSize(QSize(0, 0));
-    //instaswap->setCursor(QCursor(Qt::PointingHandCursor));
-    //instaswap->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-    //instaswap->setOpenExternalLinks(true);
-//#ifndef QT_NO_TOOLTIP
-    //instaswap->setToolTip(QApplication::translate("OverviewPage", "Exchange your SIN rapidly", nullptr));
-//#endif // QT_NO_TOOLTIP
-    //instaswap->setText(QApplication::translate("OverviewPage", "<a href=\"https://instaswap.io/\"><img src=\":/icons/instaswap1\" width=\"32\" height=\"32\"></a>", nullptr));
-
-            QLabel* twitter = new QLabel();
-    twitter->setObjectName(QStringLiteral("twitter"));
-    twitter->setMinimumSize(QSize(32, 32));
-    twitter->setMaximumSize(QSize(32, 32));
-    twitter->setBaseSize(QSize(0, 0));
-    twitter->setCursor(QCursor(Qt::PointingHandCursor));
-    twitter->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-    twitter->setOpenExternalLinks(true);
-#ifndef QT_NO_TOOLTIP
-    twitter->setToolTip(QApplication::translate("OverviewPage", "Visit SINOVATE Twitter Channel", nullptr));
-#endif // QT_NO_TOOLTIP
-    twitter->setText(QApplication::translate("OverviewPage", "<a href=\"https://sinovate.io/links/twitter\"><img src=\":/icons/twitter\" width=\"32\" height=\"32\"></a>", nullptr));
-
-            QLabel* discord = new QLabel();
-    discord->setObjectName(QStringLiteral("discord"));
-    discord->setMinimumSize(QSize(32, 32));
-    discord->setMaximumSize(QSize(32, 32));
-    discord->setBaseSize(QSize(0, 0));
-    discord->setCursor(QCursor(Qt::PointingHandCursor));
-    discord->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-    discord->setOpenExternalLinks(true);
-#ifndef QT_NO_TOOLTIP
-    discord->setToolTip(QApplication::translate("OverviewPage", "Join the official SINOVATE Discord community.", nullptr));
-#endif // QT_NO_TOOLTIP
-    discord->setText(QApplication::translate("OverviewPage", "<a href=\"https://sinovate.io/links/discord\"><img src=\":/icons/discord\" width=\"32\" height=\"32\"></a>", nullptr));
-
-            QLabel* github = new QLabel();
-    github->setObjectName(QStringLiteral("github"));
-    github->setMinimumSize(QSize(32, 32));
-    github->setMaximumSize(QSize(32, 32));
-    github->setBaseSize(QSize(0, 0));
-    github->setCursor(QCursor(Qt::PointingHandCursor));
-    github->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-    github->setOpenExternalLinks(true);
-#ifndef QT_NO_TOOLTIP
-    github->setToolTip(QApplication::translate("OverviewPage", "Visit SINOVATE Github", nullptr));
-#endif // QT_NO_TOOLTIP
-    github->setText(QApplication::translate("OverviewPage", "<a href=\"https://github.com/SINOVATEblockchain\"><img src=\":/icons/github\" width=\"32\" height=\"32\"></a>", nullptr));
-
-    frameSocialLayout->addWidget(website);
-    frameSocialLayout->addWidget(discord);
-    frameSocialLayout->addWidget(twitter);
-    frameSocialLayout->addWidget(github);
-    //frameSocialLayout->addWidget(instaswap);
-    frameSocialLayout->addWidget(explorer);
-
-
-
-
-        // Disable size grip because it looks ugly and nobody needs it
+   // Disable size grip because it looks ugly and nobody needs it
     statusBar()->setSizeGripEnabled(false);
 
     // Status bar notification icons
@@ -317,16 +217,10 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
         progressBar->setStyleSheet("QProgressBar { background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
     }
 
-
-    //statusBar()->addWidget(spacerLabel);
-    //statusBar()->addWidget(frameSocial);
     statusBar()->addWidget(progressBarLabel);
     progressBarLabel->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 1px solid white; } QLabel {color: #fff; }");
     statusBar()->addWidget(progressBar);
     statusBar()->addPermanentWidget(frameBlocks);
-
-
-
 
     // Install event filter to be able to catch status tip events (QEvent::StatusTip)
     this->installEventFilter(this);
@@ -523,27 +417,15 @@ void SINGUI::createActions()
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
     connect(homeAction, SIGNAL(triggered()), this, SLOT(gotoHomePage()));
     
-    //connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    //connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(gotoSendCoinsPage()));
-    //connect(sendCoinsMenuAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    //connect(sendCoinsMenuAction, SIGNAL(triggered()), this, SLOT(gotoSendCoinsPage()));
-    
-    
     connect(sendCoinsAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
     connect(sendCoinsAction, &QAction::triggered, [this]{ gotoSendCoinsPage(); });
     connect(sendCoinsMenuAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
     connect(sendCoinsMenuAction, &QAction::triggered, [this]{ gotoSendCoinsPage(); });
 
-    
     connect(depositCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(depositCoinsAction, SIGNAL(triggered()), this, SLOT(gotoDepositCoinsPage()));
     connect(depositCoinsMenuAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(depositCoinsMenuAction, SIGNAL(triggered()), this, SLOT(gotoDepositCoinsPage()));
-    
-    //connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    //connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(gotoReceiveCoinsPage()));
-    //connect(receiveCoinsMenuAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    //connect(receiveCoinsMenuAction, SIGNAL(triggered()), this, SLOT(gotoReceiveCoinsPage()));
     
     connect(receiveCoinsAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
     connect(receiveCoinsAction, &QAction::triggered, this, &SINGUI::gotoReceiveCoinsPage);
@@ -731,6 +613,7 @@ void SINGUI::createMenuBar()
 
     // Configure the menus
     QMenu *file = appMenuBar->addMenu(tr("&File"));
+     appMenuBar->addMenu("|");
     if(walletFrame)
     {
         file->addAction(openAction);
@@ -746,11 +629,6 @@ void SINGUI::createMenuBar()
         file->addSeparator();
     }
     file->addAction(quitAction);
-
-
-
-
-
 
 
 
@@ -925,7 +803,7 @@ void SINGUI::createToolBars()
         
         /////////////////
 
-         //// Set widget topBar on the top right corner ////
+         //// Set widget topBar on the bottom left corner ////
 
     QWidget *topBar = new QWidget;
     topThemeButton = new QPushButton();
@@ -981,20 +859,20 @@ void SINGUI::createToolBars()
 
 
 
-    topOptionButton->setIcon(QIcon(":/icons/options"));
-    topOptionButton->setIconSize(QSize(16, 16));
-    topOptionButton->setToolTip( "Open Options Window"  );
-    topOptionButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
+    //topOptionButton->setIcon(QIcon(":/icons/options"));
+    //topOptionButton->setIconSize(QSize(16, 16));
+    //topOptionButton->setToolTip( "Open Options Window"  );
+    //topOptionButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
 
-    topAddressButton->setIcon(QIcon(":/icons/address-book"));
-    topAddressButton->setIconSize(QSize(16, 16));
-    topAddressButton->setToolTip( "Open Receiving Addresses"  );
-    topAddressButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
+    //topAddressButton->setIcon(QIcon(":/icons/address-book"));
+    //topAddressButton->setIconSize(QSize(16, 16));
+    //topAddressButton->setToolTip( "Open Receiving Addresses"  );
+    //topAddressButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
 
-    topFaqButton->setIcon(QIcon(":/icons/faq"));
-    topFaqButton->setIconSize(QSize(16, 16));
-    topFaqButton->setToolTip( "Open FAQ Window"  );
-    topFaqButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
+    //topFaqButton->setIcon(QIcon(":/icons/faq"));
+    //topFaqButton->setIconSize(QSize(16, 16));
+    //topFaqButton->setToolTip( "Open FAQ Window"  );
+    //topFaqButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
 
     topBar->setLayout(topBarLayout);
     toolbar->addWidget(topBar);
@@ -1003,15 +881,14 @@ void SINGUI::createToolBars()
     connect(topThemeButton, SIGNAL (released()), this, SLOT (onThemeClicked()));
     connect(topSetupButton, SIGNAL(released()), this, SLOT(gotoSetupTab()));
     connect(topConsoleButton, SIGNAL (released()), this, SLOT (showDebugWindowActivateConsole()));
-    connect(topOptionButton, SIGNAL(released()), this, SLOT(optionsClicked()));
-    connect(topAddressButton, SIGNAL(released()), walletFrame, SLOT(usedReceivingAddresses()));
-    connect(topFaqButton, SIGNAL (released()), this, SLOT (gotoFaqPage()));
+    //connect(topOptionButton, SIGNAL(released()), this, SLOT(optionsClicked()));
+    //connect(topAddressButton, SIGNAL(released()), walletFrame, SLOT(usedReceivingAddresses()));
+    //connect(topFaqButton, SIGNAL (released()), this, SLOT (gotoFaqPage()));
 
 
     //// topBar end ////
 
-        ////////////////
-        
+              
         toolbar->addWidget(labelVersion);
 
     }
