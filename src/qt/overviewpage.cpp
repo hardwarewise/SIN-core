@@ -40,7 +40,7 @@
 
 #define ICON_OFFSET 16
 #define DECORATION_SIZE 38
-#define NUM_ITEMS 11
+#define NUM_ITEMS 7
 #define NUM_ITEMS_ADV 7
 
 Q_DECLARE_METATYPE(interfaces::WalletBalances)
@@ -68,8 +68,9 @@ public:
         int xspace = DECORATION_SIZE + 8;
         int ypad = 6;
         int halfheight = (mainRect.height() - 2*ypad)/2;
-        QRect amountRect(mainRect.left() + xspace, mainRect.top()+ypad, mainRect.width() - xspace - ICON_OFFSET, halfheight);
-        QRect addressRect(mainRect.left() + xspace, mainRect.top()+ypad+halfheight, mainRect.width() - xspace, halfheight);
+        QRect amountRect(mainRect.left() + xspace, mainRect.top()+ypad, mainRect.width() - 100 - ICON_OFFSET, halfheight);
+        QRect addressRect(mainRect.left() + 200, mainRect.top()+ypad, mainRect.width() - xspace - ICON_OFFSET, halfheight);
+        //QRect addressRect(mainRect.left() + 200, mainRect.top()+ypad+halfheight, mainRect.width() - xspace, halfheight);
         icon = platformStyle->SingleColorIcon(icon);
         icon.paint(painter, decorationRect);
 

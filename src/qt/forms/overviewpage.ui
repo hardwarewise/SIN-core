@@ -819,8 +819,36 @@ color:#011552;</string>
      <item>
       <widget class="QWidget" name="transactionWidget" native="true">
        <layout class="QHBoxLayout" name="transactionListLayout">
+        <property name="leftMargin">
+         <number>20</number>
+        </property>
+        <property name="rightMargin">
+         <number>20</number>
+        </property>
         <item>
-         <widget class="QListView" name="listTransactions"/>
+         <widget class="QListView" name="listTransactions">
+          <property name="styleSheet">
+           <string notr="true">QListView {
+/*background: #D6DCE5; */
+ alternate-background-color: #D6D7D8;
+font-weight: lighter;
+font-size:14px;
+color: #000000;
+margin-top:0px;
+margin-left:-40px;
+margin-right:-40px;
+padding-right: 10 px;
+margin-bottom: 9px;
+}
+</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
