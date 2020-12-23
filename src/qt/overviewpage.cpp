@@ -40,8 +40,8 @@
 
 #define ICON_OFFSET 16
 #define DECORATION_SIZE 38
-#define NUM_ITEMS 7
-#define NUM_ITEMS_ADV 7
+#define NUM_ITEMS 6
+#define NUM_ITEMS_ADV 6
 
 Q_DECLARE_METATYPE(interfaces::WalletBalances)
 
@@ -570,10 +570,14 @@ void OverviewPage::showTransactionWidget(bool bShow)   {
     if (bShow)  {
     ui->transactionWidget->show();
     ui->buttonWidget->show();
+    ui->recentWidget->show();
+    ui->recentHeaderWidget->show();
     }
     else {        
         ui->transactionWidget->hide();
         ui->buttonWidget->hide();
+        ui->recentWidget->hide();
+        ui->recentHeaderWidget->hide();
     }
 }
 
@@ -581,10 +585,14 @@ void OverviewPage::showToolBoxWidget(bool bShow)   {
     if (bShow) {  
         ui->toolBoxWidget->show();
         ui->buttonWidget->hide();
+        ui->recentWidget->hide();
+        ui->recentHeaderWidget->hide();
     }
     else {         
         ui->toolBoxWidget->hide();
         ui->buttonWidget->show();
+        ui->recentWidget->show();
+        ui->recentHeaderWidget->show();
     }
 }
 
