@@ -125,6 +125,8 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     connect(overviewPage, &OverviewPage::sendCoinsClicked, [this]{ gotoSendCoinsPage(); });
     // Clicking receive coins button show receive coins dialog
     connect(overviewPage, &OverviewPage::receiveCoinsClicked, [this]{ gotoReceiveCoinsPage(); });
+    // clicking more button shows transactions details
+    connect(overviewPage, &OverviewPage::moreClicked, [this]{ gotoHistoryPage(); });
 
     // Highlight transaction after send
     connect(sendCoinsPage, SIGNAL(coinsSent(uint256)), transactionView, SLOT(focusTransaction(uint256)));

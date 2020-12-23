@@ -605,4 +605,9 @@ void OverviewPage::on_buttonReceive_clicked()
 {
     Q_EMIT receiveCoinsClicked();
 }
+
+void OverviewPage::on_buttonMore_clicked()
+{
+    Q_EMIT moreClicked();
+}
 // --
