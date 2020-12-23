@@ -115,6 +115,7 @@
         <file alias="setup_top">res/icons/setup_top.svg</file>
         <file alias="setup_res">res/icons/setup_res.svg</file>
         <file alias="setup_con">res/icons/setup_con.svg</file>
+        <file alias="mywallet">res/icons/mywallet.svg</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>

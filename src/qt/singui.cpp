@@ -283,7 +283,7 @@ void SINGUI::createActions()
 {
     QActionGroup *tabGroup = new QActionGroup(this);
 
-    overviewAction = new QAction(platformStyle->SingleColorIcon(":/icons/overview1"), tr(" &My Wallet\n"), this);
+    overviewAction = new QAction(platformStyle->SingleColorIcon(":/icons/mywallet"), tr(" &My Wallet\n"), this);
     overviewAction->setStatusTip(tr("Show general overview of wallet"));
     overviewAction->setToolTip(overviewAction->statusTip());
     overviewAction->setCheckable(true);
@@ -292,7 +292,7 @@ void SINGUI::createActions()
     
     homeAction =new QAction(overviewAction);
     homeAction->setText("Home");
-    homeAction->setIcon(QIcon(":/icons/deposit"));
+    homeAction->setIcon(QIcon(":/icons/overview1"));
     homeAction->setToolTip(homeAction->statusTip());
     homeAction->setCheckable(true);
     tabGroup->addAction(homeAction);
@@ -331,7 +331,7 @@ void SINGUI::createActions()
 
 
 
-    historyAction = new QAction(platformStyle->SingleColorIcon(":/icons/history1"), tr(" &History\n"), this);
+    historyAction = new QAction(platformStyle->SingleColorIcon(":/icons/history1"), tr(" &Tx History\n"), this);
     historyAction->setStatusTip(tr("Browse transaction history"));
     historyAction->setToolTip(historyAction->statusTip());
     historyAction->setCheckable(true);
@@ -740,8 +740,6 @@ void SINGUI::createToolBars()
         //toolbar->addAction(sendCoinsAction);
         toolbar->addAction(depositCoinsAction);
         //toolbar->addAction(receiveCoinsAction);
-        toolbar->addAction(historyAction);
-
         // Dash
         QSettings settings;
         if (settings.value("fShowMasternodesTab").toBool())
@@ -756,6 +754,7 @@ void SINGUI::createToolBars()
         // StatsPage
         toolbar->addAction(statsPageAction);
         //
+        toolbar->addAction(historyAction);
 
 
         homeAction->setChecked(true);
