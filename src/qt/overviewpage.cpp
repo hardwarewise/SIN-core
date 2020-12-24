@@ -37,6 +37,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QToolButton>
 
 #define ICON_OFFSET 16
 #define DECORATION_SIZE 38
@@ -163,7 +164,57 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     
     ui->setupUi(this);
 
-        
+    ui->toolButtonBlog->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    ui->toolButtonBlog->setIcon(QIcon(":/icons/blog"));
+    ui->toolButtonBlog->setIconSize(QSize(64, 64));
+     ui->toolButtonBlog->setStatusTip(tr("Visit Sinovate Blog"));
+
+    ui->toolButtonDocs->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    ui->toolButtonDocs->setIcon(QIcon(":/icons/docs"));
+    ui->toolButtonDocs->setIconSize(QSize(64, 64));
+    ui->toolButtonDocs->setStatusTip(tr("Visit Sinovate Docs"));
+
+    
+    ui->toolButtonExchanges->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    ui->toolButtonExchanges->setIcon(QIcon(":/icons/cmc_white"));
+    ui->toolButtonExchanges->setIconSize(QSize(64, 64));
+    ui->toolButtonExchanges->setStatusTip(tr("Buy Sinovate Coin"));
+
+    ui->toolButtonExplorer->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    ui->toolButtonExplorer->setIcon(QIcon(":/icons/explorer_white"));
+    ui->toolButtonExplorer->setIconSize(QSize(64, 64));
+    ui->toolButtonExplorer->setStatusTip(tr("Visit Sinovate Block Explorer"));
+
+    ui->toolButtonOptions->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    ui->toolButtonOptions->setIcon(QIcon(":/icons/options_white"));
+    ui->toolButtonOptions->setIconSize(QSize(64, 64));
+    ui->toolButtonOptions->setStatusTip(tr("Open Options Tab"));
+
+    ui->toolButtonRoadmap->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    ui->toolButtonRoadmap->setIcon(QIcon(":/icons/roadmap_white"));
+    ui->toolButtonRoadmap->setIconSize(QSize(64, 64));
+    ui->toolButtonRoadmap->setStatusTip(tr("Sinovate Roadmap"));
+
+    ui->toolButtonWebTool->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    ui->toolButtonWebTool->setIcon(QIcon(":/icons/webtool"));
+    ui->toolButtonWebTool->setIconSize(QSize(64, 64));
+    ui->toolButtonWebTool->setStatusTip(tr("Visit Sinovate WebTool"));
+
+    ui->toolButtonWallet->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    ui->toolButtonWallet->setIcon(QIcon(":/icons/download_white"));
+    ui->toolButtonWallet->setIconSize(QSize(64, 64));
+    ui->toolButtonWallet->setStatusTip(tr("Download Latest Sinovate Wallets"));
+
+    ui->toolButtonWhitePaper->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    ui->toolButtonWhitePaper->setIcon(QIcon(":/icons/whitepaper"));
+    ui->toolButtonWhitePaper->setIconSize(QSize(64, 64));
+    ui->toolButtonWhitePaper->setStatusTip(tr("Sinovate WhitePaper"));
+
+    ui->toolButtonFaq->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    ui->toolButtonFaq->setIcon(QIcon(":/icons/faq_white"));
+    ui->toolButtonFaq->setIconSize(QSize(64, 64));
+    ui->toolButtonFaq->setStatusTip(tr("Open FAQ Page"));
+
     ui->buttonSend->setIcon(QIcon(":/icons/send1"));
     ui->buttonReceive->setIcon(QIcon(":/icons/receiving_addresses1"));
     
@@ -610,4 +661,47 @@ void OverviewPage::on_buttonMore_clicked()
 {
     Q_EMIT moreClicked();
 }
+
+void OverviewPage::on_toolButtonOptions_clicked()
+{
+    Q_EMIT toolButtonOptionsClicked();
+}
+
+void OverviewPage::on_toolButtonFaq_clicked()
+{
+    Q_EMIT toolButtonFaqClicked();
+}
+
+void OverviewPage::on_toolButtonBlog_clicked() {
+    QDesktopServices::openUrl(QUrl("https://sinovate.io/blog/", QUrl::TolerantMode));
+}
+
+void OverviewPage::on_toolButtonDocs_clicked() {
+    QDesktopServices::openUrl(QUrl("https://docs.sinovate.io/", QUrl::TolerantMode));
+}
+
+void OverviewPage::on_toolButtonExchanges_clicked() {
+    QDesktopServices::openUrl(QUrl("https://coinmarketcap.com/currencies/sinovate/markets/", QUrl::TolerantMode));
+}
+
+void OverviewPage::on_toolButtonExplorer_clicked() {
+    QDesktopServices::openUrl(QUrl("https://explorer.sinovate.io/", QUrl::TolerantMode));
+}
+
+void OverviewPage::on_toolButtonRoadmap_clicked() {
+    QDesktopServices::openUrl(QUrl("https://sinovate.io/roadmap/", QUrl::TolerantMode));
+}
+
+void OverviewPage::on_toolButtonWallet_clicked() {
+    QDesktopServices::openUrl(QUrl("https://github.com/SINOVATEblockchain/SIN-core/releases", QUrl::TolerantMode));
+}
+
+void OverviewPage::on_toolButtonWebTool_clicked() {
+    QDesktopServices::openUrl(QUrl("https://github.com/SINOVATEblockchain/SINWebTool", QUrl::TolerantMode));
+}
+
+void OverviewPage::on_toolButtonWhitePaper_clicked() {
+    QDesktopServices::openUrl(QUrl("https://sinovate.io/light-whitepaper/", QUrl::TolerantMode));
+}
+
 // --

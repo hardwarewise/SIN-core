@@ -60,7 +60,9 @@ Q_SIGNALS:
     void sendCoinsClicked(QString addr = "");
     void receiveCoinsClicked();
     void moreClicked();
-
+    void toolButtonOptionsClicked();
+    void toolButtonFaqClicked();
+    
 private:
     Ui::OverviewPage *ui;
     ClientModel *clientModel;
@@ -93,6 +95,18 @@ private Q_SLOTS:
     void on_buttonSend_clicked();
     void on_buttonReceive_clicked();
     void on_buttonMore_clicked();
+    void on_toolButtonBlog_clicked();
+    void on_toolButtonDocs_clicked();
+    void on_toolButtonExchanges_clicked();
+    void on_toolButtonExplorer_clicked();
+    void on_toolButtonRoadmap_clicked();
+    void on_toolButtonWallet_clicked();
+    void on_toolButtonWebTool_clicked();
+    void on_toolButtonWhitePaper_clicked();
+    void on_toolButtonOptions_clicked();
+    void on_toolButtonFaq_clicked();
+
+
 };
 
 #endif // BITCOIN_QT_OVERVIEWPAGE_H

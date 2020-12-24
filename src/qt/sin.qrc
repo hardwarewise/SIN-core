@@ -91,6 +91,7 @@
         <file alias="chaoex">res/icons/chaoex.png</file>
         <file alias="citex">res/icons/citex.png</file>
         <file alias="cmc">res/icons/cmc.svg</file>
+        <file alias="cmc_white">res/icons/cmc_white.svg</file>
         <file alias="coinsbit">res/icons/coinsbit.png</file>
         <file alias="crex24">res/icons/crex24.png</file>
         <file alias="stex">res/icons/stex.png</file>
@@ -116,6 +117,15 @@
         <file alias="setup_res">res/icons/setup_res.svg</file>
         <file alias="setup_con">res/icons/setup_con.svg</file>
         <file alias="mywallet">res/icons/mywallet.svg</file>
+        <file alias="blog">res/icons/blog.svg</file>
+        <file alias="docs">res/icons/docs.svg</file>
+        <file alias="explorer_white">res/icons/explorer_white.svg</file>
+        <file alias="options_white">res/icons/options_white.svg</file>
+        <file alias="roadmap_white">res/icons/roadmap_white.svg</file>
+        <file alias="webtool">res/icons/webtool.svg</file>
+        <file alias="download_white">res/icons/download_white.svg</file>
+        <file alias="whitepaper">res/icons/whitepaper.svg</file>
+        <file alias="faq_white">res/icons/faq_white.svg</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>

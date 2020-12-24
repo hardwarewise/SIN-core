@@ -128,6 +128,10 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     // clicking more button shows transactions details
     connect(overviewPage, &OverviewPage::moreClicked, [this]{ gotoHistoryPage(); });
 
+    // clicking faq button shows open FAQ Page
+    connect(overviewPage, &OverviewPage::toolButtonFaqClicked, [this]{ gotoFaqPage(); });
+    
+    
     // Highlight transaction after send
     connect(sendCoinsPage, SIGNAL(coinsSent(uint256)), transactionView, SLOT(focusTransaction(uint256)));
 
