@@ -185,10 +185,10 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     ui->toolButtonExplorer->setIconSize(QSize(64, 64));
     ui->toolButtonExplorer->setStatusTip(tr("Visit Sinovate Block Explorer"));
 
-    ui->toolButtonOptions->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    ui->toolButtonOptions->setIcon(QIcon(":/icons/options_white"));
-    ui->toolButtonOptions->setIconSize(QSize(64, 64));
-    ui->toolButtonOptions->setStatusTip(tr("Open Options Tab"));
+    ui->toolButtonDiscord->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    ui->toolButtonDiscord->setIcon(QIcon(":/icons/discord_white"));
+    ui->toolButtonDiscord->setIconSize(QSize(64, 64));
+    ui->toolButtonDiscord->setStatusTip(tr("Visit Sinovate Discord Channel"));
 
     ui->toolButtonRoadmap->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     ui->toolButtonRoadmap->setIcon(QIcon(":/icons/roadmap_white"));
@@ -662,14 +662,13 @@ void OverviewPage::on_buttonMore_clicked()
     Q_EMIT moreClicked();
 }
 
-void OverviewPage::on_toolButtonOptions_clicked()
-{
-    Q_EMIT toolButtonOptionsClicked();
-}
-
 void OverviewPage::on_toolButtonFaq_clicked()
 {
     Q_EMIT toolButtonFaqClicked();
+}
+
+void OverviewPage::on_toolButtonDiscord_clicked() {
+    QDesktopServices::openUrl(QUrl("https://sinovate.io/links/discord/", QUrl::TolerantMode));
 }
 
 void OverviewPage::on_toolButtonBlog_clicked() {

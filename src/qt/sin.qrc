@@ -126,6 +126,8 @@
         <file alias="download_white">res/icons/download_white.svg</file>
         <file alias="whitepaper">res/icons/whitepaper.svg</file>
         <file alias="faq_white">res/icons/faq_white.svg</file>
+        <file alias="discord_white">res/icons/discord.svg</file>
+
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>

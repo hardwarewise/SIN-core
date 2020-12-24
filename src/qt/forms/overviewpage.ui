@@ -1282,31 +1282,6 @@ margin-bottom: 9px;
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QToolButton" name="toolButtonOptions">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>120</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>120</width>
-            <height>120</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>OPTIONS</string>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="1">
          <widget class="QToolButton" name="toolButtonWallet">
           <property name="sizePolicy">
@@ -1379,6 +1354,31 @@ margin-bottom: 9px;
           </property>
           <property name="text">
            <string>WHITEPAPER</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QToolButton" name="toolButtonDiscord">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>120</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>120</width>
+            <height>120</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>DISCORD</string>
           </property>
          </widget>
         </item>
