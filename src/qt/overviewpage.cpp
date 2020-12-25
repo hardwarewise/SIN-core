@@ -40,9 +40,9 @@
 #include <QToolButton>
 
 #define ICON_OFFSET 16
-#define DECORATION_SIZE 38
-#define NUM_ITEMS 6
-#define NUM_ITEMS_ADV 6
+#define DECORATION_SIZE 30
+#define NUM_ITEMS 8
+#define NUM_ITEMS_ADV 8
 
 Q_DECLARE_METATYPE(interfaces::WalletBalances)
 
@@ -65,13 +65,11 @@ public:
         QIcon icon = qvariant_cast<QIcon>(index.data(TransactionTableModel::RawDecorationRole));
         QRect mainRect = option.rect;
         mainRect.moveLeft(ICON_OFFSET);
-        QRect decorationRect(mainRect.topLeft(), QSize(DECORATION_SIZE - 6, DECORATION_SIZE - 6));
-        int xspace = DECORATION_SIZE + 8;
-        int ypad = 6;
-        int halfheight = (mainRect.height() - 2*ypad)/2;
-        QRect amountRect(mainRect.left() + xspace, mainRect.top()+ypad, mainRect.width() - 100 - ICON_OFFSET, halfheight);
-        QRect addressRect(mainRect.left() + 200, mainRect.top()+ypad, mainRect.width() - xspace - ICON_OFFSET, halfheight);
-        //QRect addressRect(mainRect.left() + 200, mainRect.top()+ypad+halfheight, mainRect.width() - xspace, halfheight);
+        QRect decorationRect(mainRect.topLeft(), QSize(DECORATION_SIZE - 8, DECORATION_SIZE - 8));
+        int xspace = DECORATION_SIZE + 16;
+        int ypad = 2;
+        QRect amountRect(mainRect.left() + xspace, mainRect.top()+ypad, mainRect.width() - 100 - ICON_OFFSET, 20);
+        QRect addressRect(mainRect.left() + 200, mainRect.top()+ypad, mainRect.width() - xspace - ICON_OFFSET, 20);
         icon = platformStyle->SingleColorIcon(icon);
         icon.paint(painter, decorationRect);
 
@@ -94,7 +92,7 @@ public:
         if (index.data(TransactionTableModel::WatchonlyRole).toBool())
         {
             QIcon iconWatchonly = qvariant_cast<QIcon>(index.data(TransactionTableModel::WatchonlyDecorationRole));
-            QRect watchonlyRect(boundingRect.right() + 5, mainRect.top()+ypad+halfheight, 16, halfheight);
+            QRect watchonlyRect(boundingRect.right() + 5, mainRect.top()+ypad+20, 16, 20);
             iconWatchonly.paint(painter, watchonlyRect);
         }
 
