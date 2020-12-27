@@ -33,59 +33,59 @@
 
 QPushButton#buttonSend, QPushButton#buttonReceive  { /* Send Button */
 border:  1px solid #01094C;
-    background-color:#01094C;
+    background-color:transparent;
     font-size:18px;
     padding:4px 6px;
-    color: #FFFFFF;
-    border-radius: 8px;
+    color: #01094C;
+    border-radius: 12px;
 }
 
 
 QPushButton#buttonSend:hover, QPushButton#buttonReceive:hover { /* Send Button hover */
 border:  1px solid #01094C;
-    background-color:#0e1163;
+    background-color: #58A7E6;
     font-size:18px;
     padding:4px 6px;
-    color: #FFFFFF;
-    border-radius: 8px;
+    color: #ffffff;
+    border-radius: 12px;
 }
 
 QPushButton#buttonSend:pressed, QPushButton#buttonReceive:pressed { /* Send Button pressed */
 border:  1px solid #0e1163;
-    background-color:#0e1163;
+    background-color:#0088D0;
     font-size:18px;
     padding:4px 6px;
-    color: #00B4B8;
-    border-radius: 8px;
+    color: #FFFFFF;
+    border-radius: 12px;
 }
 
 
 QPushButton#buttonMore{ /* More  Button */
 border:  1px solid #01094C;
-    background-color:#01094C;
+    background-color:transparent;
     font-size:12px;
     padding:4px 6px;
-    color: #FFFFFF;
-    border-radius: 10px;
+    color: #01094C;
+    border-radius: 12px;
 }
 
 
 QPushButton#buttonMore:hover { /* More Button hover */
 border:  1px solid #01094C;
-    background-color:#0e1163;
+    background-color: #58A7E6;
     font-size:12px;
     padding:4px 6px;
-    color: #FFFFFF;
-    border-radius: 10px;
+    color: #ffffff;
+    border-radius: 12px;
 }
 
 QPushButton#buttonMore:pressed{ /* More Button pressed */
 border:  1px solid #0e1163;
-    background-color:#0e1163;
+    background-color:#0088D0;
     font-size:12px;
     padding:4px 6px;
-    color: #00B4B8;
-    border-radius: 10px;
+    color: #FFFFFF;
+    border-radius: 12px;
 }
 
 /*///////////////////// QToolButton ///////////////////*/
@@ -675,13 +675,13 @@ color:#011552;</string>
           </property>
           <property name="minimumSize">
            <size>
-            <width>100</width>
+            <width>140</width>
             <height>32</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>100</width>
+            <width>140</width>
             <height>32</height>
            </size>
           </property>
@@ -700,13 +700,13 @@ color:#011552;</string>
           </property>
           <property name="minimumSize">
            <size>
-            <width>100</width>
+            <width>140</width>
             <height>32</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>100</width>
+            <width>140</width>
             <height>32</height>
            </size>
           </property>

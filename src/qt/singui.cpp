@@ -339,7 +339,7 @@ void SINGUI::createActions()
     receiveCoinsMenuAction->setStatusTip(receiveCoinsAction->statusTip());
     receiveCoinsMenuAction->setToolTip(receiveCoinsMenuAction->statusTip());
 
-    historyAction = new QAction(platformStyle->SingleColorIcon(":/icons/history1"), tr(" &Tx History\n"), this);
+    historyAction = new QAction(platformStyle->SingleColorIcon(":/icons/history1"), tr(" &Transactions\n"), this);
     historyAction->setStatusTip(tr("Browse transaction history"));
     historyAction->setToolTip(historyAction->statusTip());
     historyAction->setCheckable(true);
@@ -382,7 +382,7 @@ void SINGUI::createActions()
 
     //
     // StatsPage
-    statsPageAction = new QAction(platformStyle->SingleColorIcon(":/icons/stats"), tr(" &Stats\n"), this);
+    statsPageAction = new QAction(platformStyle->SingleColorIcon(":/icons/stats"), tr(" &Statistics\n"), this);
     statsPageAction->setStatusTip(tr("Statistics"));
     statsPageAction->setToolTip(statsPageAction->statusTip());
     statsPageAction->setCheckable(true);
