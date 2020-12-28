@@ -318,7 +318,7 @@ void SINGUI::createActions()
     sendCoinsMenuAction->setStatusTip(sendCoinsAction->statusTip());
     sendCoinsMenuAction->setToolTip(sendCoinsMenuAction->statusTip());
 
-    depositCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/deposit"), tr(" &Earn\n"), this);
+    depositCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/deposit"), tr(" &Staking\n"), this);
     depositCoinsAction->setStatusTip(tr("Timelock coins to a SIN address"));
     depositCoinsAction->setToolTip(depositCoinsAction->statusTip());
     depositCoinsAction->setCheckable(true);
@@ -731,15 +731,15 @@ void SINGUI::createToolBars()
         QWidget* empty2 = new QWidget();
 		empty2->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 		toolbar->addWidget(empty2); //4
-        toolbar->addAction(homeAction);
-        toolbar->addAction(overviewAction);  
-        toolbar->addAction(depositCoinsAction);
+        toolbar->addAction(homeAction); //5
+        toolbar->addAction(overviewAction); //6  
+        toolbar->addAction(depositCoinsAction); //7
         
         // Dash
         QSettings settings;
         if (settings.value("fShowMasternodesTab").toBool())
         {
-            toolbar->addAction(masternodeAction);
+            toolbar->addAction(masternodeAction); //8
         }
 
         //InstaSwap
@@ -747,9 +747,9 @@ void SINGUI::createToolBars()
     	//
 
         // StatsPage
-        toolbar->addAction(statsPageAction);
+        toolbar->addAction(statsPageAction); //9
         //
-        toolbar->addAction(historyAction);
+        toolbar->addAction(historyAction); //10
 
 
         homeAction->setChecked(true);
@@ -781,13 +781,11 @@ void SINGUI::createToolBars()
 		empty->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 		toolbar->addWidget(empty);
 
-        QLabel* labelVersionName = new QLabel();
-        labelVersionName->setText("DIN");
-        labelVersionName->setStyleSheet("margin-top: 10px; color: #00FFFF ; font-size: 16px; font-weight : bold;");
-        labelVersionName->setAlignment(Qt::AlignCenter);
-        
+            
 		QLabel* labelVersion = new QLabel();
-        labelVersion->setText(QString(tr("BETELGEUSE\nv%1\n")).arg(QString::fromStdString(FormatVersionFriendly())));
+        //TODO
+        //labelVersion->setText(QString(tr("BETELGEUSE\nv%1\n")).arg(QString::fromStdString(FormatVersionFriendly())));
+        labelVersion->setText(QString(tr("BETELGEUSE\nv2.1.0\n")));
         labelVersion->setStyleSheet("color: white ; margin-bottom: 2px; font-weight : bold;");
         labelVersion->setAlignment(Qt::AlignCenter);
         

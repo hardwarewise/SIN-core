@@ -117,17 +117,26 @@
         <file alias="setup_res">res/icons/setup_res.svg</file>
         <file alias="setup_con">res/icons/setup_con.svg</file>
         <file alias="mywallet">res/icons/mywallet.svg</file>
-        <file alias="blog">res/icons/blog.svg</file>
-        <file alias="docs">res/icons/docs.svg</file>
+        <file alias="blog_white">res/icons/blog_white.svg</file>
+        <file alias="docs_white">res/icons/docs_white.svg</file>
         <file alias="explorer_white">res/icons/explorer_white.svg</file>
         <file alias="options_white">res/icons/options_white.svg</file>
         <file alias="roadmap_white">res/icons/roadmap_white.svg</file>
-        <file alias="webtool">res/icons/webtool.svg</file>
+        <file alias="webtool_white">res/icons/webtool_white.svg</file>
         <file alias="download_white">res/icons/download_white.svg</file>
-        <file alias="whitepaper">res/icons/whitepaper.svg</file>
+        <file alias="whitepaper_white">res/icons/whitepaper_white.svg</file>
         <file alias="faq_white">res/icons/faq_white.svg</file>
-        <file alias="discord_white">res/icons/discord.svg</file>
-
+        <file alias="discord_white">res/icons/discord_white.svg</file>
+        <file alias="blog_blue">res/icons/blog_blue.svg</file>
+        <file alias="docs_blue">res/icons/docs_blue.svg</file>
+        <file alias="explorer_blue">res/icons/explorer_blue.svg</file>
+        <file alias="roadmap_blue">res/icons/roadmap_blue.svg</file>
+        <file alias="webtool_blue">res/icons/webtool_blue.svg</file>
+        <file alias="download_blue">res/icons/download_blue.svg</file>
+        <file alias="whitepaper_blue">res/icons/whitepaper_blue.svg</file>
+        <file alias="faq_blue">res/icons/faq_blue.svg</file>
+        <file alias="discord_blue">res/icons/discord_blue.svg</file>
+        <file alias="cmc_blue">res/icons/cmc_blue.svg</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>

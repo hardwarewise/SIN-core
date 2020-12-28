@@ -1,3 +1,74 @@
+/*--------------------------------------------
+         --==OVERVIEW PAGE==--
+----------------------------------------------*/
+/*----------------------------------------------
+QverviewPage -> QToolButton START
+----------------------------------------------*/
+QWidget#toolBoxWidget .QToolButton {
+  border:  1px solid #01094C;
+  background-color:transparent;
+  font-size:12px;
+  padding:4px 6px;
+  color: #01094C;
+  border-radius: 12px;
+  }
+
+  QWidget#toolBoxWidget .QToolButton:hover {
+    border:  1px solid #01094C;
+    background-color: #58A7E6;
+    font-size:12px;
+    padding:4px 6px;
+    color: #ffffff;
+    border-radius: 12px;
+    border-right: 3px solid #01094C;
+    border-bottom: 3px solid #01094C;
+  }
+  
+  QWidget#toolBoxWidget QToolButton#toolButtonBlog {
+    qproperty-icon: url(':/icons/blog_blue');
+  }
+  
+  QWidget#toolBoxWidget QToolButton#toolButtonDocs {
+    qproperty-icon: url(':/icons/docs_blue');
+  }
+  
+  QWidget#toolBoxWidget QToolButton#toolButtonExchanges {
+    qproperty-icon: url(':/icons/cmc_blue');
+  }
+
+  QWidget#toolBoxWidget QToolButton#toolButtonExplorer {
+    qproperty-icon: url(':/icons/explorer_blue');
+  }
+
+  QWidget#toolBoxWidget QToolButton#toolButtonRoadmap {
+    qproperty-icon: url(':/icons/roadmap_blue');
+  }
+
+
+  QWidget#toolBoxWidget QToolButton#toolButtonDiscord {
+    qproperty-icon: url(':/icons/discord_blue');
+  }
+
+  QWidget#toolBoxWidget QToolButton#toolButtonWallet {
+    qproperty-icon: url(':/icons/download_blue');
+  }
+
+  QWidget#toolBoxWidget QToolButton#toolButtonWebTool {
+    qproperty-icon: url(':/icons/webtool_blue');
+  }
+
+  QWidget#toolBoxWidget QToolButton#toolButtonWhitePaper {
+    qproperty-icon: url(':/icons/whitepaper_blue');
+  }
+
+  QWidget#toolBoxWidget QToolButton#toolButtonFaq {
+    qproperty-icon: url(':/icons/faq_blue');
+  }
+
+/* OverviewPage QToolButton END */
+
+
+
 /* BGcolor #FFFFFF */
 /* Menu BG Color #01094C */
 

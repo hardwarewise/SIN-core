@@ -163,53 +163,53 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     ui->setupUi(this);
 
     ui->toolButtonBlog->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    ui->toolButtonBlog->setIcon(QIcon(":/icons/blog"));
+    //ui->toolButtonBlog->setIcon(QIcon(":/icons/blog_blue"));
     ui->toolButtonBlog->setIconSize(QSize(64, 64));
      ui->toolButtonBlog->setStatusTip(tr("Visit Sinovate Blog"));
 
     ui->toolButtonDocs->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    ui->toolButtonDocs->setIcon(QIcon(":/icons/docs"));
+    //ui->toolButtonDocs->setIcon(QIcon(":/icons/docs_blue"));
     ui->toolButtonDocs->setIconSize(QSize(64, 64));
     ui->toolButtonDocs->setStatusTip(tr("Visit Sinovate Docs"));
 
     
     ui->toolButtonExchanges->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    ui->toolButtonExchanges->setIcon(QIcon(":/icons/cmc_white"));
+    //ui->toolButtonExchanges->setIcon(QIcon(":/icons/cmc_blue"));
     ui->toolButtonExchanges->setIconSize(QSize(64, 64));
     ui->toolButtonExchanges->setStatusTip(tr("Buy Sinovate Coin"));
 
     ui->toolButtonExplorer->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    ui->toolButtonExplorer->setIcon(QIcon(":/icons/explorer_white"));
+    //ui->toolButtonExplorer->setIcon(QIcon(":/icons/explorer_blue"));
     ui->toolButtonExplorer->setIconSize(QSize(64, 64));
     ui->toolButtonExplorer->setStatusTip(tr("Visit Sinovate Block Explorer"));
 
     ui->toolButtonDiscord->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    ui->toolButtonDiscord->setIcon(QIcon(":/icons/discord_white"));
+    //ui->toolButtonDiscord->setIcon(QIcon(":/icons/discord_blue"));
     ui->toolButtonDiscord->setIconSize(QSize(64, 64));
     ui->toolButtonDiscord->setStatusTip(tr("Visit Sinovate Discord Channel"));
 
     ui->toolButtonRoadmap->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    ui->toolButtonRoadmap->setIcon(QIcon(":/icons/roadmap_white"));
+    //ui->toolButtonRoadmap->setIcon(QIcon(":/icons/roadmap_blue"));
     ui->toolButtonRoadmap->setIconSize(QSize(64, 64));
     ui->toolButtonRoadmap->setStatusTip(tr("Sinovate Roadmap"));
 
     ui->toolButtonWebTool->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    ui->toolButtonWebTool->setIcon(QIcon(":/icons/webtool"));
+    //ui->toolButtonWebTool->setIcon(QIcon(":/icons/webtool_blue"));
     ui->toolButtonWebTool->setIconSize(QSize(64, 64));
     ui->toolButtonWebTool->setStatusTip(tr("Visit Sinovate WebTool"));
 
     ui->toolButtonWallet->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    ui->toolButtonWallet->setIcon(QIcon(":/icons/download_white"));
+    //ui->toolButtonWallet->setIcon(QIcon(":/icons/download_blue"));
     ui->toolButtonWallet->setIconSize(QSize(64, 64));
     ui->toolButtonWallet->setStatusTip(tr("Download Latest Sinovate Wallets"));
 
     ui->toolButtonWhitePaper->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    ui->toolButtonWhitePaper->setIcon(QIcon(":/icons/whitepaper"));
+    //ui->toolButtonWhitePaper->setIcon(QIcon(":/icons/whitepaper_blue"));
     ui->toolButtonWhitePaper->setIconSize(QSize(64, 64));
     ui->toolButtonWhitePaper->setStatusTip(tr("Sinovate WhitePaper"));
 
     ui->toolButtonFaq->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    ui->toolButtonFaq->setIcon(QIcon(":/icons/faq_white"));
+    //ui->toolButtonFaq->setIcon(QIcon(":/icons/faq_blue"));
     ui->toolButtonFaq->setIconSize(QSize(64, 64));
     ui->toolButtonFaq->setStatusTip(tr("Open FAQ Page"));
 
@@ -272,7 +272,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                             QString total;
                             double current2 = (current * totalBalance / 100000000);
                             total = QString::number(current2, 'f', 2);
-                            ui->labelUSDTotal->setText("$" + total + " USD");
+                            //ui->labelUSDTotal->setText("$" + total + " USD");
                         }
                     }
                 }
@@ -328,7 +328,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                             QString totalEUR;
                             double current2EUR = (currentEUR * totalBalance / 100000000);
                             totalEUR = QString::number(current2EUR, 'f', 2);
-                            ui->labelEURTotal->setText("€" + totalEUR + " EUR");
+                            //ui->labelEURTotal->setText("€" + totalEUR + " EUR");
                         }
                     }
                 }
@@ -600,7 +600,7 @@ void OverviewPage::onResult(QNetworkReply* replystats)
 
         double currentBTC = dataObject.value("lastPrice").toDouble();
         double availableBTC = (currentBTC * totalBalance / 100000000);
-        ui->labelBTCTotal->setText(QString::number(availableBTC, 'f', 8) + " BTC");
+        //ui->labelBTCTotal->setText(QString::number(availableBTC, 'f', 8) + " BTC");
        
     }
     else
@@ -621,12 +621,14 @@ void OverviewPage::showTransactionWidget(bool bShow)   {
     ui->buttonWidget->show();
     ui->recentWidget->show();
     ui->recentHeaderWidget->show();
+    ui->line->show();
     }
     else {        
         ui->transactionWidget->hide();
         ui->buttonWidget->hide();
         ui->recentWidget->hide();
         ui->recentHeaderWidget->hide();
+        ui->line->hide();
     }
 }
 
@@ -636,12 +638,14 @@ void OverviewPage::showToolBoxWidget(bool bShow)   {
         ui->buttonWidget->hide();
         ui->recentWidget->hide();
         ui->recentHeaderWidget->hide();
+        ui->line->hide();
     }
     else {         
         ui->toolBoxWidget->hide();
         ui->buttonWidget->show();
         ui->recentWidget->show();
         ui->recentHeaderWidget->show();
+        ui->line->show();
     }
 }
 
