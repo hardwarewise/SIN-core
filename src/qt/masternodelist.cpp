@@ -37,6 +37,7 @@
 #include <QStyleFactory>
 #include <QDesktopServices>
 #include <QTextCodec>
+#include <QSignalMapper>
 
 // begin nodeSetup
 #include <boost/algorithm/string.hpp>
@@ -101,9 +102,35 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
 
     mCheckAllNodesAction = new QAction(tr("Check ALL nodes status"), this);
     contextDINMenu->addAction(mCheckAllNodesAction);
-    connect(ui->dinTable, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextDINMenu(const QPoint&)));
     connect(mCheckAllNodesAction, SIGNAL(triggered()), this, SLOT(nodeSetupCheckAllDINNodes()));
 
+    // select columns context menu
+    QHeaderView *horizontalHeader;
+    horizontalHeader = ui->dinTable->horizontalHeader();
+    horizontalHeader->setContextMenuPolicy(Qt::CustomContextMenu);     //set contextmenu
+    contextDINColumnsMenu = new QMenu();
+
+    connect(horizontalHeader, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextDINColumnsMenu(const QPoint&)));
+
+    int columnID = 0;
+    QTableWidgetItem *headerItem;
+    QSignalMapper* signalMapper = new QSignalMapper (this) ;
+
+    while ( (headerItem = ui->dinTable->horizontalHeaderItem(columnID)) != nullptr )   {
+        QAction * actionCheckColumnVisible = new QAction(headerItem->text(), this);
+        actionCheckColumnVisible->setCheckable(true);
+        actionCheckColumnVisible->setChecked(true);
+        contextDINColumnsMenu->addAction(actionCheckColumnVisible);
+
+        connect (actionCheckColumnVisible, SIGNAL(triggered()), signalMapper, SLOT(map())) ;
+        signalMapper->setMapping (actionCheckColumnVisible, columnID) ;
+
+        contextDINColumnsActions.push_back( std::make_pair(columnID, actionCheckColumnVisible) );
+        columnID++;
+    }
+    connect (signalMapper, SIGNAL(mapped(int)), this, SLOT(nodeSetupDINColumnToggle( int )));
+
+    // timers
     timerSingleShot = new QTimer(this);
     connect(timerSingleShot, SIGNAL(timeout()), this, SLOT(updateDINList()));
     timerSingleShot->setSingleShot(true);
@@ -175,6 +202,9 @@ MasternodeList::~MasternodeList()
     delete ConnectionManager;
     delete mCheckNodeAction;
     delete mCheckAllNodesAction;
+    for(auto const& value: contextDINColumnsActions) {
+        delete value.second;
+    }
 }
 
 void MasternodeList::setClientModel(ClientModel *model)
@@ -193,6 +223,11 @@ void MasternodeList::showContextDINMenu(const QPoint &point)
     if(item)    {
         contextDINMenu->exec(QCursor::pos());
     }
+}
+
+void MasternodeList::showContextDINColumnsMenu(const QPoint &point)
+{
+    contextDINColumnsMenu->exec(QCursor::pos());
 }
 
 void MasternodeList::updateDINList()
@@ -522,6 +557,26 @@ void MasternodeList::nodeSetupCheckAllDINNodes()    {
     }
     mCheckAllNodesAction->setEnabled(false);
     mCheckNodeAction->setEnabled(false);
+}
+
+void MasternodeList::nodeSetupDINColumnToggle(int nColumn ) {
+
+LogPrintf("nodeSetupDINColumnToggle %d \n", nColumn );
+
+    bool bHide = false;
+
+    // find action
+    auto it = std::find_if( contextDINColumnsActions.begin(), contextDINColumnsActions.end(),
+    [&nColumn](const std::pair<int, QAction*>& element){ return element.first == nColumn;} );
+
+    if (it != contextDINColumnsActions.end())
+    {
+        QAction *a = it->second;
+        if (!a->isChecked()) {
+            bHide = true;
+        }
+        ui->dinTable->setColumnHidden( nColumn, bHide);
+    }
 }
 
 void MasternodeList::nodeSetupCheckDINNodeTimer()    {

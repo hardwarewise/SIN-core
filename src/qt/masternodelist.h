@@ -75,6 +75,8 @@ public:
 
 private:
     QMenu *contextDINMenu;
+    QMenu *contextDINColumnsMenu;
+    std::vector<std::pair<int, QAction*>> contextDINColumnsActions;
     int64_t nTimeFilterUpdated;
     bool fFilterUpdated;
 
@@ -185,6 +187,8 @@ private:
 
 private Q_SLOTS:
     void showContextDINMenu(const QPoint &);
+    void showContextDINColumnsMenu(const QPoint &);
+    void nodeSetupDINColumnToggle(int nColumn );
     void on_checkDINNode();
     void on_payButton_clicked();
 
