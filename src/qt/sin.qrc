@@ -5,7 +5,7 @@
         <file alias="address-book">res/icons/address-book.svg</file>
         <file alias="quit">res/icons/quit.png</file>
         <file alias="send">res/icons/send.png</file>
-		<file alias="send1">res/icons/send1.png</file>
+		<file alias="send1">res/icons/send1.svg</file>
         <file alias="deposit">res/icons/deposit.png</file>
         <file alias="connect_0">res/icons/connect0.png</file>
         <file alias="connect_1">res/icons/connect1.png</file>
@@ -26,7 +26,7 @@
         <file alias="eye_plus">res/icons/eye_plus.png</file>
         <file alias="options">res/icons/configure.svg</file>
         <file alias="receiving_addresses">res/icons/receive.png</file>
-		<file alias="receiving_addresses1">res/icons/receive1.png</file>
+		<file alias="receiving_addresses1">res/icons/receive1.svg</file>
         <file alias="editpaste">res/icons/editpaste.svg</file>
         <file alias="editcopy">res/icons/editcopy.svg</file>
         <file alias="add">res/icons/add.png</file>

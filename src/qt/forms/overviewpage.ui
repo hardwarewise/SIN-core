@@ -28,65 +28,7 @@
   <property name="styleSheet">
    <string notr="true">QToolTip { color: #000000; background-color: #ffffff; border: 0px; }
 
-/*QPushButton {color:#f84444;  font-size:14px; background-color: transparent; border-radius: 0px;}*/
-.QPushButton {color:#FFFFFF;  font-size:14px; background-color: #01094C; border-radius:10px;}
 
-QPushButton#buttonSend, QPushButton#buttonReceive  { /* Send Button */
-border:  1px solid #01094C;
-    background-color:transparent;
-    font-size:18px;
-    padding:4px 6px;
-    color: #01094C;
-    border-radius: 12px;
-}
-
-
-QPushButton#buttonSend:hover, QPushButton#buttonReceive:hover { /* Send Button hover */
-border:  1px solid #01094C;
-    background-color: #58A7E6;
-    font-size:18px;
-    padding:4px 6px;
-    color: #ffffff;
-    border-radius: 12px;
-}
-
-QPushButton#buttonSend:pressed, QPushButton#buttonReceive:pressed { /* Send Button pressed */
-border:  1px solid #0e1163;
-    background-color:#0088D0;
-    font-size:18px;
-    padding:4px 6px;
-    color: #FFFFFF;
-    border-radius: 12px;
-}
-
-
-QPushButton#buttonMore{ /* More  Button */
-border:  1px solid #01094C;
-    background-color:transparent;
-    font-size:12px;
-    padding:4px 6px;
-    color: #01094C;
-    border-radius: 12px;
-}
-
-
-QPushButton#buttonMore:hover { /* More Button hover */
-border:  1px solid #01094C;
-    background-color: #58A7E6;
-    font-size:12px;
-    padding:4px 6px;
-    color: #ffffff;
-    border-radius: 12px;
-}
-
-QPushButton#buttonMore:pressed{ /* More Button pressed */
-border:  1px solid #0e1163;
-    background-color:#0088D0;
-    font-size:12px;
-    padding:4px 6px;
-    color: #FFFFFF;
-    border-radius: 12px;
-}
 
 </string>
   </property>
@@ -281,7 +223,7 @@ border:  1px solid #0e1163;
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QWidget" name="bottom_container" native="true">
+         <widget class="QWidget" name="balance_container" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
             <horstretch>0</horstretch>
@@ -337,7 +279,7 @@ border:  1px solid #0e1163;
                      <property name="styleSheet">
                       <string notr="true">font-size:48px;
 font-weight:bold;
-color:#011552;</string>
+</string>
                      </property>
                      <property name="text">
                       <string notr="true">00.00 SIN</string>
@@ -371,7 +313,7 @@ color:#011552;</string>
                     <widget class="QLabel" name="labelTitle3">
                      <property name="styleSheet">
                       <string notr="true">font-size:14px;
-color:#011552;</string>
+</string>
                      </property>
                      <property name="text">
                       <string>Pending:</string>
@@ -385,7 +327,7 @@ color:#011552;</string>
                     <widget class="QLabel" name="labelUnconfirmed">
                      <property name="styleSheet">
                       <string notr="true">font-size:14px;
-color:#011552;</string>
+</string>
                      </property>
                      <property name="text">
                       <string notr="true">0.00 SIN</string>
@@ -416,7 +358,7 @@ color:#011552;</string>
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#011552;</string>
+                      <string notr="true"/>
                      </property>
                      <property name="text">
                       <string/>
@@ -427,7 +369,7 @@ color:#011552;</string>
                     <widget class="QLabel" name="labelImmatureText">
                      <property name="styleSheet">
                       <string notr="true">font-size:14px;
-color:#011552;</string>
+</string>
                      </property>
                      <property name="text">
                       <string>Immature:</string>
@@ -441,7 +383,7 @@ color:#011552;</string>
                     <widget class="QLabel" name="labelImmature">
                      <property name="styleSheet">
                       <string notr="true">font-size:14px;
-color:#011552;</string>
+</string>
                      </property>
                      <property name="text">
                       <string notr="true">0.00 SIN</string>
@@ -484,6 +426,9 @@ color:#011552;</string>
         <property name="spacing">
          <number>10</number>
         </property>
+        <property name="bottomMargin">
+         <number>5</number>
+        </property>
         <item>
          <spacer name="horizontalSpacer_10">
           <property name="orientation">
@@ -508,13 +453,13 @@ color:#011552;</string>
           <property name="minimumSize">
            <size>
             <width>140</width>
-            <height>32</height>
+            <height>36</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>140</width>
-            <height>32</height>
+            <height>36</height>
            </size>
           </property>
           <property name="text">
@@ -533,13 +478,13 @@ color:#011552;</string>
           <property name="minimumSize">
            <size>
             <width>140</width>
-            <height>32</height>
+            <height>36</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>140</width>
-            <height>32</height>
+            <height>36</height>
            </size>
           </property>
           <property name="text">
@@ -578,7 +523,7 @@ color:#011552;</string>
         </size>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(147, 147, 147);</string>
+        <string notr="true">background-color: #6F8097;</string>
        </property>
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
@@ -659,7 +604,6 @@ color:#011552;</string>
             <property name="font">
              <font>
               <family>OpenSans</family>
-              <pointsize>-1</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -758,10 +702,10 @@ color:#011552;</string>
          <number>10</number>
         </property>
         <item>
-         <widget class="QLabel" name="label_12">
+         <widget class="QLabel" name="recentTransactionsLabel">
           <property name="styleSheet">
-           <string notr="true">font-size:14px;
-color:#011552;</string>
+           <string notr="true">font-size:16px;
+</string>
           </property>
           <property name="text">
            <string>Recent Transactions</string>
@@ -800,8 +744,7 @@ color:#011552;</string>
         </sizepolicy>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: #01094C;
-</string>
+        <string notr="true"/>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="5,10,65,0,20,0">
         <property name="leftMargin">
@@ -832,8 +775,7 @@ color:#011552;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">font-size:14px;
-color:#FFFFFF;
-font-weight:bold;</string>
+</string>
           </property>
           <property name="text">
            <string>Type</string>
@@ -862,8 +804,7 @@ font-weight:bold;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">font-size:14px;
-color:#FFFFFF;
-font-weight:bold;</string>
+</string>
           </property>
           <property name="text">
            <string>Date</string>
@@ -874,8 +815,7 @@ font-weight:bold;</string>
          <widget class="QLabel" name="label_10">
           <property name="styleSheet">
            <string notr="true">font-size:14px;
-color:#FFFFFF;
-font-weight:bold;</string>
+</string>
           </property>
           <property name="text">
            <string>Label</string>
@@ -902,8 +842,7 @@ font-weight:bold;</string>
          <widget class="QLabel" name="label_11">
           <property name="styleSheet">
            <string notr="true">font-size:14px;
-color:#FFFFFF;
-font-weight:bold;</string>
+</string>
           </property>
           <property name="text">
            <string>Amount</string>
@@ -941,20 +880,7 @@ font-weight:bold;</string>
         <item>
          <widget class="QListView" name="listTransactions">
           <property name="styleSheet">
-           <string notr="true">QListView {
-background-color: transparent;
-/*background: #D6DCE5; */
-alternate-background-color: #D6D7D8;
-font-weight: lighter;
-font-size:14px;
-color: #000000;
-margin-top:0px;
-margin-left:-40px;
-margin-right:-40px;
-padding-right: 10 px;
-margin-bottom: 9px;
-}
-</string>
+           <string notr="true"/>
           </property>
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
@@ -1259,163 +1185,162 @@ margin-bottom: 9px;
       </spacer>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
-       <property name="leftMargin">
-        <number>15</number>
-       </property>
-       <property name="topMargin">
-        <number>9</number>
-       </property>
-       <property name="bottomMargin">
-        <number>10</number>
-       </property>
-       <item>
-        <spacer name="horizontalSpacer_17">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QLabel" name="labelMarketValueBtc">
-         <property name="styleSheet">
-          <string notr="true">font-size:14px;
-color:#011552;
+      <widget class="QWidget" name="bottomValueWidget" native="true">
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <property name="leftMargin">
+         <number>15</number>
+        </property>
+        <property name="topMargin">
+         <number>9</number>
+        </property>
+        <property name="bottomMargin">
+         <number>10</number>
+        </property>
+        <item>
+         <spacer name="horizontalSpacer_17">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="labelMarketValueBtc">
+          <property name="styleSheet">
+           <string notr="true">font-size:14px;
 font-weight: bold;</string>
-         </property>
-         <property name="text">
-          <string>Value BTC:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="labelCurrentPriceBTC">
-         <property name="styleSheet">
-          <string notr="true">font-size:14px;
-color:#011552;</string>
-         </property>
-         <property name="text">
-          <string notr="true">0.00 BTC</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_13">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_2">
-         <property name="styleSheet">
-          <string notr="true">font-size:14px;
-color:#011552;
+          </property>
+          <property name="text">
+           <string>Value BTC :</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="labelCurrentPriceBTC">
+          <property name="styleSheet">
+           <string notr="true">font-size:14px;
+</string>
+          </property>
+          <property name="text">
+           <string notr="true">0.00 BTC</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_13">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="styleSheet">
+           <string notr="true">font-size:14px;
 font-weight: bold;</string>
-         </property>
-         <property name="text">
-          <string>Value USD: </string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="labelCurrentPrice">
-         <property name="styleSheet">
-          <string notr="true">font-size:14px;
-color:#011552;</string>
-         </property>
-         <property name="text">
-          <string>0.00 USD</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_12">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_7">
-         <property name="styleSheet">
-          <string notr="true">font-size:14px;
-color:#011552;
+          </property>
+          <property name="text">
+           <string>Value USD : </string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="labelCurrentPrice">
+          <property name="styleSheet">
+           <string notr="true">font-size:14px;
+</string>
+          </property>
+          <property name="text">
+           <string>0.00 USD</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_12">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_7">
+          <property name="styleSheet">
+           <string notr="true">font-size:14px;
 font-weight: bold;</string>
-         </property>
-         <property name="text">
-          <string>Value EUR:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="labelCurrentEURPrice">
-         <property name="styleSheet">
-          <string notr="true">font-size:14px;
-color:#011552;</string>
-         </property>
-         <property name="text">
-          <string>0.00 EUR</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_8">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_7">
-         <property name="maximumSize">
-          <size>
-           <width>1</width>
-           <height>16</height>
-          </size>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
+          </property>
+          <property name="text">
+           <string>Value EUR :</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="labelCurrentEURPrice">
+          <property name="styleSheet">
+           <string notr="true">font-size:14px;
+</string>
+          </property>
+          <property name="text">
+           <string>0.00 EUR</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_8">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_7">
+          <property name="maximumSize">
+           <size>
+            <width>1</width>
+            <height>16</height>
+           </size>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
      </item>
     </layout>
    </item>

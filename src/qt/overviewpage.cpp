@@ -107,7 +107,7 @@ public:
         else
         {
             
-            foreground = QColor(61, 113, 193);
+            foreground = QColor(255, 255, 255);
         }
 
 
@@ -122,7 +122,7 @@ public:
         painter->drawText(amountRect, Qt::AlignRight|Qt::AlignVCenter, amountText);
 
         painter->setPen(option.palette.color(QPalette::Text));
-        foreground = QColor(205, 220, 234);
+        foreground = QColor(255, 255, 255);
         painter->drawText(amountRect, Qt::AlignLeft|Qt::AlignVCenter, GUIUtil::dateTimeStr(date));
 
         
@@ -252,7 +252,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                     if (!list.isEmpty()) {
                         double next = list.first().toDouble(&ok);
                         if (!ok) {
-                            ui->labelCurrentPrice->setStyleSheet(currentPriceStyleSheet.arg("#011552"));
+                            ui->labelCurrentPrice->setStyleSheet(".QLabel{font-size:14px;}");
                             ui->labelCurrentPrice->setText("");
                         } else {
                             double current = ui->labelCurrentPrice->text().toDouble(&ok);
@@ -264,7 +264,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                                 else if (next > current)
                                     ui->labelCurrentPrice->setStyleSheet(currentPriceStyleSheet.arg("green"));
                                 else
-                                    ui->labelCurrentPrice->setStyleSheet(currentPriceStyleSheet.arg("#011552;"));
+                                    ui->labelCurrentPrice->setStyleSheet(".QLabel{font-size:14px;}");
                                     
                             }
                             ui->labelCurrentPrice->setText(QString("%1").arg(QString().setNum(next, 'f', 8)));
@@ -308,7 +308,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                     if (!listEUR.isEmpty()) {
                         double next = listEUR.first().toDouble(&okEUR);
                         if (!okEUR) {
-                            ui->labelCurrentEURPrice->setStyleSheet(currentPriceStyleSheet.arg("#011552"));
+                            ui->labelCurrentEURPrice->setStyleSheet(".QLabel{font-size:14px;}");
                             ui->labelCurrentEURPrice->setText("");
                         } else {
                             double currentEUR = ui->labelCurrentEURPrice->text().toDouble(&okEUR);
@@ -320,7 +320,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                                 else if (next > currentEUR)
                                     ui->labelCurrentEURPrice->setStyleSheet(currentPriceStyleSheet.arg("green"));
                                 else
-                                    ui->labelCurrentEURPrice->setStyleSheet(currentPriceStyleSheet.arg("#011552;"));
+                                    ui->labelCurrentEURPrice->setStyleSheet(".QLabel{font-size:14px;}");
                                     
                             }
                             ui->labelCurrentEURPrice->setText(QString("%1").arg(QString().setNum(next, 'f', 8)));

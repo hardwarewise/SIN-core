@@ -14,10 +14,7 @@
    <string notr="true">Transaction details</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QDialog#TransactionDescDialog {
-background-color: #FFFFFF;
-}
-
+   <string notr="true">
 QPushButton {
 
 	background-color: #2E3191;
@@ -28,8 +25,9 @@ QPushButton {
 	border: 0;
 	color: #ffffff;
 	font-size: 14px;
-		
+
 }
+
 QPushButton:hover {
 	background-color: #191c8a;
 	
@@ -43,12 +41,13 @@ QPushButton:pressed {
 	border: 1px solid #333;
 }
 
-QTextEdit#detailText {
+/*QTextEdit#detailText {
 background-color: transparent;
 font-size: 14px;
 color: #333333;
 border:0;
-}</string>
+}
+*/</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
