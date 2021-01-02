@@ -1192,6 +1192,7 @@ void MasternodeList::nodeSetupEnableOrderUI( bool bEnable, int orderID , int inv
         ui->comboBilling->setEnabled(false);
         ui->btnSetup->setEnabled(true);
         ui->btnSetupReset->setEnabled(true);
+        ui->payButton->setEnabled(false);
         ui->labelOrder->setVisible(true);
         ui->labelOrderID->setVisible(true);
         ui->labelOrderID->setText(QString::fromStdString("#")+QString::number(orderID));
@@ -1206,6 +1207,7 @@ void MasternodeList::nodeSetupEnableOrderUI( bool bEnable, int orderID , int inv
         ui->comboBilling->setEnabled(true);
         ui->btnSetup->setEnabled(true);
         ui->btnSetupReset->setEnabled(false);
+        ui->payButton->setEnabled(true);
         ui->labelOrder->setVisible(false);
         ui->labelOrderID->setVisible(false);
         ui->labelInvoice->setVisible(false);
