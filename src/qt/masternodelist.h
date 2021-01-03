@@ -33,6 +33,7 @@ class ClientModel;
 class OptionsModel;
 class QNetworkAccessManager;
 class UniValue;
+class QEvent;
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
