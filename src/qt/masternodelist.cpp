@@ -68,6 +68,21 @@ int GetOffsetFromUtc()
 #endif
 }
 
+bool DINColumnsEventHandler::eventFilter(QObject *pQObj, QEvent *pQEvent)
+{
+  if (pQEvent->type() == QEvent::MouseButtonRelease) {
+     if ( QMenu* menu = dynamic_cast<QMenu*>(pQObj) ) {
+         QAction *action = menu->activeAction();
+         if (action) {
+             action->trigger();
+         }
+         return true;    // don't close menu
+     }
+  }
+  // standard event processing
+  return QObject::eventFilter(pQObj, pQEvent);
+}
+
 MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *parent) :
     QWidget(parent),
     // ++ DIN ROI Stats
