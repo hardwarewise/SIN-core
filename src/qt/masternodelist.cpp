@@ -109,17 +109,23 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     horizontalHeader = ui->dinTable->horizontalHeader();
     horizontalHeader->setContextMenuPolicy(Qt::CustomContextMenu);     //set contextmenu
     contextDINColumnsMenu = new QMenu();
+    menuEventHandler = new DINColumnsEventHandler();
+    contextDINColumnsMenu->installEventFilter(menuEventHandler);
 
     connect(horizontalHeader, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextDINColumnsMenu(const QPoint&)));
 
     int columnID = 0;
     QTableWidgetItem *headerItem;
     QSignalMapper* signalMapper = new QSignalMapper (this) ;
+    QSettings settings;
 
     while ( (headerItem = ui->dinTable->horizontalHeaderItem(columnID)) != nullptr )   {
         QAction * actionCheckColumnVisible = new QAction(headerItem->text(), this);
+        bool bCheck = settings.value("bShowDINColumn_"+QString::number(columnID), true).toBool();
+        if (!bCheck)    ui->dinTable->setColumnHidden( columnID, true);
+
         actionCheckColumnVisible->setCheckable(true);
-        actionCheckColumnVisible->setChecked(true);
+        actionCheckColumnVisible->setChecked(bCheck);
         contextDINColumnsMenu->addAction(actionCheckColumnVisible);
 
         connect (actionCheckColumnVisible, SIGNAL(triggered()), signalMapper, SLOT(map())) ;
@@ -560,10 +566,8 @@ void MasternodeList::nodeSetupCheckAllDINNodes()    {
 }
 
 void MasternodeList::nodeSetupDINColumnToggle(int nColumn ) {
-
-LogPrintf("nodeSetupDINColumnToggle %d \n", nColumn );
-
     bool bHide = false;
+    QSettings settings;
 
     // find action
     auto it = std::find_if( contextDINColumnsActions.begin(), contextDINColumnsActions.end(),
@@ -575,6 +579,7 @@ LogPrintf("nodeSetupDINColumnToggle %d \n", nColumn );
         if (!a->isChecked()) {
             bHide = true;
         }
+        settings.setValue("bShowDINColumn_"+QString::number(nColumn), !bHide);
         ui->dinTable->setColumnHidden( nColumn, bHide);
     }
 }
