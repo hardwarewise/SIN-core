@@ -64,20 +64,7 @@ struct infinitynode_conf_t
 class DINColumnsEventHandler : public QObject  {
 
 protected:
-   virtual bool eventFilter(QObject *pQObj, QEvent *pQEvent) override
-   {
-     if (pQEvent->type() == QEvent::MouseButtonRelease) {
-        if ( QMenu* menu = dynamic_cast<QMenu*>(pQObj) ) {
-            QAction *action = menu->activeAction();
-            if (action) {
-                action->trigger();
-            }
-            return true;    // don't close menu
-        }
-     }
-     // standard event processing
-     return QObject::eventFilter(pQObj, pQEvent);
-   }
+   virtual bool eventFilter(QObject *pQObj, QEvent *pQEvent) override;
 };
 
 /** Masternode Manager page widget */
