@@ -211,6 +211,9 @@ MasternodeList::~MasternodeList()
     for(auto const& value: contextDINColumnsActions) {
         delete value.second;
     }
+    delete contextDINMenu;
+    delete contextDINColumnsMenu;
+    delete menuEventHandler;
 }
 
 void MasternodeList::setClientModel(ClientModel *model)
