@@ -114,6 +114,7 @@ QT_FORMS_UI = \
   qt/forms/signverifymessagedialog.ui \
   qt/forms/statspage.ui \
   qt/forms/faqpage.ui \
+  qt/forms/stakepage.ui \
   qt/forms/transactiondescdialog.ui
 
 # Dash
@@ -174,7 +175,10 @@ QT_MOC_CPP = \
   qt/moc_walletframe.cpp \
   qt/moc_statspage.cpp \
   qt/moc_faqpage.cpp \
+  qt/moc_qswitchcontrol.cpp \
+  qt/moc_stakepage.cpp \
   qt/moc_walletmodel.cpp \
+  qt/sinpushbutton.cpp \
   qt/moc_walletview.cpp
 
 # Dash
@@ -215,6 +219,8 @@ BITCOIN_QT_H = \
   qt/bantablemodel.h \
   qt/statspage.h \
   qt/faqpage.h \
+  qt/qswitchcontrol.h \
+  qt/stakepage.h \
   qt/sinaddressvalidator.h \
   qt/sinamountfield.h \
   qt/singui.h \
@@ -264,6 +270,7 @@ BITCOIN_QT_H = \
   qt/walletmodel.h \
   qt/walletmodeltransaction.h \
   qt/walletview.h \
+  qt/sinpushbutton.h \
   qt/winshutdownmonitor.h
 
 # Dash
@@ -399,6 +406,8 @@ BITCOIN_QT_WALLET_CPP = \
   qt/walletmodel.cpp \
   qt/statspage.cpp \
   qt/faqpage.cpp \
+  qt/qswitchcontrol.cpp \
+  qt/stakepage.cpp \
   qt/walletmodeltransaction.cpp \
   qt/walletview.cpp
 
