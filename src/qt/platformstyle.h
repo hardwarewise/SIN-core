@@ -39,16 +39,53 @@ public:
     /** Colorize an icon (given object) with the text color */
     QIcon TextColorIcon(const QIcon& icon) const;
 
+    static QIcon SingleColorIcon(const QString& resourcename, const QColor& colorbase, double opacity = 1);
+    static QIcon SingleColorIcon(const QIcon& icon, const QColor& colorbase, double opacity = 1);
+    
+    enum TableColorType{
+        Normal = 0,
+        Input,
+        Inout,
+        Output,
+        Error
+    };
+    
+    QIcon TableColorIcon(const QString& resourcename, TableColorType type) const;
+    void TableColor(TableColorType type, QColor& color, double& opacity) const;
+    QImage TableColorImage(const QString& resourcename, TableColorType type) const;
+
+    enum StateType{
+        NavBar = 0,
+        PushButton = 1,
+        PushButtonLight = 2,
+        PushButtonIcon = 3
+    };
+    /** Get multi-states icon*/
+    QIcon MultiStatesIcon(const QString& resourcename, StateType type = NavBar) const;
+
 private:
     PlatformStyle(const QString &name, bool imagesOnButtons, bool colorizeIcons, bool useExtraSpacing);
 
+    QIcon MultiStatesIconV1(const QString& resourcename, StateType type = NavBar) const;
+    QIcon MultiStatesIconV2(const QString& resourcename, StateType type = NavBar) const;
+    QIcon MultiStatesIconV3(const QString& resourcename, StateType type = NavBar) const;
+
     QString name;
+    int version;
     bool imagesOnButtons;
     bool colorizeIcons;
     bool useExtraSpacing;
     QColor singleColor;
     QColor textColor;
-    /* ... more to come later */
+    QColor multiStatesIconColor1;
+    QColor multiStatesIconColor2;
+    QColor multiStatesIconColor3;
+    QColor tableColorNormal;
+    QColor tableColorInput;
+    QColor tableColorInout;
+    QColor tableColorOutput;
+    QColor tableColorError;
+    
 };
 
 #endif // BITCOIN_QT_PLATFORMSTYLE_H

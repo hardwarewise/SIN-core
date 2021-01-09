@@ -104,6 +104,7 @@ private Q_SLOTS:
     void on_toolButtonWhitePaper_clicked();
     void on_toolButtonDiscord_clicked();
     void on_toolButtonFaq_clicked();
+    void showDetails();
 };
 
 #endif // BITCOIN_QT_OVERVIEWPAGE_H
