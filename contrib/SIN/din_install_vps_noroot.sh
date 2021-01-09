@@ -169,7 +169,7 @@ infinitynodeprivkey=$COINKEY
 externalip=$NODEIP:$COIN_PORT
 infinitynode=1
 masternode=0
-turnoffmasternode=0
+turnoffmasternode=1
 EOF
 }
 
