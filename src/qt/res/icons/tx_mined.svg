@@ -1,12 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 841.9 595.3" enable-background="new 0 0 841.9 595.3" xml:space="preserve">
-<rect x="464" y="158.6" transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 1027.5018 42.8013)" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="81.9" height="151.3"/>
-<rect x="190" y="342.1" transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 882.9977 387.9771)" fill="none" stroke="#ffffff" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="342.3" height="69.4"/>
-<path stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M445.7,186l32.2-32.2
-	c-44.6-37.2-124-74.4-218.3-64.5l-2.5,9.9C361.4,114.1,403.6,153.8,445.7,186z"/>
-<path stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M552.4,292.7l32.2-32.2
-	c37.2,44.6,74.4,124,64.5,218.3l-9.9,2.5C624.3,377,584.6,332.4,552.4,292.7z"/>
-</svg>
+<?xml version="1.0" encoding="utf-8"?><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 121.2 122.88" style="enable-background:new 0 0 121.2 122.88" xml:space="preserve"><style type="text/css">.st0{fill-rule:evenodd;clip-rule:evenodd;}</style><g><path fill="#ffffff" class="st0" d="M66.17,24.52c9.78,12.13,14.55,26.46,13.93,39.58c-4.52-11.08-11.54-22.31-20.85-32.65l-3.12,3.12 c-0.35,0.35-0.93,0.35-1.28,0l-9.87-9.87c-0.35-0.35-0.35-0.93,0-1.28l3.03-3.03C37.4,11.2,25.96,4.37,14.75,0.13 c13.22-0.99,27.81,3.57,40.2,13.31l1.36-1.36c0.35-0.35,0.93-0.35,1.28,0l9.87,9.87c0.35,0.35,0.35,0.93,0,1.28L66.17,24.52 L66.17,24.52z M49.32,58.69v-4.05l19.11,2.04L49.32,58.69L49.32,58.69z M57.83,74.36l-2.87-2.87l14.96-12.07L57.83,74.36 L57.83,74.36z M111.77,35.18l2.32,5.02l-24.85,8.4L111.77,35.18L111.77,35.18z M92.26,20.63l5.19,1.91L85.82,46.05L92.26,20.63 L92.26,20.63z M102.7,57.6l18.5,11.47v53.81H25.73c19.44-19.44,46.04-25.61,61.42-52.24C92.99,60.52,91.01,49.7,102.7,57.6 L102.7,57.6z M44.6,27.81l7.99,7.99L9.64,78.76c-2.2,2.2-5.8,2.2-7.99,0l0,0c-2.2-2.2-2.2-5.8,0-7.99L44.6,27.81L44.6,27.81z"/></g></svg>

@@ -1,7 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
     <qresource prefix="/icons">
         <file alias="sin">res/icons/sin.png</file>
-		<file alias="masternodes">res/icons/masternodes.png</file>
+		<file alias="masternodes">res/icons/masternodes.svg</file>
         <file alias="address-book">res/icons/address-book.svg</file>
         <file alias="quit">res/icons/quit.png</file>
         <file alias="send">res/icons/send.png</file>
@@ -34,9 +34,9 @@
         <file alias="edit">res/icons/edit.svg</file>
         <file alias="edit1">res/icons/edit1.svg</file>
         <file alias="history">res/icons/history.png</file>
-		<file alias="history1">res/icons/history1.png</file>
+		<file alias="history1">res/icons/history1.svg</file>
         <file alias="overview">res/icons/overview.png</file>
-        <file alias="overview1">res/icons/overview1.png</file>
+        <file alias="overview1">res/icons/overview1.svg</file>
 		<file alias="export">res/icons/export.svg</file>
         <file alias="synced">res/icons/synced.png</file>
         <file alias="remove">res/icons/remove.svg</file>
@@ -47,8 +47,8 @@
         <file alias="tx_inout">res/icons/tx_inout.png</file>
         <file alias="lock_closed">res/icons/lock_closed.svg</file>
         <file alias="lock_open">res/icons/lock_open.svg</file>
-        <file alias="lock_closed1">res/icons/lock_closed1.png</file>
-        <file alias="lock_open1">res/icons/lock_open1.png</file>
+        <file alias="lock_closed1">res/icons/lock_closed1.svg</file>
+        <file alias="lock_open1">res/icons/lock_open1.svg</file>
         <file alias="key">res/icons/key.png</file>
         <file alias="filesave">res/icons/filesave.svg</file>
         <file alias="debugwindow">res/icons/debugwindow.svg</file>
@@ -100,7 +100,7 @@
         <file alias="qbtc">res/icons/qbtc.png</file>
         <file alias="instaswap">res/icons/instaswap.png</file>
         <file alias="instaswap1">res/icons/instaswap1.png</file>
-        <file alias="stats">res/icons/stats.png</file>
+        <file alias="stats">res/icons/stats.svg</file>
         <file alias="faq">res/icons/faq.svg</file>
         <file alias="setupOk">res/icons/ok.svg</file>
         <file alias="setupKo">res/icons/ko.svg</file>
@@ -137,6 +137,8 @@
         <file alias="faq_blue">res/icons/faq_blue.svg</file>
         <file alias="discord_blue">res/icons/discord_blue.svg</file>
         <file alias="cmc_blue">res/icons/cmc_blue.svg</file>
+        <file alias="send_to">res/icons/send_to.png</file>
+        <file alias="receive_from">res/icons/receive_from.png</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>
@@ -179,6 +181,7 @@
 	<qresource prefix="/css">
 	 <file alias="default">res/css/default.css</file>
 	 <file alias="light">res/css/light.css</file>
+     <file alias="stylesheet">res/css/stylesheet.css</file>
 	 </qresource>
 	 <qresource prefix="/images">
 	 <file alias="sinbg">res/images/sinbg.png</file>
@@ -218,6 +221,5 @@
        <file alias="Hind-Regular">res/fonts/Hind-Regular.ttf</file>
        <file alias="Hind-SemiBold">res/fonts/Hind-SemiBold.ttf</file>
        <file alias="Montserrat-Bold">res/fonts/Montserrat-Bold.ttf</file>
-    
     </qresource>
 </RCC>
