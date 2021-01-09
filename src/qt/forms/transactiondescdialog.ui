@@ -6,68 +6,129 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>620</width>
-    <height>250</height>
+    <width>621</width>
+    <height>370</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string notr="true">Transaction details</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">
-QPushButton {
-
-	background-color: #2E3191;
-	background-repeat: no-repeat;
-    background-size: 1000% 1000%;
- 	padding: 5px 15px;
-	letter-spacing: 1px;
-	border: 0;
-	color: #ffffff;
-	font-size: 14px;
-
+   <string notr="true">QDialog#TransactionDescDialog {
+background-color: #FFFFFF;
 }
 
-QPushButton:hover {
-	background-color: #191c8a;
-	
-	
-}
-QPushButton:focus {
-	border: none;
-	outline: none;
-}
-QPushButton:pressed {
-	border: 1px solid #333;
-}
+QPushButton  { 
+  font-size:12px;
+  padding:4px 6px;
+  border-radius: 12px;
+  }
+  
+QPushButton:hover  {
+    font-size:12px;
+    padding:4px 6px;
+  }
 
-/*QTextEdit#detailText {
+QTextEdit#detailText {
 background-color: transparent;
 font-size: 14px;
-color: #333333;
 border:0;
-}
-*/</string>
+}</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
-    <widget class="QTextEdit" name="detailText">
-     <property name="toolTip">
-      <string>This pane shows a detailed description of the transaction</string>
+    <widget class="QFrame" name="descFrame">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <property name="readOnly">
-      <bool>true</bool>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
      </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
      </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Close</set>
-     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
+        <property name="leftMargin">
+         <number>9</number>
+        </property>
+        <property name="topMargin">
+         <number>9</number>
+        </property>
+        <property name="rightMargin">
+         <number>9</number>
+        </property>
+        <property name="bottomMargin">
+         <number>9</number>
+        </property>
+        <item>
+         <widget class="QTextEdit" name="detailText">
+          <property name="toolTip">
+           <string>This pane shows a detailed description of the transaction</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">/*background-color: #172E4C;
+border-radius : 12px;
+margin: 10px;*/</string>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="tabStopWidth">
+           <number>80</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDialogButtonBox" name="buttonBox">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="standardButtons">
+           <set>QDialogButtonBox::Close</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
@@ -76,9 +137,9 @@ border:0;
  <connections>
   <connection>
    <sender>buttonBox</sender>
-   <signal>accepted()</signal>
+   <signal>rejected()</signal>
    <receiver>TransactionDescDialog</receiver>
-   <slot>accept()</slot>
+   <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>20</x>
@@ -92,9 +153,9 @@ border:0;
   </connection>
   <connection>
    <sender>buttonBox</sender>
-   <signal>rejected()</signal>
+   <signal>accepted()</signal>
    <receiver>TransactionDescDialog</receiver>
-   <slot>reject()</slot>
+   <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>20</x>
