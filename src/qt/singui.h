@@ -36,6 +36,7 @@ class MasternodeList;
 class InstaSwap;
 class StatsPage;
 class FaqPage;
+class StakePage;
 
 namespace interfaces {
 class Handler;
@@ -63,7 +64,7 @@ public:
 
     explicit SINGUI(interfaces::Node& node, const PlatformStyle *platformStyle, const NetworkStyle *networkStyle, QWidget *parent = 0);
     ~SINGUI();
-
+ 
     /** Set the client model.
         The client model represents the part of the core that communicates with the P2P network, and is wallet-agnostic.
     */
@@ -100,11 +101,12 @@ private:
     QLabel* labelWalletHDStatusIcon = nullptr;
     QLabel* labelProxyIcon = nullptr;
     QLabel* connectionsControl = nullptr;
+    QLabel* connectionsCount = nullptr;
     QLabel* labelBlocksIcon = nullptr;
     QLabel* progressBarLabel = nullptr;
     QProgressBar* progressBar = nullptr;
     QProgressDialog* progressDialog = nullptr;
-    QPushButton *topThemeButton = nullptr;
+    /*QPushButton *topThemeButton = nullptr;*/
     QMenuBar* appMenuBar = nullptr;
     QMenuBar* subMenu = nullptr;
     QToolBar* appToolBar = nullptr;
@@ -124,6 +126,10 @@ private:
 
     // FaqPage
     QAction *faqPageAction;
+    //
+
+    // StakePage
+    QAction *stakePageAction;
     //
 
     QAction* quitAction = nullptr;
@@ -175,7 +181,6 @@ private:
     
     QLabel *mainIcon;
     QLabel *mainBrand;
-    
     QLabel *m_wallet_selector_label = nullptr;
     QComboBox* m_wallet_selector = nullptr;
 
@@ -185,6 +190,7 @@ private:
     RPCConsole* rpcConsole = nullptr;
     StatsPage  *statsWindow;
     FaqPage  *faqWindow;
+    StakePage  *stakeWindow;
     //HelpMessageDialog* helpMessageDialog = nullptr;
     HelpMessageDialog *helpMessageDialog;
 
@@ -306,6 +312,11 @@ private Q_SLOTS:
     void gotoFaqPage(); 
     //
 
+    //StakePage
+    /** Switch to Stake Page */
+    void gotoStakePage(); 
+    //
+
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
@@ -322,7 +333,7 @@ private Q_SLOTS:
     void openClicked();
 #endif // ENABLE_WALLET
     /** toggle Theme */
-    void onThemeClicked();
+    //void onThemeClicked();
     /** Show configuration dialog */
     void optionsClicked();
     /** Show about dialog */

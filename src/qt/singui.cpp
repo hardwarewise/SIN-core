@@ -53,6 +53,10 @@
 #include <qt/faqpage.h>
 //
 
+// StakePage
+#include <qt/stakepage.h>
+//
+
 #include <iostream>
 
 #include <QAction>
@@ -146,6 +150,15 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     QFontDatabase::addApplicationFont(":/fonts/Hind-Light");
     QFontDatabase::addApplicationFont(":/fonts/Montserrat-Bold");
     
+    ///////////////////////////////////
+
+    QFile file(":/css/stylesheet");
+    file.open(QFile::ReadOnly);
+    QString styleSheet = QLatin1String(file.readAll());
+    this->setStyleSheet(styleSheet);
+
+
+    //////////////////////////////////
 
 
  // Accept D&D of URIs
@@ -198,6 +211,8 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     labelWalletHDStatusIcon = new QLabel();
     labelProxyIcon = new QLabel();
     connectionsControl = new GUIUtil::ClickableLabel();
+    connectionsCount = new GUIUtil::ClickableLabel();
+    connectionsCount->setStyleSheet("color : #000000;");
     labelBlocksIcon = new GUIUtil::ClickableLabel();
     if(enableWallet)
     {
@@ -210,6 +225,8 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     frameBlocksLayout->addWidget(labelProxyIcon);
     frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(connectionsControl);
+    frameBlocksLayout->addStretch();
+    frameBlocksLayout->addWidget(connectionsCount);
     frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelBlocksIcon);
     frameBlocksLayout->addStretch();
@@ -234,7 +251,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     }
 
     statusBar()->addWidget(progressBarLabel);
-    progressBarLabel->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 1px solid white; } QLabel {color: #fff; }");
+    progressBarLabel->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 1px solid white; } QLabel {color: #6b80af; }");
     statusBar()->addWidget(progressBar);
     statusBar()->addPermanentWidget(frameBlocks);
 
@@ -248,7 +265,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     subscribeToCoreSignals();
 
     connect(connectionsControl, SIGNAL(clicked(QPoint)), this, SLOT(toggleNetworkActive()));
-
+    
     ///Resorces Web Links
     connect(ResourcesWebsite1, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot1()));
     connect(ResourcesWebsite2, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot2()));
@@ -318,7 +335,7 @@ void SINGUI::createActions()
     sendCoinsMenuAction->setStatusTip(sendCoinsAction->statusTip());
     sendCoinsMenuAction->setToolTip(sendCoinsMenuAction->statusTip());
 
-    depositCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/deposit"), tr(" &Staking\n"), this);
+    depositCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/tx_mined"), tr(" &Earn\n"), this);
     depositCoinsAction->setStatusTip(tr("Timelock coins to a SIN address"));
     depositCoinsAction->setToolTip(depositCoinsAction->statusTip());
     depositCoinsAction->setCheckable(true);
@@ -412,6 +429,26 @@ void SINGUI::createActions()
     connect(faqPageAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(faqPageAction, SIGNAL(triggered()), this, SLOT(gotoFaqPage()));
     //
+
+
+
+  // StakePage
+    //stakePageAction = new QAction(platformStyle->SingleColorIcon(":/icons/tx_mined"), tr("&Stake\n"), this);
+    stakePageAction = new QAction(platformStyle->MultiStatesIcon(":/icons/tx_mined"), tr("&Staking"), this);
+    stakePageAction->setStatusTip(tr("Staking"));
+    stakePageAction->setToolTip(stakePageAction->statusTip());
+    stakePageAction->setCheckable(true);
+
+    #ifdef Q_OS_MAC
+    stakePageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_9));
+#else
+    stakePageAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_9));
+#endif
+    tabGroup->addAction(stakePageAction);
+    connect(stakePageAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(stakePageAction, SIGNAL(triggered()), this, SLOT(gotoStakePage()));
+    //
+
 
     // These showNormalIfMinimized are needed because Send Coins and Receive Coins
     // can be triggered from the tray menu, and need to show the GUI to be useful.
@@ -631,6 +668,7 @@ void SINGUI::createMenuBar()
     file->addAction(quitAction);
 
     QMenu *settings = appMenuBar->addMenu(tr("&Settings"));
+    appMenuBar->addMenu("|");
     if(walletFrame)
     {
         settings->addAction(openRPCConsoleAction);
@@ -682,7 +720,7 @@ void SINGUI::createMenuBar()
 
     settings->addSeparator();
 
-    QMenu *help = settings->addMenu(tr("&Help"));
+    QMenu *help = appMenuBar->addMenu(tr("&Help"));
     if(walletFrame)
     {
     	help->addAction(openRPCConsoleAction);
@@ -713,7 +751,6 @@ void SINGUI::createToolBars()
     	mainIcon->show();
     	mainIcon->setStyleSheet("QLabel { margin-top: 10px; margin-bottom: 10px; }");
     	
-
         QWidget* empty3 = new QWidget();
 		empty3->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 		toolbar->addWidget(empty3); //1
@@ -726,14 +763,13 @@ void SINGUI::createToolBars()
     	
         toolbar->addWidget(mainIcon);  //2
         toolbar->addWidget(mainBrand); //3
-
               
         QWidget* empty2 = new QWidget();
 		empty2->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 		toolbar->addWidget(empty2); //4
         toolbar->addAction(homeAction); //5
         toolbar->addAction(overviewAction); //6  
-        toolbar->addAction(depositCoinsAction); //7
+        toolbar->addAction(stakePageAction); //7
         
         // Dash
         QSettings settings;
@@ -792,7 +828,7 @@ void SINGUI::createToolBars()
          //// Set widget topBar on the bottom left corner ////
 
         QWidget *topBar = new QWidget;
-        topThemeButton = new QPushButton();
+        /*topThemeButton = new QPushButton();*/
         QPushButton *topSetupButton = new QPushButton();
         QPushButton *topConsoleButton = new QPushButton();
         QPushButton *topOptionButton = new QPushButton();
@@ -802,13 +838,14 @@ void SINGUI::createToolBars()
 
         QHBoxLayout *topBarLayout = new QHBoxLayout;
 
-        topBarLayout->addWidget(topThemeButton);
+        /*topBarLayout->addWidget(topThemeButton);*/
+        topBarLayout->addWidget(topOptionButton);
         if (settings.value("fShowMasternodesTab").toBool()) { 
         topBarLayout->addWidget(topSetupButton);
         }
         topBarLayout->addWidget(topConsoleButton);
     
-        bool lightTheme = settings.value("lightTheme", false).toBool();
+        /*bool lightTheme = settings.value("lightTheme", false).toBool();
 
         QString cssFileName = lightTheme ? ":/css/light" : ":/css/default";
         QFile cssFile(cssFileName);
@@ -823,27 +860,34 @@ void SINGUI::createToolBars()
 
         cssFile.open(QFile::ReadOnly);
         QString styleSheet = QLatin1String(cssFile.readAll());
-        this->setStyleSheet(styleSheet);
+        this->setStyleSheet(styleSheet);*/
 
-        topThemeButton->setIconSize(QSize(16, 16));
-        topThemeButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
+        /*topThemeButton->setIconSize(QSize(16, 16));
+        topThemeButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");*/
 
+        
+        topOptionButton->setIcon(QIcon(":/icons/options"));
+        topOptionButton->setIconSize(QSize(16, 16));
+        topOptionButton->setToolTip( "Open Options Window"  );
+        topOptionButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent; border: none;} QPushButton:hover {border: 1px solid  #00FFFF; }");
+        
         topSetupButton->setIcon(QIcon(":/icons/setup_top"));
         topSetupButton->setIconSize(QSize(38, 16));
         topSetupButton->setToolTip( "Open SetUP Wizard"  );
-        topSetupButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent; } QPushButton:hover {border: 1px solid  #00FFFF; } ");
+        topSetupButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent; border: none; } QPushButton:hover {border: 1px solid  #00FFFF; } ");
     
     
         topConsoleButton->setIcon(QIcon(":/icons/debugwindow"));
         topConsoleButton->setIconSize(QSize(16, 16));
         topConsoleButton->setToolTip( "Open Console"  );
-        topConsoleButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");
+        topConsoleButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent; border: none;} QPushButton:hover {border: 1px solid  #00FFFF; }");
 
         topBar->setLayout(topBarLayout);
         toolbar->addWidget(topBar);
 
 
-        connect(topThemeButton, SIGNAL (released()), this, SLOT (onThemeClicked()));
+        /*connect(topThemeButton, SIGNAL (released()), this, SLOT (onThemeClicked()));*/
+        connect(topOptionButton, SIGNAL(released()), this, SLOT(optionsClicked()));
         connect(topSetupButton, SIGNAL(released()), this, SLOT(gotoSetupTab()));
         connect(topConsoleButton, SIGNAL (released()), this, SLOT (showDebugWindowActivateConsole()));
     
@@ -1004,6 +1048,10 @@ void SINGUI::setWalletActionsEnabled(bool enabled)
     faqPageAction->setEnabled(enabled);
     //
 
+    // StakePage
+    stakePageAction->setEnabled(enabled);
+    //
+
     encryptWalletAction->setEnabled(enabled);
     backupWalletAction->setEnabled(enabled);
     changePassphraseAction->setEnabled(enabled);
@@ -1050,6 +1098,7 @@ void SINGUI::createTrayIconMenu()
     trayIconMenu->addAction(ResourcesWebsite7);
     trayIconMenu->addAction(statsPageAction);
     trayIconMenu->addAction(faqPageAction);
+    trayIconMenu->addAction(stakePageAction);
     trayIconMenu->addAction(ResourcesWebsite11);
 
 //end Exchange and Web Links
@@ -1150,7 +1199,7 @@ void SINGUI::showDebugWindowActivateConsole()
     showDebugWindow();
 }
 
-void SINGUI::onThemeClicked()
+/*void SINGUI::onThemeClicked()
 {
     QSettings settings;
     bool lightTheme = !settings.value("lightTheme", false).toBool();
@@ -1173,7 +1222,7 @@ void SINGUI::onThemeClicked()
     QString styleSheet = QLatin1String(cssFile.readAll());
     this->setStyleSheet(styleSheet);
 }
-
+*/
 // Dash
 void SINGUI::showMNConfEditor()
 {
@@ -1262,6 +1311,13 @@ void SINGUI::gotoFaqPage()
 }
 //
 
+// Stakepage
+void SINGUI::gotoStakePage()
+{
+        stakePageAction->setChecked(true);
+    if (walletFrame) walletFrame->gotoStakePage();
+}
+//
 
 void SINGUI::gotoReceiveCoinsPage()
 {
@@ -1317,14 +1373,18 @@ void SINGUI::updateNetworkState()
 
     if (m_node.getNetworkActive()) {
         tooltip = tr("%n active connection(s) to SIN network", "", count) + QString(".<br>") + tr("Click to disable network activity.");
+        connectionsCount->setText(tr("%n", "", count));
     } else {
         tooltip = tr("Network activity disabled.") + QString("<br>") + tr("Click to enable network activity again.");
         icon = ":/icons/network_disabled";
+        connectionsCount->setText("0");
     }
 
     // Don't word-wrap this (fixed-width) tooltip
     tooltip = QString("<nobr>") + tooltip + QString("</nobr>");
     connectionsControl->setToolTip(tooltip);
+    connectionsCount->setToolTip(tr("Connected Peers : %n", "", count));
+    
 
     connectionsControl->setPixmap(platformStyle->SingleColorIcon(icon).pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
 }
@@ -1885,7 +1945,7 @@ UnitDisplayStatusBarControl::UnitDisplayStatusBarControl(const PlatformStyle *pl
     setMinimumSize(max_width, 0);
     setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     //setStyleSheet(QString("QLabel { color : #BC8F3A; font-weight: bold; }").arg(platformStyle->SingleColor().name()));
-    setStyleSheet(QString("QLabel { color : #BC8F3A; font-weight: bold; }"));
+    setStyleSheet(QString("QLabel { color : #071A36; font-weight: bold; }"));
 }
 
 /** So that it responds to button clicks */
@@ -1943,4 +2003,3 @@ void UnitDisplayStatusBarControl::onMenuSelection(QAction* action)
         optionsModel->setDisplayUnit(action->data());
     }
 }
-
