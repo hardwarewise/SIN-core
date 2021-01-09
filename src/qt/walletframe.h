@@ -16,6 +16,7 @@ class WalletModel;
 class WalletView;
 class StatsPage;
 class FaqPage;
+class StakePage;
 
 QT_BEGIN_NAMESPACE
 class QStackedWidget;
@@ -89,6 +90,11 @@ public Q_SLOTS:
     // FaqPage
     /** Switch to FAQ page */
     void gotoFaqPage();
+    //
+
+       // StakePage
+    /** Switch to Stake page */
+    void gotoStakePage();
     //
 
     // setUP

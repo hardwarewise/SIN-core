@@ -24,6 +24,9 @@
 #include <qt/faqpage.h>
 //
 
+// StakePage
+#include <qt/stakepage.h>
+//
 
 #include <QStackedWidget>
 
@@ -40,6 +43,7 @@ class WalletModel;
 class AddressBookPage;
 class StatsPage;
 class FaqPage;
+
 
 
 QT_BEGIN_NAMESPACE
@@ -106,6 +110,10 @@ private:
     FaqPage *faqWindow;
     //
 
+        // StakePage
+    StakePage *stakeWindow;
+    //
+
     TransactionView *transactionView;
 
     QProgressDialog *progressDialog;
@@ -137,6 +145,11 @@ public Q_SLOTS:
     // FAQ
     /** Switch to faq page */
     void gotoFaqPage();
+    //
+
+    // Stake
+    /** Switch to Stake page */
+    void gotoStakePage();
     //
 
     // setUP

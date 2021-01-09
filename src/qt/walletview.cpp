@@ -24,6 +24,7 @@
 #include <qt/walletmodel.h>
 #include "statspage.h"
 #include "faqpage.h"
+#include "stakepage.h"
 
 #include <interfaces/node.h>
 #include <ui_interface.h>
@@ -114,6 +115,11 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
      //FAQPage
     faqWindow = new FaqPage(platformStyle);
     addWidget(faqWindow);
+    //
+
+     //StakePage
+    stakeWindow = new StakePage(platformStyle);
+    addWidget(stakeWindow);
     //
 
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
@@ -317,6 +323,12 @@ void WalletView::gotoFaqPage()
 }
 //
 
+// StakePage
+void WalletView::gotoStakePage()
+{
+    setCurrentWidget(stakeWindow);
+}
+//
 
 void WalletView::gotoReceiveCoinsPage()
 {
