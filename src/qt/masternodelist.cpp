@@ -37,6 +37,7 @@
 #include <QStyleFactory>
 #include <QDesktopServices>
 #include <QTextCodec>
+#include <QSignalMapper>
 
 // begin nodeSetup
 #include <boost/algorithm/string.hpp>
@@ -65,6 +66,21 @@ int GetOffsetFromUtc()
 #else
     return QDateTime::currentDateTime().offsetFromUtc();
 #endif
+}
+
+bool DINColumnsEventHandler::eventFilter(QObject *pQObj, QEvent *pQEvent)
+{
+  if (pQEvent->type() == QEvent::MouseButtonRelease) {
+     if ( QMenu* menu = dynamic_cast<QMenu*>(pQObj) ) {
+         QAction *action = menu->activeAction();
+         if (action) {
+             action->trigger();
+         }
+         return true;    // don't close menu
+     }
+  }
+  // standard event processing
+  return QObject::eventFilter(pQObj, pQEvent);
 }
 
 MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *parent) :
@@ -101,9 +117,41 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
 
     mCheckAllNodesAction = new QAction(tr("Check ALL nodes status"), this);
     contextDINMenu->addAction(mCheckAllNodesAction);
-    connect(ui->dinTable, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextDINMenu(const QPoint&)));
     connect(mCheckAllNodesAction, SIGNAL(triggered()), this, SLOT(nodeSetupCheckAllDINNodes()));
 
+    // select columns context menu
+    QHeaderView *horizontalHeader;
+    horizontalHeader = ui->dinTable->horizontalHeader();
+    horizontalHeader->setContextMenuPolicy(Qt::CustomContextMenu);     //set contextmenu
+    contextDINColumnsMenu = new QMenu();
+    menuEventHandler = new DINColumnsEventHandler();
+    contextDINColumnsMenu->installEventFilter(menuEventHandler);
+
+    connect(horizontalHeader, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextDINColumnsMenu(const QPoint&)));
+
+    int columnID = 0;
+    QTableWidgetItem *headerItem;
+    QSignalMapper* signalMapper = new QSignalMapper (this) ;
+    QSettings settings;
+
+    while ( (headerItem = ui->dinTable->horizontalHeaderItem(columnID)) != nullptr )   {
+        QAction * actionCheckColumnVisible = new QAction(headerItem->text(), this);
+        bool bCheck = settings.value("bShowDINColumn_"+QString::number(columnID), true).toBool();
+        if (!bCheck)    ui->dinTable->setColumnHidden( columnID, true);
+
+        actionCheckColumnVisible->setCheckable(true);
+        actionCheckColumnVisible->setChecked(bCheck);
+        contextDINColumnsMenu->addAction(actionCheckColumnVisible);
+
+        connect (actionCheckColumnVisible, SIGNAL(triggered()), signalMapper, SLOT(map())) ;
+        signalMapper->setMapping (actionCheckColumnVisible, columnID) ;
+
+        contextDINColumnsActions.push_back( std::make_pair(columnID, actionCheckColumnVisible) );
+        columnID++;
+    }
+    connect (signalMapper, SIGNAL(mapped(int)), this, SLOT(nodeSetupDINColumnToggle( int )));
+
+    // timers
     timerSingleShot = new QTimer(this);
     connect(timerSingleShot, SIGNAL(timeout()), this, SLOT(updateDINList()));
     timerSingleShot->setSingleShot(true);
@@ -175,6 +223,12 @@ MasternodeList::~MasternodeList()
     delete ConnectionManager;
     delete mCheckNodeAction;
     delete mCheckAllNodesAction;
+    for(auto const& value: contextDINColumnsActions) {
+        delete value.second;
+    }
+    delete contextDINMenu;
+    delete contextDINColumnsMenu;
+    delete menuEventHandler;
 }
 
 void MasternodeList::setClientModel(ClientModel *model)
@@ -193,6 +247,11 @@ void MasternodeList::showContextDINMenu(const QPoint &point)
     if(item)    {
         contextDINMenu->exec(QCursor::pos());
     }
+}
+
+void MasternodeList::showContextDINColumnsMenu(const QPoint &point)
+{
+    contextDINColumnsMenu->exec(QCursor::pos());
 }
 
 void MasternodeList::updateDINList()
@@ -522,6 +581,25 @@ void MasternodeList::nodeSetupCheckAllDINNodes()    {
     }
     mCheckAllNodesAction->setEnabled(false);
     mCheckNodeAction->setEnabled(false);
+}
+
+void MasternodeList::nodeSetupDINColumnToggle(int nColumn ) {
+    bool bHide = false;
+    QSettings settings;
+
+    // find action
+    auto it = std::find_if( contextDINColumnsActions.begin(), contextDINColumnsActions.end(),
+    [&nColumn](const std::pair<int, QAction*>& element){ return element.first == nColumn;} );
+
+    if (it != contextDINColumnsActions.end())
+    {
+        QAction *a = it->second;
+        if (!a->isChecked()) {
+            bHide = true;
+        }
+        settings.setValue("bShowDINColumn_"+QString::number(nColumn), !bHide);
+        ui->dinTable->setColumnHidden( nColumn, bHide);
+    }
 }
 
 void MasternodeList::nodeSetupCheckDINNodeTimer()    {
@@ -1192,6 +1270,7 @@ void MasternodeList::nodeSetupEnableOrderUI( bool bEnable, int orderID , int inv
         ui->comboBilling->setEnabled(false);
         ui->btnSetup->setEnabled(true);
         ui->btnSetupReset->setEnabled(true);
+        ui->payButton->setEnabled(false);
         ui->labelOrder->setVisible(true);
         ui->labelOrderID->setVisible(true);
         ui->labelOrderID->setText(QString::fromStdString("#")+QString::number(orderID));
@@ -1206,6 +1285,7 @@ void MasternodeList::nodeSetupEnableOrderUI( bool bEnable, int orderID , int inv
         ui->comboBilling->setEnabled(true);
         ui->btnSetup->setEnabled(true);
         ui->btnSetupReset->setEnabled(false);
+        ui->payButton->setEnabled(true);
         ui->labelOrder->setVisible(false);
         ui->labelOrderID->setVisible(false);
         ui->labelInvoice->setVisible(false);

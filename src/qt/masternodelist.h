@@ -33,6 +33,7 @@ class ClientModel;
 class OptionsModel;
 class QNetworkAccessManager;
 class UniValue;
+class QEvent;
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
@@ -60,6 +61,12 @@ struct infinitynode_conf_t
     CTxDestination collateralAddress{};
 };
 
+class DINColumnsEventHandler : public QObject  {
+
+protected:
+   virtual bool eventFilter(QObject *pQObj, QEvent *pQEvent) override;
+};
+
 /** Masternode Manager page widget */
 class MasternodeList : public QWidget
 {
@@ -75,6 +82,9 @@ public:
 
 private:
     QMenu *contextDINMenu;
+    QMenu *contextDINColumnsMenu;
+    DINColumnsEventHandler *menuEventHandler;
+    std::vector<std::pair<int, QAction*>> contextDINColumnsActions;
     int64_t nTimeFilterUpdated;
     bool fFilterUpdated;
 
@@ -185,6 +195,8 @@ private:
 
 private Q_SLOTS:
     void showContextDINMenu(const QPoint &);
+    void showContextDINColumnsMenu(const QPoint &);
+    void nodeSetupDINColumnToggle(int nColumn );
     void on_checkDINNode();
     void on_payButton_clicked();
 
