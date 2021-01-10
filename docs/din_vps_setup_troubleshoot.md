@@ -41,7 +41,7 @@
 
 <br>
 
-1.8 VPS hardware - make sure VPS is very responsive. This means all resources must reply in ~100 milliseconds, ls - folder list for disk system, netstat - for the network system. Wallet daemon must not use a lot of swap files. VPS must reply to incoming connections in 100 milliseconds.
+1.8 VPS hardware - make sure VPS is very responsive. This means all resources must reply in ~100 milliseconds, ls - folder list for disk system, netstat - for the network system. Wallet daemon must not use a lot of swap. VPS must reply to incoming connections in 100 milliseconds. Monthly VPS trafic around 100 Gb - if provider limit VPS bandwidth before 100 Gb this maybe isuue. 
 
 <br>
 
