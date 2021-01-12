@@ -170,6 +170,9 @@ width: 200px;
            <attribute name="horizontalHeaderDefaultSectionSize">
             <number>100</number>
            </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
            <column>
             <property name="text">
              <string>Owner address</string>
@@ -262,7 +265,7 @@ width: 200px;
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,0,0,0,0,0,0,0,0,10,0">
+          <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,0,0,0,0,0,0,0,0,10">
            <property name="bottomMargin">
             <number>0</number>
            </property>
@@ -271,12 +274,18 @@ width: 200px;
              <property name="text">
               <string>Nodes Ready:</string>
              </property>
+             <property name="alignment">
+              <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+             </property>
             </widget>
            </item>
            <item>
             <widget class="QLabel" name="ReadyNodesLabel">
              <property name="text">
               <string>0</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
              </property>
             </widget>
            </item>
@@ -285,12 +294,18 @@ width: 200px;
              <property name="text">
               <string>Nodes Expired:</string>
              </property>
+             <property name="alignment">
+              <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+             </property>
             </widget>
            </item>
            <item>
             <widget class="QLabel" name="ExpiredNodesLabel">
              <property name="text">
               <string>0</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
              </property>
             </widget>
            </item>
@@ -299,12 +314,18 @@ width: 200px;
              <property name="text">
               <string>Nodes Incomplete:</string>
              </property>
+             <property name="alignment">
+              <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+             </property>
             </widget>
            </item>
            <item>
             <widget class="QLabel" name="IncompleteNodesLabel">
              <property name="text">
               <string>0</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
              </property>
             </widget>
            </item>
@@ -313,12 +334,18 @@ width: 200px;
              <property name="text">
               <string>Current height:</string>
              </property>
+             <property name="alignment">
+              <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+             </property>
             </widget>
            </item>
            <item>
             <widget class="QLabel" name="currentHeightLabel">
              <property name="text">
               <string>0</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
              </property>
             </widget>
            </item>
@@ -351,19 +378,6 @@ width: 200px;
            </item>
            <item>
             <spacer name="horizontalSpacer_6">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -578,32 +592,6 @@ color: #011552;
              </property>
              <property name="text">
               <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="txtEmail">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>200</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>200</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">selection-color: white;
-selection-background-color: #BC8F3A;;</string>
              </property>
             </widget>
            </item>
@@ -928,6 +916,32 @@ color: #011552;</string>
              </property>
              <property name="text">
               <string>bigRoi</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="txtEmail">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>200</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>200</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">selection-color: white;
+selection-background-color: #BC8F3A;;</string>
              </property>
             </widget>
            </item>

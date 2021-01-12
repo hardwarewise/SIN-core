@@ -310,7 +310,7 @@ void SINGUI::createActions()
 {
     QActionGroup *tabGroup = new QActionGroup(this);
 
-    overviewAction = new QAction(platformStyle->SingleColorIcon(":/icons/mywallet"), tr(" &My Wallet\n"), this);
+    overviewAction = new QAction(platformStyle->SingleColorIcon(":/icons/mywallet"), tr(" &Dashboard\n"), this);
     overviewAction->setStatusTip(tr("Show general overview of wallet"));
     overviewAction->setToolTip(overviewAction->statusTip());
     overviewAction->setCheckable(true);
@@ -434,7 +434,7 @@ void SINGUI::createActions()
 
   // StakePage
     //stakePageAction = new QAction(platformStyle->SingleColorIcon(":/icons/tx_mined"), tr("&Stake\n"), this);
-    stakePageAction = new QAction(platformStyle->MultiStatesIcon(":/icons/tx_mined"), tr("&Staking"), this);
+    stakePageAction = new QAction(platformStyle->SingleColorIcon(":/icons/tx_mined", "#ffffff"), tr(" &Staking\n"), this);
     stakePageAction->setStatusTip(tr("Staking"));
     stakePageAction->setToolTip(stakePageAction->statusTip());
     stakePageAction->setCheckable(true);

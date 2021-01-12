@@ -149,17 +149,7 @@ QWidget#recentWidget .QLabel {
 OverviewPage .QListView {
   background-color: transparent;
   border : none;
-  /*alternate-background-color: rgba(23,46,76, 1);*/
-  /*font-weight: lighter;
-  font-size:14px;
-  color: #6f80ab;
-  margin-top:0px;
-  margin-left:-40px;
-  margin-right:-40px;
-  padding-right: 10 px;
-  margin-bottom: 9px;
-  
-  */
+  font-size:12px;
   }
   
 
@@ -300,6 +290,87 @@ background-color:#58A7E6;
 
 
 /*--------------------------------------------
+Radio Button CSS
+--------------------------------------------*/
+QRadioButton{
+  color: #6f80ab;
+  outline-style: none;
+}
+QRadioButton:hover, QRadioButton:checked {
+  color: #6f80ab;
+}
+QRadioButton:disabled {
+  color: rgba(111, 128, 171, 20%);
+}
+QRadioButton::indicator {
+  width: 16px;
+  height: 16px;
+}
+QRadioButton::indicator::unchecked {
+  image: url(:/images/radiobutton_unchecked);
+}
+QRadioButton::indicator::checked {
+  image: url(:/images/radiobutton_checked);
+}
+QRadioButton::indicator::unchecked:hover {
+  image: url(:/images/radiobutton_unchecked_hover);
+}
+QRadioButton::indicator::checked:hover {
+  image: url(:/images/radiobutton_checked_hover);
+}
+QRadioButton:indicator:unchecked:disabled {
+  image: url(:/images/radiobutton_unchecked_disabled);  
+}
+QRadioButton:indicator:checked:disabled {
+  image: url(:/images/radiobutton_checked_disabled);
+}
+
+/*--------------------------------------------
+Check Box CSS
+--------------------------------------------*/
+QCheckBox{
+  color: #6f80ab;
+  outline-style: none;
+}
+QCheckBox:hover, QCheckBox:checked {
+  color: #6f80ab;
+}
+QCheckBox:disabled {
+  color: rgba(111, 128, 171, 20%);
+}
+QCheckBox::indicator {
+  width: 16px;
+  height: 16px;
+}
+QCheckBox::indicator::unchecked {
+  image: url(:/images/checkbox_unchecked);
+}
+QCheckBox::indicator::checked {
+  image: url(:/images/checkbox_checked);
+}
+QCheckBox:indicator:indeterminate {
+  image: url(:/images/checkbox_indeterminate);
+}
+QCheckBox::indicator::unchecked:hover {
+  image: url(:/images/checkbox_unchecked_hover);
+}
+QCheckBox::indicator::checked:hover {
+  image: url(:/images/checkbox_checked_hover);
+}
+QCheckBox:indicator:indeterminate:hover {
+  image: url(:/images/checkbox_indeterminate_hover);
+}
+QCheckBox:indicator:unchecked:disabled {
+  image: url(:/images/checkbox_unchecked_disabled);  
+}
+QCheckBox:indicator:checked:disabled {
+  image: url(:/images/checkbox_checked_disabled);
+}
+QCheckBox:indicator:indeterminate:disabled {
+  image: url(:/images/checkbox_indeterminate_disabled);
+}
+
+/*--------------------------------------------
 QPushButton CSS
 --------------------------------------------*/
 
@@ -310,9 +381,13 @@ QPushButton {
     font-size:12px;
     min-height: 20px;
     padding:4px 6px;
-    color: #F2F2F2;
+    color: #4D9BD9;
     border-radius: 14px;
     }
+    
+QPushButton:hover {
+  border: 1px solid #74B2FE;
+}
     
 QPushButton:pressed  {
     border:  1px solid #74B2FE;
@@ -328,6 +403,26 @@ QPushButton::disabled {
     background: rgba(25, 40, 73, 60%);
     border: 1px solid rgba(70, 88, 127, 40%);
   }
+
+/*--------------------------------------------
+Tool Button CSS
+--------------------------------------------*/
+QStackedWidget#SendCoinsEntry .QToolButton {
+	background-color: transparent;
+	padding: 6px;
+	border: none;
+}
+QStackedWidget#SendCoinsEntry .QToolButton::hover{
+	background-color: rgba(73, 88, 122, 20%);
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+QStackedWidget#SendCoinsEntry .QToolButton::pressed{
+	background-color: rgba(73, 88, 122, 30%);
+}
+QStackedWidget#SendCoinsEntry .QToolButton::disabled{
+	background-color: transparent;
+}
 
 /*--------------------------------------------
 Progress Bar CSS
@@ -348,6 +443,106 @@ QProgressBar::disabled {
 }
 QToolTip { 
 	color: #000000; background-color: #FFFFE1; border: 1px solid #000000; 
+}
+
+/*--------------------------------------------
+Tab Bar CSS
+--------------------------------------------*/
+QTabBar::tab {
+  background-color: transparent;
+  color: #4d6087;
+  padding: 11px 0px;
+  border-width: 0px;
+  border-radius: 0px;
+  border-style: none;
+  border-bottom: 3px solid transparent;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+QTabBar::tab:selected {
+  color: #4d6087;
+  border-bottom: 3px solid #4d6087;
+}
+QTabBar::tab:hover:!selected {
+  color: #18aae0;
+  border-bottom: 3px solid #18aae0;
+}
+QTabBar::tab:disabled {
+  color: rgba(111, 128, 171, 20%);
+}
+QTabWidget::pane {
+  border: none;
+  border-top: none;
+  background-color: transparent;
+}
+TitleBar QTabBar::tab {
+  padding: 5px 0px;
+}
+#widgetTitle, #widgetWallet {
+  background-color: transparent;
+}
+
+/*--------------------------------------------
+Modal Overlay CSS
+--------------------------------------------*/
+#ModalOverlay QProgressBar {
+  background-color: #1A233A;
+  border: none;
+  font: 1pt;
+  color: transparent;
+  border-radius: 4px;
+  height: 9px;
+}
+#ModalOverlay QProgressBar::chunk {
+  background-color: #4f9fdd;
+  border-radius: 4px;
+}
+#ModalOverlay QLabel { 
+  color: #6f80ab;  
+}
+#ModalOverlay #labelNumberOfBlocksLeft, 
+#ModalOverlay #labelLastBlockTime, 
+#ModalOverlay #labelSyncDone, 
+#ModalOverlay #labelProgressIncrease, 
+#ModalOverlay #labelEstimatedTimeLeft{
+  color: #47587d;
+}
+#ModalOverlay #labelNote {
+  font: 20pt;
+}
+#contentWidget{
+  background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #0C2448, stop: 1 #000D20);
+  border-radius: 14px;
+}
+#contentWidget #buttonsContainerWhite{
+  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+#buttonsContainerWhite {
+  background-color: #051937 ;
+}
+
+/*--------------------------------------------
+Group Box CSS
+--------------------------------------------*/
+QGroupBox
+{
+    border: 0px solid transparent; 
+    margin-top: 20px;
+    background-color: #1d2843;
+}
+QGroupBox::title {
+    color: #6f80ab;
+    subcontrol-position: top left;
+    left: -3px;
+    padding: -40px 3px 0px 3px;
+}
+QGroupBox::title:disabled {
+    color: rgba(111, 128, 171, 20%);
+}
+QGroupBox#groupBoxExpert {
+    background-color: transparent;
 }
 
 /*--------------------------------------------
@@ -382,6 +577,7 @@ QTableView{
   background-color: transparent;
   border: none;
   font: normal;
+  font-size: 12px;
   margin-bottom: 10px;
   qproperty-showGrid: false;
   qproperty-alternatingRowColors: false;
@@ -425,6 +621,29 @@ QLabel#transactionSum {
     color: #6f80ab;
     font-size: 12px;
     
+}
+
+/*--------------------------------------------
+QPlainTextEdit CSS
+--------------------------------------------*/
+QPlainTextEdit {
+  color: #6f80ab;
+  background-color: #1A233A;
+  border: 1px solid #49587A;
+  border-radius: 8px;
+  padding-left: 5px;
+}
+
+QPlainTextEdit::hover:!read-only {
+  border: 1px solid #5d6b8f;
+}
+
+QPlainTextEdit::focus:!read-only{
+  border: 1px solid #5d6b8f;
+}
+QPlainTextEdit::disabled {
+  border: 1px solid rgba(90, 90, 93, 40%);
+  color: rgba(42, 42, 42, 10%);
 }
 
 /*--------------------------------------------
@@ -752,3 +971,146 @@ QDialog .QWidget {
   background:transparent;
   border:0px;
   }
+
+/*infinityNodes Page*/
+MasternodeList .QLabel {
+  color: #6f80ab;
+}
+
+/*StatsPage */
+
+StatsPage .QLabel {
+  color: #6f80ab;
+}
+
+
+/*---------------------------------*/
+/* QDialog Table View              /*
+/*--------------------------------*/
+
+QDialog .QTableView{
+  color: #6f80ab;
+  background-color: #1A233A;
+  border: 1px solid #49587A;
+  border-radius: 8px;
+  font: normal;
+  qproperty-showGrid: false;
+  qproperty-alternatingRowColors: false;
+  qproperty-selectionBehavior: SelectRows;
+}
+QDialog .QTableView::item{
+  border: none;
+}
+QDialog .QTableView::item:selected{
+  qproperty-showGrid: false;
+  background: #4f9fdd;
+  color: #ffffff;
+}
+QDialog .QHeaderView::disabled{
+  color: rgba(111, 128, 171, 20%);
+}
+QDialog .QHeaderView::down-arrow:disabled {
+  image: url(":/icons/down_arrow_disabled");
+  width: 6px;
+  height: 4px;
+}
+QDialog .QHeaderView::up-arrow:disabled {
+  image: url(":/icons/up_arrow_disabled");
+  width: 6px;
+  height: 4px;
+}
+QDialog .QTableView::disabled{
+  color: rgba(111, 128, 171, 20%);
+}
+
+QDialog .QHeaderView:section {
+  background-color: transparent;
+}
+
+/*AdressBookPage*/
+AddressBookPage {
+  background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #0C2448, stop: 1 #000D20);
+}
+
+AddressBookPage #buttonsContainerWhite {
+  background-color: #051937 ;
+}
+
+AddressBookPage .QLabel {
+  color: #6f80ab;
+}
+
+/*OpenUriDialog*/
+
+OpenURIDialog {
+  background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #0C2448, stop: 1 #000D20);
+}
+
+OpenURIDialog #buttonsContainerWhite {
+  background-color: #051937 ;
+}
+
+OpenURIDialog .QLabel {
+  color: #6f80ab;
+}
+
+/*ReceiveCoinsDialog*/
+#recentRequestsView {
+  margin-right: 10px;
+}
+
+
+/*SignVerifyMessageDialog*/
+
+SignVerifyMessageDialog {
+  background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #0C2448, stop: 1 #000D20);
+}
+
+SignVerifyMessageDialog #buttonsContainerWhite {
+  background-color: #051937 ;
+}
+
+SignVerifyMessageDialog .QLabel {
+  color: #6f80ab;
+}
+
+SignVerifyMessageDialog .QToolButton {
+  background-color: transparent;
+}
+
+/*EditAdressDislog*/
+EditAddressDialog {
+  background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #0C2448, stop: 1 #000D20);
+}
+
+EditAddressDialog #buttonsContainerWhite {
+  background-color: #051937 ;
+}
+
+EditAddressDialog .QLabel {
+  color: #6f80ab;
+}
+
+/*AskPassphraseDialog*/
+
+AskPassphraseDialog {
+  background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #0C2448, stop: 1 #000D20);
+}
+
+AskPassphraseDialog .QLabel {
+  color: #6f80ab;
+}
+
+/*OptionsDialog*/
+
+OptionsDialog {
+  background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #0C2448, stop: 1 #000D20);
+}
+
+OptionsDialog #buttonsContainerWhite {
+  background-color: #051937 ;
+}
+
+OptionsDialog .QLabel {
+  color: #6f80ab;
+}

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>776</width>
-    <height>410</height>
+    <height>416</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1">
@@ -295,10 +295,14 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="leftMargin">
+       <number>22</number>
+      </property>
       <item>
        <widget class="QLabel" name="label_6">
         <property name="font">
          <font>
+          <pointsize>10</pointsize>
           <weight>50</weight>
           <bold>false</bold>
          </font>
@@ -399,7 +403,7 @@
   <customwidget>
    <class>SinPushButton</class>
    <extends>QPushButton</extends>
-   <header location="global">qt/sinpushbutton.h</header>
+   <header>qt/sinpushbutton.h</header>
   </customwidget>
   <customwidget>
    <class>SINAmountField</class>

@@ -27,14 +27,14 @@ SignVerifyMessageDialog::SignVerifyMessageDialog(const PlatformStyle *_platformS
 {
     ui->setupUi(this);
 
-    ui->addressBookButton_SM->setIcon(platformStyle->SingleColorIcon(":/icons/address-book"));
-    ui->pasteButton_SM->setIcon(platformStyle->SingleColorIcon(":/icons/editpaste"));
-    ui->copySignatureButton_SM->setIcon(platformStyle->SingleColorIcon(":/icons/editcopy"));
-    ui->signMessageButton_SM->setIcon(platformStyle->SingleColorIcon(":/icons/edit1"));
-    ui->clearButton_SM->setIcon(platformStyle->SingleColorIcon(":/icons/remove1"));
-    ui->addressBookButton_VM->setIcon(platformStyle->SingleColorIcon(":/icons/address-book"));
-    ui->verifyMessageButton_VM->setIcon(platformStyle->SingleColorIcon(":/icons/transaction01"));
-    ui->clearButton_VM->setIcon(platformStyle->SingleColorIcon(":/icons/remove1"));
+    ui->addressBookButton_SM->setIcon(platformStyle->MultiStatesIcon(":/icons/address-book", PlatformStyle::PushButtonIcon));
+    ui->pasteButton_SM->setIcon(platformStyle->MultiStatesIcon(":/icons/editpaste", PlatformStyle::PushButtonIcon));
+    ui->copySignatureButton_SM->setIcon(platformStyle->MultiStatesIcon(":/icons/editcopy", PlatformStyle::PushButtonIcon));
+    ui->signMessageButton_SM->setIcon(platformStyle->MultiStatesIcon(":/icons/edit", PlatformStyle::PushButton));
+    ui->clearButton_SM->setIcon(platformStyle->MultiStatesIcon(":/icons/remove", PlatformStyle::PushButtonLight));
+    ui->addressBookButton_VM->setIcon(platformStyle->MultiStatesIcon(":/icons/address-book", PlatformStyle::PushButtonIcon));
+    ui->verifyMessageButton_VM->setIcon(platformStyle->MultiStatesIcon(":/icons/transaction_0", PlatformStyle::PushButton));
+    ui->clearButton_VM->setIcon(platformStyle->MultiStatesIcon(":/icons/remove", PlatformStyle::PushButtonLight));
 
     ui->signatureOut_SM->setPlaceholderText(tr("Click \"Sign Message\" to generate signature"));
 

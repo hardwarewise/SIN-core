@@ -27,6 +27,11 @@
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QLabel" name="label_3">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Send SIN Coins</string>
           </property>
@@ -58,7 +63,7 @@
              <x>0</x>
              <y>0</y>
              <width>498</width>
-             <height>440</height>
+             <height>426</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0">
@@ -112,6 +117,11 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Balance:</string>
           </property>
@@ -124,6 +134,11 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
           </property>
           <property name="cursor">
            <cursorShape>IBeamCursor</cursorShape>
@@ -139,7 +154,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QPushButton" name="sendButton">
+           <widget class="SinPushButton" name="sendButton">
             <property name="minimumSize">
              <size>
               <width>150</width>
@@ -165,7 +180,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="clearButton">
+           <widget class="SinPushButton" name="clearButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -179,7 +194,7 @@
              <string>Clear &amp;All</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../sin.qrc">
               <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
             </property>
             <property name="autoDefault">
@@ -188,7 +203,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="addButton">
+           <widget class="SinPushButton" name="addButton">
             <property name="toolTip">
              <string>Send to multiple recipients at once</string>
             </property>
@@ -196,7 +211,7 @@
              <string>Add &amp;Recipient</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../sin.qrc">
               <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
             </property>
             <property name="autoDefault">
@@ -250,7 +265,7 @@
         </size>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: #000000;</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -1230,6 +1245,11 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of &quot;100 satos
    <class>QValidatedLineEdit</class>
    <extends>QLineEdit</extends>
    <header>qt/qvalidatedlineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SinPushButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">qt/sinpushbutton.h</header>
   </customwidget>
  </customwidgets>
  <resources>

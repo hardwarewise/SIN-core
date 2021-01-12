@@ -73,9 +73,9 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *_platformStyle, QWidget *p
         ui->clearButton->setIcon(QIcon());
         ui->sendButton->setIcon(QIcon());
     } else {
-        ui->addButton->setIcon(_platformStyle->SingleColorIcon(":/icons/add1"));
-        ui->clearButton->setIcon(_platformStyle->SingleColorIcon(":/icons/remove1"));
-        ui->sendButton->setIcon(_platformStyle->SingleColorIcon(":/icons/send1"));
+        ui->addButton->setIcon(_platformStyle->MultiStatesIcon(":/icons/add_recipient", PlatformStyle::PushButton));
+        ui->clearButton->setIcon(_platformStyle->MultiStatesIcon(":/icons/remove_entry", PlatformStyle::PushButton));
+        ui->sendButton->setIcon(_platformStyle->MultiStatesIcon(":/icons/send", PlatformStyle::PushButton));
     }
 
     GUIUtil::setupAddressWidget(ui->lineEditCoinControlChange, this);
@@ -721,8 +721,10 @@ void SendCoinsDialog::updateCoinControlState(CCoinControl& ctrl)
 {
     if (ui->radioCustomFee->isChecked()) {
         ctrl.m_feerate = CFeeRate(ui->customFee->value());
+        ui->labelMinFeeWarning->show();
     } else {
         ctrl.m_feerate.reset();
+        ui->labelMinFeeWarning->hide();
     }
     // Avoid using global defaults when sending money from the GUI
     // Either custom fee will be used or if not selected, the confirmation target from dropdown box

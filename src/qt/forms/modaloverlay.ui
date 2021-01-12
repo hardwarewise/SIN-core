@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>385</height>
+    <width>1000</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,35 +35,25 @@
    <item>
     <widget class="QWidget" name="bgWidget" native="true">
      <property name="styleSheet">
-      <string notr="true">QWidget#bgWidget {
-background-color:#ffffff;
-color: #707070;
-} 
-</string>
+      <string notr="true"/>
      </property>
      <layout class="QVBoxLayout" name="verticalLayoutMain" stretch="1">
       <property name="leftMargin">
-       <number>60</number>
+       <number>120</number>
       </property>
       <property name="topMargin">
-       <number>60</number>
+       <number>120</number>
       </property>
       <property name="rightMargin">
-       <number>60</number>
+       <number>120</number>
       </property>
       <property name="bottomMargin">
-       <number>60</number>
+       <number>120</number>
       </property>
       <item>
        <widget class="QWidget" name="contentWidget" native="true">
         <property name="styleSheet">
-         <string notr="true">QLabel { color: #707070;  }
-
-#contentWidget {
-background-color: #FFFFFF;
- border-radius: 6px;
-color: #707070;
-} </string>
+         <string notr="true"/>
         </property>
         <layout class="QVBoxLayout" name="verticalLayoutSub" stretch="1,0,0,0">
          <property name="spacing">
@@ -92,7 +82,7 @@ color: #707070;
               <number>0</number>
              </property>
              <item>
-              <widget class="QPushButton" name="warningIcon">
+              <widget class="SinPushButton" name="warningIcon">
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -203,10 +193,10 @@ color: #707070;
          <item>
           <layout class="QFormLayout" name="formLayout">
            <property name="fieldGrowthPolicy">
-            <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+            <enum>QFormLayout::ExpandingFieldsGrow</enum>
            </property>
            <property name="horizontalSpacing">
-            <number>6</number>
+            <number>20</number>
            </property>
            <property name="verticalSpacing">
             <number>6</number>
@@ -337,40 +327,45 @@ color: #707070;
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutButtons">
-           <property name="leftMargin">
-            <number>10</number>
-           </property>
-           <property name="topMargin">
-            <number>10</number>
-           </property>
-           <item>
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QPushButton" name="closeButton">
-             <property name="focusPolicy">
-              <enum>Qt::StrongFocus</enum>
-             </property>
-             <property name="text">
-              <string>Hide</string>
-             </property>
-             <property name="default">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          <widget class="QWidget" name="buttonsContainerWhite" native="true">
+           <layout class="QHBoxLayout" name="horizontalLayoutButtons">
+            <property name="leftMargin">
+             <number>10</number>
+            </property>
+            <property name="topMargin">
+             <number>10</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="closeButton">
+              <property name="focusPolicy">
+               <enum>Qt::StrongFocus</enum>
+              </property>
+              <property name="text">
+               <string>Hide</string>
+              </property>
+              <property name="default">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -386,6 +381,11 @@ color: #707070;
    <extends>QWidget</extends>
    <header>qt/modaloverlay.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SinPushButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">qt/sinpushbutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

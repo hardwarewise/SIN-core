@@ -146,6 +146,7 @@
         <file alias="up_arrow_hover">res/icons/up_arrow_hover.png</file>
         <file alias="down_arrow_hover">res/icons/down_arrow_hover.png</file>
         <file alias="remove_entry">res/icons/remove_entry.png</file>
+        <file alias="add_recipient">res/icons/add_recipient.png</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>
@@ -219,8 +220,24 @@
      <file alias="stats-top-header">res/images/stats-top-header.png</file>
      <file alias="setuplogo">res/images/setuplogo.svg</file>
      <file alias="splash-loading">res/images/splash-loading.gif</file>
+     <file alias="/radiobutton_checked">res/images//radiobutton_checked.png</file>
+     <file alias="/radiobutton_unchecked_hover">res/images//radiobutton_unchecked_hover.png</file>
+     <file alias="/radiobutton_checked_hover">res/images//radiobutton_checked_hover.png</file>
+     <file alias="/radiobutton_checked_disabled">res/images//radiobutton_checked_disabled.png</file>
+     <file alias="/radiobutton_unchecked_disabled">res/images//radiobutton_unchecked_disabled.png</file>
+     <file alias="/checkbox_unchecked">res/images//checkbox_unchecked.png</file>
+     <file alias="/checkbox_checked">res/images//checkbox_checked.png</file>
+     <file alias="/checkbox_indeterminate">res/images//checkbox_indeterminate.png</file>
+     <file alias="/checkbox_unchecked_hover">res/images//checkbox_unchecked_hover.png</file>
+     <file alias="/checkbox_checked_hover">res/images//checkbox_checked_hover.png</file>
+     <file alias="/checkbox_indeterminate_hover">res/images//checkbox_indeterminate_hover.png</file>
+     <file alias="/checkbox_unchecked_disabled">res/images//checkbox_unchecked_disabled.png</file>
+     <file alias="/checkbox_checked_disabled">res/images//checkbox_checked_disabled.png</file>
+     <file alias="/checkbox_indeterminate_disabled">res/images//checkbox_indeterminate_disabled.png</file>
+
+
 </qresource>
-     
+
    <qresource prefix="/fonts">
        <file alias="Hind-Bold">res/fonts/Hind-Bold.ttf</file>
        <file alias="Hind-Light">res/fonts/Hind-Light.ttf</file>
