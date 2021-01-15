@@ -310,7 +310,7 @@ void SINGUI::createActions()
 {
     QActionGroup *tabGroup = new QActionGroup(this);
 
-    overviewAction = new QAction(platformStyle->SingleColorIcon(":/icons/mywallet"), tr(" &Dashboard\n"), this);
+    overviewAction = new QAction(platformStyle->SingleColorIcon(":/icons/mywallet"), tr(" &My Wallet\n"), this);
     overviewAction->setStatusTip(tr("Show general overview of wallet"));
     overviewAction->setToolTip(overviewAction->statusTip());
     overviewAction->setCheckable(true);

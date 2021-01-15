@@ -55,6 +55,11 @@ CoinControlDialog::CoinControlDialog(const PlatformStyle *_platformStyle, QWidge
 {
     ui->setupUi(this);
 
+    QFile file(":/css/stylesheet");
+    file.open(QFile::ReadOnly);
+    QString styleSheet = QLatin1String(file.readAll());
+    this->setStyleSheet(styleSheet);
+
 
     // context menu actions
     QAction *copyAddressAction = new QAction(tr("Copy address"), this);
