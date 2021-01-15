@@ -28,6 +28,9 @@
    </property>
    <item>
     <widget class="QFrame" name="frameStakeInfo">
+     <property name="styleSheet">
+      <string notr="true">background-color: #222F4B;</string>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -67,6 +70,9 @@
           </property>
           <property name="toolTip">
            <string>Your current spendable balance</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: white;</string>
           </property>
           <property name="text">
            <string notr="true">0.000 000 00 SIN</string>
@@ -258,7 +264,7 @@
           <item>
            <widget class="QLabel" name="labelReward">
             <property name="text">
-             <string>4 SIN/Block</string>
+             <string>3052.5 SIN/Block</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>

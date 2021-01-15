@@ -395,53 +395,7 @@ width: 200px;
        </widget>
        <widget class="QWidget" name="tabNodeSetup">
         <property name="styleSheet">
-         <string notr="true">QWidget#tabNodeSetup {
-background-image: url(':/images/setuplogo');
-background-position : right bottom;
-background-repeat:none;
-}
-
-
-QPushButton#btnSetup{ /* setUP Button */
-border:  1px solid #011552;
-    background-color:#011552;
-    font-size:18px;
-    padding:4px 6px;
-    color: #FFFFFF;
-    border-radius: 2px;
-}
-
-
-QPushButton#btnSetup:hover { /* setUP Button hover */
-border:  1px solid #00FFFF;
-    background-color:#0e1163;
-    font-size:18px;
-    padding:4px 6px;
-    color: #FFFFFF;
-    border-radius: 2px;
-}
-
-QPushButton#btnSetup:pressed { /* setUP Button pressed */
-border:  1px solid #0e1163;
-    background-color:#0e1163;
-    font-size:18px;
-    padding:4px 6px;
-    color: #00B4B8;
-    border-radius: 2px;
-}
-QComboBox#comboBurnTx, QComboBox#comboBilling, QComboBox#comboInvoice { /* Dropdown Menus */
-
-font-size: 16px;
-border-color:#bababa;
-border: 1px solid #011552;
-border-radius:0px;
-padding: 0px 0px 0px 0px;
-background:#90caf9;
-min-height:25px;
-color:#333333;
-background-color:#90caf9;
-}
-</string>
+         <string notr="true"/>
         </property>
         <attribute name="title">
          <string>1-Click Node setUP</string>
@@ -557,7 +511,7 @@ selection-background-color: #BC8F3A;;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:16px;
-color: #011552;
+
 
 
 </string>
@@ -761,7 +715,7 @@ background-size: 32px 32px;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:16px;
-color: #011552;
+
 
 </string>
              </property>
@@ -853,7 +807,7 @@ color: #011552;
              <property name="styleSheet">
               <string notr="true">font-size:14px;
 font-weight:bold;
-color: #BC8F3A;
+color: #6f80ab;
 </string>
              </property>
              <property name="text">
@@ -890,7 +844,7 @@ background-size: 32px 32px;</string>
             <widget class="QLabel" name="miniRoiLabel">
              <property name="styleSheet">
               <string notr="true">font-size:18px;
-color: #011552;</string>
+</string>
              </property>
              <property name="text">
               <string>miniRoi</string>
@@ -901,7 +855,7 @@ color: #011552;</string>
             <widget class="QLabel" name="midRoiLabel">
              <property name="styleSheet">
               <string notr="true">font-size:18px;
-color: #011552;</string>
+</string>
              </property>
              <property name="text">
               <string>midRoi</string>
@@ -912,7 +866,7 @@ color: #011552;</string>
             <widget class="QLabel" name="bigRoiLabel">
              <property name="styleSheet">
               <string notr="true">font-size:18px;
-color: #011552;</string>
+</string>
              </property>
              <property name="text">
               <string>bigRoi</string>
@@ -1007,7 +961,7 @@ selection-background-color: #BC8F3A;;</string>
                 <property name="minimumSize">
                  <size>
                   <width>200</width>
-                  <height>27</height>
+                  <height>0</height>
                  </size>
                 </property>
                 <property name="maximumSize">
@@ -1017,11 +971,7 @@ selection-background-color: #BC8F3A;;</string>
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">QComboBox {
-font-size:12px;
-font-weight: normal;
-}
-QComboBox QAbstractItemView  {
+                 <string notr="true">QComboBox QAbstractItemView  {
 min-width: 270px;
     }</string>
                 </property>
@@ -1048,7 +998,7 @@ min-width: 270px;
                 <property name="minimumSize">
                  <size>
                   <width>210</width>
-                  <height>27</height>
+                  <height>0</height>
                  </size>
                 </property>
                 <property name="maximumSize">
@@ -1174,7 +1124,7 @@ min-width: 270px;
                 <property name="minimumSize">
                  <size>
                   <width>210</width>
-                  <height>27</height>
+                  <height>0</height>
                  </size>
                 </property>
                 <property name="maximumSize">
@@ -1297,7 +1247,7 @@ color: #011552;
                  <string notr="true"/>
                 </property>
                 <property name="text">
-                 <string/>
+                 <string>1-click setUP</string>
                 </property>
                </widget>
               </item>
@@ -1395,7 +1345,7 @@ color: #011552;
                  <widget class="QLabel" name="labelTxt_1">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-color: #011552;</string>
+</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1406,7 +1356,7 @@ color: #011552;</string>
                  <widget class="QLabel" name="labelTxt_2">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-color: #011552;
+
 </string>
                   </property>
                   <property name="text">
@@ -1418,7 +1368,7 @@ color: #011552;
                  <widget class="QLabel" name="labelTxt_3">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-color: #011552;
+
 </string>
                   </property>
                   <property name="text">
@@ -1430,7 +1380,7 @@ color: #011552;
                  <widget class="QLabel" name="labelTxt_4">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-color: #011552;
+
 </string>
                   </property>
                   <property name="text">
@@ -1442,7 +1392,7 @@ color: #011552;
                  <widget class="QLabel" name="labelTxt_5">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-color: #011552;</string>
+</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1453,7 +1403,7 @@ color: #011552;</string>
                  <widget class="QLabel" name="labelTxt_6">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-color: #011552;</string>
+</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1464,7 +1414,7 @@ color: #011552;</string>
                  <widget class="QLabel" name="labelTxt_7">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-color: #011552;</string>
+</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1475,7 +1425,7 @@ color: #011552;</string>
                  <widget class="QLabel" name="labelTxt_8">
                   <property name="styleSheet">
                    <string notr="true">font-size:14px;
-color: #011552;</string>
+</string>
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
@@ -1540,7 +1490,7 @@ color: #011552;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-color: #011552;</string>
+</string>
              </property>
              <property name="text">
               <string>Client ID:</string>
@@ -1558,7 +1508,7 @@ color: #011552;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-color: #011552;</string>
+</string>
              </property>
              <property name="text">
               <string>#10</string>
@@ -1576,7 +1526,7 @@ color: #011552;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-color: #011552;</string>
+</string>
              </property>
              <property name="text">
               <string>Order ID:</string>
@@ -1594,7 +1544,7 @@ color: #011552;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-color: #011552;</string>
+</string>
              </property>
              <property name="text">
               <string>#11</string>
@@ -1612,7 +1562,7 @@ color: #011552;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-color: #011552;</string>
+</string>
              </property>
              <property name="text">
               <string>Invoice ID:</string>
@@ -1630,7 +1580,7 @@ color: #011552;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:12px;
-color: #011552;</string>
+</string>
              </property>
              <property name="text">
               <string>#12</string>

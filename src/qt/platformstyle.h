@@ -39,6 +39,7 @@ public:
     /** Colorize an icon (given object) with the text color */
     QIcon TextColorIcon(const QIcon& icon) const;
 
+    static void SingleColorImage(QImage& img, const QColor& colorbase, double opacity = 1);
     static QIcon SingleColorIcon(const QString& resourcename, const QColor& colorbase, double opacity = 1);
     static QIcon SingleColorIcon(const QIcon& icon, const QColor& colorbase, double opacity = 1);
     

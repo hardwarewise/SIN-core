@@ -104,8 +104,8 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     // --
 
 
-    ui->btnSetup->setIcon(QIcon(":/icons/setup"));
-    ui->btnSetup->setIconSize(QSize(177, 26));
+    //ui->btnSetup->setIcon(QIcon(":/icons/setup"));
+    //ui->btnSetup->setIconSize(QSize(177, 26));
     
     ui->dinTable->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -858,7 +858,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
     }
 
     if ( strStatus == "Unpaid" )  {
-        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #6f80ab;}");
         ui->labelMessage->setText(QString::fromStdString(strprintf("Invoice amount %f SIN", invoiceAmount)));
         if ( mPaymentTx != "" ) {   // already paid, waiting confirmations
             nodeSetupStep( "setupWait", "Invoice paid, waiting for confirmation");
@@ -876,7 +876,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
                 invoiceTimer->stop();
                 ui->btnSetup->setEnabled(true);
                 ui->btnSetupReset->setEnabled(true);
-                ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
+                ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #6f80ab;}");
                 ui->labelMessage->setText( "Press Reset Order button to cancel node setup process, or Continue setUP button to resume." );
                 return "cancelled";
             }
@@ -900,7 +900,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
                 }
 
                 nodeSetupSetPaymentTx(mPaymentTx);
-                ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
+                ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #6f80ab;}");
                 ui->labelMessage->setText( "Payment finished, please wait until platform confirms payment to proceed to node creation." );
                 ui->btnSetup->setEnabled(false);
                 ui->btnSetupReset->setEnabled(false);
@@ -913,7 +913,7 @@ QString MasternodeList::nodeSetupCheckInvoiceStatus()  {
 
     if ( strStatus == "Paid" )  {           // launch node setup (RPC)
         if (invoiceAmount==0)   {
-            ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
+            ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #6f80ab;}");
             ui->labelMessage->setText(QString::fromStdString("Invoice paid with balance"));
         }
 
@@ -1251,7 +1251,7 @@ void MasternodeList::nodeSetupInitialize()   {
 
     mOrderid = nodeSetupGetOrderId( mInvoiceid, mProductIds );
     if ( mOrderid > 0 )    {
-        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
+        ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #6f80ab;}");
         ui->labelMessage->setText(QString::fromStdString(strprintf("There is an order ongoing (#%d). Press 'Continue' or 'Reset' order.", mOrderid)));
         nodeSetupEnableOrderUI(true, mOrderid, mInvoiceid);
         mPaymentTx = nodeSetupGetPaymentTx();
@@ -1274,9 +1274,9 @@ void MasternodeList::nodeSetupEnableOrderUI( bool bEnable, int orderID , int inv
         ui->labelOrder->setVisible(true);
         ui->labelOrderID->setVisible(true);
         ui->labelOrderID->setText(QString::fromStdString("#")+QString::number(orderID));
-        ui->btnSetup->setIcon(QIcon(":/icons/setup_con"));
-        ui->btnSetup->setIconSize(QSize(200, 32));
-        ui->btnSetup->setText(QString::fromStdString(""));
+        //ui->btnSetup->setIcon(QIcon(":/icons/setup_con"));
+        //ui->btnSetup->setIconSize(QSize(200, 32));
+        ui->btnSetup->setText(QString::fromStdString("Continue setUP"));
         ui->labelInvoice->setVisible(true);
         ui->labelInvoiceID->setVisible(true);
         ui->labelInvoiceID->setText(QString::fromStdString("#")+QString::number(mInvoiceid));
@@ -1305,7 +1305,7 @@ void MasternodeList::nodeSetupResetClientId( )  {
     ui->btnSetup->setEnabled(false);
     mClientid = 0;
     nodeSetupResetOrderId();
-    ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
+    ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #6f80ab;}");
     ui->labelMessage->setText("Enter your client data and create a new user or login an existing one.");
 }
 
@@ -1314,10 +1314,10 @@ void MasternodeList::nodeSetupResetOrderId( )   {
     nodeSetupSetOrderId( 0, 0, "");
     ui->btnSetupReset->setEnabled(false);
     ui->btnSetup->setEnabled(true);
-    ui->btnSetup->setIcon(QIcon(":/icons/setup"));
-    ui->btnSetup->setIconSize(QSize(200, 32));
-    ui->btnSetup->setText(QString::fromStdString(""));
-    ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
+    //ui->btnSetup->setIcon(QIcon(":/icons/setup"));
+    //ui->btnSetup->setIconSize(QSize(200, 32));
+    ui->btnSetup->setText(QString::fromStdString("1-click setUP"));
+    ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #6f80ab;}");
     ui->labelMessage->setText("Select a node Tier and then follow below steps for setup.");
     mOrderid = mInvoiceid = mServiceId = 0;
     mPaymentTx = "";
@@ -1332,7 +1332,7 @@ void MasternodeList::nodeSetupEnableClientId( int clientId )  {
     ui->setupButtons->show();
     ui->labelClientIdValue->show();
     ui->labelClientId->setText("#"+QString::number(clientId));
-    ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #BC8F3A;}");
+    ui->labelMessage->setStyleSheet("QLabel { font-size:14px;font-weight:bold;color: #6f80ab;}");
     ui->labelMessage->setText("Select a node Tier and press '1-Click setUP' to verify if you meet the prerequisites");
     mClientid = clientId;
     ui->btnRestore->setText("Support");

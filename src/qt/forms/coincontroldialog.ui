@@ -44,183 +44,7 @@
       <number>0</number>
      </property>
      <property name="styleSheet">
-      <string notr="true">QFrame {
-background-color : #FFFFFF;
-}
-#btnEsc {
-    qproperty-icon: url(&quot;:/images/close&quot;) off,
-    url(&quot;:/images/close&quot;) on ;
-    qproperty-iconSize: 24px 24px;
-    background-color: transparent;
-    border:none;
-}
-
-#treeWidget {
-    border:1px solid #011552;
-    background-color:#FFFFFF;
-    background-position:center;
-    background-repeat:no-repeat;
-    selection-background-color:#DAEBF6;
-    selection-color: white;
-    font-size:14px;
-    border-radius:0px;
-    color: #707070;
-}
-
-#treeWidget::indicator:first:checked{
-    image: url(&quot;://images/checked&quot;);
-}
-#treeWidget::indicator:middle:checked{
-        image: url(&quot;://images/checked&quot;);
-}
-
-#treeWidget::indicator {
-    width: 24px;
-    height: 24px;
-}
-
-#treeWidget::indicator:indeterminate {
-    image: url(&quot;://images/indeterminate&quot;);
-}
-
-#treeWidget::indicator:unchecked {
-    image: url(&quot;://images/unchecked&quot;);
-}
-
-#treeWidget::indicator:checked {
-    image: url(&quot;://images/checked&quot;);
-}
-
-#treeWidget::item {
-    border:none;
-    border-bottom: 1px solid #bababa;
-    border-radius:0px;
-    color: #707070;
-    padding-top: 6px;
-    padding-bottom: 6px;
-    background-color:rgba(255,255,255,100);
-}
-
-#treeWidget::branch:closed:has-children:!has-siblings {
-    border-image: none;
-    background-color:rgba(255,255,255,100);
-    image: url(&quot;://images/rightArrow_small&quot;);
-    border-bottom: 1px solid #bababa;
-}
-
-#treeWidget::branch:closed:has-children:has-siblings {
-    border-image: none;
-    background-color:rgba(255,255,255,100);
-    image: url(&quot;://images/rightArrow_small&quot;);
-    border-bottom: 1px solid #bababa;
-}
-
-
-#treeWidget::branch:open:has-children:!has-siblings,
-#treeWidget::branch:open:has-children:has-siblings {
-    border-image: none;
-    image: url(&quot;://images/downArrow_small&quot;);
-    border-bottom: 1px solid #bababa;
-}
-
-#treeWidget::item:hover {
-    border:none;
-    border-bottom: 1px solid #bababa;
-    border-radius:0px;
-    color: #707070;
-    background-color:#ececec;
-}
-
-#treeWidget::item:selected {
-    border:none;
-    border-bottom: 1px solid #bababa;
-    border-radius:0px;
-    color: #707070;
-    background-color:#DAEBF6;
-}
-
-
-#treeWidget::item:hover:selected {
-    border:none;
-    border-bottom: 1px solid #bababa;
-    border-radius:0px;
-    color: #707070;
-    background-color:#DAEBF6;
-}
-
-
-#treeWidget::branch {
-    background-color: #FFFFFF;
-    selection-background-color:#DAEBF6;
-}
-
-#treeWidget::branch:selected {
-    background-color:#DAEBF6;
-}
-
-#treeWidget::branch:!selected {
-    background-color:#DAEBF6;
-}
-
-#treeWidget::branch:hover {
-    background-color:#f5f5f5;
-}
-
-#treeWidget::branch:!has-children {
-    background-color: #FFFFFF;
-}
-
-QHeaderView::section {
-    background-color: #011552;
-    color: #FFFFFF;
-    padding-top: 6px;
-    padding-bottom: 6px;
-    font-size:14px;
-    border:0px solid #011552;
-}
-
-QRadioButton:checked {
-    color: #011552;
-    font-size:14px;
-}
-
-QRadioButton:unchecked {
-    color: #bababa;
-    font-size:14px;
-}
-
-QRadioButton {
-    color: #bababa;
-    font-size:14px;
-    spacing:10px;
-}
-
-QRadioButton::indicator {
-    width:                  18px;
-    height:                 18px;
-}
-
-QRadioButton::indicator:checked {
-	image: url(':/images/radio_checked');
-}
-
-QRadioButton::indicator:unchecked {
-   image: url(':/images/radio_unchecked');
-}
-
-
-
-.QLabel  #labelCoinControlAfterFeeText, #labelCoinControlAmountText, #labelCoinControlBytesText, #labelCoinControlChangeText, #labelCoinControlLowOutputText, #labelCoinControlFeeText, #labelCoinControlQuantityText {
- color:#011552;
-  font-size:17px;
-}
-
-.QLabel  #labelCoinControlAfterFee, #labelCoinControlAmount, #labelCoinControlBytes, #labelCoinControlChange, #labelCoinControlLowOutput, #labelCoinControlFee, labelCoinControlQuantity { 
-color:#011552;
-    font-size:17px;
-}
-
-</string>
+      <string notr="true"/>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -277,8 +101,7 @@ color:#011552;
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">color:#011552;
-font-size:22px;
+           <string notr="true">font-size:16px;
 padding-left:30px;</string>
           </property>
           <property name="text">
@@ -338,8 +161,6 @@ padding-left:30px;</string>
          <widget class="QWidget" name="layoutAmount" native="true">
           <property name="styleSheet">
            <string notr="true">#layoutAmount {
-background-color:#FFFFFF;
-border:  1px solid #011552;
 border-radius:2px;
 }</string>
           </property>
@@ -381,14 +202,16 @@ border-radius:2px;
          <widget class="QWidget" name="layoutQuantity" native="true">
           <property name="styleSheet">
            <string notr="true">#layoutQuantity {
-background-color:#FFFFFF;
-border:  1px solid #011552;
+
 border-radius:2px;
 }</string>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="0,1">
+          <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="0,0">
            <item>
             <widget class="QLabel" name="labelCoinControlQuantityText">
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
              <property name="text">
               <string>Quantity:</string>
              </property>
@@ -397,8 +220,7 @@ border-radius:2px;
            <item>
             <widget class="QLabel" name="labelCoinControlQuantity">
              <property name="styleSheet">
-              <string notr="true">color:#011552;
-    font-size:17px;</string>
+              <string notr="true">font-size:17px;</string>
              </property>
              <property name="text">
               <string>0</string>
@@ -428,8 +250,6 @@ border-radius:2px;
          <widget class="QWidget" name="layoutFee" native="true">
           <property name="styleSheet">
            <string notr="true">#layoutFee {
-background-color:#FFFFFF;
-border:  1px solid #011552;
 border-radius:2px;
 }</string>
           </property>
@@ -503,24 +323,18 @@ border-radius:2px;
              </property>
              <property name="minimumSize">
               <size>
-               <width>100</width>
+               <width>0</width>
                <height>0</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>40</height>
+               <height>16777215</height>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">border:  1px solid #011552;
-height: 20px;    
-background-color:#FFFFFF;
-    padding:4px;
-    font-size:16px;
-    color: 011552;
-    border-radius: 2px;</string>
+              <string notr="true"/>
              </property>
              <property name="text">
               <string>Select all</string>
@@ -565,24 +379,18 @@ background-color:#FFFFFF;
              </property>
              <property name="minimumSize">
               <size>
-               <width>100</width>
+               <width>0</width>
                <height>0</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>40</height>
+               <height>16777215</height>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">border:  1px solid #011552;
-height: 20px;    
-background-color:#FFFFFF;
-    padding:4px;
-    font-size:16px;
-    color: 011552;
-    border-radius: 2px;</string>
+              <string notr="true"/>
              </property>
              <property name="text">
               <string>Lock-Unlock All</string>
@@ -661,8 +469,7 @@ background-color:#FFFFFF;
            <item>
             <widget class="QLabel" name="labelLocked">
              <property name="styleSheet">
-              <string notr="true">color:#011552;
-    font-size:17px;</string>
+              <string notr="true"/>
              </property>
              <property name="text">
               <string>(1 locked)</string>
@@ -689,6 +496,12 @@ background-color:#FFFFFF;
           </property>
           <property name="styleSheet">
            <string notr="true"/>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>16</width>
+            <height>16</height>
+           </size>
           </property>
           <property name="sortingEnabled">
            <bool>false</bool>
@@ -763,13 +576,9 @@ background-color:#FFFFFF;
         <item>
          <widget class="QWidget" name="layoutBytes" native="true">
           <property name="styleSheet">
-           <string notr="true">#layoutBytes {
-background-color:#FFFFFF;
-border:  1px solid #011552;
-border-radius:2px;
-}</string>
+           <string notr="true"/>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,1">
+          <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0">
            <item>
             <widget class="QLabel" name="labelCoinControlBytesText">
              <property name="text">
@@ -790,13 +599,9 @@ border-radius:2px;
         <item>
          <widget class="QWidget" name="layoutDust" native="true">
           <property name="styleSheet">
-           <string notr="true">#layoutDust {
-background-color:#FFFFFF;
-border:  1px solid #011552;
-border-radius:2px;
-}</string>
+           <string notr="true"/>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,1">
+          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,0">
            <item>
             <widget class="QLabel" name="labelCoinControlLowOutputText">
              <property name="text">
@@ -817,13 +622,9 @@ border-radius:2px;
         <item>
          <widget class="QWidget" name="layoutChange" native="true">
           <property name="styleSheet">
-           <string notr="true">#layoutChange {
-background-color:#FFFFFF;
-border:  1px solid #011552;
-border-radius:2px;
-}</string>
+           <string notr="true"/>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,1">
+          <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,0">
            <item>
             <widget class="QLabel" name="labelCoinControlChangeText">
              <property name="text">
@@ -845,8 +646,6 @@ border-radius:2px;
          <widget class="QWidget" name="layoutAfter" native="true">
           <property name="styleSheet">
            <string notr="true">#layoutAfter {
-background-color:#FFFFFF;
-border:  1px solid #011552;
 border-radius:2px;
 }</string>
           </property>
@@ -854,8 +653,7 @@ border-radius:2px;
            <item>
             <widget class="QLabel" name="labelCoinControlAfterFeeText">
              <property name="styleSheet">
-              <string notr="true">color:#011552;
-    font-size:17px;</string>
+              <string notr="true">font-size:17px;</string>
              </property>
              <property name="text">
               <string>After Fee: </string>
@@ -865,8 +663,7 @@ border-radius:2px;
            <item>
             <widget class="QLabel" name="labelCoinControlAfterFee">
              <property name="styleSheet">
-              <string notr="true">color:#011552;
-font-size:17px;</string>
+              <string notr="true">font-size:17px;</string>
              </property>
              <property name="text">
               <string>0.00 SIN</string>
@@ -892,42 +689,24 @@ font-size:17px;</string>
         <item>
          <widget class="QDialogButtonBox" name="buttonBox">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="minimumSize">
            <size>
-            <width>50</width>
-            <height>35</height>
+            <width>0</width>
+            <height>0</height>
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">border:  1px solid #011552;
-    background-color:#011552;
-    font-size:18px;
-    padding:4px 10px;
-    color: #FFFFFF;
-    border-radius: 2px;</string>
+           <string notr="true"/>
           </property>
           <property name="standardButtons">
            <set>QDialogButtonBox::Ok</set>
           </property>
          </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>558</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </item>

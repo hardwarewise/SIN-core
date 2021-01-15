@@ -76,7 +76,7 @@
         <bool>false</bool>
        </property>
        <property name="pixmap">
-        <pixmap>:/images/about</pixmap>
+        <pixmap resource="../sin.qrc">:/images/about</pixmap>
        </property>
        <property name="scaledContents">
         <bool>false</bool>
@@ -93,7 +93,7 @@
      <item>
       <widget class="QTextEdit" name="helpMessage">
        <property name="styleSheet">
-        <string notr="true">color:#333333;</string>
+        <string notr="true"/>
        </property>
        <property name="readOnly">
         <bool>true</bool>
@@ -127,7 +127,7 @@
             <cursorShape>IBeamCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">color:#333333;</string>
+            <string notr="true"/>
            </property>
            <property name="textFormat">
             <enum>Qt::PlainText</enum>
@@ -183,9 +183,9 @@
  <connections>
   <connection>
    <sender>okButton</sender>
-   <signal>accepted()</signal>
+   <signal>rejected()</signal>
    <receiver>HelpMessageDialog</receiver>
-   <slot>accept()</slot>
+   <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>20</x>
@@ -199,9 +199,9 @@
   </connection>
   <connection>
    <sender>okButton</sender>
-   <signal>rejected()</signal>
+   <signal>accepted()</signal>
    <receiver>HelpMessageDialog</receiver>
-   <slot>reject()</slot>
+   <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>20</x>

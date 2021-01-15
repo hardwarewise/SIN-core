@@ -268,6 +268,14 @@ QIcon PlatformStyle::MultiStatesIconV2(const QString &resourcename, PlatformStyl
     return icon;
 }
 
+//////////////////
+
+void PlatformStyle::SingleColorImage(QImage &img, const QColor &colorbase, double opacity)
+{
+    MakeSingleColorImage(img, colorbase, opacity);
+}
+////////////////
+
 QImage PlatformStyle::SingleColorImage(const QString& filename) const
 {
     if (!colorizeIcons)

@@ -17,9 +17,9 @@ TransactionDescDialog::TransactionDescDialog(const QModelIndex &idx, QWidget *pa
 {
     ui->setupUi(this);
 
-        ui->descFrame->setStyleSheet("background-color: #172F49");
-        ui->detailText->setStyleSheet("QTextEdit {color: white; background-color: transparent; border-radius : 12px; margin: 10px;} QToolTip { color: #000000; background-color: #ffffff; border: 0px;}");
-        ui->buttonBox->button(QDialogButtonBox::Close)->setStyleSheet("border: 1px solid #74B2FE; background-color: #061834; color: #FFFFFF;");
+        this->setStyleSheet("QDialog {background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #0C2448, stop: 1 #000D20);} QLabel { color: #6f80ab;}");
+        ui->detailText->setStyleSheet("QTextBrowser {color:  #6f80ab; background-color: #1A233A; border-radius : 12px; margin: 10px; padding: 10px; border: 1px solid #6f80ab;} QToolTip { color: #000000; background-color: #FFFFE1; border: 1px solid #000000;}");
+        
         
     setWindowTitle(tr("Details for %1").arg(idx.data(TransactionTableModel::TxHashRole).toString()));
     QString desc = idx.data(TransactionTableModel::LongDescriptionRole).toString();

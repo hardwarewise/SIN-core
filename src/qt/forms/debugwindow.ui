@@ -20,247 +20,7 @@
    <string>Debug window</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"> QWidget#RPCConsole {
-background-color: #FFFFFF;
-
-}
-QTabWidget {
-   background-color:transparent;
-   color:#333;
-
-}
-QTabWidget::pane {
-    background-color:transparent;
-    border:0;
-}
-QTabBar {
-	background-color: transparent;;
-	color: #000000;
-}
-QTabBar::tab:hover:!selected {
-	background-color: #A6D8FF;
-    color:#000000;
-}
-
-
-QTabBar::tab {
-  color:#333;
-  font-size:14px;
-  background-color:transparent;
-  padding-left: 4px;
-  padding-right: 4px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  min-width: 100px;
-  border-top-color:transparent;
-  border-left-color:transparent;
-  border-right-color:transparent;
-  width: 150px;
-}
-
-QTabBar::tab:selected {
-    border-bottom: 3px solid #BC8F3A;
-    background-color:transparent;
-
-    }
-QTabBar::tab:pressed {
-    outline:0;
-}
-
-.QValidatedLineEdit, .QLineEdit { /* Text Entry Fields */
-border: 2px solid #333;
-font-size:14px;
-/*font-weight: bold;*/
-min-height:25px;
-outline:0;
-padding:3px;
-color: #000;
-background-color:#fff;
-
-}
-
-QWidget#RPCConsole QTextEdit#messagesWidget {
-	/* Console Messages Window */
-	border: 2px solid #333;
-border-radius: 10px;
-	background-color: #ffffff;
-	color: #000;
-}
-
-QWidget#RPCConsole QWidget#tab_peers QLabel#peerHeading {
-	/* Peers Info Header */
-	color: #BC8F3A;
-}
-
-QLabel {
-color: #000000;
-}
-
-QWidget#RPCConsole QTableView#peerWidget::item, QTableView#banlistWidget::item  {
-	/* Peers Table Items */
-	color: #000000;
-}
-
-QWidget#RPCConsole QTableView#peerWidget, QTableView#banlistWidget {
-	/* Peers Table Items */
-   background-color: transparent;
-
-}
-
-QTableView::item:selected { /* Table Item Selected */
-	background: #D6D7D8;
-		color: #000000;
-}
-
-QWidget#RPCConsole QPushButton#openDebugLogfileButton,  QPushButton#btnClearTrafficGraph { /* Open Debug File Button */
-	background-color: #fff;
-	background-repeat: no-repeat;
-    background-size: 1000% 1000%;
- 	padding: 5px 5px;
-	letter-spacing: 1px;
-	border: 1px solid #bababa;
-	color: #2E3191;
-	font-size: 14px;
-}
-
-QWidget#RPCConsole QPushButton#openDebugLogfileButton:hover, QPushButton#btnClearTrafficGraph::hover {
-border: 1px solid #000000;
-}
-
-QWidget#RPCConsole QPushButton#openDebugLogfileButton:pressed,  QPushButton#btnClearTrafficGraph::pressed {
-	border: 1px solid #000000;
-}
-
-
-QScrollBar {
-	/* Scroll Bar */
-}
-QScrollBar:vertical {
-	/* Vertical Scroll Bar Attributes */
-	border: 0;
-	background: transparent;
-	width: 12px;
-    margin: 0;
-
-}
-QScrollBar:horizontal {
-	/* Horizontal Scroll Bar Attributes */
-	border: 0;
-	background: transparent;
-	height: 12px;
-    margin:0;
-
-}
-QScrollBar::handle:vertical {
-	/* Scroll Bar Slider - vertical */
-	background: #bababa;
-    border-radius: 6px;
-    min-height:50px;
-    width:3px;
-    
-
-}
-
-QScrollBar::handle:horizontal {
-	/* Scroll Bar Slider - horizontal */
-	background: #bababa;
-    min-width: 50px;
-    border-radius: 6px;
-}
-QScrollBar::add-page,
-QScrollBar::sub-page {
-	/* Scroll Bar Background */
-	background: transparent;
-}
-QScrollBar::add-line:vertical,
-QScrollBar::sub-line:vertical,
-QScrollBar::add-line:horizontal,
-QScrollBar::sub-line:horizontal {
-	/* Define Arrow Button Dimensions */
-	background: none;
-	border: 0;
-	width: 16px;
-	height: 16px;
-}
-QScrollBar::add-line:vertical:pressed,
-QScrollBar::sub-line:vertical:pressed,
-QScrollBar::add-line:horizontal:pressed,
-QScrollBar::sub-line:horizontal:pressed {
-	background-color: #e0e0e0;
-}
-QScrollBar::sub-line:vertical {
-	/* Vertical - top button position */
-	subcontrol-position: top;
-	subcontrol-origin: margin;
-}
-QScrollBar::add-line:vertical {
-	/* Vertical - bottom button position */
-	subcontrol-position: bottom;
-	subcontrol-origin: margin;
-}
-QScrollBar::sub-line:horizontal {
-	/* Vertical - left button position */
-	subcontrol-position: left;
-	subcontrol-origin: margin;
-}
-QScrollBar::add-line:horizontal {
-	/* Vertical - right button position */
-	subcontrol-position: right;
-	subcontrol-origin: margin;
-}
-QScrollBar:up-arrow,
-QScrollBar:down-arrow,
-QScrollBar:left-arrow,
-QScrollBar:right-arrow {
-	/* Arrows Icon */
-	width: 10px;
-	height: 10px;
-	display: none;
-	opacity: 0;
-}
-QScrollBar:up-arrow {
-	background: none;
-}
-QScrollBar:down-arrow {
-    /* background-image: url(':/images/downArrow_small'); */
-    background: none;
-}
-QScrollBar:left-arrow {
-    /* background-image: url(':/images/leftArrow_small'); */
-    background: none;
-}
-QScrollBar:right-arrow {
-    /* background-image: url(':/images/rightArrow_small'); */
-    background: none;
-}
-QSlider::handle:horizontal {
-	background-color: #8a8a8a;
-	border: 0;
-	border-radius: 6px;
-}
-QSlider::sub-page:horizontal {
-	background-color: #414a55;
-	border: 0;
-	border-radius: 6px;
-}
-QSlider::add-page:horizontal {
-	/* background-color:rgba(255, 255, 255, 0.08); */
-	background-color: #222d3a;
-	border: 0;
-	border-radius: 6px;
-}
-/**************************** HIDE ARROWS **********************************************/
-
-QScrollBar::add-line:vertical {
-	height: 0px;
-}
-QScrollBar::sub-line:vertical {
-	height: 0px;
-}
-QScrollBar::add-page:vertical,
-QScrollBar::sub-page:vertical {
-	height: 0px;
-}</string>
+   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
@@ -270,8 +30,8 @@ QScrollBar::sub-page:vertical {
      </property>
      <widget class="QWidget" name="tab_info">
       <property name="styleSheet">
-       <string notr="true">font-size:16px;
-color : #707070;</string>
+       <string notr="true">font-size:12px;
+</string>
       </property>
       <attribute name="title">
        <string>&amp;Information</string>
@@ -279,8 +39,27 @@ color : #707070;</string>
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="14" column="1">
-          <widget class="QLabel" name="mempoolSize">
+         <item row="13" column="0">
+          <widget class="QLabel" name="labelNumberOfTransactions">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Current number of transactions</string>
+           </property>
+          </widget>
+         </item>
+         <item row="18" column="1">
+          <widget class="QLabel" name="masternodeCount">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -293,17 +72,49 @@ color : #707070;</string>
              <height>0</height>
             </size>
            </property>
-           <property name="cursor">
-            <cursorShape>IBeamCursor</cursorShape>
+           <property name="styleSheet">
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>N/A</string>
            </property>
-           <property name="textFormat">
-            <enum>Qt::PlainText</enum>
+          </widget>
+         </item>
+         <item row="10" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
-           <property name="textInteractionFlags">
-            <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Current number of blocks</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="label_8">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Name</string>
            </property>
           </widget>
          </item>
@@ -329,10 +140,127 @@ color : #707070;</string>
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">color: #2E3191;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>Network</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="labelGeneral">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>-1</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="text">
+            <string>General</string>
+           </property>
+          </widget>
+         </item>
+         <item row="17" column="0">
+          <widget class="QLabel" name="masternodesLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>-1</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="text">
+            <string>Infinitynodes</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLabel" name="dataDir">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>450</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="cursor">
+            <cursorShape>IBeamCursor</cursorShape>
+           </property>
+           <property name="text">
+            <string>N/A</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::PlainText</enum>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="1">
+          <widget class="QLabel" name="numberOfBlocks">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>450</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="cursor">
+            <cursorShape>IBeamCursor</cursorShape>
+           </property>
+           <property name="text">
+            <string>N/A</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::PlainText</enum>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
            </property>
           </widget>
          </item>
@@ -364,32 +292,22 @@ color : #707070;</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_9">
+         <item row="19" column="1" alignment="Qt::AlignRight">
+          <widget class="SinPushButton" name="openDebugLogfileButton">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>200</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="minimumSize">
-            <size>
-             <width>200</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>-1</pointsize>
-             <weight>75</weight>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">color: #2E3191;</string>
+           <property name="toolTip">
+            <string>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</string>
            </property>
            <property name="text">
-            <string>General</string>
+            <string>&amp;Open Debug Log File</string>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -412,8 +330,64 @@ color : #707070;</string>
            </property>
           </widget>
          </item>
-         <item row="8" column="0">
-          <widget class="QLabel" name="label_7">
+         <item row="13" column="1">
+          <widget class="QLabel" name="mempoolNumberTxs">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>450</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="cursor">
+            <cursorShape>IBeamCursor</cursorShape>
+           </property>
+           <property name="text">
+            <string>N/A</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::PlainText</enum>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="1">
+          <widget class="QLabel" name="mempoolSize">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>450</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="cursor">
+            <cursorShape>IBeamCursor</cursorShape>
+           </property>
+           <property name="text">
+            <string>N/A</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::PlainText</enum>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="labelClientUserAgent">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -427,7 +401,51 @@ color : #707070;</string>
             </size>
            </property>
            <property name="text">
-            <string>Number of connections</string>
+            <string>User Agent</string>
+           </property>
+           <property name="indent">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+         <item row="11" column="0">
+          <widget class="QLabel" name="labelLastBlockTime">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Last block time</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_berkeleyDBVersion">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Using BerkeleyDB version</string>
+           </property>
+           <property name="indent">
+            <number>0</number>
            </property>
           </widget>
          </item>
@@ -478,63 +496,6 @@ color : #707070;</string>
            </property>
           </widget>
          </item>
-         <item row="10" column="1">
-          <widget class="QLabel" name="numberOfBlocks">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>450</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="cursor">
-            <cursorShape>IBeamCursor</cursorShape>
-           </property>
-           <property name="text">
-            <string>N/A</string>
-           </property>
-           <property name="textFormat">
-            <enum>Qt::PlainText</enum>
-           </property>
-           <property name="textInteractionFlags">
-            <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="0">
-          <widget class="QLabel" name="label_10">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>200</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>-1</pointsize>
-             <weight>75</weight>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">color: #2E3191;</string>
-           </property>
-           <property name="text">
-            <string>Block chain</string>
-           </property>
-          </widget>
-         </item>
          <item row="12" column="0">
           <widget class="QLabel" name="labelMempoolTitle">
            <property name="sizePolicy">
@@ -557,15 +518,15 @@ color : #707070;</string>
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">color: #2E3191;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>Memory Pool</string>
            </property>
           </widget>
          </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_berkeleyDBVersion">
+         <item row="8" column="0">
+          <widget class="QLabel" name="label_7">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -579,15 +540,72 @@ color : #707070;</string>
             </size>
            </property>
            <property name="text">
-            <string>Using BerkeleyDB version</string>
-           </property>
-           <property name="indent">
-            <number>0</number>
+            <string>Number of connections</string>
            </property>
           </widget>
          </item>
-         <item row="17" column="0">
-          <widget class="QLabel" name="masternodesLabel">
+         <item row="5" column="1">
+          <widget class="QLabel" name="startupTime">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>450</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="cursor">
+            <cursorShape>IBeamCursor</cursorShape>
+           </property>
+           <property name="text">
+            <string>N/A</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::PlainText</enum>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+           </property>
+          </widget>
+         </item>
+         <item row="18" column="0">
+          <widget class="QLabel" name="masternodeCountLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Number of InfinityNodes</string>
+           </property>
+          </widget>
+         </item>
+         <item row="16" column="0">
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="9" column="0">
+          <widget class="QLabel" name="labelBlockChain">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -608,178 +626,15 @@ color : #707070;</string>
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">color: #2E3191;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
-            <string>Infinitynodes</string>
+            <string>Block chain</string>
            </property>
           </widget>
          </item>
-         <item row="7" column="0">
-          <widget class="QLabel" name="label_8">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>200</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Name</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLabel" name="dataDir">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>450</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="cursor">
-            <cursorShape>IBeamCursor</cursorShape>
-           </property>
-           <property name="text">
-            <string>N/A</string>
-           </property>
-           <property name="textFormat">
-            <enum>Qt::PlainText</enum>
-           </property>
-           <property name="wordWrap">
-            <bool>true</bool>
-           </property>
-           <property name="textInteractionFlags">
-            <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="clientUserAgent">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>450</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="cursor">
-            <cursorShape>IBeamCursor</cursorShape>
-           </property>
-           <property name="text">
-            <string>N/A</string>
-           </property>
-           <property name="textFormat">
-            <enum>Qt::PlainText</enum>
-           </property>
-           <property name="textInteractionFlags">
-            <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-           </property>
-          </widget>
-         </item>
-         <item row="10" column="0">
-          <widget class="QLabel" name="label_3">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>200</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Current number of blocks</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1">
-          <widget class="QLabel" name="numberOfConnections">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>450</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="cursor">
-            <cursorShape>IBeamCursor</cursorShape>
-           </property>
-           <property name="text">
-            <string>N/A</string>
-           </property>
-           <property name="textFormat">
-            <enum>Qt::PlainText</enum>
-           </property>
-           <property name="textInteractionFlags">
-            <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="0">
-          <widget class="QLabel" name="labelMemoryUsage">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>200</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Memory usage</string>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="0">
-          <widget class="QLabel" name="labelLastBlockTime">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>200</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Last block time</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1">
-          <widget class="QLabel" name="startupTime">
+         <item row="1" column="1">
+          <widget class="QLabel" name="clientVersion">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -834,8 +689,8 @@ color : #707070;</string>
            </property>
           </widget>
          </item>
-         <item row="13" column="1">
-          <widget class="QLabel" name="mempoolNumberTxs">
+         <item row="2" column="1">
+          <widget class="QLabel" name="clientUserAgent">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -859,6 +714,53 @@ color : #707070;</string>
            </property>
            <property name="textInteractionFlags">
             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1">
+          <widget class="QLabel" name="numberOfConnections">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>450</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="cursor">
+            <cursorShape>IBeamCursor</cursorShape>
+           </property>
+           <property name="text">
+            <string>N/A</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::PlainText</enum>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="0">
+          <widget class="QLabel" name="labelMemoryUsage">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Memory usage</string>
            </property>
           </widget>
          </item>
@@ -878,148 +780,6 @@ color : #707070;</string>
            </property>
            <property name="text">
             <string>Client version</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="labelClientUserAgent">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>200</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>User Agent</string>
-           </property>
-           <property name="indent">
-            <number>0</number>
-           </property>
-          </widget>
-         </item>
-         <item row="13" column="0">
-          <widget class="QLabel" name="labelNumberOfTransactions">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>200</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Current number of transactions</string>
-           </property>
-          </widget>
-         </item>
-         <item row="16" column="0">
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="clientVersion">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>450</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="cursor">
-            <cursorShape>IBeamCursor</cursorShape>
-           </property>
-           <property name="text">
-            <string>N/A</string>
-           </property>
-           <property name="textFormat">
-            <enum>Qt::PlainText</enum>
-           </property>
-           <property name="textInteractionFlags">
-            <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-           </property>
-          </widget>
-         </item>
-         <item row="18" column="0">
-          <widget class="QLabel" name="masternodeCountLabel">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>200</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Number of InfinityNodes</string>
-           </property>
-          </widget>
-         </item>
-         <item row="18" column="1">
-          <widget class="QLabel" name="masternodeCount">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>450</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">color: #BC8F3A;</string>
-           </property>
-           <property name="text">
-            <string>N/A</string>
-           </property>
-          </widget>
-         </item>
-         <item row="19" column="1">
-          <widget class="QPushButton" name="openDebugLogfileButton">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>200</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="toolTip">
-            <string>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</string>
-           </property>
-           <property name="text">
-            <string>&amp;Open Debug Log File</string>
-           </property>
-           <property name="autoDefault">
-            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -1073,11 +833,11 @@ color : #707070;</string>
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="fontSmallerButton">
+          <widget class="QToolButton" name="fontSmallerButton">
            <property name="maximumSize">
             <size>
-             <width>24</width>
-             <height>24</height>
+             <width>16777215</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="toolTip">
@@ -1096,20 +856,14 @@ color : #707070;</string>
              <height>16</height>
             </size>
            </property>
-           <property name="autoDefault">
-            <bool>false</bool>
-           </property>
-           <property name="flat">
-            <bool>true</bool>
-           </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="fontBiggerButton">
+          <widget class="QToolButton" name="fontBiggerButton">
            <property name="maximumSize">
             <size>
-             <width>24</width>
-             <height>24</height>
+             <width>16777215</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="toolTip">
@@ -1128,20 +882,14 @@ color : #707070;</string>
              <height>16</height>
             </size>
            </property>
-           <property name="autoDefault">
-            <bool>false</bool>
-           </property>
-           <property name="flat">
-            <bool>true</bool>
-           </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="clearButton">
+          <widget class="QToolButton" name="clearButton">
            <property name="maximumSize">
             <size>
-             <width>24</width>
-             <height>24</height>
+             <width>16777215</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="toolTip">
@@ -1159,12 +907,6 @@ color : #707070;</string>
            </property>
            <property name="shortcut">
             <string notr="true">Ctrl+L</string>
-           </property>
-           <property name="autoDefault">
-            <bool>false</bool>
-           </property>
-           <property name="flat">
-            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -1195,14 +937,14 @@ color : #707070;</string>
           <number>3</number>
          </property>
          <item>
-          <widget class="QPushButton" name="promptIcon">
+          <widget class="QToolButton" name="promptIcon">
            <property name="enabled">
             <bool>false</bool>
            </property>
            <property name="maximumSize">
             <size>
-             <width>16</width>
-             <height>24</height>
+             <width>16777215</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="text">
@@ -1218,12 +960,6 @@ color : #707070;</string>
              <width>14</width>
              <height>14</height>
             </size>
-           </property>
-           <property name="autoDefault">
-            <bool>false</bool>
-           </property>
-           <property name="flat">
-            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -1307,6 +1043,9 @@ color : #707070;</string>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
           <widget class="QGroupBox" name="groupBox">
+           <property name="styleSheet">
+            <string notr="true">background-color: transparent;</string>
+           </property>
            <property name="title">
             <string>Totals</string>
            </property>
@@ -1330,17 +1069,53 @@ color : #707070;</string>
                 <property name="palette">
                  <palette>
                   <active>
+                   <colorrole role="Button">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
+                      <green>0</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
                    <colorrole role="Light">
                     <brush brushstyle="SolidPattern">
                      <color alpha="255">
                       <red>0</red>
                       <green>255</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
+                   <colorrole role="Base">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
+                      <green>0</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
+                   <colorrole role="Window">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
+                      <green>0</green>
                       <blue>0</blue>
                      </color>
                     </brush>
                    </colorrole>
                   </active>
                   <inactive>
+                   <colorrole role="Button">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
+                      <green>0</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
                    <colorrole role="Light">
                     <brush brushstyle="SolidPattern">
                      <color alpha="255">
@@ -1350,13 +1125,58 @@ color : #707070;</string>
                      </color>
                     </brush>
                    </colorrole>
+                   <colorrole role="Base">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
+                      <green>0</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
+                   <colorrole role="Window">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
+                      <green>0</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
                   </inactive>
                   <disabled>
+                   <colorrole role="Button">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
+                      <green>0</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
                    <colorrole role="Light">
                     <brush brushstyle="SolidPattern">
                      <color alpha="255">
                       <red>0</red>
                       <green>255</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
+                   <colorrole role="Base">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
+                      <green>0</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
+                   <colorrole role="Window">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
+                      <green>0</green>
                       <blue>0</blue>
                      </color>
                     </brush>
@@ -1384,6 +1204,9 @@ color : #707070;</string>
                   <height>0</height>
                  </size>
                 </property>
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                 </property>
@@ -1410,10 +1233,37 @@ color : #707070;</string>
                 <property name="palette">
                  <palette>
                   <active>
+                   <colorrole role="Button">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
+                      <green>0</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
                    <colorrole role="Light">
                     <brush brushstyle="SolidPattern">
                      <color alpha="255">
                       <red>255</red>
+                      <green>0</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
+                   <colorrole role="Base">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
+                      <green>0</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
+                   <colorrole role="Window">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
                       <green>0</green>
                       <blue>0</blue>
                      </color>
@@ -1421,6 +1271,15 @@ color : #707070;</string>
                    </colorrole>
                   </active>
                   <inactive>
+                   <colorrole role="Button">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
+                      <green>0</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
                    <colorrole role="Light">
                     <brush brushstyle="SolidPattern">
                      <color alpha="255">
@@ -1430,12 +1289,57 @@ color : #707070;</string>
                      </color>
                     </brush>
                    </colorrole>
+                   <colorrole role="Base">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
+                      <green>0</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
+                   <colorrole role="Window">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
+                      <green>0</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
                   </inactive>
                   <disabled>
+                   <colorrole role="Button">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
+                      <green>0</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
                    <colorrole role="Light">
                     <brush brushstyle="SolidPattern">
                      <color alpha="255">
                       <red>255</red>
+                      <green>0</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
+                   <colorrole role="Base">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
+                      <green>0</green>
+                      <blue>0</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
+                   <colorrole role="Window">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="0">
+                      <red>0</red>
                       <green>0</green>
                       <blue>0</blue>
                      </color>
@@ -1539,7 +1443,7 @@ color : #707070;</string>
            </property>
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>10</pointsize>
             </font>
            </property>
            <property name="cursor">
@@ -2184,6 +2088,11 @@ color : #707070;</string>
    <slots>
     <slot>clear()</slot>
    </slots>
+  </customwidget>
+  <customwidget>
+   <class>SinPushButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">qt/sinpushbutton.h</header>
   </customwidget>
  </customwidgets>
  <resources>
