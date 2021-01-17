@@ -91,18 +91,18 @@
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>40</height>
+            <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>40</height>
+            <height>16777215</height>
            </size>
           </property>
           <property name="styleSheet">
            <string notr="true">font-size:16px;
-padding-left:30px;</string>
+</string>
           </property>
           <property name="text">
            <string>Select SIN Coins to Send</string>
@@ -128,25 +128,6 @@ padding-left:30px;</string>
           </property>
          </spacer>
         </item>
-        <item>
-         <widget class="QPushButton" name="btnEsc">
-          <property name="minimumSize">
-           <size>
-            <width>24</width>
-            <height>24</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>24</width>
-            <height>24</height>
-           </size>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
        </layout>
       </item>
       <item>
@@ -167,6 +148,13 @@ border-radius:2px;
           <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,1">
            <item>
             <widget class="QLabel" name="labelCoinControlAmountText">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Amount</string>
              </property>
@@ -174,6 +162,11 @@ border-radius:2px;
            </item>
            <item>
             <widget class="QLabel" name="labelCoinControlAmount">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string>0.00 SIN</string>
              </property>
@@ -209,6 +202,13 @@ border-radius:2px;
           <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="0,0">
            <item>
             <widget class="QLabel" name="labelCoinControlQuantityText">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="styleSheet">
               <string notr="true"/>
              </property>
@@ -219,8 +219,13 @@ border-radius:2px;
            </item>
            <item>
             <widget class="QLabel" name="labelCoinControlQuantity">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
              <property name="styleSheet">
-              <string notr="true">font-size:17px;</string>
+              <string notr="true"/>
              </property>
              <property name="text">
               <string>0</string>
@@ -253,9 +258,16 @@ border-radius:2px;
 border-radius:2px;
 }</string>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,1">
+          <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,0">
            <item>
             <widget class="QLabel" name="labelCoinControlFeeText">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Fee:</string>
              </property>
@@ -263,6 +275,11 @@ border-radius:2px;
            </item>
            <item>
             <widget class="QLabel" name="labelCoinControlFee">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string>0.00 SIN</string>
              </property>
@@ -270,6 +287,19 @@ border-radius:2px;
            </item>
           </layout>
          </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>
@@ -570,8 +600,14 @@ border-radius:2px;
         <property name="leftMargin">
          <number>20</number>
         </property>
+        <property name="topMargin">
+         <number>5</number>
+        </property>
         <property name="rightMargin">
          <number>20</number>
+        </property>
+        <property name="bottomMargin">
+         <number>10</number>
         </property>
         <item>
          <widget class="QWidget" name="layoutBytes" native="true">
@@ -581,6 +617,13 @@ border-radius:2px;
           <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0">
            <item>
             <widget class="QLabel" name="labelCoinControlBytesText">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Bytes:</string>
              </property>
@@ -588,6 +631,11 @@ border-radius:2px;
            </item>
            <item>
             <widget class="QLabel" name="labelCoinControlBytes">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string>0</string>
              </property>
@@ -604,6 +652,13 @@ border-radius:2px;
           <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,0">
            <item>
             <widget class="QLabel" name="labelCoinControlLowOutputText">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Dust:</string>
              </property>
@@ -611,6 +666,11 @@ border-radius:2px;
            </item>
            <item>
             <widget class="QLabel" name="labelCoinControlLowOutput">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string>no</string>
              </property>
@@ -627,6 +687,13 @@ border-radius:2px;
           <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,0">
            <item>
             <widget class="QLabel" name="labelCoinControlChangeText">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Change:</string>
              </property>
@@ -634,6 +701,11 @@ border-radius:2px;
            </item>
            <item>
             <widget class="QLabel" name="labelCoinControlChange">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string>0</string>
              </property>
@@ -652,8 +724,15 @@ border-radius:2px;
           <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="0,1">
            <item>
             <widget class="QLabel" name="labelCoinControlAfterFeeText">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="styleSheet">
-              <string notr="true">font-size:17px;</string>
+              <string notr="true"/>
              </property>
              <property name="text">
               <string>After Fee: </string>
@@ -662,8 +741,13 @@ border-radius:2px;
            </item>
            <item>
             <widget class="QLabel" name="labelCoinControlAfterFee">
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
              <property name="styleSheet">
-              <string notr="true">font-size:17px;</string>
+              <string notr="true"/>
              </property>
              <property name="text">
               <string>0.00 SIN</string>
@@ -672,6 +756,19 @@ border-radius:2px;
            </item>
           </layout>
          </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>
@@ -701,7 +798,9 @@ border-radius:2px;
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true"/>
+           <string notr="true">#buttonBox *[text=&quot;OK&quot;] {
+  min-width: 100px;
+}</string>
           </property>
           <property name="standardButtons">
            <set>QDialogButtonBox::Ok</set>

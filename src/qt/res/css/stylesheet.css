@@ -22,11 +22,11 @@ QWidget#toolBoxWidget .QToolButton {
     border-radius: 12px;
     
   }
-  
+ 
   QWidget#toolBoxWidget QToolButton#toolButtonBlog {
     qproperty-icon: url(':/icons/blog_white');
   }
-  
+ 
   QWidget#toolBoxWidget QToolButton#toolButtonDocs {
     qproperty-icon: url(':/icons/docs_white');
   }
@@ -252,7 +252,39 @@ height:100%;
 padding-top:20px
 }
 
+
 QToolBar > QToolButton {
+  color: #6f80ab;
+  background: transparent;
+  border: 0px solid transparent;
+  border-radius: 0px;
+  padding-left: 20px;
+  padding-right: 0px;
+  padding-top:10px;
+  width:100%;
+  padding-bottom:10px;
+  min-width:170px;
+  font-size:12px;
+  font-weight: normal;
+}
+
+QToolBar > QToolButton:checked {
+  border-right: 3px solid #4f9fdd;
+}
+QToolBar > QToolButton:pressed, QToolBar > QToolButton:hover:pressed, QToolBar > QToolButton:checked {
+  color: #4f9fdd;
+  background: #1e2b47;
+}
+QToolBar > QToolButton:hover:!checked {
+  color: #7388b7;
+  background: #25314e;
+}
+QToolBar > QToolButton:disabled {
+  color: rgba(111, 128, 171, 20%);
+}
+
+
+/*QToolBar > QToolButton {
 background-color:transparent;
 font-size:12px;
 font-weight: normal;
@@ -271,22 +303,21 @@ QToolBar > QToolButton:checked {
 background-color: #0088D0;
 font-size:12px;
 color: #F2F2F2;
-/*border-right : 3px solid white;*/
 }
 
 QToolBar > QToolButton:checked:hover {
-background-color: #0088D0;
+
+background-color: yellow;
     color: #F2F2F2;
     border-right : 3px solid  white;
 }
-
 
 QToolBar > QToolButton:hover {
 background-color:#58A7E6;
     color: #F2F2F2;
     border-right : 3px solid transparent;
 }
-
+*/
 
 /*--------------------------------------------
 Radio Button CSS
@@ -457,6 +488,7 @@ QTabBar::tab {
   border-bottom: 3px solid transparent;
   margin-left: 10px;
   margin-right: 10px;
+  font:10pt;
 }
 QTabBar::tab:selected {
   color: #4d6087;
@@ -575,8 +607,7 @@ QTableView{
   color: #6f80ab;
   background-color: transparent;
   border: none;
-  font: normal;
-  font-size: 12px;
+  font: 10pt;
   margin-bottom: 10px;
   qproperty-showGrid: false;
   qproperty-alternatingRowColors: false;
@@ -976,6 +1007,13 @@ MasternodeList .QLabel {
   color: #6f80ab;
 }
 
+#bottomWidget {
+  background-image: url(':/icons/setup_bottom');
+  background-position : right bottom;
+  background-repeat:none;
+  }
+  
+
 /*StatsPage */
 
 StatsPage .QLabel {
@@ -992,7 +1030,7 @@ QDialog .QTableView{
   background-color: #1A233A;
   border: 1px solid #49587A;
   border-radius: 8px;
-  font: normal;
+  font: 10pt;
   qproperty-showGrid: false;
   qproperty-alternatingRowColors: false;
   qproperty-selectionBehavior: SelectRows;
@@ -1256,6 +1294,10 @@ ReceiveRequestDialog {
       color: #6f80ab;
     }
 
+    #layoutAmount, #layoutQuantity, #layoutFee, #layoutBytes, #layoutChange, #layoutAfter, #layoutDust {
+      background:  #1A233A;
+      border: 1px solid #6f80ab;
+    }
 /*--------------------------------------------
  CoinControl Tree view CSS
 --------------------------------------------*/
@@ -1289,7 +1331,7 @@ QTreeView {
   color: #6f80ab;
   alternate-background-color: transparent;
   border: none;
-  font: normal;
+  font: 10pt;
   qproperty-showGrid: false;
   qproperty-alternatingRowColors: false;
   qproperty-selectionBehavior: SelectRows;
@@ -1346,4 +1388,10 @@ QTreeView:indicator:indeterminate:disabled {
 /*StakePage*/
 StakePage  .QLabel {
   color: #6f80ab;
+}
+
+
+/*MessageBox*/
+QMessageBox {
+  background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #0C2448, stop: 1 #000D20);
 }

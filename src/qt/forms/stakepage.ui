@@ -18,7 +18,7 @@
     <number>20</number>
    </property>
    <property name="topMargin">
-    <number>0</number>
+    <number>20</number>
    </property>
    <property name="rightMargin">
     <number>20</number>
@@ -87,6 +87,11 @@
         </item>
         <item row="0" column="0">
          <widget class="QLabel" name="labelAssetsText">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Staking assets</string>
           </property>
@@ -121,6 +126,11 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>Stake:</string>
             </property>
@@ -131,6 +141,11 @@
           </item>
           <item>
            <widget class="QLabel" name="labelStake">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>0.000 000 00 SIN</string>
             </property>
@@ -162,6 +177,11 @@
         </item>
         <item row="1" column="4">
          <widget class="QLabel" name="labelStaking">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Staking</string>
           </property>
@@ -432,6 +452,11 @@
    </item>
    <item>
     <widget class="QLabel" name="labelRecordsText">
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Stake records</string>
      </property>

@@ -80,6 +80,11 @@
       </property>
       <item>
        <widget class="QDialogButtonBox" name="buttonBox">
+        <property name="styleSheet">
+         <string notr="true">#buttonBox *[text=&quot;OK&quot;] {
+  min-width: 80px;
+}</string>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>

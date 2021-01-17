@@ -114,7 +114,7 @@ PlatformStyle::PlatformStyle(const QString &_name, bool _imagesOnButtons, bool _
     multiStatesIconColor3 = "#ffffff";
 
     // Determine table color
-    tableColorNormal =  "#ffffff";
+    tableColorNormal = "#6f80ab";
     tableColorInput = "#2fa5df";
     tableColorInout = "#40bb00";
     tableColorOutput = "#40bb00";
@@ -224,8 +224,8 @@ QIcon PlatformStyle::MultiStatesIconV2(const QString &resourcename, PlatformStyl
         QPixmap pix2 = MakeSingleColorPixmap(img2, colorAlt, 1);
         icon.addPixmap(pix1, QIcon::Normal, QIcon::On);
         icon.addPixmap(pix2, QIcon::Normal, QIcon::Off);
-        icon.addPixmap(pix1, QIcon::Selected, QIcon::Off);
-        icon.addPixmap(pix2, QIcon::Selected, QIcon::On);
+        icon.addPixmap(pix1, QIcon::Selected, QIcon::On);
+        icon.addPixmap(pix2, QIcon::Selected, QIcon::Off);
         break;
     }
     case PushButtonIcon:

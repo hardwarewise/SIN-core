@@ -79,7 +79,10 @@
            <item>
             <layout class="QVBoxLayout" name="verticalLayoutIcon">
              <property name="leftMargin">
-              <number>0</number>
+              <number>10</number>
+             </property>
+             <property name="rightMargin">
+              <number>20</number>
              </property>
              <item>
               <widget class="SinPushButton" name="warningIcon">
@@ -353,6 +356,12 @@
             </item>
             <item>
              <widget class="QPushButton" name="closeButton">
+              <property name="minimumSize">
+               <size>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::StrongFocus</enum>
               </property>
@@ -377,15 +386,15 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>SinPushButton</class>
+   <extends>QPushButton</extends>
+   <header>qt/sinpushbutton.h</header>
+  </customwidget>
+  <customwidget>
    <class>ModalOverlay</class>
    <extends>QWidget</extends>
    <header>qt/modaloverlay.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>SinPushButton</class>
-   <extends>QPushButton</extends>
-   <header location="global">qt/sinpushbutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

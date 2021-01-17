@@ -8,6 +8,7 @@
 #include <qt/guiutil.h>
 
 #include <chainparams.h>
+#include <qt/platformstyle.h>
 
 #include <QResizeEvent>
 #include <QPropertyAnimation>
@@ -22,6 +23,7 @@ userClosed(false),
 foreverHidden(false)
 {
     ui->setupUi(this);
+    ui->warningIcon->setIcon(PlatformStyle::SingleColorIcon(":/icons/warning", "#009ee5"));
     connect(ui->closeButton, SIGNAL(clicked()), this, SLOT(closeClicked()));
     if (parent) {
         parent->installEventFilter(this);

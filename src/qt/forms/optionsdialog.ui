@@ -22,7 +22,11 @@
   <property name="styleSheet">
    <string notr="true">QTabBar::tab { 
 height: 30px;
-}</string>
+width: 80px;
+}
+
+
+</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -34,7 +38,7 @@ height: 30px;
       <string notr="true"/>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabMain">
       <attribute name="title">
@@ -1024,6 +1028,12 @@ height: 30px;
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
            <widget class="QPushButton" name="okButton">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="text">
              <string>&amp;OK</string>
             </property>

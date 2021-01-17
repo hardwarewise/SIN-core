@@ -116,6 +116,7 @@
         <file alias="setup_top">res/icons/setup_top.svg</file>
         <file alias="setup_res">res/icons/setup_res.svg</file>
         <file alias="setup_con">res/icons/setup_con.svg</file>
+        <file alias="setup_bottom">res/icons/setup_bottom.svg</file>
         <file alias="mywallet">res/icons/mywallet.svg</file>
         <file alias="blog_white">res/icons/blog_white.svg</file>
         <file alias="docs_white">res/icons/docs_white.svg</file>
@@ -147,6 +148,13 @@
         <file alias="down_arrow_hover">res/icons/down_arrow_hover.png</file>
         <file alias="remove_entry">res/icons/remove_entry.png</file>
         <file alias="add_recipient">res/icons/add_recipient.png</file>
+        <file alias="message_warning">res/icons/message_warning.png</file>
+        <file alias="message_critical">res/icons/message_critical.png</file>
+        <file alias="message_info">res/icons/message_info.png</file>
+        <file alias="message_question">res/icons/message_question.png</file>
+        <file alias="down_arrow_unit">res/icons/down_arrow_unit.png</file>
+        <file alias="right_arrow_unit">res/icons/right_arrow_unit.png</file>
+
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>
@@ -234,7 +242,6 @@
      <file alias="/checkbox_unchecked_disabled">res/images//checkbox_unchecked_disabled.png</file>
      <file alias="/checkbox_checked_disabled">res/images//checkbox_checked_disabled.png</file>
      <file alias="/checkbox_indeterminate_disabled">res/images//checkbox_indeterminate_disabled.png</file>
-
 
 </qresource>
 
