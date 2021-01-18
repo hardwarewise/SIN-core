@@ -783,7 +783,7 @@ border-radius:2px;
         <property name="rightMargin">
          <number>26</number>
         </property>
-        <item>
+        <item alignment="Qt::AlignLeft">
          <widget class="QDialogButtonBox" name="buttonBox">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
