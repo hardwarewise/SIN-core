@@ -652,10 +652,6 @@ void SINGUI::createMenuBar()
     settings->addSeparator();
 
     QMenu *help = appMenuBar->addMenu(tr("&Help"));
-    if(walletFrame)
-    {
-    	help->addAction(openRPCConsoleAction);
-    }
     help->addAction(showHelpMessageAction);
     help->addAction(faqPageAction);
     help->addSeparator();
