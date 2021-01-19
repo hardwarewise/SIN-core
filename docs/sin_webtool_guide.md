@@ -1,9 +1,22 @@
+**Introduction to WebTool, a browser based lightweight Wallet.** 
+
+The Sinovate Wallet comes in different flavors. 
+There is a Wallet application available for all kind of Operating Systems, 
+including Windows, MacOS, Linux, IOS, and Android and there is the WebTool Wallet. 
+
+The WebTool Wallet is special in that it runs inside a normal Web Browser, making it lightweight 
+and a good alternative when the other Wallet applications are not available. 
+
+In order to use the Webtool Wallet, you'll need to do two things: 
+1) You need to download the WebTool files and place them on your device, so that the 'WebToolOpenWithaBrowser.html' can be loaded into the device web browser.
+
+2) You need to load a [PRIVATE KEY] from your other Wallet. This document will describe the steps needed to do those two things and the features of the WebTool Wallet.
+
 # Features
     
 -   Send coin nominative feature
 -   Invoice payment transaction with attached information
 -   Vote E-Governance vote 
--   New features Coming soon
     
 # Make a Keyfile
     
@@ -137,10 +150,6 @@ As a result of this process, you will be informed with the message **"Transactio
 
   
 
-# Payment
-    
-
-Coming soon...
 
 
 # R.S.V Vote
@@ -190,22 +199,3 @@ Once your vote has been submitted successfully, you will be given a Transaction 
 
 ![](assets/img/sin_webtool_guide/webtool21.png)
 
-
-
-# Multisig Address
-    
-
-Coming soon...
-
-
-
-# Multisign Tx
-    
-
-Coming soon...
-
-
-# Proposal
-    
-
-Coming soon...
