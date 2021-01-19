@@ -53,4 +53,7 @@ static const int MAX_URI_LENGTH = 255;
 #define QAPP_APP_NAME_TESTNET "SIN-Qt-testnet"
 #define QAPP_APP_NAME_REGTEST "SIN-Qt-regtest"
 
+/* Mainnet SINOVATE explorer uri */
+#define SINOVATE_EXPLORER_MAINNET "<a style= color:#2d9ad0; href='https://explorer.sinovate.io/tx/"
+
 #endif // BITCOIN_QT_GUICONSTANTS_H
