@@ -134,9 +134,7 @@ private:
 
     QAction* quitAction = nullptr;
     QAction* sendCoinsAction = nullptr;
-    QAction* depositCoinsAction = nullptr;
     QAction* sendCoinsMenuAction = nullptr;
-    QAction* depositCoinsMenuAction = nullptr;
     QAction* usedSendingAddressesAction = nullptr;
     QAction* usedReceivingAddressesAction = nullptr;
     QAction* signMessageAction = nullptr;
@@ -162,22 +160,6 @@ private:
     QAction* showHelpMessageAction = nullptr;
     QAction* m_wallet_selector_label_action = nullptr;
     QAction* m_wallet_selector_action = nullptr;
-
-    /// start Resources Web Links
-          
-    QAction* ResourcesWebsite1;
-    QAction* ResourcesWebsite2;
-    QAction* ResourcesWebsite3;
-    QAction* ResourcesWebsite4;
-    QAction* ResourcesWebsite5;
-    QAction* ResourcesWebsite6;
-    QAction* ResourcesWebsite7;
-    QAction* ResourcesWebsite9;
-    QAction* ResourcesWebsite10;
-    QAction* ResourcesWebsite11;
-/// end Resources Web Links
-
-
     
     QLabel *mainIcon;
     QLabel *mainBrand;
@@ -321,9 +303,6 @@ private Q_SLOTS:
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
-    /** Switch to deposit coins page */
-    void gotoDepositCoinsPage(QString addr = "");
-
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");
     /** Show Sign/Verify Message dialog and switch to verify message tab */

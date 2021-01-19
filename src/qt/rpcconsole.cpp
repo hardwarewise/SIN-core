@@ -1045,21 +1045,6 @@ void RPCConsole::updateTrafficStats(quint64 totalBytesIn, quint64 totalBytesOut)
     ui->lblBytesOut->setText(GUIUtil::formatBytes(totalBytesOut));
 }
 
-/// start Resources Web Links
-
-void RPCConsole::hyperlinks3_slot1(){ GUIUtil::hyperlinks3_slot1();}
-void RPCConsole::hyperlinks3_slot2(){ GUIUtil::hyperlinks3_slot2();}
-void RPCConsole::hyperlinks3_slot3(){ GUIUtil::hyperlinks3_slot3();}
-void RPCConsole::hyperlinks3_slot4(){ GUIUtil::hyperlinks3_slot4();}
-void RPCConsole::hyperlinks3_slot5(){ GUIUtil::hyperlinks3_slot5();}
-void RPCConsole::hyperlinks3_slot6(){ GUIUtil::hyperlinks3_slot6();}
-void RPCConsole::hyperlinks3_slot7(){ GUIUtil::hyperlinks3_slot7();}
-void RPCConsole::hyperlinks3_slot8(){ GUIUtil::hyperlinks3_slot8();}
-void RPCConsole::hyperlinks3_slot9(){ GUIUtil::hyperlinks3_slot9();}
-void RPCConsole::hyperlinks3_slot10(){ GUIUtil::hyperlinks3_slot10();}
-void RPCConsole::hyperlinks3_slot11(){ GUIUtil::hyperlinks3_slot11();}
-/// end Resources Web Links
-
 void RPCConsole::peerSelected(const QItemSelection &selected, const QItemSelection &deselected)
 {
     Q_UNUSED(deselected);
@@ -1309,5 +1294,22 @@ void RPCConsole::showOrHideBanTableIfRequired()
 
 void RPCConsole::setTabFocus(enum TabTypes tabType)
 {
-    ui->tabWidget->setCurrentIndex(tabType);
+    ui->tabWidget->setCurrentIndex(int(tabType));
+}
+
+QString RPCConsole::tabTitle(TabTypes tab_type) const
+{
+    return ui->tabWidget->tabText(int(tab_type));
+}
+
+QKeySequence RPCConsole::tabShortcut(TabTypes tab_type) const
+{
+    switch (tab_type) {
+    case TabTypes::INFO: return QKeySequence(Qt::CTRL + Qt::Key_I);
+    case TabTypes::CONSOLE: return QKeySequence(Qt::CTRL + Qt::Key_T);
+    case TabTypes::GRAPH: return QKeySequence(Qt::CTRL + Qt::Key_N);
+    case TabTypes::PEERS: return QKeySequence(Qt::CTRL + Qt::Key_P);
+    } // no default case, so the compiler can warn about missing cases
+
+    assert(false);
 }

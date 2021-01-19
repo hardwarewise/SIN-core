@@ -58,12 +58,17 @@ public:
         CMD_ERROR
     };
 
-    enum TabTypes {
-        TAB_INFO = 0,
-        TAB_CONSOLE = 1,
-        TAB_GRAPH = 2,
-        TAB_PEERS = 3
+    enum class TabTypes {
+        INFO,
+        CONSOLE,
+        GRAPH,
+        PEERS
     };
+
+    std::vector<TabTypes> tabs() const { return {TabTypes::INFO, TabTypes::CONSOLE, TabTypes::GRAPH, TabTypes::PEERS}; }
+
+    QString tabTitle(TabTypes tab_type) const;
+    QKeySequence tabShortcut(TabTypes tab_type) const;
 
 protected:
     virtual bool eventFilter(QObject* obj, QEvent *event);
@@ -129,22 +134,6 @@ public Q_SLOTS:
     void unbanSelectedNode();
     /** set which tab has the focus (is visible) */
     void setTabFocus(enum TabTypes tabType);
-
-    //start Resources Web Links
-      
-        
-    void hyperlinks3_slot1();
-    void hyperlinks3_slot2();
-    void hyperlinks3_slot3();
-    void hyperlinks3_slot4();
-    void hyperlinks3_slot5();
-    void hyperlinks3_slot6();
-    void hyperlinks3_slot7();
-    void hyperlinks3_slot8();
-    void hyperlinks3_slot9();
-    void hyperlinks3_slot10();
-    void hyperlinks3_slot11();
-    //end Resources Web Links
 
 Q_SIGNALS:
     // For RPC command executor

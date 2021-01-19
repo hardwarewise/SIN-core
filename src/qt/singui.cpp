@@ -82,6 +82,7 @@
 #include <QFontDatabase>
 #include <QPushButton>
 #include <QToolTip>
+#include <QWindow>
 
 #if QT_VERSION < 0x050000
 #include <QTextDocument>
@@ -264,20 +265,7 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     subscribeToCoreSignals();
 
     connect(connectionsControl, SIGNAL(clicked(QPoint)), this, SLOT(toggleNetworkActive()));
-    
-    ///Resorces Web Links
-    connect(ResourcesWebsite1, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot1()));
-    connect(ResourcesWebsite2, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot2()));
-    connect(ResourcesWebsite3, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot3()));
-    connect(ResourcesWebsite4, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot4()));
-    connect(ResourcesWebsite5, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot5()));
-    connect(ResourcesWebsite6, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot6()));
-    connect(ResourcesWebsite7, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot7()));
-    connect(ResourcesWebsite9, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot9()));
-    connect(ResourcesWebsite10, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot10()));
-    connect(ResourcesWebsite11, SIGNAL(triggered()), rpcConsole, SLOT(hyperlinks3_slot11()));
-    ///end Exhange, Resources and Web Links
-
+   
     modalOverlay = new ModalOverlay(this->centralWidget());
 #ifdef ENABLE_WALLET
     if(enableWallet) {
@@ -323,7 +311,7 @@ void SINGUI::createActions()
     homeAction->setCheckable(true);
     tabGroup->addAction(homeAction);
 
-    sendCoinsAction = new QAction(platformStyle->MultiStatesIcon(":/icons/send1", PlatformStyle::NavBar), tr(" &Send\n"), this);
+    sendCoinsAction = new QAction(tr(" &Send\n"), this);
     sendCoinsAction->setStatusTip(tr("Send coins to a SIN address"));
     sendCoinsAction->setToolTip(sendCoinsAction->statusTip());
     sendCoinsAction->setCheckable(true);
@@ -334,17 +322,7 @@ void SINGUI::createActions()
     sendCoinsMenuAction->setStatusTip(sendCoinsAction->statusTip());
     sendCoinsMenuAction->setToolTip(sendCoinsMenuAction->statusTip());
 
-    depositCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/tx_mined"), tr(" &Earn\n"), this);
-    depositCoinsAction->setStatusTip(tr("Timelock coins to a SIN address"));
-    depositCoinsAction->setToolTip(depositCoinsAction->statusTip());
-    depositCoinsAction->setCheckable(true);
-    tabGroup->addAction(depositCoinsAction);
-
-    depositCoinsMenuAction = new QAction(platformStyle->TextColorIcon(":/icons/deposit"), depositCoinsAction->text(), this);
-    depositCoinsMenuAction->setStatusTip(depositCoinsAction->statusTip());
-    depositCoinsMenuAction->setToolTip(depositCoinsMenuAction->statusTip());
-
-    receiveCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/receiving_addresses1"), tr(" &Receive\n"), this);
+    receiveCoinsAction = new QAction(tr(" &Receive\n"), this);
     receiveCoinsAction->setStatusTip(tr("Request payments (generates QR codes and sin: URIs)"));
     receiveCoinsAction->setToolTip(receiveCoinsAction->statusTip());
     receiveCoinsAction->setCheckable(true);
@@ -414,8 +392,8 @@ void SINGUI::createActions()
     //
 
     // FaqPage
-    faqPageAction = new QAction(platformStyle->SingleColorIcon(":/icons/faq"), tr("&FAQ\n"), this);
-    faqPageAction->setStatusTip(tr("FAQ"));
+    faqPageAction = new QAction(tr("&FAQ\n"), this);
+    faqPageAction->setStatusTip(tr("Frequently Asked Questions"));
     faqPageAction->setToolTip(faqPageAction->statusTip());
     faqPageAction->setCheckable(true);
 
@@ -460,11 +438,6 @@ void SINGUI::createActions()
     connect(sendCoinsMenuAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
     connect(sendCoinsMenuAction, &QAction::triggered, [this]{ gotoSendCoinsPage(); });
 
-    connect(depositCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    connect(depositCoinsAction, SIGNAL(triggered()), this, SLOT(gotoDepositCoinsPage()));
-    connect(depositCoinsMenuAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    connect(depositCoinsMenuAction, SIGNAL(triggered()), this, SLOT(gotoDepositCoinsPage()));
-    
     connect(receiveCoinsAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
     connect(receiveCoinsAction, &QAction::triggered, this, &SINGUI::gotoReceiveCoinsPage);
     connect(receiveCoinsMenuAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
@@ -475,59 +448,59 @@ void SINGUI::createActions()
 
 #endif // ENABLE_WALLET
 
-    quitAction = new QAction(platformStyle->SingleColorIcon(":/icons/exit"), tr("E&xit"), this);
+    quitAction = new QAction(tr("E&xit"), this);
     quitAction->setStatusTip(tr("Quit application"));
     quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
     quitAction->setMenuRole(QAction::QuitRole);
-    aboutAction = new QAction(platformStyle->SingleColorIcon(":/icons/sin"), tr("&About %1").arg(tr("SINOVATE")), this);
-    aboutAction->setStatusTip(tr("Show information about %1").arg(tr("SINOVATE")));
+    aboutAction = new QAction(tr("&About %1").arg(PACKAGE_NAME), this);
+    aboutAction->setStatusTip(tr("Show information about %1").arg(PACKAGE_NAME));
     aboutAction->setMenuRole(QAction::AboutRole);
     aboutAction->setEnabled(false);
-    aboutQtAction = new QAction(platformStyle->SingleColorIcon(":/icons/about_qt"), tr("About &Qt"), this);
+    aboutQtAction = new QAction(tr("About &Qt"), this);
     aboutQtAction->setStatusTip(tr("Show information about Qt"));
     aboutQtAction->setMenuRole(QAction::AboutQtRole);
-    optionsAction = new QAction(platformStyle->SingleColorIcon(":/icons/options"), tr("&Options..."), this);
-    optionsAction->setStatusTip(tr("Modify configuration options for %1").arg(tr("SINOVATE")));
+    optionsAction = new QAction(tr("&Options..."), this);
+    optionsAction->setStatusTip(tr("Modify configuration options for %1").arg(PACKAGE_NAME));
     optionsAction->setMenuRole(QAction::PreferencesRole);
     optionsAction->setEnabled(false);
-    toggleHideAction = new QAction(platformStyle->SingleColorIcon(":/icons/about2"), tr("&Show / Hide"), this);
+    toggleHideAction = new QAction(tr("&Show / Hide"), this);
     toggleHideAction->setStatusTip(tr("Show or hide the main Window"));
 
-    encryptWalletAction = new QAction(platformStyle->SingleColorIcon(":/icons/lock_closed"), tr("&Encrypt Wallet..."), this);
+    encryptWalletAction = new QAction(tr("&Encrypt Wallet..."), this);
     encryptWalletAction->setStatusTip(tr("Encrypt the private keys that belong to your wallet"));
     encryptWalletAction->setCheckable(true);
-    backupWalletAction = new QAction(platformStyle->SingleColorIcon(":/icons/filesave"), tr("&Backup Wallet..."), this);
+    backupWalletAction = new QAction(tr("&Backup Wallet..."), this);
     backupWalletAction->setStatusTip(tr("Backup wallet to another location"));
-    changePassphraseAction = new QAction(platformStyle->SingleColorIcon(":/icons/password"), tr("&Change Passphrase..."), this);
+    changePassphraseAction = new QAction(tr("&Change Passphrase..."), this);
     changePassphraseAction->setStatusTip(tr("Change the passphrase used for wallet encryption"));
 
     
-    signMessageAction = new QAction(platformStyle->SingleColorIcon(":/icons/edit"), tr("Sign &message..."), this);
+    signMessageAction = new QAction(tr("Sign &message..."), this);
     signMessageAction->setStatusTip(tr("Sign messages with your SIN addresses to prove you own them"));
-    verifyMessageAction = new QAction(platformStyle->SingleColorIcon(":/icons/verify"), tr("&Verify message..."), this);
+    verifyMessageAction = new QAction(tr("&Verify message..."), this);
     verifyMessageAction->setStatusTip(tr("Verify messages to ensure they were signed with specified SIN addresses"));
 
     
-    openConfEditorAction = new QAction(QIcon(":/icons/edit"), tr("Open Wallet &Configuration File (sin.conf)"), this);
+    openConfEditorAction = new QAction(tr("Open Wallet &Configuration File (sin.conf)"), this);
     openConfEditorAction->setStatusTip(tr("Open configuration file (sin.conf)"));
 
-    openRPCConsoleAction = new QAction(platformStyle->SingleColorIcon(":/icons/debugwindow"), tr("&Debug window (Console)"), this);
-    openRPCConsoleAction->setStatusTip(tr("Open debugging and diagnostic console"));
+    openRPCConsoleAction = new QAction(tr("Node window"), this);
+    openRPCConsoleAction->setStatusTip(tr("Open node debugging and diagnostic console"));
     // initially disable the debug window menu item
     openRPCConsoleAction->setEnabled(false);
+    openRPCConsoleAction->setObjectName("openRPCConsoleAction");
 
-    usedSendingAddressesAction = new QAction(platformStyle->SingleColorIcon(":/icons/address-book"), tr("&Sending addresses..."), this);
+    usedSendingAddressesAction = new QAction(tr("&Sending addresses"), this);
     usedSendingAddressesAction->setStatusTip(tr("Show the list of used sending addresses and labels"));
-
-    usedReceivingAddressesAction = new QAction(platformStyle->SingleColorIcon(":/icons/address-book"), tr("&Receiving addresses..."), this);
+    usedReceivingAddressesAction = new QAction(tr("&Receiving addresses"), this);
     usedReceivingAddressesAction->setStatusTip(tr("Show the list of used receiving addresses and labels"));
 
-    openAction = new QAction(platformStyle->SingleColorIcon(":/icons/open"), tr("Open &URI..."), this);
-    openAction->setStatusTip(tr("Open a sin: URI or payment request"));
+    openAction = new QAction(tr("Open &URI..."), this);
+    openAction->setStatusTip(tr("Open a sin: URI"));
 
-    showHelpMessageAction = new QAction(platformStyle->SingleColorIcon(":/icons/info"), tr("&Command-line options"), this);
+    showHelpMessageAction = new QAction(tr("&Command-line options"), this);
     showHelpMessageAction->setMenuRole(QAction::NoRole);
-    showHelpMessageAction->setStatusTip(tr("Show the %1 help message to get a list with possible SIN command-line options").arg(tr("SINOVATE")));
+    showHelpMessageAction->setStatusTip(tr("Show the %1 help message to get a list with possible SINOVATE command-line options").arg(PACKAGE_NAME));
 
     // Open configs and backup folder from menu
     connect(openConfEditorAction, SIGNAL(triggered()), this, SLOT(showConfEditor()));
@@ -542,23 +515,6 @@ void SINGUI::createActions()
     
     // prevents an open debug window from becoming stuck/unusable on client shutdown
     connect(quitAction, SIGNAL(triggered()), rpcConsole, SLOT(hide()));
-
-//start Resources Web Links
-
-    ResourcesWebsite1 = new QAction(QIcon(":/icons/info"), tr("&Whitepaper"), this);
-    ResourcesWebsite2 = new QAction(QIcon(":/icons/info"), tr("&Roadmap"), this);
-    ResourcesWebsite3 = new QAction(QIcon(":/icons/info"), tr("&Documents"), this);
-    ResourcesWebsite4 = new QAction(QIcon(":/icons/info"), tr("&Download sin.conf "), this);
-    ResourcesWebsite5 = new QAction(QIcon(":/icons/info"), tr("&Wallets"), this);
-    ResourcesWebsite6 = new QAction(QIcon(":/icons/explorer1"), tr("&Explorer"), this);
-    ResourcesWebsite7 = new QAction(QIcon(":/icons/info"), tr("&SIN WebTool"), this);
-    ResourcesWebsite9 = new QAction(QIcon(":/icons/cmc"), tr("&Exchanges"), this);
-    ResourcesWebsite10 = new QAction(QIcon(":/icons/info"), tr("&Social Media Channels"), this);
-    ResourcesWebsite11 = new QAction(QIcon(":/icons/info"), tr("&Download Bootstrap"), this);
-
-
-//end Resources Web Links
-
 
 
 #ifdef ENABLE_WALLET
@@ -602,12 +558,6 @@ void SINGUI::createMenuBar()
         file->addAction(signMessageAction);
         file->addAction(verifyMessageAction);
         file->addSeparator();
-        file->addAction(usedSendingAddressesAction);
-        file->addAction(usedReceivingAddressesAction);
-        file->addSeparator();
-        file->addAction(ResourcesWebsite4); //Download sin.conf
-        file->addAction(ResourcesWebsite11); //Download Bootstrap
-        file->addSeparator();
     }
     file->addAction(quitAction);
 
@@ -615,42 +565,69 @@ void SINGUI::createMenuBar()
     appMenuBar->addMenu("|");
     if(walletFrame)
     {
-        settings->addAction(openRPCConsoleAction);
         settings->addAction(encryptWalletAction);
         settings->addAction(changePassphraseAction);
-
- // Dash
-    if(walletFrame)
-    {
+    
         QMenu *tools = settings->addMenu(tr("&Tools"));
         tools->addAction(openConfEditorAction);
+   
+        settings->addSeparator();
+        settings->addAction(optionsAction);
     }
+    
+    QMenu *window_menu = appMenuBar->addMenu(tr("&Window"));
+    appMenuBar->addMenu("|");
+    
+    QAction* minimize_action = window_menu->addAction(tr("Minimize"));
+    minimize_action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_M));
+    connect(minimize_action, &QAction::triggered, [] {
+        QApplication::activeWindow()->showMinimized();
+    });
+    connect(qApp, &QApplication::focusWindowChanged, [minimize_action] (QWindow* window) {
+        minimize_action->setEnabled(window != nullptr && (window->flags() & Qt::Dialog) != Qt::Dialog && window->windowState() != Qt::WindowMinimized);
+    });
 
- //start Resources Links
+#ifdef Q_OS_MAC
+    QAction* zoom_action = window_menu->addAction(tr("Zoom"));
+    connect(zoom_action, &QAction::triggered, [] {
+        QWindow* window = qApp->focusWindow();
+        if (window->windowState() != Qt::WindowMaximized) {
+            window->showMaximized();
+        } else {
+            window->showNormal();
+        }
+    });
+
+    connect(qApp, &QApplication::focusWindowChanged, [zoom_action] (QWindow* window) {
+        zoom_action->setEnabled(window != nullptr);
+    });
+#endif
 
     if (walletFrame) {
-        QMenu* hyperlinks3 = settings->addMenu(tr("&Resources"));
-        hyperlinks3->addAction(ResourcesWebsite10);
-        hyperlinks3->addAction(ResourcesWebsite9);
-        hyperlinks3->addAction(ResourcesWebsite1);
-        hyperlinks3->addAction(ResourcesWebsite2);
-        hyperlinks3->addAction(ResourcesWebsite3);
-        hyperlinks3->addAction(ResourcesWebsite5);
-        hyperlinks3->addAction(ResourcesWebsite6);
-        hyperlinks3->addAction(ResourcesWebsite7);
-                
+#ifdef Q_OS_MAC
+        window_menu->addSeparator();
+        QAction* main_window_action = window_menu->addAction(tr("Main Window"));
+        connect(main_window_action, &QAction::triggered, [this] {
+            GUIUtil::bringToFront(this);
+        });
+#endif
+        window_menu->addSeparator();
+        window_menu->addAction(usedSendingAddressesAction);
+        window_menu->addAction(usedReceivingAddressesAction);
     }
-    //end Resources Links
 
-    //
-    // temporarily closed it.
- 	//settings->addAction(instaswapAction);
-    settings->addSeparator();
+    window_menu->addSeparator();
+    for (RPCConsole::TabTypes tab_type : rpcConsole->tabs()) {
+        QAction* tab_action = window_menu->addAction(rpcConsole->tabTitle(tab_type));
+        tab_action->setShortcut(rpcConsole->tabShortcut(tab_type));
+        connect(tab_action, &QAction::triggered, [this, tab_type] {
+            rpcConsole->setTabFocus(tab_type);
+            showDebugWindow();
+        });
     }
-    settings->addAction(optionsAction);
+    //////////////////////////////////
 
-    settings->addSeparator();
-
+    
     QMenu *help = appMenuBar->addMenu(tr("&Help"));
     help->addAction(showHelpMessageAction);
     help->addAction(faqPageAction);
@@ -949,8 +926,6 @@ void SINGUI::setWalletActionsEnabled(bool enabled)
     overviewAction->setEnabled(enabled);
     sendCoinsAction->setEnabled(enabled);
     sendCoinsMenuAction->setEnabled(enabled);
-    depositCoinsAction->setEnabled(enabled);
-    depositCoinsMenuAction->setEnabled(enabled);
     receiveCoinsAction->setEnabled(enabled);
     receiveCoinsMenuAction->setEnabled(enabled);
     historyAction->setEnabled(enabled);
@@ -1011,27 +986,6 @@ void SINGUI::createTrayIconMenu()
     trayIconMenu = new QMenu(this);
     trayIcon->setContextMenu(trayIconMenu);
 
-
-//start Resources Web Links
-
-    trayIconMenu->addAction(ResourcesWebsite9);
-    trayIconMenu->addAction(ResourcesWebsite1);
-    trayIconMenu->addAction(ResourcesWebsite2);
-    trayIconMenu->addAction(ResourcesWebsite3);
-    trayIconMenu->addAction(ResourcesWebsite4);
-    trayIconMenu->addAction(ResourcesWebsite5);
-    trayIconMenu->addAction(ResourcesWebsite6);
-    trayIconMenu->addAction(ResourcesWebsite7);
-    trayIconMenu->addAction(statsPageAction);
-    trayIconMenu->addAction(faqPageAction);
-    trayIconMenu->addAction(stakePageAction);
-    trayIconMenu->addAction(ResourcesWebsite11);
-
-//end Exchange and Web Links
-
-
-
-
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
 #else
@@ -1051,17 +1005,18 @@ void SINGUI::createTrayIconMenu()
 #endif
     if (enableWallet) {
         trayIconMenu->addAction(sendCoinsMenuAction);
-        trayIconMenu->addAction(depositCoinsMenuAction);
         trayIconMenu->addAction(receiveCoinsMenuAction);
         trayIconMenu->addSeparator();
         trayIconMenu->addAction(signMessageAction);
         trayIconMenu->addAction(verifyMessageAction);
         trayIconMenu->addSeparator();
+        trayIconMenu->addAction(optionsAction);
         trayIconMenu->addAction(openRPCConsoleAction);
+        trayIconMenu->addSeparator();
+        
     }
-    trayIconMenu->addAction(optionsAction);
-    trayIconMenu->addAction(openRPCConsoleAction);
-    trayIconMenu->addAction(openConfEditorAction);
+    
+    
 
 #ifndef Q_OS_MAC // This is built-in on macOS
     trayIconMenu->addSeparator();
@@ -1112,7 +1067,7 @@ void SINGUI::showDebugWindow()
 
 void SINGUI::showDebugWindowActivateConsole()
 {
-    rpcConsole->setTabFocus(RPCConsole::TAB_CONSOLE);
+    rpcConsole->setTabFocus(RPCConsole::TabTypes::CONSOLE);
     showDebugWindow();
 }
 
@@ -1246,12 +1201,6 @@ void SINGUI::gotoSendCoinsPage(QString addr)
 {
     sendCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoSendCoinsPage(addr);
-}
-
-void SINGUI::gotoDepositCoinsPage(QString addr)
-{
-    depositCoinsAction->setChecked(true);
-    if (walletFrame) walletFrame->gotoDepositCoinsPage(addr);
 }
 
 void SINGUI::gotoSignMessageTab(QString addr)
