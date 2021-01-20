@@ -6,26 +6,22 @@ QverviewPage -> QToolButton START
 ----------------------------------------------*/
 QWidget#toolBoxWidget .QToolButton {
   border:  1px solid #74B2FE;
-  background-color: #061834;
+  background-color: transparent;
   font-size:12px;
   padding:4px 6px;
-  color: #FFFFFF;
+  color: #6f80ab;
   border-radius: 12px;
   }
 
   QWidget#toolBoxWidget .QToolButton:hover {
-    border:  1px solid #74B2FE;
-    background-color: #0088D0;
-    font-size:12px;
-    padding:4px 6px;
-    color: #FFFFFF;
-    border-radius: 12px;
-    
+    background: #1e2b47;
   }
+  
  
   QWidget#toolBoxWidget QToolButton#toolButtonBlog {
     qproperty-icon: url(':/icons/blog_white');
   }
+  
  
   QWidget#toolBoxWidget QToolButton#toolButtonDocs {
     qproperty-icon: url(':/icons/docs_white');
@@ -1121,6 +1117,7 @@ OptionsDialog .QLabel {
 /*HelpMessageDialog*/
 
 HelpMessageDialog {
+  color: #6f80ab;
   background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #0C2448, stop: 1 #000D20);
 }
 
@@ -1362,5 +1359,11 @@ StakePage  .QLabel {
 
 /*MessageBox*/
 QMessageBox {
+  color: #6f80ab;
   background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #0C2448, stop: 1 #000D20);
+}
+
+QWidget {
+  color: #6f80ab;
+  
 }
