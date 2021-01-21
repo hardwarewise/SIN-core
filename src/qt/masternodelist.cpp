@@ -2078,4 +2078,9 @@ void MasternodeList::getStatistics()
     request.setUrl(summaryUrl);
     m_networkManager->get(request);
 }
+
+void MasternodeList::on_setupSinovateButton_clicked() {
+    QDesktopServices::openUrl(QUrl("https://setup.sinovate.io/", QUrl::TolerantMode));
+}
+
 // --

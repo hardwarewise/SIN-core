@@ -968,11 +968,17 @@ MasternodeList .QLabel {
   color: #6f80ab;
 }
 
-#bottomWidget {
+#setupSinovateButton {
+  background: transparent;
   background-image: url(':/icons/setup_bottom');
-  background-position : right bottom;
+  background-position : center;
   background-repeat:none;
+  border:none
   }
+
+  #setupSinovateButton:hover {
+    border: 1px solid #74B2FE;
+    }
   
 
 /*StatsPage */
