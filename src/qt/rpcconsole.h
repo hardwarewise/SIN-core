@@ -94,6 +94,7 @@ private Q_SLOTS:
     void showOrHideBanTableIfRequired();
     /** clear the selected node */
     void clearSelectedNode();
+    void on_openDataFolderButton_clicked();
 
 public Q_SLOTS:
     void clear(bool clearHistory = true);

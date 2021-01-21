@@ -121,6 +121,9 @@ namespace GUIUtil
     // Open debug.log
     void openDebugLogfile();
 
+    // Open Data Folder
+    void openDataFolder();
+
     // Open the config file
     bool openSinConf();
 

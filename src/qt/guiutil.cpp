@@ -410,6 +410,12 @@ void openDebugLogfile()
         QDesktopServices::openUrl(QUrl::fromLocalFile(boostPathToQString(pathDebug)));
 }
 
+void openDataFolder()
+{
+
+        QDesktopServices::openUrl(QUrl::fromLocalFile(boostPathToQString(GetDataDir())));
+}
+
 bool openSinConf()
 {
     boost::filesystem::path pathConfig = GetConfigFile(gArgs.GetArg("-conf", BITCOIN_CONF_FILENAME));
