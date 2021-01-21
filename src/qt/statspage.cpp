@@ -55,9 +55,9 @@ void StatsPage::onResult(QNetworkReply* reply)
 
         QLocale l = QLocale(QLocale::English);
         // Set NETWORK strings
-        QString heightValue(tr("E %1 - D %2").arg(dataObject.value("explorerHeight").toVariant().toString(), dataObject.value("blockcount").toVariant().toString(), dataObject.value("poolHeight").toVariant().toString()));
+        QString heightValue(dataObject.value("blockcount").toVariant().toString());
         QString knownHashrateString = QString::number(dataObject.value("known_hashrate").toDouble()/1000000000, 'f', 2);
-        QString hashrateString = knownHashrateString + " / " + dataObject.value("hashrate").toVariant().toString();
+        QString hashrateString = knownHashrateString;
         m_ui->hashrateValueLabel->setText(hashrateString +" GH/s");
         m_ui->difficultyValueLabel->setText(dataObject.value("difficulty").toVariant().toString());
         m_ui->lastPriceValueLabel->setText(QString::number(dataObject.value("lastPrice").toDouble(), 'f', 8) + QString(" BTC"));
@@ -110,9 +110,9 @@ void StatsPage::onResult(QNetworkReply* reply)
         m_ui->midValueLabel->setText(midString);
         m_ui->lilValueLabel->setText(lilString);
         m_ui->totalValueLabel->setText(totalNodesString);
-        m_ui->bigRoiLabel->setText(bigROIStringPercent + " %");
-        m_ui->midRoiLabel->setText(midROIStringPercent + " %");
-        m_ui->miniRoiLabel->setText(lilROIStringPercent + " %");
+        m_ui->bigRoiLabel->setText(bigROIStringPercent + "%");
+        m_ui->midRoiLabel->setText(midROIStringPercent + "%");
+        m_ui->miniRoiLabel->setText(lilROIStringPercent + "%");
 
     }
     else
