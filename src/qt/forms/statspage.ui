@@ -217,8 +217,14 @@ color: #4F9FDD;</string>
             </item>
             <item row="1" column="0" colspan="2">
              <widget class="QLabel" name="label">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>32</height>
+               </size>
+              </property>
               <property name="styleSheet">
-               <string notr="true">font-size: 26px;
+               <string notr="true">font-size: 20px;
 color: #4F9FDD;</string>
               </property>
               <property name="text">
@@ -471,7 +477,7 @@ font-size: 20px;
               </property>
               <property name="minimumSize">
                <size>
-                <width>50</width>
+                <width>30</width>
                 <height>0</height>
                </size>
               </property>
@@ -583,7 +589,7 @@ font-size: 20px;
              <widget class="QLabel" name="midRoiLabel">
               <property name="minimumSize">
                <size>
-                <width>150</width>
+                <width>30</width>
                 <height>0</height>
                </size>
               </property>
@@ -747,7 +753,7 @@ color: #4F9FDD;</string>
              <widget class="QLabel" name="bigRoiLabel">
               <property name="minimumSize">
                <size>
-                <width>150</width>
+                <width>30</width>
                 <height>0</height>
                </size>
               </property>
@@ -1255,7 +1261,7 @@ color: #4F9FDD;
 margin-bottom: 20px;</string>
               </property>
               <property name="text">
-               <string>ADDRESSES</string>
+               <string>TOTAL ADDRESSES</string>
               </property>
               <property name="margin">
                <number>0</number>
@@ -1438,7 +1444,7 @@ color: #4F9FDD;</string>
 color: #4F9FDD;</string>
               </property>
               <property name="text">
-               <string>ACTIVE</string>
+               <string>ACTIVE ADDRESSES</string>
               </property>
               <property name="margin">
                <number>0</number>

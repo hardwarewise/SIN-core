@@ -20,7 +20,7 @@ StatsPage::StatsPage(const PlatformStyle* platformStyle, QWidget *parent) :
 
  	m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(getStatistics()));
-    m_timer->start(30000);
+    m_timer->start(311000);
     connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onResult(QNetworkReply*)));
     getStatistics();
 }
@@ -56,9 +56,9 @@ void StatsPage::onResult(QNetworkReply* reply)
         QLocale l = QLocale(QLocale::English);
         // Set NETWORK strings
         QString heightValue(dataObject.value("blockcount").toVariant().toString());
-        QString knownHashrateString = QString::number(dataObject.value("known_hashrate").toDouble()/1000000000, 'f', 2);
+        QString knownHashrateString = QString::number(dataObject.value("known_hashrate").toDouble()/1000000, 'f', 2);
         QString hashrateString = knownHashrateString;
-        m_ui->hashrateValueLabel->setText(hashrateString +" GH/s");
+        m_ui->hashrateValueLabel->setText(hashrateString +" MH/s");
         m_ui->difficultyValueLabel->setText(dataObject.value("difficulty").toVariant().toString());
         m_ui->lastPriceValueLabel->setText(QString::number(dataObject.value("lastPrice").toDouble(), 'f', 8) + QString(" BTC"));
         m_ui->heightValueLabel->setText(heightValue);
