@@ -452,12 +452,12 @@ QTabBar::tab {
   font:10pt;
 }
 QTabBar::tab:selected {
-  color: #4d6087;
-  border-bottom: 3px solid #4d6087;
+  color: #4F9FDD;
+  border-bottom: 3px solid #4F9FDD;
 }
 QTabBar::tab:hover:!selected {
-  color: #18aae0;
-  border-bottom: 3px solid #18aae0;
+  color:  #4d6087;
+  border-bottom: 3px solid  #4d6087;
 }
 QTabBar::tab:disabled {
   color: rgba(111, 128, 171, 20%);
