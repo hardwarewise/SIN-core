@@ -98,7 +98,7 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     // ++ DIN ROI Stats
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(getStatistics()));
-    m_timer->start(30000);
+    m_timer->start(300000);
     connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onResult(QNetworkReply*)));
     getStatistics();
     // --

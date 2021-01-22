@@ -843,7 +843,7 @@ background-size: 32px 32px;</string>
            <item row="5" column="1">
             <widget class="QLabel" name="miniRoiLabel">
              <property name="styleSheet">
-              <string notr="true">font-size:18px;
+              <string notr="true">font-size:14px;
 </string>
              </property>
              <property name="text">
@@ -854,7 +854,7 @@ background-size: 32px 32px;</string>
            <item row="5" column="3">
             <widget class="QLabel" name="midRoiLabel">
              <property name="styleSheet">
-              <string notr="true">font-size:18px;
+              <string notr="true">font-size:14px;
 </string>
              </property>
              <property name="text">
@@ -865,7 +865,7 @@ background-size: 32px 32px;</string>
            <item row="5" column="5">
             <widget class="QLabel" name="bigRoiLabel">
              <property name="styleSheet">
-              <string notr="true">font-size:18px;
+              <string notr="true">font-size:14px;
 </string>
              </property>
              <property name="text">
