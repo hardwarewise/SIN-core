@@ -774,7 +774,7 @@ void SINGUI::createToolBars()
         topOptionButton->setToolTip( "Open Options Window"  );
         topOptionButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent; border: none;} QPushButton:hover {border: 1px solid  #6f80ab; }");
         
-        topSetupButton->setIcon(QIcon(":/icons/setup_top"));
+        topSetupButton->setIcon(QIcon(":/icons/setup_bottom"));
         topSetupButton->setIconSize(QSize(38, 16));
         topSetupButton->setToolTip( "Open SetUP Wizard"  );
         topSetupButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent; border: none; } QPushButton:hover {border: 1px solid  #6f80ab; } ");
