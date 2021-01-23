@@ -154,6 +154,10 @@
         <file alias="message_question">res/icons/message_question.png</file>
         <file alias="down_arrow_unit">res/icons/down_arrow_unit.png</file>
         <file alias="right_arrow_unit">res/icons/right_arrow_unit.png</file>
+        <file alias="slider_switcher">res/icons/slider_switcher.png</file>
+        <file alias="slider_switcher_disabled">res/icons/slider_switcher_disabled.png</file>
+        <file alias="slider_switcher_hover">res/icons/slider_switcher_hover.png</file>
+        <file alias="about_white">res/icons/about_white.png</file>
 
     </qresource>
     <qresource prefix="/movies">

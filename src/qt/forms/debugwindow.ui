@@ -26,7 +26,7 @@
    <string>Debug window</string>
   </property>
   <property name="toolTip">
-   <string>Open current data directory.</string>
+   <string/>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -816,10 +816,13 @@
               </sizepolicy>
              </property>
              <property name="toolTip">
-              <string>Open current data directory.</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Open current SIN directory. &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;Please do not make any changes in this folder while the wallet is open. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;Do not forget to back up periodically.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
              </property>
              <property name="text">
-              <string>Open Data Folder</string>
+              <string>Open SIN Folder</string>
              </property>
             </widget>
            </item>
@@ -1069,6 +1072,18 @@
            </item>
            <item>
             <widget class="QPushButton" name="btnClearTrafficGraph">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>80</width>
+               <height>16777215</height>
+              </size>
+             </property>
              <property name="text">
               <string>&amp;Reset</string>
              </property>
@@ -1113,9 +1128,9 @@
                   <active>
                    <colorrole role="Button">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
+                     <color alpha="255">
                       <red>0</red>
-                      <green>0</green>
+                      <green>255</green>
                       <blue>0</blue>
                      </color>
                     </brush>
@@ -1131,18 +1146,18 @@
                    </colorrole>
                    <colorrole role="Base">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
+                     <color alpha="255">
                       <red>0</red>
-                      <green>0</green>
+                      <green>255</green>
                       <blue>0</blue>
                      </color>
                     </brush>
                    </colorrole>
                    <colorrole role="Window">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
+                     <color alpha="255">
                       <red>0</red>
-                      <green>0</green>
+                      <green>255</green>
                       <blue>0</blue>
                      </color>
                     </brush>
@@ -1151,9 +1166,9 @@
                   <inactive>
                    <colorrole role="Button">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
+                     <color alpha="255">
                       <red>0</red>
-                      <green>0</green>
+                      <green>255</green>
                       <blue>0</blue>
                      </color>
                     </brush>
@@ -1169,18 +1184,18 @@
                    </colorrole>
                    <colorrole role="Base">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
+                     <color alpha="255">
                       <red>0</red>
-                      <green>0</green>
+                      <green>255</green>
                       <blue>0</blue>
                      </color>
                     </brush>
                    </colorrole>
                    <colorrole role="Window">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
+                     <color alpha="255">
                       <red>0</red>
-                      <green>0</green>
+                      <green>255</green>
                       <blue>0</blue>
                      </color>
                     </brush>
@@ -1189,9 +1204,9 @@
                   <disabled>
                    <colorrole role="Button">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
+                     <color alpha="255">
                       <red>0</red>
-                      <green>0</green>
+                      <green>255</green>
                       <blue>0</blue>
                      </color>
                     </brush>
@@ -1207,24 +1222,27 @@
                    </colorrole>
                    <colorrole role="Base">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
+                     <color alpha="255">
                       <red>0</red>
-                      <green>0</green>
+                      <green>255</green>
                       <blue>0</blue>
                      </color>
                     </brush>
                    </colorrole>
                    <colorrole role="Window">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
+                     <color alpha="255">
                       <red>0</red>
-                      <green>0</green>
+                      <green>255</green>
                       <blue>0</blue>
                      </color>
                     </brush>
                    </colorrole>
                   </disabled>
                  </palette>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgb(0, 255, 0);</string>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -1277,8 +1295,8 @@
                   <active>
                    <colorrole role="Button">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
-                      <red>0</red>
+                     <color alpha="255">
+                      <red>255</red>
                       <green>0</green>
                       <blue>0</blue>
                      </color>
@@ -1295,8 +1313,8 @@
                    </colorrole>
                    <colorrole role="Base">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
-                      <red>0</red>
+                     <color alpha="255">
+                      <red>255</red>
                       <green>0</green>
                       <blue>0</blue>
                      </color>
@@ -1304,8 +1322,8 @@
                    </colorrole>
                    <colorrole role="Window">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
-                      <red>0</red>
+                     <color alpha="255">
+                      <red>255</red>
                       <green>0</green>
                       <blue>0</blue>
                      </color>
@@ -1315,8 +1333,8 @@
                   <inactive>
                    <colorrole role="Button">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
-                      <red>0</red>
+                     <color alpha="255">
+                      <red>255</red>
                       <green>0</green>
                       <blue>0</blue>
                      </color>
@@ -1333,8 +1351,8 @@
                    </colorrole>
                    <colorrole role="Base">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
-                      <red>0</red>
+                     <color alpha="255">
+                      <red>255</red>
                       <green>0</green>
                       <blue>0</blue>
                      </color>
@@ -1342,8 +1360,8 @@
                    </colorrole>
                    <colorrole role="Window">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
-                      <red>0</red>
+                     <color alpha="255">
+                      <red>255</red>
                       <green>0</green>
                       <blue>0</blue>
                      </color>
@@ -1353,8 +1371,8 @@
                   <disabled>
                    <colorrole role="Button">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
-                      <red>0</red>
+                     <color alpha="255">
+                      <red>255</red>
                       <green>0</green>
                       <blue>0</blue>
                      </color>
@@ -1371,8 +1389,8 @@
                    </colorrole>
                    <colorrole role="Base">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
-                      <red>0</red>
+                     <color alpha="255">
+                      <red>255</red>
                       <green>0</green>
                       <blue>0</blue>
                      </color>
@@ -1380,8 +1398,8 @@
                    </colorrole>
                    <colorrole role="Window">
                     <brush brushstyle="SolidPattern">
-                     <color alpha="0">
-                      <red>0</red>
+                     <color alpha="255">
+                      <red>255</red>
                       <green>0</green>
                       <blue>0</blue>
                      </color>
@@ -1389,6 +1407,9 @@
                    </colorrole>
                   </disabled>
                  </palette>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgb(255, 0, 0);</string>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>

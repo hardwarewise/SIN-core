@@ -83,6 +83,9 @@
         <property name="styleSheet">
          <string notr="true">#buttonBox *[text=&quot;OK&quot;] {
   min-width: 80px;
+}
+#buttonBox *[text=&quot;Cancel&quot;] {
+  min-width: 80px;
 }</string>
         </property>
         <property name="orientation">
