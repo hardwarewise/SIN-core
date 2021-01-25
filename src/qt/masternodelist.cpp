@@ -93,6 +93,10 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     clientModel(0),
     walletModel(0)
 {
+    motdTimer = new QTimer();
+    motd_networkManager = new QNetworkAccessManager();
+    motd_request = new QNetworkRequest();
+
     ui->setupUi(this);
 
     // ++ DIN ROI Stats
@@ -103,6 +107,34 @@ MasternodeList::MasternodeList(const PlatformStyle *platformStyle, QWidget *pare
     getStatistics();
     // --
 
+
+ ////// +++++++++ motd
+
+  // Load Motd
+       
+
+        // Network request code 
+        QObject::connect(motd_networkManager, &QNetworkAccessManager::finished,
+                         this, [=](QNetworkReply *reply) {  
+                         
+                    if (reply->error()) {
+                        ui->labelMotd->setText("NaN");
+                        qDebug() << reply->errorString();
+                        return;
+                    }
+                    // Get the data from the network request
+                    QString answer = reply->readAll();
+
+                    ui->labelMotd->setText(answer);
+          }
+        );
+
+         connect(motdTimer, SIGNAL(timeout()), this, SLOT(loadMotd()));
+        motdTimer->start(300000);
+        loadMotd();
+
+ 
+ ///// ---------- motd
 
     ui->btnSetup->setIcon(QIcon(":/icons/setup"));
     ui->btnSetup->setIconSize(QSize(177, 26));
@@ -2078,4 +2110,12 @@ void MasternodeList::getStatistics()
     request.setUrl(summaryUrl);
     m_networkManager->get(request);
 }
+
+void MasternodeList::loadMotd()
+{
+        motd_request->setUrl(QUrl("https://setup.sinovate.io/motd.php"));
+    
+    motd_networkManager->get(*motd_request);
+}
 // --
+
