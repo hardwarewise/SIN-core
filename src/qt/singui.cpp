@@ -149,17 +149,6 @@ SINGUI::SINGUI(interfaces::Node& node, const PlatformStyle *_platformStyle, cons
     QFontDatabase::addApplicationFont(":/fonts/Hind-Regular");
     QFontDatabase::addApplicationFont(":/fonts/Hind-Light");
     QFontDatabase::addApplicationFont(":/fonts/Montserrat-Bold");
-    
-    ///////////////////////////////////
-
-    QFile file(":/css/stylesheet");
-    file.open(QFile::ReadOnly);
-    QString styleSheet = QLatin1String(file.readAll());
-    this->setStyleSheet(styleSheet);
-
-
-    //////////////////////////////////
-
 
  // Accept D&D of URIs
     setAcceptDrops(true);
@@ -651,7 +640,6 @@ void SINGUI::createToolBars()
         toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         toolbar->setMinimumWidth(160);
         mainIcon = new QLabel (this);
-    	mainIcon->setPixmap(QPixmap(":images/nav-logo-sin"));
     	mainIcon->setAlignment(Qt::AlignCenter);
     	mainIcon->show();
     	mainIcon->setStyleSheet("QLabel { margin-top: 10px; margin-bottom: 10px; }");
@@ -664,7 +652,7 @@ void SINGUI::createToolBars()
     	mainBrand->setText("SINOVATE");
     	mainBrand->setAlignment(Qt::AlignCenter);
     	mainBrand->show();
-    	mainBrand->setStyleSheet("QLabel { color:#F2F2F2; font-size:16px; font-weight:normal;}");
+    	//mainBrand->setStyleSheet("QLabel { color:#F2F2F2; font-size:16px; font-weight:normal;}");
     	
         toolbar->addWidget(mainIcon);  //2
         toolbar->addWidget(mainBrand); //3
@@ -725,54 +713,55 @@ void SINGUI::createToolBars()
             
 		QLabel* labelVersion = new QLabel();
         labelVersion->setText(QString(tr("BETELGEUSE\nv%1\n")).arg(QString::fromStdString(FormatVersionFriendly())));
-        labelVersion->setStyleSheet("color: #6f80ab; margin-bottom: 2px; font-weight : bold;");
+        labelVersion->setStyleSheet("color: #6f80ab; margin-bottom: 2px; font-weight : bold; font-size: 12px;");
         labelVersion->setAlignment(Qt::AlignCenter);
         
          //// Set widget topBar on the bottom left corner ////
 
         QWidget *topBar = new QWidget;
-        /*topThemeButton = new QPushButton();*/
+        topThemeButton = new QPushButton();
         QPushButton *topSetupButton = new QPushButton();
         QPushButton *topConsoleButton = new QPushButton();
-        QPushButton *topOptionButton = new QPushButton();
+        //QPushButton *topOptionButton = new QPushButton();
         QPushButton *topAddressButton = new QPushButton();
         QPushButton *topFaqButton = new QPushButton();
 
-
         QHBoxLayout *topBarLayout = new QHBoxLayout;
 
-        /*topBarLayout->addWidget(topThemeButton);*/
-        topBarLayout->addWidget(topOptionButton);
+        topBarLayout->addWidget(topThemeButton);
+        //topBarLayout->addWidget(topOptionButton);
         if (settings.value("fShowMasternodesTab").toBool()) { 
         topBarLayout->addWidget(topSetupButton);
         }
         topBarLayout->addWidget(topConsoleButton);
     
-        /*bool lightTheme = settings.value("lightTheme", false).toBool();
+        bool lightTheme = settings.value("lightTheme", false).toBool();
 
-        QString cssFileName = lightTheme ? ":/css/light" : ":/css/default";
+        QString cssFileName = lightTheme ? ":/css/light" : ":/css/dark";
         QFile cssFile(cssFileName);
 
         if (lightTheme) {
-        topThemeButton->setIcon(QIcon(":/icons/theme-light"));
+        topThemeButton->setIcon(platformStyle->SingleColorIcon(":/icons/theme-white", "#6f80ab"));
         topThemeButton->setToolTip( "White Theme"  );
+        mainIcon->setPixmap(QPixmap(":images/nav-logo-black"));
         } else {
-        topThemeButton->setIcon(QIcon(":/icons/theme-white"));
+        topThemeButton->setIcon(platformStyle->SingleColorIcon(":/icons/theme-light", "#6f80ab"));
         topThemeButton->setToolTip( "Light Theme"  );
+        mainIcon->setPixmap(QPixmap(":images/nav-logo-sin"));
         }
 
         cssFile.open(QFile::ReadOnly);
         QString styleSheet = QLatin1String(cssFile.readAll());
-        this->setStyleSheet(styleSheet);*/
+        this->setStyleSheet(styleSheet);
 
-        /*topThemeButton->setIconSize(QSize(16, 16));
-        topThemeButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent;} QPushButton:hover {border: 1px solid  #00FFFF; }");*/
+        topThemeButton->setIconSize(QSize(16, 16));
+        topThemeButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent; border: none;} QPushButton:hover {border: 1px solid  #6f80ab; }");
 
         
-        topOptionButton->setIcon(platformStyle->SingleColorIcon(":/icons/options", "#6f80ab"));
+        /*topOptionButton->setIcon(platformStyle->SingleColorIcon(":/icons/options", "#6f80ab"));
         topOptionButton->setIconSize(QSize(16, 16));
         topOptionButton->setToolTip( "Open Options Window"  );
-        topOptionButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent; border: none;} QPushButton:hover {border: 1px solid  #6f80ab; }");
+        topOptionButton->setStyleSheet("QToolTip { color: #000000; background-color: #ffffff; border: 0px; } QPushButton {background-color: transparent; border: none;} QPushButton:hover {border: 1px solid  #6f80ab; }");*/
         
         topSetupButton->setIcon(QIcon(":/icons/setup_bottom"));
         topSetupButton->setIconSize(QSize(38, 16));
@@ -789,8 +778,8 @@ void SINGUI::createToolBars()
         toolbar->addWidget(topBar);
 
 
-        /*connect(topThemeButton, SIGNAL (released()), this, SLOT (onThemeClicked()));*/
-        connect(topOptionButton, SIGNAL(released()), this, SLOT(optionsClicked()));
+        connect(topThemeButton, SIGNAL (released()), this, SLOT (onThemeClicked()));
+        //connect(topOptionButton, SIGNAL(released()), this, SLOT(optionsClicked()));
         connect(topSetupButton, SIGNAL(released()), this, SLOT(gotoSetupTab()));
         connect(topConsoleButton, SIGNAL (released()), this, SLOT (showDebugWindowActivateConsole()));
     
@@ -1071,30 +1060,32 @@ void SINGUI::showDebugWindowActivateConsole()
     showDebugWindow();
 }
 
-/*void SINGUI::onThemeClicked()
+void SINGUI::onThemeClicked()
 {
     QSettings settings;
     bool lightTheme = !settings.value("lightTheme", false).toBool();
 
-    QString cssFileName = lightTheme ? ":/css/light" : ":/css/default";
+    QString cssFileName = lightTheme ? ":/css/light" : ":/css/dark";
     QFile cssFile(cssFileName);
 
     // Store theme
     settings.setValue("lightTheme", lightTheme);
 
     if (lightTheme) {
-        topThemeButton->setIcon(QIcon(":/icons/theme-light"));
-        topThemeButton->setToolTip( "White Theme"  );
+        topThemeButton->setIcon(platformStyle->SingleColorIcon(":/icons/theme-white", "#6f80ab"));
+        topThemeButton->setToolTip( "Dark Theme"  );
+        mainIcon->setPixmap(QPixmap(":images/nav-logo-black"));
     } else {
-        topThemeButton->setIcon(QIcon(":/icons/theme-white"));
+        topThemeButton->setIcon(platformStyle->SingleColorIcon(":/icons/theme-light", "#6f80ab"));
         topThemeButton->setToolTip( "Light Theme"  );
+        mainIcon->setPixmap(QPixmap(":images/nav-logo-sin"));
     }
 
     cssFile.open(QFile::ReadOnly);
     QString styleSheet = QLatin1String(cssFile.readAll());
     this->setStyleSheet(styleSheet);
 }
-*/
+
 // Dash
 void SINGUI::showMNConfEditor()
 {

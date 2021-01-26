@@ -106,7 +106,7 @@ private:
     QLabel* progressBarLabel = nullptr;
     QProgressBar* progressBar = nullptr;
     QProgressDialog* progressDialog = nullptr;
-    /*QPushButton *topThemeButton = nullptr;*/
+    QPushButton *topThemeButton = nullptr;
     QMenuBar* appMenuBar = nullptr;
     QMenuBar* subMenu = nullptr;
     QToolBar* appToolBar = nullptr;
@@ -312,7 +312,7 @@ private Q_SLOTS:
     void openClicked();
 #endif // ENABLE_WALLET
     /** toggle Theme */
-    //void onThemeClicked();
+    void onThemeClicked();
     /** Show configuration dialog */
     void optionsClicked();
     /** Show about dialog */

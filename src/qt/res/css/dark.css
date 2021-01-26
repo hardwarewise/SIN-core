@@ -620,17 +620,20 @@ QTableView{
   border: none;
   font: 10pt;
   margin-bottom: 10px;
+  outline: none;
   qproperty-showGrid: false;
   qproperty-alternatingRowColors: false;
   qproperty-selectionBehavior: SelectRows;
 }
 QTableView::item{
   border: none;
+  outline: none;
 }
 QTableView::item:selected{
   qproperty-showGrid: false;
   background: #4f9fdd;
   color: #ffffff;
+  outline: none;
 }
 QHeaderView::disabled{
   color: rgba(111, 128, 171, 20%);
@@ -1427,4 +1430,18 @@ QMessageBox {
 QWidget {
   color: #6f80ab;
   
+}
+
+QToolBar > QLabel { color:#F2F2F2; font-size:16px; font-weight:normal;}
+
+/*QListView*/
+
+QListView::item:focus { 
+  border:none;
+  outline: none;
+}
+
+QListView {
+  border: none;
+  outline: none;
 }

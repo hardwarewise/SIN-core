@@ -199,9 +199,8 @@
         <file alias="spinner-035">res/movies/spinner-035.png</file>
     </qresource>
 	<qresource prefix="/css">
-	 <file alias="default">res/css/default.css</file>
+	 <file alias="dark">res/css/dark.css</file>
 	 <file alias="light">res/css/light.css</file>
-     <file alias="stylesheet">res/css/stylesheet.css</file>
 	 </qresource>
 	 <qresource prefix="/images">
 	 <file alias="sinbg">res/images/sinbg.png</file>
@@ -223,6 +222,7 @@
      <file alias="radio_unchecked1">res/images/unchecked_radio1.png</file>
      <file alias="radio_checked1">res/images/checked_radio1.png</file>
      <file alias="nav-logo-sin">res/images/nav-logo-sin.png</file>
+     <file alias="nav-logo-black">res/images/nav-logo-black.png</file>
      <file alias="indeterminate">res/images/indeterminate.png</file>
      <file alias="close">res/images/close.png</file>
      <file alias="stats-nodes-header">res/images/stats-nodes-header.png</file>
@@ -258,3 +258,4 @@
        <file alias="Montserrat-Bold">res/fonts/Montserrat-Bold.ttf</file>
     </qresource>
 </RCC>
+

@@ -19,7 +19,6 @@
 #include <rpc/server.h>
 #include <rpc/client.h>
 #include <util.h>
-
 #include <openssl/crypto.h>
 
 #include <univalue.h>
@@ -457,12 +456,15 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
 {
     ui->setupUi(this);
 
-     QFile file(":/css/stylesheet");
-    file.open(QFile::ReadOnly);
-    QString styleSheet = QLatin1String(file.readAll());
+    QSettings settings;
+    bool lightTheme = !settings.value("lightTheme", false).toBool();
+    QString cssFileName = lightTheme ? ":/css/dark" : ":/css/light";
+    QFile cssFile(cssFileName);
+    cssFile.open(QFile::ReadOnly);
+    QString styleSheet = QLatin1String(cssFile.readAll());
     this->setStyleSheet(styleSheet);
 
-    QSettings settings;
+    //QSettings settings;
     if (!restoreGeometry(settings.value("RPCConsoleWindowGeometry").toByteArray())) {
         // Restore failed (perhaps missing setting), center the window
         move(QApplication::desktop()->availableGeometry().center() - frameGeometry().center());

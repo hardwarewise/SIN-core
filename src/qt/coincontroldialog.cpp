@@ -54,12 +54,14 @@ CoinControlDialog::CoinControlDialog(const PlatformStyle *_platformStyle, QWidge
     platformStyle(_platformStyle)
 {
     ui->setupUi(this);
-
-    QFile file(":/css/stylesheet");
-    file.open(QFile::ReadOnly);
-    QString styleSheet = QLatin1String(file.readAll());
+    
+    QSettings settings;
+    bool lightTheme = !settings.value("lightTheme", false).toBool();
+    QString cssFileName = lightTheme ? ":/css/dark" : ":/css/light";
+    QFile cssFile(cssFileName);
+    cssFile.open(QFile::ReadOnly);
+    QString styleSheet = QLatin1String(cssFile.readAll());
     this->setStyleSheet(styleSheet);
-
 
     // context menu actions
     QAction *copyAddressAction = new QAction(tr("Copy address"), this);
@@ -153,7 +155,7 @@ CoinControlDialog::CoinControlDialog(const PlatformStyle *_platformStyle, QWidge
     sortView(COLUMN_AMOUNT, Qt::DescendingOrder);
 
     // restore list mode and sortorder as a convenience feature
-    QSettings settings;
+    //QSettings settings;
     if (settings.contains("nCoinControlMode") && !settings.value("nCoinControlMode").toBool())
         ui->radioTreeMode->click();
     if (settings.contains("nCoinControlSortColumn") && settings.contains("nCoinControlSortOrder"))
