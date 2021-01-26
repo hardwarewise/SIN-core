@@ -36,6 +36,8 @@
 #include <QUrl>
 #include <QVBoxLayout>
 #include <QStyleFactory>
+#include <QListView>
+
 
 TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *parent) :
     QWidget(parent), model(0), transactionProxyModel(0),
@@ -63,6 +65,7 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
     hlayout->addWidget(watchOnlyWidget);
 
     dateWidget = new QComboBox(this);
+    dateWidget->setView(new QListView());
     if (platformStyle->getUseExtraSpacing()) {
         dateWidget->setFixedWidth(121);
     } else {
@@ -78,6 +81,7 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
     hlayout->addWidget(dateWidget);
 
     typeWidget = new QComboBox(this);
+    typeWidget->setView(new QListView());
     if (platformStyle->getUseExtraSpacing()) {
         typeWidget->setFixedWidth(121);
     } else {
