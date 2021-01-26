@@ -147,9 +147,12 @@ public Q_SLOTS:
 Q_SIGNALS:
 
 private:
+    QTimer *motdTimer;
     QTimer* m_timer;
     Ui::MasternodeList *ui;
     QNetworkAccessManager* m_networkManager;
+    QNetworkAccessManager* motd_networkManager;
+    QNetworkRequest* motd_request;
     QTimer *timer;
     QTimer* timerSingleShot;
     ClientModel *clientModel;
@@ -208,6 +211,7 @@ private Q_SLOTS:
     void on_btnRestore_clicked();
     void onResult(QNetworkReply* replystats);
     void getStatistics();
+    void loadMotd();
 };
 
 #endif // FXTC_QT_MASTERNODELIST_H
