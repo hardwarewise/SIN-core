@@ -202,7 +202,7 @@ public:
         assert(consensus.hashGenesisBlock == uint256S("000032bd27c65ec42967b7854a49df222abdfae8d9350a61083af8eab2a25e03"));
         assert(genesis.hashMerkleRoot == uint256S("c3555790e3804130514a674f3374b451dce058407dad6b9e82e191e198012680"));
 
-        vSeeds.push_back("seederdns.suqa.org"); //SIN dns seeder
+        vSeeds.push_back("seederdns.sinovate.org", "seederdns.suqa.org"); //SIN dns seeder
 
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,63);
