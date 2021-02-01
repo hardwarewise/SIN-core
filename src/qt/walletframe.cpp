@@ -61,7 +61,7 @@ bool WalletFrame::addWallet(WalletModel *walletModel)
     if (current_wallet_view) {
         walletView->setCurrentIndex(current_wallet_view->currentIndex());
     } else {
-        walletView->gotoOverviewPage();
+        walletView->gotoHomePage();
     }
 
     walletStack->addWidget(walletView);
@@ -130,6 +130,13 @@ void WalletFrame::gotoOverviewPage()
         i.value()->gotoOverviewPage();
 }
 
+void WalletFrame::gotoHomePage()
+{
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoHomePage();
+}
+
 void WalletFrame::gotoHistoryPage()
 {
     QMap<QString, WalletView*>::const_iterator i;
@@ -172,6 +179,16 @@ void WalletFrame::gotoFaqPage()
         i.value()->gotoFaqPage();
 }
 //
+
+// StakePage
+void WalletFrame::gotoStakePage()
+{
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoStakePage();
+}
+//
+
 
 void WalletFrame::gotoReceiveCoinsPage()
 {

@@ -6,6 +6,7 @@
 
 #include <qt/sinunits.h>
 #include <qt/guiconstants.h>
+#include <qt/styleSheet.h>
 #include <qt/qvaluecombobox.h>
 
 #include <QApplication>
@@ -195,7 +196,7 @@ SINAmountField::SINAmountField(QWidget *parent) :
     amount(0)
 {
     amount = new AmountSpinBox(this);
-	amount->setStyleSheet("background-color:transparent; border-color:#2E3191;	border-radius:0px; font-size:16px;	color:#707070;");
+	amount->setStyleSheet("");
     amount->setLocale(QLocale::c());
     amount->installEventFilter(this);
     amount->setMaximumWidth(240);
@@ -245,9 +246,9 @@ bool SINAmountField::validate()
 void SINAmountField::setValid(bool valid)
 {
     if (valid)
-        amount->setStyleSheet("background-color:transparent; border-color:#2E3191;  border-radius:0px; font-size:16px;  color:#707070;");
+        amount->setStyleSheet("");
     else
-        amount->setStyleSheet(STYLE_INVALID);
+        SetObjectStyleSheet(amount, StyleSheetNames::Invalid);
 }
 
 bool SINAmountField::eventFilter(QObject *object, QEvent *event)

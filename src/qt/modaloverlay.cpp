@@ -8,6 +8,8 @@
 #include <qt/guiutil.h>
 
 #include <chainparams.h>
+#include <qt/platformstyle.h>
+#include <qt/styleSheet.h>
 
 #include <QResizeEvent>
 #include <QPropertyAnimation>
@@ -22,6 +24,12 @@ userClosed(false),
 foreverHidden(false)
 {
     ui->setupUi(this);
+
+    // Set stylesheet
+    SetObjectStyleSheet(ui->warningIcon, StyleSheetNames::ButtonTransparent);
+    QColor warningIconColor = GetStringStyleValue("modaloverlay/warning-icon-color", "#000000");
+    
+    ui->warningIcon->setIcon(PlatformStyle::SingleColorIcon(":/icons/warning", "#009ee5"));
     connect(ui->closeButton, SIGNAL(clicked()), this, SLOT(closeClicked()));
     if (parent) {
         parent->installEventFilter(this);

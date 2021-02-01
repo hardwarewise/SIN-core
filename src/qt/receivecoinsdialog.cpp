@@ -12,6 +12,7 @@
 #include <qt/sinunits.h>
 #include <qt/optionsmodel.h>
 #include <qt/platformstyle.h>
+#include <qt/styleSheet.h>
 #include <qt/receiverequestdialog.h>
 #include <qt/recentrequeststablemodel.h>
 #include <qt/walletmodel.h>
@@ -31,6 +32,11 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *_platformStyle, QWid
     platformStyle(_platformStyle)
 {
     ui->setupUi(this);
+
+    // Set stylesheet
+    SetObjectStyleSheet(ui->showRequestButton, StyleSheetNames::ButtonTransparentBordered);
+    SetObjectStyleSheet(ui->removeRequestButton, StyleSheetNames::ButtonTransparentBordered);
+
     //Hide FlashSend checkbox
     ui->checkUseInstantSend->hide();
     //Hide Segwit checkbox
@@ -49,10 +55,10 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *_platformStyle, QWid
         ui->showRequestButton->setIcon(QIcon());
         ui->removeRequestButton->setIcon(QIcon());
     } else {
-        ui->clearButton->setIcon(_platformStyle->SingleColorIcon(":/icons/remove1"));
-        ui->receiveButton->setIcon(_platformStyle->SingleColorIcon(":/icons/receiving_addresses1"));
-        ui->showRequestButton->setIcon(_platformStyle->SingleColorIcon(":/icons/edit1"));
-        ui->removeRequestButton->setIcon(_platformStyle->SingleColorIcon(":/icons/remove1"));
+        ui->clearButton->setIcon(platformStyle->MultiStatesIcon(":/icons/remove_entry", PlatformStyle::PushButton));
+        ui->receiveButton->setIcon(platformStyle->MultiStatesIcon(":/icons/receiving_addresses", PlatformStyle::PushButton));
+        ui->showRequestButton->setIcon(platformStyle->MultiStatesIcon(":/icons/eye", PlatformStyle::PushButton));
+        ui->removeRequestButton->setIcon(platformStyle->MultiStatesIcon(":/icons/remove", PlatformStyle::PushButton));
     }
 
     // context menu actions
