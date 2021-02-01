@@ -20,7 +20,7 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QPushButton { 
+   <string notr="true">/*QPushButton { 
 
     background-color:transparent;
     font-size:18px;
@@ -48,17 +48,21 @@ QPushButton:checked {
 
 QWidget {
 font-size: 16px;
-}</string>
+}
+*/</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_4">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="styleSheet">
-        <string notr="true">font-size:18px;
-font-weight: bold;
-color: #011552;</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string>Frequently Asked Questions</string>
@@ -103,6 +107,9 @@ color: #011552;</string>
             </property>
             <item>
              <widget class="QWidget" name="containerButtons" native="true">
+              <property name="styleSheet">
+               <string notr="true">background-color: transparent;</string>
+              </property>
               <layout class="QVBoxLayout" name="verticalLayout">
                <property name="spacing">
                 <number>0</number>
@@ -146,8 +153,14 @@ color: #011552;</string>
                   <property name="bottomMargin">
                    <number>0</number>
                   </property>
-                  <item>
+                  <item alignment="Qt::AlignVCenter">
                    <widget class="QPushButton" name="pushButtonFaq1">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -162,6 +175,10 @@ color: #011552;</string>
                     </property>
                     <property name="focusPolicy">
                      <enum>Qt::NoFocus</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">border-radius: 0px;
+margin-bottom: 10px;</string>
                     </property>
                     <property name="text">
                      <string>1) What is  SINOVATE?</string>
@@ -177,8 +194,14 @@ color: #011552;</string>
                     </property>
                    </widget>
                   </item>
-                  <item>
+                  <item alignment="Qt::AlignVCenter">
                    <widget class="QPushButton" name="pushButtonFaq2">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -194,6 +217,11 @@ color: #011552;</string>
                     <property name="focusPolicy">
                      <enum>Qt::NoFocus</enum>
                     </property>
+                    <property name="styleSheet">
+                     <string notr="true">border-radius: 0px;
+margin-top:10px;
+margin-bottom: 10px;</string>
+                    </property>
                     <property name="text">
                      <string>2) What is an Infinity Node?</string>
                     </property>
@@ -205,8 +233,14 @@ color: #011552;</string>
                     </property>
                    </widget>
                   </item>
-                  <item>
+                  <item alignment="Qt::AlignVCenter">
                    <widget class="QPushButton" name="pushButtonFaq3">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -221,6 +255,11 @@ color: #011552;</string>
                     </property>
                     <property name="focusPolicy">
                      <enum>Qt::NoFocus</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">border-radius: 0px;
+margin-top:10px;
+margin-bottom: 10px;</string>
                     </property>
                     <property name="text">
                      <string>3) What is an INFINITY NODE 1.0?</string>
@@ -235,6 +274,12 @@ color: #011552;</string>
                   </item>
                   <item>
                    <widget class="QPushButton" name="pushButtonFaq4">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -250,9 +295,13 @@ color: #011552;</string>
                     <property name="focusPolicy">
                      <enum>Qt::NoFocus</enum>
                     </property>
+                    <property name="styleSheet">
+                     <string notr="true">border-radius: 0px;
+margin-top:10px;
+margin-bottom: 10px;</string>
+                    </property>
                     <property name="text">
-                     <string>4) What differentiates Infinite Node 1.0 
- and masternode technology?</string>
+                     <string>4) What differentiates Infinite Node 1.0 and masternode?</string>
                     </property>
                     <property name="checkable">
                      <bool>true</bool>
@@ -262,8 +311,14 @@ color: #011552;</string>
                     </property>
                    </widget>
                   </item>
-                  <item>
+                  <item alignment="Qt::AlignVCenter">
                    <widget class="QPushButton" name="pushButtonFaq5">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -272,6 +327,11 @@ color: #011552;</string>
                     </property>
                     <property name="focusPolicy">
                      <enum>Qt::NoFocus</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">border-radius: 0px;
+margin-top:10px;
+margin-bottom: 10px;</string>
                     </property>
                     <property name="text">
                      <string>5) What is an EARN?</string>
@@ -284,8 +344,14 @@ color: #011552;</string>
                     </property>
                    </widget>
                   </item>
-                  <item>
+                  <item alignment="Qt::AlignVCenter">
                    <widget class="QPushButton" name="pushButtonFaq6">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -294,6 +360,11 @@ color: #011552;</string>
                     </property>
                     <property name="focusPolicy">
                      <enum>Qt::NoFocus</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">border-radius: 0px;
+margin-top:10px;
+margin-bottom: 10px;</string>
                     </property>
                     <property name="text">
                      <string>6) What are the Specs and Block Rewards?</string>
@@ -306,8 +377,14 @@ color: #011552;</string>
                     </property>
                    </widget>
                   </item>
-                  <item>
+                  <item alignment="Qt::AlignVCenter">
                    <widget class="QPushButton" name="pushButtonFaq7">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -316,6 +393,11 @@ color: #011552;</string>
                     </property>
                     <property name="focusPolicy">
                      <enum>Qt::NoFocus</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">border-radius: 0px;
+margin-top:10px;
+margin-bottom: 10px;</string>
                     </property>
                     <property name="text">
                      <string>7) What is the X25X algorithm?</string>
@@ -328,8 +410,14 @@ color: #011552;</string>
                     </property>
                    </widget>
                   </item>
-                  <item>
+                  <item alignment="Qt::AlignVCenter">
                    <widget class="QPushButton" name="pushButtonFaq8">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -338,6 +426,11 @@ color: #011552;</string>
                     </property>
                     <property name="focusPolicy">
                      <enum>Qt::NoFocus</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">border-radius: 0px;
+margin-top:10px;
+margin-bottom: 10px;</string>
                     </property>
                     <property name="text">
                      <string>8) Where can I get support when needed?</string>
@@ -350,8 +443,14 @@ color: #011552;</string>
                     </property>
                    </widget>
                   </item>
-                  <item>
+                  <item alignment="Qt::AlignVCenter">
                    <widget class="QPushButton" name="pushButtonFaq9">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -360,6 +459,11 @@ color: #011552;</string>
                     </property>
                     <property name="focusPolicy">
                      <enum>Qt::NoFocus</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">border-radius: 0px;
+margin-top:10px;
+margin-bottom: 10px;</string>
                     </property>
                     <property name="text">
                      <string>9) What are SIN block Explorer functions?</string>
@@ -372,8 +476,14 @@ color: #011552;</string>
                     </property>
                    </widget>
                   </item>
-                  <item>
+                  <item alignment="Qt::AlignVCenter">
                    <widget class="QPushButton" name="pushButtonFaq10">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -382,6 +492,11 @@ color: #011552;</string>
                     </property>
                     <property name="focusPolicy">
                      <enum>Qt::NoFocus</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">border-radius: 0px;
+margin-top:10px;
+margin-bottom: 10px;</string>
                     </property>
                     <property name="text">
                      <string>10) Where can I get more detailed information?</string>
@@ -448,11 +563,7 @@ color: #011552;</string>
             <item>
              <widget class="QScrollArea" name="scrollAreaFaq">
               <property name="styleSheet">
-               <string notr="true">#scrollAreaFaq { 
-background:transparent; 
-border: 1px solid #2E3191;
-}
-</string>
+               <string notr="true"/>
               </property>
               <property name="horizontalScrollBarPolicy">
                <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -470,16 +581,16 @@ border: 1px solid #2E3191;
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>-2295</y>
+                 <y>-2879</y>
                  <width>658</width>
-                 <height>4840</height>
+                 <height>3606</height>
                 </rect>
                </property>
                <property name="autoFillBackground">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
                <property name="styleSheet">
-                <string notr="true">#scrollAreaWidgetContents { background:transparent; }</string>
+                <string notr="true"/>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_7">
                 <property name="spacing">
@@ -532,9 +643,15 @@ border: 1px solid #2E3191;
                        <height>24</height>
                       </size>
                      </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>12</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#011552;
-color: white;</string>
+                      <string notr="true"/>
                      </property>
                      <property name="text">
                       <string>1</string>
@@ -554,6 +671,11 @@ color: white;</string>
                      </property>
                      <item>
                       <widget class="QLabel" name="labelSubtitle1">
+                       <property name="font">
+                        <font>
+                         <pointsize>12</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>What is a SINOVATE?</string>
                        </property>
@@ -626,9 +748,15 @@ color: white;</string>
                        <height>24</height>
                       </size>
                      </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>12</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#011552;
-color: white;</string>
+                      <string notr="true"/>
                      </property>
                      <property name="text">
                       <string>2</string>
@@ -651,6 +779,11 @@ color: white;</string>
                      </property>
                      <item>
                       <widget class="QLabel" name="labelSubtitle2">
+                       <property name="font">
+                        <font>
+                         <pointsize>12</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>What is an Infinity Node?</string>
                        </property>
@@ -678,7 +811,7 @@ color: white;</string>
                      <item>
                       <widget class="QLabel" name="labelContent2">
                        <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Infinity Nodes are similar to traditional masternodes implemented by other cryptocurrency projects but have been designed differently for SINOVATE. They help to support the network by granting their holders additional bespoke features via a continuously connected GUI (graphical user interface) wallet. &lt;/p&gt;&lt;p&gt;Like simple nodes, a full copy of the main SIN blockchain is replicated by the Infinity Node holder, who is regularly rewarded daily with SIN coins as compensation for the services provided. &lt;/p&gt;&lt;p&gt;Therefore, it is an alternative means to acquire SIN coins besides the proof-of-work mining layer. &lt;/p&gt;&lt;p&gt;Multi-Tiered Infinity Nodes&lt;/p&gt;&lt;p&gt;There are three different tiers of Infinity Node available for users of the SINOVATE network. It is described as an evolution of previously implemented masternode technology by other blockchain projects. Each tier or layer provides different functions, but they all increase the overall decentralization and stability of the network. &lt;/p&gt;&lt;p&gt;Each tier requires different collateral in order to create the Infinity Node: &lt;/p&gt;&lt;p&gt;1. 100,000 SIN coins for Mini SIN&lt;/p&gt;&lt;p&gt;2. 500,000 SIN coins for Mid SIN &lt;/p&gt;&lt;p&gt;3. 1,000,000 SIN coins for Big SIN &lt;/p&gt;&lt;p&gt;For full transparency, SIN coins used to create Infinity Nodes are burnt and sent to the unspendable SIN wallet address below.&lt;/p&gt;&lt;p&gt;SinBurnAddress123456789SuqaXbx3AMC&lt;/p&gt;&lt;p&gt;For the installation guides, please visit &lt;a href=&quot;https://docs.sinovate.io/#/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://docs.sinovate.io/#/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Infinity Nodes are similar to traditional masternodes implemented by other cryptocurrency projects but have been designed differently for SINOVATE. They help to support the network by granting their holders additional bespoke features via a continuously connected GUI (graphical user interface) wallet. &lt;/p&gt;&lt;p&gt;Like simple nodes, a full copy of the main SIN blockchain is replicated by the Infinity Node holder, who is regularly rewarded daily with SIN coins as compensation for the services provided. &lt;/p&gt;&lt;p&gt;Therefore, it is an alternative means to acquire SIN coins besides the proof-of-work mining layer. &lt;/p&gt;&lt;p&gt;Multi-Tiered Infinity Nodes&lt;/p&gt;&lt;p&gt;There are three different tiers of Infinity Node available for users of the SINOVATE network. It is described as an evolution of previously implemented masternode technology by other blockchain projects. Each tier or layer provides different functions, but they all increase the overall decentralization and stability of the network. &lt;/p&gt;&lt;p&gt;Each tier requires different collateral in order to create the Infinity Node: &lt;/p&gt;&lt;p&gt;1. 100,000 SIN coins for Mini SIN&lt;/p&gt;&lt;p&gt;2. 500,000 SIN coins for Mid SIN &lt;/p&gt;&lt;p&gt;3. 1,000,000 SIN coins for Big SIN &lt;/p&gt;&lt;p&gt;For full transparency, SIN coins used to create Infinity Nodes are burnt and sent to the unspendable SIN wallet address below.&lt;/p&gt;&lt;p&gt;SinBurnAddress123456789SuqaXbx3AMC&lt;/p&gt;&lt;p&gt;For the installation guides, please visit &lt;a href=&quot;https://docs.sinovate.io/#/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2d9ad0;&quot;&gt;https://docs.sinovate.io/#/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                        <property name="alignment">
                         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -723,9 +856,15 @@ color: white;</string>
                        <height>24</height>
                       </size>
                      </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>12</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#011552;
-color: white;</string>
+                      <string notr="true"/>
                      </property>
                      <property name="text">
                       <string>3</string>
@@ -745,6 +884,11 @@ color: white;</string>
                      </property>
                      <item>
                       <widget class="QLabel" name="labelSubtitle3">
+                       <property name="font">
+                        <font>
+                         <pointsize>12</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>What is an INFINITY NODE 1.0?</string>
                        </property>
@@ -817,9 +961,15 @@ color: white;</string>
                        <height>24</height>
                       </size>
                      </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>12</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#011552;
-color: white;</string>
+                      <string notr="true"/>
                      </property>
                      <property name="text">
                       <string>4</string>
@@ -839,6 +989,11 @@ color: white;</string>
                      </property>
                      <item>
                       <widget class="QLabel" name="labelSubtitle4">
+                       <property name="font">
+                        <font>
+                         <pointsize>12</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>What differentiates Infinite Node 1.0 
  and masternode technology?</string>
@@ -912,9 +1067,15 @@ color: white;</string>
                        <height>24</height>
                       </size>
                      </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>12</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#011552;
-color: white;</string>
+                      <string notr="true"/>
                      </property>
                      <property name="text">
                       <string>5</string>
@@ -934,6 +1095,11 @@ color: white;</string>
                      </property>
                      <item>
                       <widget class="QLabel" name="labelSubtitle5">
+                       <property name="font">
+                        <font>
+                         <pointsize>12</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>What is an EARN?</string>
                        </property>
@@ -1006,9 +1172,15 @@ color: white;</string>
                        <height>24</height>
                       </size>
                      </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>12</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#011552;
-color: white;</string>
+                      <string notr="true"/>
                      </property>
                      <property name="text">
                       <string>6</string>
@@ -1031,6 +1203,11 @@ color: white;</string>
                      </property>
                      <item>
                       <widget class="QLabel" name="labelSubtitle6">
+                       <property name="font">
+                        <font>
+                         <pointsize>12</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>What are the Specifications and Block Rewards?</string>
                        </property>
@@ -1103,9 +1280,15 @@ color: white;</string>
                        <height>24</height>
                       </size>
                      </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>12</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#011552;
-color: white;</string>
+                      <string notr="true"/>
                      </property>
                      <property name="text">
                       <string>7</string>
@@ -1125,6 +1308,11 @@ color: white;</string>
                      </property>
                      <item>
                       <widget class="QLabel" name="labelSubtitle7">
+                       <property name="font">
+                        <font>
+                         <pointsize>12</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>What is the X25X algorithm?</string>
                        </property>
@@ -1197,9 +1385,15 @@ color: white;</string>
                        <height>24</height>
                       </size>
                      </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>12</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#011552;
-color: white;</string>
+                      <string notr="true"/>
                      </property>
                      <property name="text">
                       <string>8</string>
@@ -1219,6 +1413,11 @@ color: white;</string>
                      </property>
                      <item>
                       <widget class="QLabel" name="labelSubtitle8">
+                       <property name="font">
+                        <font>
+                         <pointsize>12</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Where can I get support when needed?</string>
                        </property>
@@ -1246,7 +1445,7 @@ color: white;</string>
                      <item>
                       <widget class="QLabel" name="labelContent8">
                        <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can get continuous support through our &lt;a href=&quot;https://sinovate.io/links/discord&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Discord support channel&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can get continuous support through our &lt;a href=&quot;https://sinovate.io/links/discord&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2d9ad0;&quot;&gt;Discord support channel&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                        <property name="alignment">
                         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1291,9 +1490,15 @@ color: white;</string>
                        <height>24</height>
                       </size>
                      </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>12</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#011552;
-color: white;</string>
+                      <string notr="true"/>
                      </property>
                      <property name="text">
                       <string>9</string>
@@ -1313,6 +1518,11 @@ color: white;</string>
                      </property>
                      <item>
                       <widget class="QLabel" name="labelSubtitle9">
+                       <property name="font">
+                        <font>
+                         <pointsize>12</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>What are SIN block Explorer functions?</string>
                        </property>
@@ -1340,7 +1550,7 @@ color: white;</string>
                      <item>
                       <widget class="QLabel" name="labelContent9">
                        <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The custom &lt;a href=&quot;https://explorer.sinovate.io&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;SIN Block Explorer&lt;/span&gt;&lt;/a&gt; enables the following:&lt;/p&gt;&lt;p&gt;To view, all blocks timestamped since the launch of the blockchain&lt;/p&gt;&lt;p&gt;To trace all transactions sent/received&lt;/p&gt;&lt;p&gt;To investigate every wallet address created by the network&lt;/p&gt;&lt;p&gt;To monitor the total hash rate and difficulty of the network&lt;/p&gt;&lt;p&gt;To view the top 200 wallet addresses (SIN coin distribution)&lt;/p&gt;&lt;p&gt;To find out how many nodes are active&lt;/p&gt;&lt;p&gt;To see how many SIN coins have been burnt&lt;/p&gt;&lt;p&gt;To view the current ROI statistics (how many days before the initial Infinity Node-locked SIN coin investment is paid back)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The custom &lt;a href=&quot;https://explorer.sinovate.io&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2d9ad0;&quot;&gt;SIN Block Explorer&lt;/span&gt;&lt;/a&gt; enables the following:&lt;/p&gt;&lt;p&gt;To view, all blocks timestamped since the launch of the blockchain&lt;/p&gt;&lt;p&gt;To trace all transactions sent/received&lt;/p&gt;&lt;p&gt;To investigate every wallet address created by the network&lt;/p&gt;&lt;p&gt;To monitor the total hash rate and difficulty of the network&lt;/p&gt;&lt;p&gt;To view the top 200 wallet addresses (SIN coin distribution)&lt;/p&gt;&lt;p&gt;To find out how many nodes are active&lt;/p&gt;&lt;p&gt;To see how many SIN coins have been burnt&lt;/p&gt;&lt;p&gt;To view the current ROI statistics (how many days before the initial Infinity Node-locked SIN coin investment is paid back)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                        <property name="alignment">
                         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1385,9 +1595,15 @@ color: white;</string>
                        <height>24</height>
                       </size>
                      </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>12</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color:#011552;
-color: white;</string>
+                      <string notr="true"/>
                      </property>
                      <property name="text">
                       <string>10</string>
@@ -1407,6 +1623,11 @@ color: white;</string>
                      </property>
                      <item>
                       <widget class="QLabel" name="labelSubtitle10">
+                       <property name="font">
+                        <font>
+                         <pointsize>12</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Where can I get more detailed information?</string>
                        </property>
@@ -1434,7 +1655,7 @@ color: white;</string>
                      <item>
                       <widget class="QLabel" name="labelContent10">
                        <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For more detailed information, you can visit the &lt;a href=&quot;https://sinovate.io&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;sinovate.io&lt;/span&gt;&lt;/a&gt; website. You can also check out our &lt;a href=&quot;https://docs.sinovate.io/#/SINOVATE_Whitepaper_Light&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Whitepaper&lt;/span&gt;&lt;/a&gt; document.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For more detailed information, you can visit the &lt;a href=&quot;https://sinovate.io&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2d9ad0;&quot;&gt;sinovate.io&lt;/span&gt;&lt;/a&gt; website. You can also check out our &lt;a href=&quot;https://docs.sinovate.io/#/SINOVATE_Whitepaper_Light&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2d9ad0;&quot;&gt;Whitepaper&lt;/span&gt;&lt;/a&gt; document.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                        <property name="alignment">
                         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
