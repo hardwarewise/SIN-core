@@ -202,6 +202,7 @@ private Q_SLOTS:
     void nodeSetupDINColumnToggle(int nColumn );
     void on_checkDINNode();
     void on_payButton_clicked();
+    void on_setupSinovateButton_clicked();
 
     // node setup
     void on_btnSetup_clicked();

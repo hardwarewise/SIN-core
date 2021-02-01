@@ -29,6 +29,7 @@
 #include <QMessageBox>
 #include <QTimer>
 #include <QStyleFactory>
+#include <QListView>
 
 OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     QDialog(parent),
@@ -37,6 +38,8 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     mapper(0)
 {
     ui->setupUi(this);
+    ui->lang->setView(new QListView());
+    ui->unit->setView(new QListView());
 
     SetObjectStyleSheet(ui->resetButton, StyleSheetNames::ButtonLight);
     SetObjectStyleSheet(ui->openSINConfButton, StyleSheetNames::ButtonLight);
