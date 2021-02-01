@@ -20,12 +20,7 @@
    <string>Send Coins</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QFrame#frame {
-background-image: url(':/images/earnbg');
-background-repeat:none;
-background-position: right bottom;
-background-size: 500px 337px;
-}</string>
+   <string notr="true"/>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_4">
    <item>
