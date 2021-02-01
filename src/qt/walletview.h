@@ -24,6 +24,9 @@
 #include <qt/faqpage.h>
 //
 
+// StakePage
+#include <qt/stakepage.h>
+//
 
 #include <QStackedWidget>
 
@@ -40,6 +43,7 @@ class WalletModel;
 class AddressBookPage;
 class StatsPage;
 class FaqPage;
+
 
 
 QT_BEGIN_NAMESPACE
@@ -106,6 +110,10 @@ private:
     FaqPage *faqWindow;
     //
 
+        // StakePage
+    StakePage *stakeWindow;
+    //
+
     TransactionView *transactionView;
 
     QProgressDialog *progressDialog;
@@ -115,6 +123,7 @@ private:
 public Q_SLOTS:
     /** Switch to overview (home) page */
     void gotoOverviewPage();
+    void gotoHomePage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
 
@@ -136,6 +145,11 @@ public Q_SLOTS:
     // FAQ
     /** Switch to faq page */
     void gotoFaqPage();
+    //
+
+    // Stake
+    /** Switch to Stake page */
+    void gotoStakePage();
     //
 
     // setUP
@@ -203,6 +217,7 @@ Q_SIGNALS:
     void incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address, const QString& label, const QString& walletName);
     /** Notify that the out of sync warning icon has been pressed */
     void outOfSyncWarningClicked();
+    void sendCoins(QString addr = "");
 };
 
 #endif // BITCOIN_QT_WALLETVIEW_H

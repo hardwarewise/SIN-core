@@ -24,6 +24,7 @@
 #include <qt/walletmodel.h>
 #include "statspage.h"
 #include "faqpage.h"
+#include "stakepage.h"
 
 #include <interfaces/node.h>
 #include <ui_interface.h>
@@ -37,6 +38,7 @@
 #include <QSettings>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <qt/sinpushbutton.h>
 
 WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     QStackedWidget(parent),
@@ -52,11 +54,11 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     QHBoxLayout *hbox_buttons = new QHBoxLayout();
     transactionView = new TransactionView(platformStyle, this);
     vbox->addWidget(transactionView);
-    QPushButton *exportButton = new QPushButton(tr("&Export"), this);
+    QPushButton *exportButton = new SinPushButton(tr("&Export"), this);
     exportButton->setObjectName("exportButton"); // Label ID as CSS-reference
     exportButton->setToolTip(tr("Export the data in the current tab to a file"));
     if (platformStyle->getImagesOnButtons()) {
-        exportButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
+        exportButton->setIcon(platformStyle->MultiStatesIcon(":/icons/export", PlatformStyle::PushButton));
     }
     hbox_buttons->addStretch();
 
@@ -116,10 +118,27 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     addWidget(faqWindow);
     //
 
+     //StakePage
+    stakeWindow = new StakePage(platformStyle);
+    addWidget(stakeWindow);
+    //
+
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
     connect(overviewPage, SIGNAL(outOfSyncWarningClicked()), this, SLOT(requestedSyncWarningInfo()));
 
+           
+     // Clicking send coins button show send coins dialog
+    connect(overviewPage, &OverviewPage::sendCoinsClicked, [this]{ gotoSendCoinsPage(); });
+    // Clicking receive coins button show receive coins dialog
+    connect(overviewPage, &OverviewPage::receiveCoinsClicked, [this]{ gotoReceiveCoinsPage(); });
+    // clicking more button shows transactions details
+    connect(overviewPage, &OverviewPage::moreClicked, [this]{ gotoHistoryPage(); });
+
+    // clicking faq button shows open FAQ Page
+    connect(overviewPage, &OverviewPage::toolButtonFaqClicked, [this]{ gotoFaqPage(); });
+    
+    
     // Highlight transaction after send
     connect(sendCoinsPage, SIGNAL(coinsSent(uint256)), transactionView, SLOT(focusTransaction(uint256)));
 
@@ -256,6 +275,15 @@ void WalletView::processNewTransaction(const QModelIndex& parent, int start, int
 
 void WalletView::gotoOverviewPage()
 {
+    overviewPage->showTransactionWidget(true);
+    overviewPage->showToolBoxWidget(false);
+    setCurrentWidget(overviewPage);
+}
+
+void WalletView::gotoHomePage()
+{
+    overviewPage->showTransactionWidget(false);
+    overviewPage->showToolBoxWidget(true);
     setCurrentWidget(overviewPage);
 }
 
@@ -296,6 +324,12 @@ void WalletView::gotoFaqPage()
 }
 //
 
+// StakePage
+void WalletView::gotoStakePage()
+{
+    setCurrentWidget(stakeWindow);
+}
+//
 
 void WalletView::gotoReceiveCoinsPage()
 {

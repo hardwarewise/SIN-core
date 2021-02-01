@@ -22,7 +22,6 @@ class PlatformStyle;
 class WalletModel;
 
 
-
 namespace Ui {
     class OverviewPage;
 }
@@ -47,13 +46,21 @@ public:
     void showOutOfSyncWarning(bool fShow);
     std::vector<COutput> termDepositInfo;
 
+    void showTransactionWidget(bool bShow);
+    void showToolBoxWidget(bool bShow);
+        
 public Q_SLOTS:
     void setBalance(const interfaces::WalletBalances& balances);
     void getPriceInfo();
+    void getPriceInfoEur();
         
 Q_SIGNALS:
     void transactionClicked(const QModelIndex &index);
     void outOfSyncWarningClicked();
+    void sendCoinsClicked(QString addr = "");
+    void receiveCoinsClicked();
+    void moreClicked();
+    void toolButtonFaqClicked();
 
 private:
     Ui::OverviewPage *ui;
@@ -63,8 +70,11 @@ private:
     QNetworkAccessManager* m_networkManager;
     interfaces::WalletBalances m_balances;
     QTimer *pricingTimer;
+    QTimer *pricingTimerEUR;
     QNetworkAccessManager* networkManager;
+    QNetworkAccessManager* networkManagerEUR;
     QNetworkRequest* request;
+    QNetworkRequest* requestEUR;
     qint64 totalBalance;
     int nDisplayUnit;    
 
@@ -81,10 +91,20 @@ private Q_SLOTS:
     void handleOutOfSyncWarningClicks();
     void onResult(QNetworkReply* replystats);
     void getStatistics();
-
-    
-    
-
+    void on_buttonSend_clicked();
+    void on_buttonReceive_clicked();
+    void on_buttonMore_clicked();
+    void on_toolButtonBlog_clicked();
+    void on_toolButtonDocs_clicked();
+    void on_toolButtonExchanges_clicked();
+    void on_toolButtonExplorer_clicked();
+    void on_toolButtonRoadmap_clicked();
+    void on_toolButtonWallet_clicked();
+    void on_toolButtonWebTool_clicked();
+    void on_toolButtonWhitePaper_clicked();
+    void on_toolButtonDiscord_clicked();
+    void on_toolButtonFaq_clicked();
+    void showDetails();
 };
 
 #endif // BITCOIN_QT_OVERVIEWPAGE_H

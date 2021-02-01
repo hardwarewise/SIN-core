@@ -7,14 +7,21 @@
 
 #include <qt/guiutil.h>
 #include <qt/walletmodel.h>
+#include <qt/styleSheet.h>
 
 #include <QUrl>
+#include <QPushButton>
+
 
 OpenURIDialog::OpenURIDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::OpenURIDialog)
 {
     ui->setupUi(this);
+
+    SetObjectStyleSheet(ui->buttonBox->button(QDialogButtonBox::Cancel), StyleSheetNames::ButtonLight);
+    SetObjectStyleSheet(ui->buttonBox->button(QDialogButtonBox::Ok), StyleSheetNames::ButtonGray);
+
     ui->uriEdit->setPlaceholderText("sin:");
 }
 

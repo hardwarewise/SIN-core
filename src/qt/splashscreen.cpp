@@ -105,7 +105,7 @@ SplashScreen::SplashScreen(interfaces::Node& node, Qt::WindowFlags f, const Netw
         const int x = paddingLeft;
         const int y = paddingTop+titleCopyrightVSpace;
         QRect copyrightRect(x, y, pixmap.width() - x, pixmap.height() - y);
-        pixPaint.drawText(copyrightRect, Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, copyrightText +"\n\xc2\xA9 2008-2020 The Bitcoin Core Developers");
+        pixPaint.drawText(copyrightRect, Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, copyrightText +"\n\xc2\xA9 2008-2021 The Bitcoin Core Developers");
     }
     pixPaint.end();
 

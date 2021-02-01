@@ -121,6 +121,9 @@ namespace GUIUtil
     // Open debug.log
     void openDebugLogfile();
 
+    // Open Data Folder
+    void openDataFolder();
+
     // Open the config file
     bool openSinConf();
 
@@ -128,23 +131,6 @@ namespace GUIUtil
     // Open masternode.conf
     void openMNConfigfile();
     //
-
-    // start Resources Web links
-    // Function for Hyperlinks
-    
-        
-    void hyperlinks3_slot1();
-    void hyperlinks3_slot2();
-    void hyperlinks3_slot3();
-    void hyperlinks3_slot4();
-    void hyperlinks3_slot5();
-    void hyperlinks3_slot6();
-    void hyperlinks3_slot7();
-    void hyperlinks3_slot8();
-    void hyperlinks3_slot9();
-    void hyperlinks3_slot10();
-    void hyperlinks3_slot11();
-    // end Resources Web links
 
     /** Qt event filter that intercepts ToolTipChange events, and replaces the tooltip with a rich text
       representation if needed. This assures that Qt can word-wrap long tooltip messages.

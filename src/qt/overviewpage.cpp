@@ -13,6 +13,7 @@
 #include <qt/platformstyle.h>
 #include <qt/transactionfilterproxy.h>
 #include <qt/transactiontablemodel.h>
+#include <qt/transactiondescdialog.h>
 #include <qt/utilitydialog.h>
 #include <qt/walletmodel.h>
 #include <wallet/wallet.h>
@@ -23,7 +24,10 @@
 #include <shutdown.h>
 #include <instantx.h>
 #include <masternode-sync.h>
+#include <qt/styleSheet.h>
 
+
+#include <QAction>
 #include <QAbstractItemDelegate>
 #include <QPainter>
 #include <QSettings>
@@ -35,14 +39,22 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QToolButton>
 
+#define NUM_ITEMS 5
+#define MARGIN 5
+#define SYMBOL_WIDTH 80
 
-#define ICON_OFFSET 16
-#define DECORATION_SIZE 38
-#define NUM_ITEMS 11
-#define NUM_ITEMS_ADV 7
+#define TX_SIZE 40
+#define DECORATION_SIZE 20
+#define DATE_WIDTH 110
+#define TYPE_WIDTH 140
+#define AMOUNT_WIDTH 205
+
+#define BUTTON_ICON_SIZE 24
 
 Q_DECLARE_METATYPE(interfaces::WalletBalances)
+
 
 class TxViewDelegate : public QAbstractItemDelegate
 {
@@ -52,90 +64,142 @@ public:
         QAbstractItemDelegate(parent), unit(BitcoinUnits::SIN),
         platformStyle(_platformStyle)
     {
-
+        background_color_selected = GetStringStyleValue("txviewdelegate/background-color-selected", "#009ee5");
+        background_color = GetStringStyleValue("txviewdelegate/background-color", "#393939");
+        alternate_background_color = GetStringStyleValue("txviewdelegate/alternate-background-color", "#2e2e2e");
+        foreground_color = GetStringStyleValue("txviewdelegate/foreground-color", "#dedede");
+        foreground_color_selected = GetStringStyleValue("txviewdelegate/foreground-color-selected", "#ffffff");
+        amount_color = GetStringStyleValue("txviewdelegate/amount-color", "#ffffff");
+        color_unconfirmed = GetColorStyleValue("guiconstants/color-unconfirmed", COLOR_UNCONFIRMED);
+        color_negative = GetColorStyleValue("guiconstants/color-negative", COLOR_NEGATIVE);
+    
     }
+
 
     inline void paint(QPainter *painter, const QStyleOptionViewItem &option,
                       const QModelIndex &index ) const
     {
         painter->save();
-
-        QIcon icon = qvariant_cast<QIcon>(index.data(TransactionTableModel::RawDecorationRole));
-        QRect mainRect = option.rect;
-        mainRect.moveLeft(ICON_OFFSET);
-        QRect decorationRect(mainRect.topLeft(), QSize(DECORATION_SIZE - 6, DECORATION_SIZE - 6));
-        int xspace = DECORATION_SIZE + 8;
-        int ypad = 6;
-        int halfheight = (mainRect.height() - 2*ypad)/2;
-        QRect amountRect(mainRect.left() + xspace, mainRect.top()+ypad, mainRect.width() - xspace - ICON_OFFSET, halfheight);
-        QRect addressRect(mainRect.left() + xspace, mainRect.top()+ypad+halfheight, mainRect.width() - xspace, halfheight);
-        icon = platformStyle->SingleColorIcon(icon);
-        icon.paint(painter, decorationRect);
-
+        bool selected = option.state & QStyle::State_Selected;
         QDateTime date = index.data(TransactionTableModel::DateRole).toDateTime();
+        QIcon icon = qvariant_cast<QIcon>(index.data(TransactionTableModel::RawDecorationRole));
+        if(selected)
+        {
+            icon = PlatformStyle::SingleColorIcon(icon, foreground_color_selected);
+        }
         QString address = index.data(Qt::DisplayRole).toString();
         qint64 amount = index.data(TransactionTableModel::AmountRole).toLongLong();
         bool confirmed = index.data(TransactionTableModel::ConfirmedRole).toBool();
-        QVariant value = index.data(Qt::ForegroundRole);
-        QColor foreground = option.palette.color(QPalette::Text);
-        if(value.canConvert<QBrush>())
+
+        QModelIndex ind = index.model()->index(index.row(), TransactionTableModel::Type, index.parent());
+        QString typeString = ind.data(Qt::DisplayRole).toString();
+
+        QRect mainRect = option.rect;
+        QColor txColor = index.row() % 2 ? background_color : alternate_background_color;
+        painter->fillRect(mainRect, txColor);
+
+        if(selected)
         {
-            QBrush brush = qvariant_cast<QBrush>(value);
-            foreground = brush.color();
+            painter->fillRect(mainRect.x()+1, mainRect.y()+1, mainRect.width()-2, mainRect.height()-2, background_color_selected);
         }
 
+        QColor foreground = foreground_color;
+        if(selected)
+        {
+            foreground = foreground_color_selected;
+        }
         painter->setPen(foreground);
-        QRect boundingRect;
-        painter->drawText(addressRect, Qt::AlignLeft|Qt::AlignVCenter, address, &boundingRect);
 
-        if (index.data(TransactionTableModel::WatchonlyRole).toBool())
+        QRect dateRect(mainRect.left() + MARGIN, mainRect.top(), DATE_WIDTH, TX_SIZE);
+        painter->drawText(dateRect, Qt::AlignLeft|Qt::AlignVCenter, GUIUtil::dateTimeStr(date));
+
+        int topMargin = (TX_SIZE - DECORATION_SIZE) / 2;
+        QRect decorationRect(dateRect.topRight() + QPoint(MARGIN, topMargin), QSize(DECORATION_SIZE, DECORATION_SIZE));
+        icon.paint(painter, decorationRect);
+
+        QRect typeRect(decorationRect.right() + MARGIN, mainRect.top(), TYPE_WIDTH, TX_SIZE);
+        painter->drawText(typeRect, Qt::AlignLeft|Qt::AlignVCenter, typeString);
+
+        bool watchOnly = index.data(TransactionTableModel::WatchonlyRole).toBool();
+
+        if (watchOnly)
         {
             QIcon iconWatchonly = qvariant_cast<QIcon>(index.data(TransactionTableModel::WatchonlyDecorationRole));
-            QRect watchonlyRect(boundingRect.right() + 5, mainRect.top()+ypad+halfheight, 16, halfheight);
+            if(selected)
+            {
+                iconWatchonly = PlatformStyle::SingleColorIcon(iconWatchonly, foreground_color_selected);
+            }
+            QRect watchonlyRect(typeRect.right() + MARGIN, mainRect.top() + topMargin, DECORATION_SIZE, DECORATION_SIZE);
             iconWatchonly.paint(painter, watchonlyRect);
         }
 
+        int addressMargin = watchOnly ? MARGIN + 20 : MARGIN;
+        int addressWidth = mainRect.width() - DATE_WIDTH - DECORATION_SIZE - TYPE_WIDTH - AMOUNT_WIDTH - 5*MARGIN;
+        addressWidth = watchOnly ? addressWidth - 20 : addressWidth;
+
+        QFont addressFont = option.font;
+        addressFont.setPointSizeF(addressFont.pointSizeF() * 0.95);
+        painter->setFont(addressFont);
+
+        QFontMetrics fmName(painter->font());
+        QString clippedAddress = fmName.elidedText(address, Qt::ElideRight, addressWidth);
+
+        QRect addressRect(typeRect.right() + addressMargin, mainRect.top(), addressWidth, TX_SIZE);
+        painter->drawText(addressRect, Qt::AlignLeft|Qt::AlignVCenter, clippedAddress);
+
+        QFont amountFont = option.font;
+        painter->setFont(amountFont);
+
         if(amount < 0)
         {
-            foreground = COLOR_NEGATIVE;
+            foreground = color_negative;
         }
         else if(!confirmed)
         {
-            foreground = COLOR_UNCONFIRMED;
+            foreground = color_unconfirmed;
         }
         else
         {
-            
-            foreground = QColor(61, 113, 193);
+            foreground = amount_color;
         }
 
-
+        if(selected)
+        {
+            foreground = foreground_color_selected;
+        }
         painter->setPen(foreground);
-
 
         QString amountText = BitcoinUnits::formatWithUnit(unit, amount, true, BitcoinUnits::separatorAlways);
         if(!confirmed)
         {
             amountText = QString("[") + amountText + QString("]");
         }
+
+        QRect amountRect(addressRect.right() + MARGIN, addressRect.top(), AMOUNT_WIDTH, TX_SIZE);
         painter->drawText(amountRect, Qt::AlignRight|Qt::AlignVCenter, amountText);
 
-        painter->setPen(option.palette.color(QPalette::Text));
-        foreground = QColor(205, 220, 234);
-        painter->drawText(amountRect, Qt::AlignLeft|Qt::AlignVCenter, GUIUtil::dateTimeStr(date));
-
-        
         painter->restore();
     }
 
     inline QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
-        return QSize(DECORATION_SIZE, DECORATION_SIZE);
+        return QSize(TX_SIZE, TX_SIZE);
     }
 
     int unit;
     const PlatformStyle *platformStyle;
 
+private:
+    QColor background_color_selected;
+    QColor background_color;
+    QColor alternate_background_color;
+    QColor foreground_color;
+    QColor foreground_color_selected;
+    QColor amount_color;
+    QColor color_unconfirmed;
+    QColor color_negative;
+
+    
 };
 #include <qt/overviewpage.moc>
 
@@ -144,17 +208,81 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     // ++ Explorer Stats
     m_timer(nullptr),
     // --
+    
     ui(new Ui::OverviewPage),
+    
     m_networkManager(new QNetworkAccessManager(this)),
     clientModel(0),
     walletModel(0),
     txdelegate(new TxViewDelegate(platformStyle, this))
 {
     pricingTimer = new QTimer();
+    pricingTimerEUR = new QTimer();
     networkManager = new QNetworkAccessManager();
+    networkManagerEUR = new QNetworkAccessManager();
     request = new QNetworkRequest();
+    requestEUR = new QNetworkRequest();
+    
     ui->setupUi(this);
 
+    ui->toolButtonBlog->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    //ui->toolButtonBlog->setIcon(QIcon(":/icons/blog_blue"));
+    ui->toolButtonBlog->setIconSize(QSize(64, 64));
+    ui->toolButtonBlog->setStatusTip(tr("Visit Sinovate Blog"));
+
+    ui->toolButtonDocs->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    //ui->toolButtonDocs->setIcon(QIcon(":/icons/docs_blue"));
+    ui->toolButtonDocs->setIconSize(QSize(64, 64));
+    ui->toolButtonDocs->setStatusTip(tr("Visit Sinovate Docs"));
+
+    
+    ui->toolButtonExchanges->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    //ui->toolButtonExchanges->setIcon(QIcon(":/icons/cmc_blue"));
+    ui->toolButtonExchanges->setIconSize(QSize(64, 64));
+    ui->toolButtonExchanges->setStatusTip(tr("Buy Sinovate Coin"));
+
+    ui->toolButtonExplorer->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    //ui->toolButtonExplorer->setIcon(QIcon(":/icons/explorer_blue"));
+    ui->toolButtonExplorer->setIconSize(QSize(64, 64));
+    ui->toolButtonExplorer->setStatusTip(tr("Visit Sinovate Block Explorer"));
+
+    ui->toolButtonDiscord->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    //ui->toolButtonDiscord->setIcon(QIcon(":/icons/discord_blue"));
+    ui->toolButtonDiscord->setIconSize(QSize(64, 64));
+    ui->toolButtonDiscord->setStatusTip(tr("Visit Sinovate Discord Channel"));
+
+    ui->toolButtonRoadmap->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    //ui->toolButtonRoadmap->setIcon(QIcon(":/icons/roadmap_blue"));
+    ui->toolButtonRoadmap->setIconSize(QSize(64, 64));
+    ui->toolButtonRoadmap->setStatusTip(tr("Sinovate Roadmap"));
+
+    ui->toolButtonWebTool->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    //ui->toolButtonWebTool->setIcon(QIcon(":/icons/webtool_blue"));
+    ui->toolButtonWebTool->setIconSize(QSize(64, 64));
+    ui->toolButtonWebTool->setStatusTip(tr("Visit Sinovate WebTool"));
+
+    ui->toolButtonWallet->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    //ui->toolButtonWallet->setIcon(QIcon(":/icons/download_blue"));
+    ui->toolButtonWallet->setIconSize(QSize(64, 64));
+    ui->toolButtonWallet->setStatusTip(tr("Download Latest Sinovate Wallets"));
+
+    ui->toolButtonWhitePaper->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    //ui->toolButtonWhitePaper->setIcon(QIcon(":/icons/whitepaper_blue"));
+    ui->toolButtonWhitePaper->setIconSize(QSize(64, 64));
+    ui->toolButtonWhitePaper->setStatusTip(tr("Sinovate WhitePaper"));
+
+    ui->toolButtonFaq->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    //ui->toolButtonFaq->setIcon(QIcon(":/icons/faq_blue"));
+    ui->toolButtonFaq->setIconSize(QSize(64, 64));
+    ui->toolButtonFaq->setStatusTip(tr("Open FAQ Page"));
+
+    ui->buttonSend->setIcon(platformStyle->MultiStatesIcon(":/icons/send", PlatformStyle::PushButton));
+    ui->buttonSend->setIconSize(QSize(BUTTON_ICON_SIZE, BUTTON_ICON_SIZE));
+
+    ui->buttonReceive->setIcon(platformStyle->MultiStatesIcon(":/icons/receiving_addresses", PlatformStyle::PushButton));
+    ui->buttonReceive->setIconSize(QSize(BUTTON_ICON_SIZE, BUTTON_ICON_SIZE));
+    
+    
     // ++ Explorer Stats
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(getStatistics()));
@@ -185,13 +313,13 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                     // List the found values
                     QStringList list = rx.capturedTexts();
 
-                    QString currentPriceStyleSheet = ".QLabel{color: %1; font-size:18px;}";
+                    QString currentPriceStyleSheet = ".QLabel{color: %1; font-size:12px;}";
                     // Evaluate the current and next numbers and assign a color (green for positive, red for negative)
                     bool ok;
                     if (!list.isEmpty()) {
                         double next = list.first().toDouble(&ok);
                         if (!ok) {
-                            ui->labelCurrentPrice->setStyleSheet(currentPriceStyleSheet.arg("#4960ad"));
+                            ui->labelCurrentPrice->setStyleSheet(".QLabel{font-size:12px;}");
                             ui->labelCurrentPrice->setText("");
                         } else {
                             double current = ui->labelCurrentPrice->text().toDouble(&ok);
@@ -203,7 +331,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                                 else if (next > current)
                                     ui->labelCurrentPrice->setStyleSheet(currentPriceStyleSheet.arg("green"));
                                 else
-                                    ui->labelCurrentPrice->setStyleSheet(currentPriceStyleSheet.arg("black"));
+                                    ui->labelCurrentPrice->setStyleSheet(".QLabel{font-size:12px;}");
                                     
                             }
                             ui->labelCurrentPrice->setText(QString("%1").arg(QString().setNum(next, 'f', 8)));
@@ -217,12 +345,68 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
                 }
         );
 
+     //--
+
+     // Set the EUR pricing information
        
+
+        // Network request code 
+        QObject::connect(networkManagerEUR, &QNetworkAccessManager::finished,
+                         this, [=](QNetworkReply *replyEUR) {  
+                         
+                    if (replyEUR->error()) {
+                        ui->labelCurrentEURPrice->setText("");
+                        qDebug() << replyEUR->errorString();
+                        return;
+                    }
+                    // Get the data from the network request
+                    QString answerEUR = replyEUR->readAll();
+
+                    // Create regex expression to find the value with 8 decimals
+                    QRegExp rxEUR("\\d*.\\d\\d\\d\\d\\d\\d\\d\\d");
+                    rxEUR.indexIn(answerEUR);
+
+                    // List the found values
+                    QStringList listEUR = rxEUR.capturedTexts();
+
+                    QString currentPriceStyleSheet = ".QLabel{color: %1; font-size:14px;}";
+                    // Evaluate the current and next numbers and assign a color (green for positive, red for negative)
+                    bool okEUR;
+                    if (!listEUR.isEmpty()) {
+                        double next = listEUR.first().toDouble(&okEUR);
+                        if (!okEUR) {
+                            ui->labelCurrentEURPrice->setStyleSheet(".QLabel{font-size:14px;}");
+                            ui->labelCurrentEURPrice->setText("");
+                        } else {
+                            double currentEUR = ui->labelCurrentEURPrice->text().toDouble(&okEUR);
+                            if (!okEUR) {
+                                currentEUR = 0.00000000;
+                            } else {
+                                if (next < currentEUR)
+                                    ui->labelCurrentEURPrice->setStyleSheet(currentPriceStyleSheet.arg("red"));
+                                else if (next > currentEUR)
+                                    ui->labelCurrentEURPrice->setStyleSheet(currentPriceStyleSheet.arg("green"));
+                                else
+                                    ui->labelCurrentEURPrice->setStyleSheet(".QLabel{font-size:14px;}");
+                                    
+                            }
+                            ui->labelCurrentEURPrice->setText(QString("%1").arg(QString().setNum(next, 'f', 8)));
+                            
+                            QString totalEUR;
+                            double current2EUR = (currentEUR * totalBalance / 100000000);
+                            totalEUR = QString::number(current2EUR, 'f', 2);
+                            //ui->labelEURTotal->setText("€" + totalEUR + " EUR");
+                        }
+                    }
+                }
+        );
+//--  
 
     m_balances.balance = -1;
 
     // use a SingleColorIcon for the "out of sync warning" icon
-    QIcon icon = platformStyle->SingleColorIcon(":/icons/warning");
+    //QIcon icon = platformStyle->SingleColorIcon(":/icons/warning", "#009ee5");
+    QIcon icon = PlatformStyle::SingleColorIcon(":/icons/warning", "#009ee5");
     icon.addPixmap(icon.pixmap(QSize(24,24), QIcon::Normal), QIcon::Disabled); // also set the disabled icon because we are using a disabled QPushButton to work around missing HiDPI support of QLabel (https://bugreports.qt.io/browse/QTBUG-42503)
     //to do
     //ui->labelTransactionsStatus->setIcon(icon);
@@ -233,12 +417,14 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     ui->listTransactions->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
     ui->listTransactions->setMinimumHeight(NUM_ITEMS * (DECORATION_SIZE + 2));
     ui->listTransactions->setAttribute(Qt::WA_MacShowFocusRect, false);
-      
+    ui->listTransactions->setSelectionBehavior(QAbstractItemView::SelectRows);
+ 
        
-    connect(ui->listTransactions, SIGNAL(clicked(QModelIndex)), this, SLOT(handleTransactionClicked(QModelIndex)));
+    //connect(ui->listTransactions, SIGNAL(clicked(QModelIndex)), this, SLOT(handleTransactionClicked(QModelIndex)));
+    connect(ui->listTransactions, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(showDetails()));
 
     // init "out of sync" warning labels
-    ui->labelWalletStatus->setText( tr("Please wait until the wallet is fully synced to see your correct balance"));
+    ui->labelWalletStatus->setText( tr(""));
     // to do
     //ui->labelTransactionsStatus->setText(tr("Out of Sync!"));
 
@@ -289,8 +475,8 @@ void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
     m_balances = balances;
     totalBalance = balances.balance + balances.unconfirmed_balance + balances.immature_balance;
     ui->labelBalance->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.balance, false, BitcoinUnits::separatorAlways));
-    ui->labelUnconfirmed->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.unconfirmed_balance, false, BitcoinUnits::separatorAlways));
-    ui->labelImmature->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.immature_balance, false, BitcoinUnits::separatorAlways));
+    ui->labelUnconfirmed->setText(BitcoinUnits::format(unit, balances.unconfirmed_balance, false, BitcoinUnits::separatorAlways));
+    ui->labelImmature->setText(BitcoinUnits::format(unit, balances.immature_balance, false, BitcoinUnits::separatorAlways));
     //to do
     //ui->labelTotal->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.balance + balances.unconfirmed_balance + balances.immature_balance, false, BitcoinUnits::separatorAlways));
     ui->labelWatchAvailable->setText(BitcoinUnits::floorHtmlWithUnit(unit, balances.watch_only_balance, false, BitcoinUnits::separatorAlways));
@@ -303,6 +489,12 @@ void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
         pricingTimer->start(300000);
         getPriceInfo();
         /** pricing USD END */
+
+        // Create the timer
+        connect(pricingTimerEUR, SIGNAL(timeout()), this, SLOT(getPriceInfoEur()));
+        pricingTimerEUR->start(300000);
+        getPriceInfoEur();
+        /** pricing EUR END */
 
     // only show immature (newly mined) balance if it's non-zero, so as not to complicate things
     // for the non-mining users
@@ -322,7 +514,7 @@ void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
 
     if(cachedTxLocks != nCompleteTXLocks){
         cachedTxLocks = nCompleteTXLocks;
-        ui->listTransactions->update();
+        //ui->listTransactions->update();
     }
 }
 
@@ -449,6 +641,14 @@ void OverviewPage::getPriceInfo()
     networkManager->get(*request);
 }
 
+void OverviewPage::getPriceInfoEur()
+{
+        requestEUR->setUrl(QUrl("https://stats.sinovate.io/priceEUR.php"));
+    
+    networkManagerEUR->get(*requestEUR);
+}
+
+
 // ++ BTC Value Stats and Available BTC Total
 void OverviewPage::onResult(QNetworkReply* replystats)
 {
@@ -483,4 +683,107 @@ void OverviewPage::onResult(QNetworkReply* replystats)
 
     replystats->deleteLater();
 }
+
+
+void OverviewPage::showTransactionWidget(bool bShow)   {
+    if (bShow)  {
+    ui->buttonWidget->show();
+    ui->recentWidget->show();
+    ui->recentHeaderWidget->show();
+    ui->line->show();
+    }
+    else {        
+        ui->buttonWidget->hide();
+        ui->recentWidget->hide();
+        ui->recentHeaderWidget->hide();
+        ui->line->hide();
+    }
+}
+
+void OverviewPage::showToolBoxWidget(bool bShow)   {
+    if (bShow) {  
+        ui->toolBoxWidget->show();
+        ui->buttonWidget->hide();
+        ui->recentWidget->hide();
+        ui->recentHeaderWidget->hide();
+        ui->line->hide();
+    }
+    else {         
+        ui->toolBoxWidget->hide();
+        ui->buttonWidget->show();
+        ui->recentWidget->show();
+        ui->recentHeaderWidget->show();
+        ui->line->show();
+    }
+}
+
+void OverviewPage::on_buttonSend_clicked()
+{
+    Q_EMIT sendCoinsClicked();
+}
+
+void OverviewPage::on_buttonReceive_clicked()
+{
+    Q_EMIT receiveCoinsClicked();
+}
+
+void OverviewPage::on_buttonMore_clicked()
+{
+    Q_EMIT moreClicked();
+}
+
+void OverviewPage::on_toolButtonFaq_clicked()
+{
+    Q_EMIT toolButtonFaqClicked();
+}
+
+void OverviewPage::on_toolButtonDiscord_clicked() {
+    QDesktopServices::openUrl(QUrl("https://sinovate.io/links/discord/", QUrl::TolerantMode));
+}
+
+void OverviewPage::on_toolButtonBlog_clicked() {
+    QDesktopServices::openUrl(QUrl("https://sinovate.io/blog/", QUrl::TolerantMode));
+}
+
+void OverviewPage::on_toolButtonDocs_clicked() {
+    QDesktopServices::openUrl(QUrl("https://docs.sinovate.io/", QUrl::TolerantMode));
+}
+
+void OverviewPage::on_toolButtonExchanges_clicked() {
+    QDesktopServices::openUrl(QUrl("https://coinmarketcap.com/currencies/sinovate/markets/", QUrl::TolerantMode));
+}
+
+void OverviewPage::on_toolButtonExplorer_clicked() {
+    QDesktopServices::openUrl(QUrl("https://explorer.sinovate.io/", QUrl::TolerantMode));
+}
+
+void OverviewPage::on_toolButtonRoadmap_clicked() {
+    QDesktopServices::openUrl(QUrl("https://sinovate.io/roadmap/", QUrl::TolerantMode));
+}
+
+void OverviewPage::on_toolButtonWallet_clicked() {
+    QDesktopServices::openUrl(QUrl("https://github.com/SINOVATEblockchain/SIN-core/releases", QUrl::TolerantMode));
+}
+
+void OverviewPage::on_toolButtonWebTool_clicked() {
+    QDesktopServices::openUrl(QUrl("https://github.com/SINOVATEblockchain/SINWebTool", QUrl::TolerantMode));
+}
+
+void OverviewPage::on_toolButtonWhitePaper_clicked() {
+    QDesktopServices::openUrl(QUrl("https://sinovate.io/light-whitepaper/", QUrl::TolerantMode));
+}
+
+void OverviewPage::showDetails()
+{
+    if(!ui->listTransactions->selectionModel())
+        return;
+    QModelIndexList selection = ui->listTransactions->selectionModel()->selectedRows();
+    if(!selection.isEmpty())
+    {
+        TransactionDescDialog *dlg = new TransactionDescDialog(selection.at(0));
+        dlg->setAttribute(Qt::WA_DeleteOnClose);
+        dlg->show();
+    }
+}
+
 // --

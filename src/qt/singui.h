@@ -36,6 +36,7 @@ class MasternodeList;
 class InstaSwap;
 class StatsPage;
 class FaqPage;
+class StakePage;
 
 namespace interfaces {
 class Handler;
@@ -63,7 +64,7 @@ public:
 
     explicit SINGUI(interfaces::Node& node, const PlatformStyle *platformStyle, const NetworkStyle *networkStyle, QWidget *parent = 0);
     ~SINGUI();
-
+ 
     /** Set the client model.
         The client model represents the part of the core that communicates with the P2P network, and is wallet-agnostic.
     */
@@ -79,7 +80,7 @@ public:
     void removeAllWallets();
 #endif // ENABLE_WALLET
     bool enableWallet = false;
-
+        
 protected:
     void changeEvent(QEvent *e);
     void closeEvent(QCloseEvent *event);
@@ -100,15 +101,17 @@ private:
     QLabel* labelWalletHDStatusIcon = nullptr;
     QLabel* labelProxyIcon = nullptr;
     QLabel* connectionsControl = nullptr;
+    QLabel* connectionsCount = nullptr;
     QLabel* labelBlocksIcon = nullptr;
     QLabel* progressBarLabel = nullptr;
     QProgressBar* progressBar = nullptr;
     QProgressDialog* progressDialog = nullptr;
-    QPushButton *topThemeButton = nullptr;
+    /*QPushButton *topThemeButton = nullptr;*/
     QMenuBar* appMenuBar = nullptr;
     QMenuBar* subMenu = nullptr;
     QToolBar* appToolBar = nullptr;
     QAction* overviewAction = nullptr;
+    QAction* homeAction = nullptr;
     QAction* historyAction = nullptr;
     // Dash
     QAction *masternodeAction = nullptr;
@@ -125,11 +128,13 @@ private:
     QAction *faqPageAction;
     //
 
+    // StakePage
+    QAction *stakePageAction;
+    //
+
     QAction* quitAction = nullptr;
     QAction* sendCoinsAction = nullptr;
-    QAction* depositCoinsAction = nullptr;
     QAction* sendCoinsMenuAction = nullptr;
-    QAction* depositCoinsMenuAction = nullptr;
     QAction* usedSendingAddressesAction = nullptr;
     QAction* usedReceivingAddressesAction = nullptr;
     QAction* signMessageAction = nullptr;
@@ -155,26 +160,9 @@ private:
     QAction* showHelpMessageAction = nullptr;
     QAction* m_wallet_selector_label_action = nullptr;
     QAction* m_wallet_selector_action = nullptr;
-
-    /// start Resources Web Links
-          
-    QAction* ResourcesWebsite1;
-    QAction* ResourcesWebsite2;
-    QAction* ResourcesWebsite3;
-    QAction* ResourcesWebsite4;
-    QAction* ResourcesWebsite5;
-    QAction* ResourcesWebsite6;
-    QAction* ResourcesWebsite7;
-    QAction* ResourcesWebsite9;
-    QAction* ResourcesWebsite10;
-    QAction* ResourcesWebsite11;
-/// end Resources Web Links
-
-
     
     QLabel *mainIcon;
     QLabel *mainBrand;
-    
     QLabel *m_wallet_selector_label = nullptr;
     QComboBox* m_wallet_selector = nullptr;
 
@@ -184,6 +172,7 @@ private:
     RPCConsole* rpcConsole = nullptr;
     StatsPage  *statsWindow;
     FaqPage  *faqWindow;
+    StakePage  *stakeWindow;
     //HelpMessageDialog* helpMessageDialog = nullptr;
     HelpMessageDialog *helpMessageDialog;
 
@@ -276,6 +265,7 @@ private Q_SLOTS:
 #ifdef ENABLE_WALLET
     /** Switch to overview (home) page */
     void gotoOverviewPage();
+    void gotoHomePage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
 
@@ -304,13 +294,15 @@ private Q_SLOTS:
     void gotoFaqPage(); 
     //
 
+    //StakePage
+    /** Switch to Stake Page */
+    void gotoStakePage(); 
+    //
+
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
-    /** Switch to deposit coins page */
-    void gotoDepositCoinsPage(QString addr = "");
-
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");
     /** Show Sign/Verify Message dialog and switch to verify message tab */
@@ -320,7 +312,7 @@ private Q_SLOTS:
     void openClicked();
 #endif // ENABLE_WALLET
     /** toggle Theme */
-    void onThemeClicked();
+    //void onThemeClicked();
     /** Show configuration dialog */
     void optionsClicked();
     /** Show about dialog */

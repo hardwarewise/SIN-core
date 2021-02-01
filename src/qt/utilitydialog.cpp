@@ -58,7 +58,7 @@ HelpMessageDialog::HelpMessageDialog(interfaces::Node& node, QWidget *parent, He
         // Make URLs clickable
         QRegExp uri("<(.*)>", Qt::CaseSensitive, QRegExp::RegExp2);
         uri.setMinimal(true); // use non-greedy matching
-        licenseInfoHTML.replace(uri, "<a style=\"color:#00419A;\" href=\"\\1\">\\1</a>");
+        licenseInfoHTML.replace(uri, "<a style=\"color:#2d9ad0;\" href=\"\\1\">\\1</a>");
         // Replace newlines with HTML breaks
         licenseInfoHTML.replace("\n", "<br>");
 
@@ -119,7 +119,7 @@ HelpMessageDialog::HelpMessageDialog(interfaces::Node& node, QWidget *parent, He
 
         ui->aboutMessage->setTextFormat(Qt::RichText);
         ui->scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-        ui->aboutMessage->setStyleSheet("background-color:transparent; color:#000000;");
+        ui->aboutMessage->setStyleSheet("background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #0C2448, stop: 1 #000D20); color: #6f80ab");
         ui->aboutMessage->setText(tr("\
 <h3>Specifications</h3> \
 <ol type=\"1\"> \

@@ -19,6 +19,7 @@
 #include <rpc/server.h>
 #include <rpc/client.h>
 #include <util.h>
+#include <qt/styleSheet.h>
 
 #include <openssl/crypto.h>
 
@@ -52,12 +53,13 @@ const char fontSizeSettingsKey[] = "consoleFontSize";
 const struct {
     const char *url;
     const char *source;
+    PlatformStyle::TableColorType type;
 } ICON_MAPPING[] = {
-    {"cmd-request", ":/icons/tx_input"},
-    {"cmd-reply", ":/icons/tx_output"},
-    {"cmd-error", ":/icons/tx_output"},
-    {"misc", ":/icons/tx_inout"},
-    {nullptr, nullptr}
+    {"cmd-request", ":/icons/tx_input", PlatformStyle::Input},
+    {"cmd-reply", ":/icons/tx_output", PlatformStyle::Output},
+    {"cmd-error", ":/icons/tx_output", PlatformStyle::Error},
+    {"misc", ":/icons/tx_inout", PlatformStyle::Inout},
+    {nullptr, nullptr, PlatformStyle::Inout}
 };
 
 namespace {
@@ -455,6 +457,17 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
     platformStyle(_platformStyle)
 {
     ui->setupUi(this);
+
+       // Set stylesheet
+    SetObjectStyleSheet(ui->promptIcon, StyleSheetNames::ButtonTransparent);
+    SetObjectStyleSheet(ui->clearButton, StyleSheetNames::ButtonTransparent);
+    SetObjectStyleSheet(ui->fontBiggerButton, StyleSheetNames::ButtonTransparent);
+    SetObjectStyleSheet(ui->fontSmallerButton, StyleSheetNames::ButtonTransparent);
+    SetObjectStyleSheet(ui->openDebugLogfileButton, StyleSheetNames::ButtonGray);
+    SetObjectStyleSheet(ui->btnClearTrafficGraph, StyleSheetNames::ButtonGray);
+    SetObjectStyleSheet(ui->peerWidget, StyleSheetNames::TableViewLight);
+    SetObjectStyleSheet(ui->banlistWidget, StyleSheetNames::TableViewLight);
+
     QSettings settings;
     if (!restoreGeometry(settings.value("RPCConsoleWindowGeometry").toByteArray())) {
         // Restore failed (perhaps missing setting), center the window
@@ -464,11 +477,13 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
     ui->openDebugLogfileButton->setToolTip(ui->openDebugLogfileButton->toolTip().arg(tr(PACKAGE_NAME)));
 
     if (platformStyle->getImagesOnButtons()) {
-        ui->openDebugLogfileButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
+        ui->openDebugLogfileButton->setIcon(platformStyle->MultiStatesIcon(":/icons/export", PlatformStyle::PushButton));
+        ui->openDataFolderButton->setIcon(platformStyle->MultiStatesIcon(":/icons/export", PlatformStyle::PushButton));
     }
-    ui->clearButton->setIcon(platformStyle->SingleColorIcon(":/icons/remove"));
-    ui->fontBiggerButton->setIcon(platformStyle->SingleColorIcon(":/icons/fontbigger"));
-    ui->fontSmallerButton->setIcon(platformStyle->SingleColorIcon(":/icons/fontsmaller"));
+    ui->clearButton->setIcon(platformStyle->MultiStatesIcon(":/icons/remove", PlatformStyle::PushButtonIcon));
+    ui->fontBiggerButton->setIcon(platformStyle->MultiStatesIcon(":/icons/fontbigger", PlatformStyle::PushButtonIcon));
+    ui->fontSmallerButton->setIcon(platformStyle->MultiStatesIcon(":/icons/fontsmaller", PlatformStyle::PushButtonIcon));
+    ui->promptIcon->setIcon(platformStyle->MultiStatesIcon(":/icons/prompticon", PlatformStyle::PushButtonIcon));
 
     // Install event filter for up and down arrow
     ui->lineEdit->installEventFilter(this);
@@ -1037,21 +1052,6 @@ void RPCConsole::updateTrafficStats(quint64 totalBytesIn, quint64 totalBytesOut)
     ui->lblBytesOut->setText(GUIUtil::formatBytes(totalBytesOut));
 }
 
-/// start Resources Web Links
-
-void RPCConsole::hyperlinks3_slot1(){ GUIUtil::hyperlinks3_slot1();}
-void RPCConsole::hyperlinks3_slot2(){ GUIUtil::hyperlinks3_slot2();}
-void RPCConsole::hyperlinks3_slot3(){ GUIUtil::hyperlinks3_slot3();}
-void RPCConsole::hyperlinks3_slot4(){ GUIUtil::hyperlinks3_slot4();}
-void RPCConsole::hyperlinks3_slot5(){ GUIUtil::hyperlinks3_slot5();}
-void RPCConsole::hyperlinks3_slot6(){ GUIUtil::hyperlinks3_slot6();}
-void RPCConsole::hyperlinks3_slot7(){ GUIUtil::hyperlinks3_slot7();}
-void RPCConsole::hyperlinks3_slot8(){ GUIUtil::hyperlinks3_slot8();}
-void RPCConsole::hyperlinks3_slot9(){ GUIUtil::hyperlinks3_slot9();}
-void RPCConsole::hyperlinks3_slot10(){ GUIUtil::hyperlinks3_slot10();}
-void RPCConsole::hyperlinks3_slot11(){ GUIUtil::hyperlinks3_slot11();}
-/// end Resources Web Links
-
 void RPCConsole::peerSelected(const QItemSelection &selected, const QItemSelection &deselected)
 {
     Q_UNUSED(deselected);
@@ -1301,5 +1301,26 @@ void RPCConsole::showOrHideBanTableIfRequired()
 
 void RPCConsole::setTabFocus(enum TabTypes tabType)
 {
-    ui->tabWidget->setCurrentIndex(tabType);
+    ui->tabWidget->setCurrentIndex(int(tabType));
+}
+
+QString RPCConsole::tabTitle(TabTypes tab_type) const
+{
+    return ui->tabWidget->tabText(int(tab_type));
+}
+
+QKeySequence RPCConsole::tabShortcut(TabTypes tab_type) const
+{
+    switch (tab_type) {
+    case TabTypes::INFO: return QKeySequence(Qt::CTRL + Qt::Key_I);
+    case TabTypes::CONSOLE: return QKeySequence(Qt::CTRL + Qt::Key_T);
+    case TabTypes::GRAPH: return QKeySequence(Qt::CTRL + Qt::Key_N);
+    case TabTypes::PEERS: return QKeySequence(Qt::CTRL + Qt::Key_P);
+    } // no default case, so the compiler can warn about missing cases
+
+    assert(false);
+}
+
+void RPCConsole::on_openDataFolderButton_clicked() {
+    GUIUtil::openDataFolder();
 }
