@@ -595,6 +595,7 @@ bool CInfinitynodeMan::buildInfinitynodeListFromGenesis(int nBlockHeight)
                                 }
                                 i++;
                             }
+                            free(signerIndexes);
 
                             //prevBlockIndex->nHeight
                             const CTxIn& txin = tx->vin[0];
