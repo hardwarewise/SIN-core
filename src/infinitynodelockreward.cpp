@@ -1208,6 +1208,7 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
         free(pubkeys); pubkeys = NULL;
         free(commitmentpk); commitmentpk = NULL;
         free(signer_data); signer_data = NULL;
+        secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
         for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
             free(commitmenthash[c]);
         }
@@ -1229,6 +1230,7 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
             free(pubkeys); pubkeys = NULL;
             free(commitmentpk); commitmentpk = NULL;
             free(signer_data); signer_data = NULL;
+            secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
             for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
                 free(commitmenthash[c]);
             }
@@ -1240,6 +1242,7 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
             free(pubkeys); pubkeys = NULL;
             free(commitmentpk); commitmentpk = NULL;
             free(signer_data); signer_data = NULL;
+            secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
             for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
                 free(commitmenthash[c]);
             }
@@ -1253,6 +1256,7 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
                 free(pubkeys); pubkeys = NULL;
                 free(commitmentpk); commitmentpk = NULL;
                 free(signer_data); signer_data = NULL;
+                secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
                 for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
                     free(commitmenthash[c]);
                 }
@@ -1266,6 +1270,7 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
             free(pubkeys); pubkeys = NULL;
             free(commitmentpk); commitmentpk = NULL;
             free(signer_data); signer_data = NULL;
+            secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
             for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
                 free(commitmenthash[c]);
             }
@@ -1278,6 +1283,7 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
             free(pubkeys); pubkeys = NULL;
             free(commitmentpk); commitmentpk = NULL;
             free(signer_data); signer_data = NULL;
+            secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
             for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
                 free(commitmenthash[c]);
             }
@@ -1290,6 +1296,7 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
             free(pubkeys); pubkeys = NULL;
             free(commitmentpk); commitmentpk = NULL;
             free(signer_data); signer_data = NULL;
+            secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
             for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
                 free(commitmenthash[c]);
             }
@@ -1313,6 +1320,7 @@ bool CInfinityNodeLockReward::MusigPartialSign(CNode* pnode, const CGroupSigners
                 free(pubkeys); pubkeys = NULL;
                 free(commitmentpk); commitmentpk = NULL;
                 free(signer_data); signer_data = NULL;
+                secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
                 for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
                     free(commitmenthash[c]);
                 }
@@ -1622,6 +1630,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                 LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::FindAndBuildMusigLockReward -- Musig Combine PublicKey FAILED\n");
                 free(pubkeys); pubkeys = NULL;
                 free(commitmentpk); commitmentpk = NULL;
+                secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
                 for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
                     free(commitmenthash[c]);
                 }
@@ -1655,6 +1664,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                 free(pubkeys); pubkeys = NULL;
                 free(commitmentpk); commitmentpk = NULL;
                 free(verifier_signer_data); verifier_signer_data = NULL;
+                secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
                 for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
                     free(commitmenthash[c]);
                 }
@@ -1669,6 +1679,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                     free(pubkeys); pubkeys = NULL;
                     free(commitmentpk); commitmentpk = NULL;
                     free(verifier_signer_data); verifier_signer_data = NULL;
+                    secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
                     for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
                         free(commitmenthash[c]);
                     }
@@ -1682,6 +1693,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                 free(pubkeys); pubkeys = NULL;
                 free(commitmentpk); commitmentpk = NULL;
                 free(verifier_signer_data); verifier_signer_data = NULL;
+                secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
                 for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
                     free(commitmenthash[c]);
                 }
@@ -1715,6 +1727,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                     free(pubkeys); pubkeys = NULL;
                     free(commitmentpk); commitmentpk = NULL;
                     free(verifier_signer_data); verifier_signer_data = NULL;
+                    secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
                     for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
                         free(commitmenthash[c]);
                     }
@@ -1730,6 +1743,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                 free(pubkeys); pubkeys = NULL;
                 free(commitmentpk); commitmentpk = NULL;
                 free(verifier_signer_data); verifier_signer_data = NULL;
+                secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
                 for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
                     free(commitmenthash[c]);
                 }
@@ -1757,6 +1771,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                 free(pubkeys); pubkeys = NULL;
                 free(commitmentpk); commitmentpk = NULL;
                 free(verifier_signer_data); verifier_signer_data = NULL;
+                secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
                 for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
                     free(commitmenthash[c]);
                 }
@@ -1769,6 +1784,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                     free(pubkeys); pubkeys = NULL;
                     free(commitmentpk); commitmentpk = NULL;
                     free(verifier_signer_data); verifier_signer_data = NULL;
+                    secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
                     for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
                         free(commitmenthash[c]);
                     }
@@ -1781,6 +1797,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                     free(pubkeys); pubkeys = NULL;
                     free(commitmentpk); commitmentpk = NULL;
                     free(verifier_signer_data); verifier_signer_data = NULL;
+                    secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
                     for(int c = 0; c < Params().GetConsensus().nInfinityNodeLockRewardSigners; c++) {
                         free(commitmenthash[c]);
                     }
@@ -2074,6 +2091,7 @@ bool CInfinityNodeLockReward::CheckLockRewardRegisterInfo(std::string sLockRewar
     scratch = secp256k1_scratch_space_create(secp256k1_context_musig, 1024 * 1024);
     if (!secp256k1_musig_pubkey_combine(secp256k1_context_musig, scratch, &combined_pk, pk_hash, pubkeys, N_SIGNERS)) {
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Musig Combine PublicKey FAILED\n");
+        secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
         free(signerIndexes);
         free(pubkeys);
         return false;
@@ -2081,6 +2099,7 @@ bool CInfinityNodeLockReward::CheckLockRewardRegisterInfo(std::string sLockRewar
 
     if(!secp256k1_schnorr_verify(secp256k1_context_musig, &final_sig, msg, &combined_pk)){
         LogPrint(BCLog::INFINITYLOCK,"CInfinityNodeLockReward::CheckLockRewardRegisterInfo -- Check register info FAILED\n");
+        secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
         free(signerIndexes);
         free(pubkeys);
         return false;
