@@ -228,51 +228,53 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     ui->toolButtonBlog->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     //ui->toolButtonBlog->setIcon(QIcon(":/icons/blog_blue"));
     ui->toolButtonBlog->setIconSize(QSize(64, 64));
+    ui->toolButtonBlog->setIcon(platformStyle->MultiStatesIcon(":/styles/theme2/app-icons/blog_white",PlatformStyle::NavBar));
+   
     ui->toolButtonBlog->setStatusTip(tr("Visit Sinovate Blog"));
 
     ui->toolButtonDocs->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    //ui->toolButtonDocs->setIcon(QIcon(":/icons/docs_blue"));
+    ui->toolButtonDocs->setIcon(platformStyle->MultiStatesIcon(":/styles/theme2/app-icons/docs_white",PlatformStyle::NavBar));
     ui->toolButtonDocs->setIconSize(QSize(64, 64));
     ui->toolButtonDocs->setStatusTip(tr("Visit Sinovate Docs"));
 
     
     ui->toolButtonExchanges->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    //ui->toolButtonExchanges->setIcon(QIcon(":/icons/cmc_blue"));
     ui->toolButtonExchanges->setIconSize(QSize(64, 64));
+    ui->toolButtonExchanges->setIcon(platformStyle->MultiStatesIcon(":/styles/theme2/app-icons/cmc_white",PlatformStyle::NavBar));
     ui->toolButtonExchanges->setStatusTip(tr("Buy Sinovate Coin"));
 
     ui->toolButtonExplorer->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    //ui->toolButtonExplorer->setIcon(QIcon(":/icons/explorer_blue"));
+    ui->toolButtonExplorer->setIcon(platformStyle->MultiStatesIcon(":/styles/theme2/app-icons/explorer_white",PlatformStyle::NavBar));
     ui->toolButtonExplorer->setIconSize(QSize(64, 64));
     ui->toolButtonExplorer->setStatusTip(tr("Visit Sinovate Block Explorer"));
 
     ui->toolButtonDiscord->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    //ui->toolButtonDiscord->setIcon(QIcon(":/icons/discord_blue"));
+    ui->toolButtonDiscord->setIcon(platformStyle->MultiStatesIcon(":/styles/theme2/app-icons/discord_white",PlatformStyle::NavBar));
     ui->toolButtonDiscord->setIconSize(QSize(64, 64));
     ui->toolButtonDiscord->setStatusTip(tr("Visit Sinovate Discord Channel"));
 
     ui->toolButtonRoadmap->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    //ui->toolButtonRoadmap->setIcon(QIcon(":/icons/roadmap_blue"));
+    ui->toolButtonRoadmap->setIcon(platformStyle->MultiStatesIcon(":/styles/theme2/app-icons/roadmap_white",PlatformStyle::NavBar));
     ui->toolButtonRoadmap->setIconSize(QSize(64, 64));
     ui->toolButtonRoadmap->setStatusTip(tr("Sinovate Roadmap"));
 
     ui->toolButtonWebTool->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    //ui->toolButtonWebTool->setIcon(QIcon(":/icons/webtool_blue"));
+    ui->toolButtonWebTool->setIcon(platformStyle->MultiStatesIcon(":/styles/theme2/app-icons/webtool_white",PlatformStyle::NavBar));
     ui->toolButtonWebTool->setIconSize(QSize(64, 64));
     ui->toolButtonWebTool->setStatusTip(tr("Visit Sinovate WebTool"));
 
     ui->toolButtonWallet->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    //ui->toolButtonWallet->setIcon(QIcon(":/icons/download_blue"));
+    ui->toolButtonWallet->setIcon(platformStyle->MultiStatesIcon(":/styles/theme2/app-icons/download_white",PlatformStyle::NavBar));
     ui->toolButtonWallet->setIconSize(QSize(64, 64));
     ui->toolButtonWallet->setStatusTip(tr("Download Latest Sinovate Wallets"));
 
     ui->toolButtonWhitePaper->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    //ui->toolButtonWhitePaper->setIcon(QIcon(":/icons/whitepaper_blue"));
+    ui->toolButtonWhitePaper->setIcon(platformStyle->MultiStatesIcon(":/styles/theme2/app-icons/whitepaper_white",PlatformStyle::NavBar));
     ui->toolButtonWhitePaper->setIconSize(QSize(64, 64));
     ui->toolButtonWhitePaper->setStatusTip(tr("Sinovate WhitePaper"));
 
     ui->toolButtonFaq->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    //ui->toolButtonFaq->setIcon(QIcon(":/icons/faq_blue"));
+    ui->toolButtonFaq->setIcon(platformStyle->MultiStatesIcon(":/styles/theme2/app-icons/faq_white",PlatformStyle::NavBar));
     ui->toolButtonFaq->setIconSize(QSize(64, 64));
     ui->toolButtonFaq->setStatusTip(tr("Open FAQ Page"));
 

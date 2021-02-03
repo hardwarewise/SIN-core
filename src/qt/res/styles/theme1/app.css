@@ -56,13 +56,13 @@ QFrame#vLine,
     border-left: 1px solid #404041;
 }
 WalletFrame{
-    background-color: #272727;
+    background-color: #000000;
 }
 QDialog{
-    background-color: #272727;
+    background-color: #000000;
 }
 QLabel{
-    color: #ffffff;
+    color: #cccccc;
 }
 QLabel::disabled{
     color: rgba(255, 255, 255, 10%);
@@ -582,7 +582,7 @@ QStatusBar QLabel::disabled{
     border: 1px solid transparent;
     color: rgba(0, 0, 0, 10%);
 }
-UnitDisplayStatusBarControl {
+/*UnitDisplayStatusBarControl {
     color: #ababab;
     background: rgba(25, 25, 25, 80%);
     border: 1px solid #5a5a5d;
@@ -590,6 +590,7 @@ UnitDisplayStatusBarControl {
     font: 16px;
     padding: 0px;
 }
+*/
 UnitDisplayStatusBarControl QMenu::item {
     border: none;
     border-radius: 10px;
@@ -797,7 +798,7 @@ QWidget#buttonsContainerWhite,
     background: #ffffff;
 }
 QWidget#ReceiveRequestDialog {
-    background: #272727;
+    background: #000000;
 }
 QTextEdit#outUri {
     border: none;
@@ -833,7 +834,7 @@ Push Button CSS
 --------------------------------------------*/
 QPushButton {
     color: white; 
-    background: #029ce0;
+    background:  #004FFF;
     border: none;
     border-radius: 12px;
     min-width: 5em;
@@ -869,13 +870,13 @@ QWidget#scrollAreaWidgetContents, QWidget#detailWidget {
 Debug Dialog CSS
 --------------------------------------------*/
 QWidget#RPCConsole{
-    background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #0C2448, stop: 1 #000D20);
+    background-color: #000000;
 }
 /*--------------------------------------------
 Shut Down Window CSS
 --------------------------------------------*/
 QWidget#shutdownWindow{
-    background-color: #272727;
+    background-color: #000000;
 }
 /*--------------------------------------------
 Tool Button CSS
@@ -1035,7 +1036,7 @@ Stake Page Widget CSS
 Overview Page Widget CSS
 --------------------------------------------*/
 #balance_container #labelBalance, #balance_container #labelUSDTotal, #balance_container #labelBTCTotal {
-    color: #f2f2f2;
+    color: #cccccc;
     font: 23pt;
   }
 #balance_container #seperatorLabel, #balance_container #balanceSeperatorLabel_1, #balance_container #balanceSeperatorLabel_2 {
@@ -1192,8 +1193,8 @@ Delegate and Staker Page Widget CSS
 ToolBar CSS
 --------------------------------------------*/
 QToolBar {
-    background-color: #1F1F1F;
-    border:none;
+    background-color: #000000;
+    border-right: 1px solid #cccccc;
     height:100%;
     padding-top:20px
     }
@@ -1205,6 +1206,7 @@ QToolBar {
       border-radius: 0px;
       padding-left: 20px;
       padding-right: 0px;
+      margin-right: 1px;
       padding-top:10px;
       width:100%;
       height: 27px;
@@ -1214,16 +1216,13 @@ QToolBar {
       font-weight: normal;
     }
     
-    QToolBar > QToolButton:checked {
-      /*border-right: 3px solid #006DAF;*/
-    }
     QToolBar > QToolButton:pressed, QToolBar > QToolButton:hover:pressed, QToolBar > QToolButton:checked {
       color: #ffffff;
-      background: #058BC8;
-      }
+      background: #004FFF;
+    }
     QToolBar > QToolButton:hover:!checked {
-      color: #4B4E4D;
-      background: #C5D1D0;
+      color: #ffffff;
+      background: #57B1D4;
     }
     QToolBar > QToolButton:disabled {
       color: rgba(111, 128, 171, 20%);
@@ -1233,11 +1232,11 @@ QToolBar {
 QverviewPage -> QToolButton START
 ----------------------------------------------*/
 QWidget#toolBoxWidget .QToolButton {
-    border:  1px solid #74B2FE;
+    border:  1px solid  #004FFF;
     background-color: transparent;
     font-size:12px;
     padding:4px 6px;
-    color: #6f80ab;
+    color: #cccccc;
     border-radius: 12px;
     }
   
@@ -1245,48 +1244,6 @@ QWidget#toolBoxWidget .QToolButton {
       background: #1e2b47;
     }
        
-    QWidget#toolBoxWidget QToolButton#toolButtonBlog {
-      qproperty-icon: url(':/styles/theme2/app-icons/blog_white');
-    }
-    
-   
-    QWidget#toolBoxWidget QToolButton#toolButtonDocs {
-      qproperty-icon: url(':/styles/theme2/app-icons/docs_white');
-    }
-    
-    QWidget#toolBoxWidget QToolButton#toolButtonExchanges {
-      qproperty-icon: url(':/styles/theme2/app-icons/cmc_white');
-    }
-  
-    QWidget#toolBoxWidget QToolButton#toolButtonExplorer {
-      qproperty-icon: url(':/styles/theme2/app-icons/explorer_white');
-    }
-  
-    QWidget#toolBoxWidget QToolButton#toolButtonRoadmap {
-      qproperty-icon: url(':/styles/theme2/app-icons/roadmap_white');
-    }
-  
-  
-    QWidget#toolBoxWidget QToolButton#toolButtonDiscord {
-      qproperty-icon: url(':/styles/theme2/app-icons/discord_white');
-    }
-  
-    QWidget#toolBoxWidget QToolButton#toolButtonWallet {
-      qproperty-icon: url(':/styles/theme2/app-icons/download_white');
-    }
-  
-    QWidget#toolBoxWidget QToolButton#toolButtonWebTool {
-      qproperty-icon: url(':/styles/theme2/app-icons/webtool_white');
-    }
-  
-    QWidget#toolBoxWidget QToolButton#toolButtonWhitePaper {
-      qproperty-icon: url(':/styles/theme2/app-icons/whitepaper_white');
-    }
-  
-    QWidget#toolBoxWidget QToolButton#toolButtonFaq {
-      qproperty-icon: url(':/styles/theme2/app-icons/faq_white');
-    }
-  
   /* OverviewPage QToolButton END */
   
   /* OverviewPage SEND/RECEIVE/MORE Button */

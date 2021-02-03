@@ -1316,44 +1316,6 @@ border-radius: 12px;
 QWidget#toolBoxWidget .QToolButton:hover {
 background: #1e2b47;
 }
-QWidget#toolBoxWidget QToolButton#toolButtonBlog {
-qproperty-icon: url(':/styles/theme2/app-icons/blog_white');
-}
-QWidget#toolBoxWidget QToolButton#toolButtonDocs {
-qproperty-icon: url(':/styles/theme2/app-icons/docs_white');
-}
-QWidget#toolBoxWidget QToolButton#toolButtonExchanges {
-qproperty-icon: url(':/styles/theme2/app-icons/cmc_white');
-}
-QWidget#toolBoxWidget QToolButton#toolButtonExplorer {
-qproperty-icon: url(':/styles/theme2/app-icons/explorer_white');
-}
-  
-    QWidget#toolBoxWidget QToolButton#toolButtonRoadmap {
-      qproperty-icon: url(':/styles/theme2/app-icons/roadmap_white');
-    }
-  
-  
-    QWidget#toolBoxWidget QToolButton#toolButtonDiscord {
-      qproperty-icon: url(':/styles/theme2/app-icons/discord_white');
-    }
-  
-    QWidget#toolBoxWidget QToolButton#toolButtonWallet {
-      qproperty-icon: url(':/styles/theme2/app-icons/download_white');
-    }
-  
-    QWidget#toolBoxWidget QToolButton#toolButtonWebTool {
-      qproperty-icon: url(':/styles/theme2/app-icons/webtool_white');
-    }
-  
-    QWidget#toolBoxWidget QToolButton#toolButtonWhitePaper {
-      qproperty-icon: url(':/styles/theme2/app-icons/whitepaper_white');
-    }
-  
-    QWidget#toolBoxWidget QToolButton#toolButtonFaq {
-      qproperty-icon: url(':/styles/theme2/app-icons/faq_white');
-    }
-  
   /* OverviewPage QToolButton END */
 
 
