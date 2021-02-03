@@ -1732,6 +1732,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                         free(commitmenthash[c]);
                     }
                     free(commitmenthash); commitmenthash = NULL;
+                    free(partial_sig); partial_sig = NULL;
                     return false;
                 }
             }
@@ -1748,6 +1749,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                     free(commitmenthash[c]);
                 }
                 free(commitmenthash); commitmenthash = NULL;
+                free(partial_sig); partial_sig = NULL;
                 return false;
             }
 
@@ -1776,6 +1778,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                     free(commitmenthash[c]);
                 }
                 free(commitmenthash); commitmenthash = NULL;
+                free(partial_sig); partial_sig = NULL;
                 return false;
             } else {
                 //send register info
@@ -1789,6 +1792,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                         free(commitmenthash[c]);
                     }
                     free(commitmenthash); commitmenthash = NULL;
+                    free(partial_sig); partial_sig = NULL;
                     return false;
                 } else {
                     //memory the musig in map. No build for this anymore
@@ -1802,6 +1806,7 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                         free(commitmenthash[c]);
                     }
                     free(commitmenthash); commitmenthash = NULL;
+                    free(partial_sig); partial_sig = NULL;
                 }
             }
             secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
