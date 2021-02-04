@@ -1347,11 +1347,10 @@ background: #1e2b47;
       font-size:12px;
       }
 
-      /*infinityNodes Page*/
-    MasternodeList .QLabel {
-    color: #6f80ab;
-  }
-  
+/*infinityNodes Page*/
+MasternodeList .QLabel {
+color: #6f80ab;
+}
   #setupSinovateButton {
     background: transparent;
     background-image: url(':/styles/theme2/app-icons/setup_bottom');
@@ -1359,10 +1358,27 @@ background: #1e2b47;
     background-repeat:none;
     border:none
     }
-  
     #setupSinovateButton:hover {
       border: 1px solid #74B2FE;
       }
+    #radioLILNode {
+    background-image: url(':/icons/minilogo');
+    background-repeat:none;
+    background-position: right;
+    background-size: 32px 32px;
+    }
+    #radioMIDNode {
+    background-image: url(':/icons/midlogo');
+    background-repeat:none;
+    background-position: right;
+    background-size: 32px 32px;
+    }
+    #radioBIGNode {
+    background-image: url(':/icons/biglogo');
+    background-repeat:none;
+    background-position: right;
+    background-size: 32px 32px;
+    }
 /*HelpMessage*/
 HelpMessageDialog #aboutLogo {
     background-image:  url(":/icons/about_white");

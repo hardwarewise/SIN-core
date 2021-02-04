@@ -151,7 +151,7 @@ QComboBox:hover {
 }
 QComboBox:drop-down {
     border: 0px;
-    border-left: 1px solid #686868;
+    /*border-left: 1px solid #686868;*/
     margin-left: -8px;
 }
 QComboBox:down-arrow {
@@ -163,21 +163,21 @@ QComboBox:down-arrow {
 QComboBox QAbstractItemView::item {
     border: none;
     border-radius: 0px;
-    background-color: #141414;
-    color: #ffffff;
+    background-color: #DEDDDE;
+    color: #636363;
     padding: 4px;
     padding-left: 10px;
 }
 QComboBox QAbstractItemView::item:selected {
-    background-color: #004FFF;
-    color: #ffffff;
+    background-color: #CFCFCF;
+    color: #232121;
     padding: 4px;
 }
 QComboBox QAbstractItemView{
-    background-color: #2e2e2e;
+    background-color: #DEDDDE;
     border: none;
-    border-top: 1px solid #727272;
-    border-bottom: 1px solid #727272;
+    /*border-top: 1px solid #727272;
+    border-bottom: 1px solid #727272;*/
     border-radius: 0px;
     padding: 4px;
     margin-top: 3px;
@@ -414,13 +414,13 @@ QPlainTextEdit QScrollBar::handle:vertical:disabled {
 }
 QComboBox QScrollBar:vertical {
     border-radius: 7px;
-    background: #222222;
+    background: transparent;
     width: 16px;
     padding: 5px 4px;
 }
 QComboBox QScrollBar::handle:vertical {
     border: none;
-    background: #2e2e2e;
+    background: #5e5e5e;
     border-radius: 4px;
     min-height: 35px;
 }
@@ -1226,7 +1226,7 @@ QToolBar {
     }
     QToolBar > QToolButton:hover:!checked {
       color: #ffffff;
-      background: #57B1D4;
+      background: #1e2b47;
     }
     QToolBar > QToolButton:disabled {
       color: rgba(111, 128, 171, 20%);
@@ -1296,7 +1296,24 @@ MasternodeList .QLabel {
     SendCoinsDialog QScrollArea{
         border: none;
     }
-
+    #radioLILNode {
+    background-image: url(':/icons/minilogo_dark');
+    background-repeat:none;
+    background-position: right;
+    background-size: 32px 32px;
+    }
+    #radioMIDNode {
+    background-image: url(':/icons/midlogo_dark');
+    background-repeat:none;
+    background-position: right;
+    background-size: 32px 32px;
+    }
+    #radioBIGNode {
+    background-image: url(':/icons/biglogo_dark');
+    background-repeat:none;
+    background-position: right;
+    background-size: 32px 32px;
+    }
 /*HelpMessage*/
 HelpMessageDialog #aboutLogo {
     background-image:  url(":/icons/about_white");
@@ -1333,9 +1350,9 @@ StatsPage #label,
     color: #004FFF;
 }
 
-StatsPage #label_8,
-#label_5,
-#label_7,
-#label_6 {
+StatsPage #hline1Stats,
+#hline2Stats,
+#hline3Stats,
+#hline4Stats {
     background-color: #cccccc;
 }

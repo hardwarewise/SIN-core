@@ -74,8 +74,14 @@
         <file alias="minilogo">res/icons/minilogo.svg</file>
         <file alias="midlogo">res/icons/midlogo.svg</file>
         <file alias="biglogo">res/icons/biglogo.svg</file>
+        <file alias="minilogo_dark">res/icons/minilogo-dark.svg</file>
+        <file alias="midlogo_dark">res/icons/midlogo-dark.svg</file>
+        <file alias="biglogo_dark">res/icons/biglogo-dark.svg</file>
         <file alias="about_white">res/icons/about_white.png</file>
         <file alias="about_black">res/icons/about_black.png</file>
+        <file alias="setuOk">res/icons/ok.svg</file>
+        <file alias="setupKo">res/icons/ko.svg</file>
+        <file alias="setuWait">res/icons/waitgif.gif</file>
         
     </qresource>
     <qresource prefix="/movies">

@@ -424,10 +424,7 @@ width: 200px;
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-image: url(':/icons/minilogo');
-background-repeat:none;
-background-position: right;
-background-size: 32px 32px;</string>
+              <string notr="true"/>
              </property>
              <property name="text">
               <string>MINI Node</string>
@@ -550,7 +547,7 @@ selection-background-color: #BC8F3A;;</string>
             </widget>
            </item>
            <item row="0" column="6">
-            <widget class="QPushButton" name="btnRestore">
+            <widget class="SinPushButton" name="btnRestore">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -651,10 +648,7 @@ selection-background-color: #BC8F3A;;</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-image: url(':/icons/biglogo');
-background-repeat:none;
-background-position: right;
-background-size: 32px 32px;</string>
+              <string notr="true"/>
              </property>
              <property name="text">
               <string>BIG Node</string>
@@ -769,7 +763,7 @@ background-size: 32px 32px;</string>
             </widget>
            </item>
            <item row="0" column="5">
-            <widget class="QPushButton" name="btnLogin">
+            <widget class="SinPushButton" name="btnLogin">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -806,8 +800,7 @@ background-size: 32px 32px;</string>
              </property>
              <property name="styleSheet">
               <string notr="true">font-size:14px;
-font-weight:bold;
-color: #6f80ab;
+
 </string>
              </property>
              <property name="text">
@@ -830,10 +823,7 @@ color: #6f80ab;
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-image: url(':/icons/midlogo');
-background-repeat:none;
-background-position: right;
-background-size: 32px 32px;</string>
+              <string notr="true"/>
              </property>
              <property name="text">
               <string>MID Node</string>
@@ -920,7 +910,7 @@ selection-background-color: #BC8F3A;;</string>
             <item>
              <layout class="QGridLayout" name="gridLayout_3">
               <item row="3" column="3">
-               <widget class="QPushButton" name="btnSetupReset">
+               <widget class="SinPushButton" name="btnSetupReset">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
@@ -967,7 +957,7 @@ selection-background-color: #BC8F3A;;</string>
                 <property name="maximumSize">
                  <size>
                   <width>210</width>
-                  <height>30</height>
+                  <height>16777215</height>
                  </size>
                 </property>
                 <property name="styleSheet">
@@ -1004,7 +994,7 @@ min-width: 270px;
                 <property name="maximumSize">
                  <size>
                   <width>210</width>
-                  <height>28</height>
+                  <height>16777215</height>
                  </size>
                 </property>
                 <property name="styleSheet">
@@ -1029,7 +1019,7 @@ min-width: 270px;
                </widget>
               </item>
               <item row="6" column="3">
-               <widget class="QPushButton" name="payButton">
+               <widget class="SinPushButton" name="payButton">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -1214,8 +1204,8 @@ min-width: 270px;
                 </property>
                </spacer>
               </item>
-              <item row="1" column="3" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-               <widget class="QPushButton" name="btnSetup">
+              <item row="1" column="3">
+               <widget class="SinPushButton" name="btnSetup">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
@@ -1227,8 +1217,8 @@ min-width: 270px;
                 </property>
                 <property name="minimumSize">
                  <size>
-                  <width>200</width>
-                  <height>28</height>
+                  <width>0</width>
+                  <height>0</height>
                  </size>
                 </property>
                 <property name="maximumSize">
@@ -1347,6 +1337,9 @@ min-width: 270px;
                   <property name="text">
                    <string>TextLabel</string>
                   </property>
+                  <property name="wordWrap">
+                   <bool>true</bool>
+                  </property>
                  </widget>
                 </item>
                 <item>
@@ -1358,6 +1351,9 @@ min-width: 270px;
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
+                  </property>
+                  <property name="wordWrap">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -1371,6 +1367,9 @@ min-width: 270px;
                   <property name="text">
                    <string>TextLabel</string>
                   </property>
+                  <property name="wordWrap">
+                   <bool>true</bool>
+                  </property>
                  </widget>
                 </item>
                 <item>
@@ -1383,6 +1382,9 @@ min-width: 270px;
                   <property name="text">
                    <string>TextLabel</string>
                   </property>
+                  <property name="wordWrap">
+                   <bool>true</bool>
+                  </property>
                  </widget>
                 </item>
                 <item>
@@ -1393,6 +1395,9 @@ min-width: 270px;
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
+                  </property>
+                  <property name="wordWrap">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -1405,6 +1410,9 @@ min-width: 270px;
                   <property name="text">
                    <string>TextLabel</string>
                   </property>
+                  <property name="wordWrap">
+                   <bool>true</bool>
+                  </property>
                  </widget>
                 </item>
                 <item>
@@ -1416,6 +1424,9 @@ min-width: 270px;
                   <property name="text">
                    <string>TextLabel</string>
                   </property>
+                  <property name="wordWrap">
+                   <bool>true</bool>
+                  </property>
                  </widget>
                 </item>
                 <item>
@@ -1426,6 +1437,9 @@ min-width: 270px;
                   </property>
                   <property name="text">
                    <string>TextLabel</string>
+                  </property>
+                  <property name="wordWrap">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -1643,6 +1657,13 @@ min-width: 270px;
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SinPushButton</class>
+   <extends>QPushButton</extends>
+   <header>qt/sinpushbutton.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../sin.qrc"/>
  </resources>
