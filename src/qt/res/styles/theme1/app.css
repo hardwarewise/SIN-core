@@ -92,14 +92,14 @@ NavigationBar #hLineStatus{
 Line Edit CSS
 --------------------------------------------*/
 QLineEdit{
-    border: 1px solid #5a5a5d;
-    border-radius: 12px;
-    background-color: #282828;
-    color: #bdbdbd;
+    border: 1px solid #FFFFFF;
+    border-radius: 5px;
+    background-color: #000000;
+    color: #cccccc;
     padding: 4px;
 }
 QLineEdit::hover:!read-only{
-    border: 1px solid #7e7e7e;
+    border: 1px solid #004FFF;
 }
 QLineEdit::focus:!read-only{
     border: 1px solid #7e7e7e;
@@ -130,16 +130,16 @@ QAbstractItemView#autoCompleterPopup::item:selected {
 List Viev CSS
 --------------------------------------------*/
 QListView {
-    background-color: #2e2e2e;
+    background-color: #000000;
     border: none;
 }
 /*--------------------------------------------
 Combo Box CSS
 --------------------------------------------*/
 QComboBox {
-    border: 1px solid #5a5a5d;
-    border-radius: 12px;
-    background-color: #2a2a2a;
+    border: 1px solid #FFFFFF;
+    border-radius: 5px;
+    background-color: #000000;
     color: #ffffff;
     padding: 4px;
     padding-left: 10px;
@@ -147,7 +147,7 @@ QComboBox {
     combobox-popup: 0;
 }
 QComboBox:hover {
-    border: 1px solid #7e7e7e;
+    border: 1px solid #004FFF;
 }
 QComboBox:drop-down {
     border: 0px;
@@ -162,14 +162,14 @@ QComboBox:down-arrow {
 }
 QComboBox QAbstractItemView::item {
     border: none;
-    border-radius: 10px;
-    background-color: #2e2e2e;
+    border-radius: 0px;
+    background-color: #141414;
     color: #ffffff;
     padding: 4px;
     padding-left: 10px;
 }
 QComboBox QAbstractItemView::item:selected {
-    background-color: #545454;
+    background-color: #004FFF;
     color: #ffffff;
     padding: 4px;
 }
@@ -178,7 +178,7 @@ QComboBox QAbstractItemView{
     border: none;
     border-top: 1px solid #727272;
     border-bottom: 1px solid #727272;
-    border-radius: 10px;
+    border-radius: 0px;
     padding: 4px;
     margin-top: 3px;
     margin-bottom: 3px;
@@ -268,23 +268,23 @@ Spin Box CSS
 --------------------------------------------*/
 QAbstractSpinBox {
     padding: 4px;
-    background-color: #282828;
+    background-color: #000000;
     background-position: right;
     background-repeat: no-repeat;
-    border: 1px solid #5a5a5d;
-    border-radius: 12px;
-    color: #bdbdbd;
+    border: 1px solid #FFFFFF;
+    border-radius: 5px;
+    color: #cccccc;
     padding-left: 12px;
 }
 QAbstractSpinBox:hover {
-    border: 1px solid #7e7e7e;
+    border: 1px solid #004FFF;
 }
 QAbstractSpinBox::up-button {
     border: none;
     border-left: 1px solid #686868;
     width: 22px;
     background-color: transparent;
-    border-top-right-radius: 12px;
+    border-top-right-radius: 5px;
 }
 QAbstractSpinBox::down-button {
     border: none;
@@ -292,7 +292,7 @@ QAbstractSpinBox::down-button {
     margin-top: -1px;
     width: 22px;
     background-color: transparent;
-    border-bottom-right-radius: 12px;
+    border-bottom-right-radius: 5px;
 }
 QAbstractSpinBox::up-arrow {
     image: url(":/styles/theme1/app-icons/up_arrow");
@@ -336,7 +336,7 @@ QAbstractSpinBox::down-arrow:off {
 Scroll Area CSS
 --------------------------------------------*/
 QAbstractScrollArea::corner {
-    background: #222222;
+    background: #transparent;
     border: 0px;
 }
 /*--------------------------------------------
@@ -371,7 +371,7 @@ QScrollBar:vertical {
 }
 QScrollBar::handle:vertical {
     border: none;
-    background: #2e2e2e;
+    background: #c2c2c2;
     border-radius: 4px;
     min-height: 35px;
 }
@@ -456,7 +456,7 @@ QScrollBar:horizontal {
 }
 QScrollBar::handle:horizontal {
     border: none;
-    background: #2e2e2e;
+    background: #c2c2c2;
     border-radius: 4px;
     min-width: 30px;
 }
@@ -467,14 +467,17 @@ QScrollBar::handle:horizontal:disabled {
 Table View CSS
 --------------------------------------------*/
 QHeaderView{
-    color: white;
+    color: #696869;
     background-color: transparent;
     border: none;
 }
 QHeaderView:section{
     padding: 6px 20px 6px 6px;
     border: none;
-    background-color: #2e2e2e;
+    background-color: #c2c2c2;
+}
+TransactionView QHeaderView:section{
+    margin-top: 10px;
 }
 QHeaderView::down-arrow {
     image: url(":/styles/theme1/app-icons/down_arrow");
@@ -491,9 +494,9 @@ QHeaderView::up-arrow {
     margin-bottom: 1px;
 }
 QTableView{
-    color: #C5C5C5;
-    background-color: #2e2e2e;
-    alternate-background-color: #393939;
+    color: #cccccc;
+    background-color: transparent;
+    alternate-background-color: transparent;
     border: none;
     font: normal;
     qproperty-showGrid: false;
@@ -505,7 +508,7 @@ QTableView::item{
 }
 QTableView::item:selected{
     qproperty-showGrid: false;
-    background: rgba(0, 138, 200, 40%);
+    background: #004FFF;
     color: white;
 }
 QHeaderView::disabled{
@@ -530,7 +533,7 @@ QTextEdit CSS
 QTextEdit {
     border: 1px solid #5a5a5d;
     border-radius: 12px;
-    background-color: #282828;
+    background-color: #000000;
     color: #bdbdbd;
     padding-left: 5px;
 }
@@ -550,7 +553,7 @@ QPlainTextEdit CSS
 QPlainTextEdit {
     border: 1px solid #5a5a5d;
     border-radius: 12px;
-    background-color: #282828;
+    background-color: #000000;
     color: #bdbdbd;
     padding-left: 5px;
 }
@@ -795,7 +798,8 @@ QWidget#buttonsContainer {
 }
 QWidget#buttonsContainerWhite,
 #buttonsContainerWhite_ {
-    background: #ffffff;
+    border-top: 1px solid #cccccc;
+    background: #000000;
 }
 QWidget#ReceiveRequestDialog {
     background: #000000;
@@ -1012,7 +1016,7 @@ Stake Page Widget CSS
     color: #9c9c9c;
 }
 #frameStakeInfo {
-    background-color: #2e2e2e;
+    background-color: #000000;
     border: 1px dotted #9c9c9c;
     color: #9c9c9c;
     border-radius: 4px;
@@ -1299,3 +1303,39 @@ HelpMessageDialog #aboutLogo {
     background-repeat: no-repeat;
     background-position: top center;
     }
+
+/*StatsPage*/
+StatsPage #label,
+#label_12,
+#lastPriceLabel,
+#difficultyLabel,
+#hashrateLabel,
+#heightLabel,
+#label_14,
+#label_2,
+#totalSupplyLabel,
+#feeLabel,
+#nodesLabel,
+#totalBurntLabel,
+#label_4,
+#totalLabel,
+#label_9,
+#label_10,
+#label_11,
+#bigLabel,
+#midLabel,
+#lilLabel,
+#label_3,
+#addressesLabel,
+#top10Label,
+#top50Label,
+#activeLabel{
+    color: #004FFF;
+}
+
+StatsPage #label_8,
+#label_5,
+#label_7,
+#label_6 {
+    background-color: #cccccc;
+}

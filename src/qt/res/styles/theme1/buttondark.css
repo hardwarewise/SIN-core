@@ -3,17 +3,17 @@ Button Black CSS
 --------------------------------------------*/
 QPushButton {
     color: white; 
-    background: #575757;
-    border: 1px solid #2d2d2e;
+    background: #004FFF;
+    border: 1px solid #004FFF;
     border-radius: 12px;
     padding: 6px;
 }
 QPushButton:hover{
     border: 1px solid #bababb;
-    color: #000000;
+    color: #ffffff;
 }
 QPushButton:pressed {
-    background: #7a7a7b;
+    background: #007CB3;
     border: none;
     color: #c4c4c4;
 }

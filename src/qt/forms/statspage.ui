@@ -134,7 +134,7 @@ font-size: 20px;
               </property>
               <property name="styleSheet">
                <string notr="true">font-size: 10px;
-color: #4F9FDD;</string>
+</string>
               </property>
               <property name="text">
                <string>POW DIFFICULTY</string>
@@ -168,7 +168,7 @@ color: #4F9FDD;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">font-size: 10px;
-color: #4F9FDD;</string>
+</string>
               </property>
               <property name="text">
                <string>NETWORK HASHRATE</string>
@@ -202,7 +202,7 @@ color: #4F9FDD;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">font-size: 10px;
-color: #4F9FDD;</string>
+</string>
               </property>
               <property name="text">
                <string>BLOCK HEIGHT</string>
@@ -225,7 +225,7 @@ color: #4F9FDD;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">font-size: 20px;
-color: #4F9FDD;</string>
+</string>
               </property>
               <property name="text">
                <string>BLOCKCHAIN STATS</string>
@@ -282,7 +282,6 @@ font-size: 20px;
               </property>
               <property name="styleSheet">
                <string notr="true">font-size: 10px;
-color: #4F9FDD;
 margin-bottom: 20px;</string>
               </property>
               <property name="text">
@@ -356,7 +355,6 @@ font-size: 20px;
              <widget class="QLabel" name="label_12">
               <property name="styleSheet">
                <string notr="true">font-size: 10px;
-color: #4F9FDD;
 margin-bottom: 20px;</string>
               </property>
               <property name="text">
@@ -403,7 +401,7 @@ font-size: 20px;
              <widget class="QLabel" name="label_14">
               <property name="styleSheet">
                <string notr="true">font-size: 10px;
-color: #4F9FDD;</string>
+</string>
               </property>
               <property name="text">
                <string>BLOCK REWARD</string>
@@ -426,7 +424,7 @@ font-size: 20px;
              </widget>
             </item>
             <item row="10" column="0" colspan="2">
-             <widget class="QLabel" name="label_5">
+             <widget class="QLabel" name="hline1Stats">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -446,11 +444,10 @@ font-size: 20px;
                </size>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color: #6F809A;
-</string>
+               <string notr="true"/>
               </property>
               <property name="text">
-               <string>TextLabel</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -467,17 +464,17 @@ font-size: 20px;
             <property name="verticalSpacing">
              <number>0</number>
             </property>
-            <item row="2" column="0">
-             <widget class="QLabel" name="totalValueLabel">
+            <item row="18" column="2">
+             <widget class="QLabel" name="lilLabel">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
               <property name="minimumSize">
                <size>
-                <width>30</width>
+                <width>400</width>
                 <height>0</height>
                </size>
               </property>
@@ -487,40 +484,22 @@ font-size: 20px;
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">margin-top: 25px;
-font-size: 20px;
+               <string notr="true">font-size: 10px;
 </string>
               </property>
               <property name="text">
-               <string>0</string>
+               <string>MINI</string>
+              </property>
+              <property name="margin">
+               <number>0</number>
+              </property>
+              <property name="indent">
+               <number>4</number>
               </property>
              </widget>
             </item>
-            <item row="0" column="0" colspan="4">
-             <widget class="QLabel" name="label_4">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>32</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>22</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">font-size: 20px;
-color: #4F9FDD;</string>
-              </property>
-              <property name="text">
-               <string>INFINITY NODES STATS</string>
-              </property>
-             </widget>
-            </item>
-            <item row="18" column="1">
-             <widget class="QLabel" name="midLabel">
+            <item row="18" column="0" alignment="Qt::AlignTop">
+             <widget class="QLabel" name="bigLabel">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -540,10 +519,44 @@ color: #4F9FDD;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">font-size: 10px;
-color: #4F9FDD;</string>
+</string>
               </property>
               <property name="text">
-               <string>MID</string>
+               <string>BIG</string>
+              </property>
+              <property name="margin">
+               <number>0</number>
+              </property>
+              <property name="indent">
+               <number>4</number>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" colspan="3">
+             <widget class="QLabel" name="totalLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>-1</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font-size: 10px;
+margin-bottom: 20px;</string>
+              </property>
+              <property name="text">
+               <string>TOTAL NODES</string>
               </property>
               <property name="margin">
                <number>0</number>
@@ -585,8 +598,128 @@ font-size: 20px;
               </property>
              </widget>
             </item>
-            <item row="5" column="1">
-             <widget class="QLabel" name="midRoiLabel">
+            <item row="6" column="1">
+             <widget class="QLabel" name="label_10">
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font-size: 10px;
+</string>
+              </property>
+              <property name="text">
+               <string>ROI</string>
+              </property>
+              <property name="indent">
+               <number>4</number>
+              </property>
+             </widget>
+            </item>
+            <item row="17" column="1">
+             <widget class="QLabel" name="midValueLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>-1</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">margin-top: 25px;
+font-size: 20px;
+</string>
+              </property>
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="label_9">
+              <property name="styleSheet">
+               <string notr="true">font-size: 10px;
+</string>
+              </property>
+              <property name="text">
+               <string>ROI</string>
+              </property>
+              <property name="indent">
+               <number>4</number>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="totalValueLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>30</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>-1</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">margin-top: 25px;
+font-size: 20px;
+</string>
+              </property>
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0" colspan="3">
+             <widget class="QLabel" name="hline2Stats">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>1</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>1</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="bigRoiLabel">
               <property name="minimumSize">
                <size>
                 <width>30</width>
@@ -627,108 +760,6 @@ font-size: 20px;
               </property>
              </widget>
             </item>
-            <item row="18" column="0" alignment="Qt::AlignTop">
-             <widget class="QLabel" name="bigLabel">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>50</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>-1</pointsize>
-               </font>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">font-size: 10px;
-color: #4F9FDD;</string>
-              </property>
-              <property name="text">
-               <string>BIG</string>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
-              <property name="indent">
-               <number>4</number>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="1">
-             <widget class="QLabel" name="label_10">
-              <property name="minimumSize">
-               <size>
-                <width>50</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">font-size: 10px;
-color: #4F9FDD;</string>
-              </property>
-              <property name="text">
-               <string>ROI</string>
-              </property>
-              <property name="indent">
-               <number>4</number>
-              </property>
-             </widget>
-            </item>
-            <item row="18" column="2">
-             <widget class="QLabel" name="lilLabel">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>400</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>-1</pointsize>
-               </font>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">font-size: 10px;
-color: #4F9FDD;</string>
-              </property>
-              <property name="text">
-               <string>MINI</string>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
-              <property name="indent">
-               <number>4</number>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="label_9">
-              <property name="styleSheet">
-               <string notr="true">font-size: 10px;
-color: #4F9FDD;</string>
-              </property>
-              <property name="text">
-               <string>ROI</string>
-              </property>
-              <property name="indent">
-               <number>4</number>
-              </property>
-             </widget>
-            </item>
             <item row="6" column="2">
              <widget class="QLabel" name="label_11">
               <property name="minimumSize">
@@ -739,7 +770,7 @@ color: #4F9FDD;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">font-size: 10px;
-color: #4F9FDD;</string>
+</string>
               </property>
               <property name="text">
                <string>ROI</string>
@@ -749,8 +780,42 @@ color: #4F9FDD;</string>
               </property>
              </widget>
             </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="bigRoiLabel">
+            <item row="18" column="1">
+             <widget class="QLabel" name="midLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>-1</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font-size: 10px;
+</string>
+              </property>
+              <property name="text">
+               <string>MID</string>
+              </property>
+              <property name="margin">
+               <number>0</number>
+              </property>
+              <property name="indent">
+               <number>4</number>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLabel" name="midRoiLabel">
               <property name="minimumSize">
                <size>
                 <width>30</width>
@@ -799,95 +864,26 @@ font-size: 20px;
               </property>
              </widget>
             </item>
-            <item row="17" column="1">
-             <widget class="QLabel" name="midValueLabel">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>50</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>-1</pointsize>
-               </font>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">margin-top: 25px;
-font-size: 20px;
-</string>
-              </property>
-              <property name="text">
-               <string>0</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0" colspan="3">
-             <widget class="QLabel" name="label_7">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
+            <item row="0" column="0" colspan="4">
+             <widget class="QLabel" name="label_4">
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>1</height>
+                <height>32</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
                 <width>16777215</width>
-                <height>1</height>
+                <height>16777215</height>
                </size>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color: #6F809A;</string>
+               <string notr="true">font-size: 20px;
+</string>
               </property>
               <property name="text">
-               <string>TextLabel</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0" colspan="3">
-             <widget class="QLabel" name="totalLabel">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>50</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>-1</pointsize>
-               </font>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">font-size: 10px;
-color: #4F9FDD;
-margin-bottom: 20px;</string>
-              </property>
-              <property name="text">
-               <string>TOTAL NODES</string>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
-              <property name="indent">
-               <number>4</number>
+               <string>INFINITY NODES STATS</string>
               </property>
              </widget>
             </item>
@@ -1009,7 +1005,6 @@ font-size: 20px;
               </property>
               <property name="styleSheet">
                <string notr="true">font-size: 10px;
-color: #4F9FDD;
 margin-bottom: 20px;</string>
               </property>
               <property name="text">
@@ -1044,7 +1039,7 @@ margin-bottom: 20px;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">font-size: 10px;
-color: #4F9FDD;</string>
+</string>
               </property>
               <property name="text">
                <string>BURNT FEES</string>
@@ -1078,7 +1073,7 @@ color: #4F9FDD;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">font-size: 10px;
-color: #4F9FDD;</string>
+</string>
               </property>
               <property name="text">
                <string>TOTAL BURNT</string>
@@ -1095,7 +1090,7 @@ color: #4F9FDD;</string>
              <widget class="QLabel" name="label_2">
               <property name="styleSheet">
                <string notr="true">font-size: 20px;
-color: #4F9FDD;</string>
+</string>
               </property>
               <property name="text">
                <string>EMISSION STATS</string>
@@ -1182,7 +1177,7 @@ font-size: 20px;
               </property>
               <property name="styleSheet">
                <string notr="true">font-size: 10px;
-color: #4F9FDD;</string>
+</string>
               </property>
               <property name="text">
                <string>BURNT NODES</string>
@@ -1196,7 +1191,7 @@ color: #4F9FDD;</string>
              </widget>
             </item>
             <item row="5" column="0" colspan="2">
-             <widget class="QLabel" name="label_6">
+             <widget class="QLabel" name="hline3Stats">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -1216,10 +1211,10 @@ color: #4F9FDD;</string>
                </size>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color: #6F809A;</string>
+               <string notr="true"/>
               </property>
               <property name="text">
-               <string>TextLabel</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -1257,7 +1252,6 @@ color: #4F9FDD;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">font-size: 10px;
-color: #4F9FDD;
 margin-bottom: 20px;</string>
               </property>
               <property name="text">
@@ -1304,7 +1298,7 @@ font-size: 20px;
               </property>
               <property name="styleSheet">
                <string notr="true">font-size: 10px;
-color: #4F9FDD;</string>
+</string>
               </property>
               <property name="text">
                <string>TOP 50</string>
@@ -1367,7 +1361,7 @@ font-size: 20px;
               </property>
               <property name="styleSheet">
                <string notr="true">font-size: 10px;
-color: #4F9FDD;</string>
+</string>
               </property>
               <property name="text">
                <string>TOP 10</string>
@@ -1413,7 +1407,7 @@ font-size: 20px;
              <widget class="QLabel" name="label_3">
               <property name="styleSheet">
                <string notr="true">font-size: 20px;
-color: #4F9FDD;</string>
+</string>
               </property>
               <property name="text">
                <string>ADDRESSES STATS</string>
@@ -1441,7 +1435,7 @@ color: #4F9FDD;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">font-size: 10px;
-color: #4F9FDD;</string>
+</string>
               </property>
               <property name="text">
                <string>ACTIVE ADDRESSES</string>
@@ -1484,7 +1478,7 @@ font-size: 20px;
              </widget>
             </item>
             <item row="3" column="0" colspan="2">
-             <widget class="QLabel" name="label_8">
+             <widget class="QLabel" name="hline4Stats">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -1504,10 +1498,10 @@ font-size: 20px;
                </size>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color: #6F809A;</string>
+               <string notr="true"/>
               </property>
               <property name="text">
-               <string>TextLabel</string>
+               <string/>
               </property>
              </widget>
             </item>

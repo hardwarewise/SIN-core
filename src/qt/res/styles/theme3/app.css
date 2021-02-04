@@ -469,6 +469,9 @@ QHeaderView:section{
     border: none;
     background-color: #e4ebf5;
 }
+TransactionView QHeaderView:section{
+    margin-top: 10px;
+}
 QHeaderView::down-arrow {
     image: url(":/styles/theme2/app-icons/down_arrow");
     width: 6px;
@@ -1328,3 +1331,37 @@ HelpMessageDialog #aboutLogo {
     background-repeat: no-repeat;
     background-position: top center;
     }
+ /*StatsPage*/
+ StatsPage #label,
+ #label_12,
+ #lastPriceLabel,
+ #difficultyLabel,
+ #hashrateLabel,
+ #heightLabel,
+ #label_14,
+ #label_2,
+ #totalSupplyLabel,
+ #feeLabel,
+ #nodesLabel,
+ #totalBurntLabel,
+ #label_4,
+ #totalLabel,
+ #label_9,
+ #label_10,
+ #label_11,
+ #bigLabel,
+ #midLabel,
+ #lilLabel,
+ #label_3,
+ #addressesLabel,
+ #top10Label,
+ #top50Label,
+ #activeLabel{
+     color: #4F9FDD;
+ }
+StatsPage #hline1Stats,
+#hline2Stats,
+#hline3Stats,
+#hline4Stats {
+    background-color: #6f80ab;
+}

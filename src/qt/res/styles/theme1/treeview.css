@@ -3,13 +3,13 @@ Tree view CSS
 --------------------------------------------*/
 QTreeWidget {
 	background-color:rgba(0,0,0,0);
-	selection-background-color: #1c536c;
+	selection-background-color: #004FFF;
 	show-decoration-selected:0;
 }
 QTreeView{
     color: #C5C5C5;
-    background-color: #2e2e2e;
-    alternate-background-color: #393939;
+    background-color: transparent;
+    alternate-background-color: transparent;
     border: none;
     font: normal;
     qproperty-showGrid: false;
@@ -21,7 +21,7 @@ QTreeView::item{
 }
 QTreeView::item:selected{
     qproperty-showGrid: false;
-    background: #1c536c;
+    background: #004FFF;
     color: white;
 }
 QTreeView::disabled{
@@ -31,13 +31,13 @@ QTreeView::disabled{
 Scroll bar dark CSS
 --------------------------------------------*/
 QScrollBar:vertical {
-    background: #222222;
+    background: transparent;
     width: 16px;
     padding: 5px 4px;
 }
 QScrollBar::handle:vertical {
     border: none;
-    background: #2e2e2e;
+    background: #c2c2c2;
     border-radius: 4px;
     min-height: 35px;
 }
@@ -46,13 +46,13 @@ QScrollBar::handle:vertical:disabled {
 }
 
 QScrollBar:horizontal {
-    background: #222222;
+    background: transparent;
     height: 16px;
     padding: 4px 5px;
 }
 QScrollBar::handle:horizontal {
     border: none;
-    background: #2e2e2e;
+    background: #c2c2c2;
     border-radius: 4px;
     min-width: 35px;
 }

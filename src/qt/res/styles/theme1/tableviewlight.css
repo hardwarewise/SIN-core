@@ -2,14 +2,14 @@
 Table View light CSS
 --------------------------------------------*/
 QHeaderView{
-    color: #5a5a5d;
-    background-color: #e1e1e1;
+    color: #696869;
+    background-color: transparent;
     border: none;
 }
 QHeaderView:section{
     padding: 6px 20px 6px 6px;
     border: none;
-    background-color: transparent;
+    background-color: #c2c2c2;
 }
 QHeaderView::down-arrow {
     image: url(":/styles/theme1/app-icons/down_arrow");
@@ -26,9 +26,10 @@ QHeaderView::up-arrow {
     margin-bottom: 1px;
 }
 QTableView{
-    background-color: #f3f3f3;
-    alternate-background-color: #ededed;
-    border: 1px solid #919192;
+    color: #cccccc;
+    background-color: transparent;
+    alternate-background-color: transparent;
+    border: none;
     font: normal;
     qproperty-showGrid: false;
     qproperty-alternatingRowColors: true;
@@ -36,12 +37,11 @@ QTableView{
 }
 QTableView::item{
     border: none;
-    color: #989898;
 }
 QTableView::item:selected{
     qproperty-showGrid: false;
-    background-color: #ffffff;
-    color: #5a5a5d;
+    background: #004FFF;
+    color: white;
 }
 
 /*--------------------------------------------
@@ -49,14 +49,14 @@ Scroll Bar Vertical CSS
 --------------------------------------------*/
 QScrollBar:vertical {
     border-radius: 0px;
-    border-left: 1px solid #6a6a6d;
-    background: #747474;
+    /*border-left: 1px solid #6a6a6d;*/
+    background: transparent;
     width: 19px;
     padding: 10px 4px;
 }
 QScrollBar::handle:vertical {
     border: 1px solid #646464;
-    background: #4c4c4c;
+    background: #c2c2c2;
     border-radius: 5px;
     min-height: 30px;
 }
@@ -68,14 +68,14 @@ Scroll Bar Horizontal CSS
 --------------------------------------------*/
 QScrollBar:horizontal {
     border-radius: 0px;
-    border-left: 1px solid #6a6a6d;
-    background: #747474;
+    /*border-left: 1px solid #6a6a6d;*/
+    background: transparent;
     height: 19px;
     padding: 4px 10px;
 }
 QScrollBar::handle:horizontal {
     border: 1px solid #646464;
-    background: #4c4c4c;
+    background: #c2c2c2;
     border-radius: 5px;
     min-height: 30px;
 }
@@ -83,6 +83,6 @@ QScrollBar::handle:horizontal:disabled {
     background: rgba(76, 76, 76, 40%);
 }
 QAbstractScrollArea::corner {
-    background: #747474;
+    background: transparent;
     border: 0px;
 }
