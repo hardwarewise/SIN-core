@@ -656,44 +656,32 @@ void SINGUI::createToolBars()
     	mainIcon->setPixmap(QPixmap(":/styles/theme2/app-icons/nav-logo-sin"));
     	mainIcon->setAlignment(Qt::AlignCenter);
     	mainIcon->show();
-    	mainIcon->setStyleSheet("QLabel { margin-top: 10px; margin-bottom: 10px; }");
-    	
-        QWidget* empty3 = new QWidget();
-		empty3->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-		toolbar->addWidget(empty3); //1
-        
+    	mainIcon->setStyleSheet("QLabel { margin-top: 30px; margin-bottom: 10px; }");
+
         mainBrand = new QLabel (this);
     	mainBrand->setText("SINOVATE");
     	mainBrand->setAlignment(Qt::AlignCenter);
     	mainBrand->show();
-    	mainBrand->setStyleSheet("QLabel { color:#F2F2F2; font-size:16px; font-weight:normal;}");
+    	mainBrand->setStyleSheet("QLabel { color:#F2F2F2; font-size:16px; font-weight:normal; margin-bottom: 30px;}");
     	
         toolbar->addWidget(mainIcon);  //2
         toolbar->addWidget(mainBrand); //3
-              
-        QWidget* empty2 = new QWidget();
-		empty2->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-		toolbar->addWidget(empty2); //4
         toolbar->addAction(homeAction); //5
         toolbar->addAction(overviewAction); //6  
         toolbar->addAction(stakePageAction); //7
-        
         // Dash
         QSettings settings;
         if (settings.value("fShowMasternodesTab").toBool())
         {
             toolbar->addAction(masternodeAction); //8
         }
-
         //InstaSwap
         //toolbar->addAction(instaswapAction);
     	//
-
         // StatsPage
         toolbar->addAction(statsPageAction); //9
         //
         toolbar->addAction(historyAction); //10
-
 
         homeAction->setChecked(true);
 
