@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>776</width>
-    <height>410</height>
+    <height>418</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1">
@@ -38,10 +38,10 @@
         <item row="8" column="2">
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QPushButton" name="receiveButton">
+           <widget class="SinPushButton" name="receiveButton">
             <property name="minimumSize">
              <size>
-              <width>150</width>
+              <width>140</width>
               <height>0</height>
              </size>
             </property>
@@ -49,18 +49,24 @@
              <string>&amp;Request payment</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../sin.qrc">
               <normaloff>:/icons/receiving_addresses</normaloff>:/icons/receiving_addresses</iconset>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="clearButton">
+           <widget class="SinPushButton" name="clearButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
             </property>
             <property name="toolTip">
              <string>Clear all fields of the form.</string>
@@ -69,7 +75,7 @@
              <string>Clear</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../sin.qrc">
               <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
             </property>
             <property name="autoDefault">
@@ -94,6 +100,11 @@
         </item>
         <item row="0" column="0" colspan="3">
          <widget class="QLabel" name="label_4">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Receive SIN Coins</string>
           </property>
@@ -284,10 +295,14 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="leftMargin">
+       <number>22</number>
+      </property>
       <item>
        <widget class="QLabel" name="label_6">
         <property name="font">
          <font>
+          <pointsize>10</pointsize>
           <weight>50</weight>
           <bold>false</bold>
          </font>
@@ -313,9 +328,15 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QPushButton" name="showRequestButton">
+         <widget class="SinPushButton" name="showRequestButton">
           <property name="enabled">
            <bool>false</bool>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>90</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="toolTip">
            <string>Show the selected request (does the same as double clicking an entry)</string>
@@ -324,7 +345,7 @@
            <string>Show</string>
           </property>
           <property name="icon">
-           <iconset>
+           <iconset resource="../sin.qrc">
             <normaloff>:/icons/edit</normaloff>:/icons/edit</iconset>
           </property>
           <property name="autoDefault">
@@ -333,9 +354,15 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="removeRequestButton">
+         <widget class="SinPushButton" name="removeRequestButton">
           <property name="enabled">
            <bool>false</bool>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>90</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="toolTip">
            <string>Remove the selected entries from the list</string>
@@ -344,7 +371,7 @@
            <string>Remove</string>
           </property>
           <property name="icon">
-           <iconset>
+           <iconset resource="../sin.qrc">
             <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
           </property>
           <property name="autoDefault">
@@ -373,6 +400,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>SinPushButton</class>
+   <extends>QPushButton</extends>
+   <header>qt/sinpushbutton.h</header>
+  </customwidget>
   <customwidget>
    <class>SINAmountField</class>
    <extends>QLineEdit</extends>

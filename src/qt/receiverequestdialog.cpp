@@ -9,6 +9,7 @@
 #include <qt/guiconstants.h>
 #include <qt/guiutil.h>
 #include <qt/optionsmodel.h>
+#include <qt/styleSheet.h>
 
 #include <QClipboard>
 #include <QDesktopServices>
@@ -137,18 +138,18 @@ void ReceiveRequestDialog::update()
     ui->btnSaveAs->setEnabled(false);
     QString html;
     html += "<html><font face='verdana, arial, helvetica, sans-serif'>";
-    html += "<h1 style='font-weight:normal; text-align:center;user-select:none;-webkit-user-select: none;'>" + tr("Payment information") + "</h1><br>";
-    html += "<b>"+tr("URI")+"</b>: ";
-    html += "<a style=\"color:#2E3191;\" href=\"" + uri + "\">" + GUIUtil::HtmlEscape(uri) + "</a><br><br>";
-    html += "<b>"+tr("Address")+"</b>: " + GUIUtil::HtmlEscape(info.address) + "<br>";
+    html += "<style>div {text-align: center;}</style>";
+    html += "<div><b>"+tr("URI")+"</b>: ";
+    html += "<a style=\"color:#2d9ad0;\" href=\"" + uri + "\">" + GUIUtil::HtmlEscape(uri) + "</a><br><br>";
+    html += "<b>"+tr("Address")+"</b>: " + GUIUtil::HtmlEscape(info.address) + "<br></div>";
     if(info.amount)
-        html += "<b>"+tr("Amount")+"</b>: " + BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), info.amount) + "<br>";
+        html += "<div><b>"+tr("Amount")+"</b>: " + BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), info.amount) + "<br></div>";
     if(!info.label.isEmpty())
-        html += "<b>"+tr("Label")+"</b>: " + GUIUtil::HtmlEscape(info.label) + "<br>";
+        html += "<div><b>"+tr("Label")+"</b>: " + GUIUtil::HtmlEscape(info.label) + "<br></div>";
     if(!info.message.isEmpty())
-        html += "<b>"+tr("Message")+"</b>: " + GUIUtil::HtmlEscape(info.message) + "<br>";
+        html += "<div><b>"+tr("Message")+"</b>: " + GUIUtil::HtmlEscape(info.message) + "<br></div>";
     if(model->isMultiwallet()) {
-        html += "<b>"+tr("Wallet")+"</b>: " + GUIUtil::HtmlEscape(model->getWalletName()) + "<br>";
+        html += "<div><b>"+tr("Wallet")+"</b>: " + GUIUtil::HtmlEscape(model->getWalletName()) + "<br></div>";
     }
     //Hide FlashSend request
     //html += "<b>"+tr("InstantSend")+"</b>: " + (info.fUseInstantSend ? tr("Yes") : tr("No")) + "<br>";
@@ -199,6 +200,7 @@ void ReceiveRequestDialog::update()
             painter.drawText(paddedRect, Qt::AlignBottom|Qt::AlignCenter, info.address);
             painter.end();
 
+            ui->lblQRCode->setScaledContents(true);
             ui->lblQRCode->setPixmap(QPixmap::fromImage(qrAddrImage));
             ui->btnSaveAs->setEnabled(true);
         }

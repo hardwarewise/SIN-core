@@ -20,7 +20,7 @@ StatsPage::StatsPage(const PlatformStyle* platformStyle, QWidget *parent) :
 
  	m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(getStatistics()));
-    m_timer->start(30000);
+    m_timer->start(311000);
     connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onResult(QNetworkReply*)));
     getStatistics();
 }
@@ -55,10 +55,10 @@ void StatsPage::onResult(QNetworkReply* reply)
 
         QLocale l = QLocale(QLocale::English);
         // Set NETWORK strings
-        QString heightValue(tr("[E] %1 / [D] %2").arg(dataObject.value("explorerHeight").toVariant().toString(), dataObject.value("blockcount").toVariant().toString(), dataObject.value("poolHeight").toVariant().toString()));
-        QString knownHashrateString = QString::number(dataObject.value("known_hashrate").toDouble()/1000000000, 'f', 2);
-        QString hashrateString = knownHashrateString + "/" + dataObject.value("hashrate").toVariant().toString();
-        m_ui->hashrateValueLabel->setText(hashrateString);
+        QString heightValue(dataObject.value("blockcount").toVariant().toString());
+        QString knownHashrateString = QString::number(dataObject.value("known_hashrate").toDouble()/1000000, 'f', 2);
+        QString hashrateString = knownHashrateString;
+        m_ui->hashrateValueLabel->setText(hashrateString +" MH/s");
         m_ui->difficultyValueLabel->setText(dataObject.value("difficulty").toVariant().toString());
         m_ui->lastPriceValueLabel->setText(QString::number(dataObject.value("lastPrice").toDouble(), 'f', 8) + QString(" BTC"));
         m_ui->heightValueLabel->setText(heightValue);
@@ -77,10 +77,11 @@ void StatsPage::onResult(QNetworkReply* reply)
         int feeNumber = dataObject.value("burnFee").toDouble() - dataObject.value("burnNode").toDouble();
         int burntNumber = dataObject.value("burnFee").toDouble();
 
-        m_ui->feeValueLabel->setText(l.toString(feeNumber));
-        m_ui->nodesValueLabel->setText(l.toString(dataObject.value("burnNode").toInt()));
-        m_ui->totalBurntValueLabel->setText(l.toString(burntNumber));
-        m_ui->totalSupplyValueLabel->setText(l.toString(supplyNumber));
+        m_ui->feeValueLabel->setText(l.toString(feeNumber)+ " SIN");
+        m_ui->nodesValueLabel->setText(l.toString(dataObject.value("burnNode").toInt())+ " SIN");
+        m_ui->totalBurntValueLabel->setText(l.toString(burntNumber)+ " SIN");
+        m_ui->totalSupplyValueLabel->setText(l.toString(supplyNumber)+ " SIN");
+        m_ui->circulationSupplyValueLabel->setText(l.toString(supplyNumber)+ " SIN");
 
         // Set INFINITY NODE STATS strings
         int bigRoiDays = 1000000/((720/dataObject.value("inf_online_big").toDouble())*1752);
@@ -100,15 +101,19 @@ void StatsPage::onResult(QNetworkReply* reply)
         QString bigROIString = "ROI: " + QString::number(bigRoiDays) + " days" ;
         QString midROIString = "ROI: " + QString::number(midRoiDays) + " days";
         QString lilROIString = "ROI: " + QString::number(lilRoiDays) + " days";
-        QString totalNodesString = QString::number(dataObject.value("inf_online_big").toInt() + dataObject.value("inf_online_mid").toInt() + dataObject.value("inf_online_lil").toInt()) + " nodes";
+        QString totalNodesString = QString::number(dataObject.value("inf_online_big").toInt() + dataObject.value("inf_online_mid").toInt() + dataObject.value("inf_online_lil").toInt());
     
-        QString bigString = dataObject.value("inf_online_big").toVariant().toString() + "/" + bigROIString + "/" + bigROIStringPercent + " %";
-        QString midString = dataObject.value("inf_online_mid").toVariant().toString() + "/" + midROIString + "/" + midROIStringPercent + " %";
-        QString lilString = dataObject.value("inf_online_lil").toVariant().toString() + "/"  + lilROIString + "/" + lilROIStringPercent + " %";
+        QString bigString = dataObject.value("inf_online_big").toVariant().toString();
+        QString midString = dataObject.value("inf_online_mid").toVariant().toString();
+        QString lilString = dataObject.value("inf_online_lil").toVariant().toString();
         m_ui->bigValueLabel->setText(bigString);
         m_ui->midValueLabel->setText(midString);
         m_ui->lilValueLabel->setText(lilString);
         m_ui->totalValueLabel->setText(totalNodesString);
+        m_ui->bigRoiLabel->setText(bigROIStringPercent + "%");
+        m_ui->midRoiLabel->setText(midROIStringPercent + "%");
+        m_ui->miniRoiLabel->setText(lilROIStringPercent + "%");
+
     }
     else
     {

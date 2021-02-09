@@ -20,6 +20,7 @@
 #include <qt/splashscreen.h>
 #include <qt/utilitydialog.h>
 #include <qt/winshutdownmonitor.h>
+#include <qt/styleSheet.h>
 
 #ifdef ENABLE_WALLET
 #include <qt/paymentserver.h>
@@ -226,7 +227,7 @@ Q_SIGNALS:
     void requestedInitialize();
     void requestedShutdown();
     void stopThread();
-    void splashFinished(QWidget *window);
+    void splashFinished();
 
 private:
     QThread *coreThread;
@@ -366,10 +367,10 @@ void BitcoinApplication::createSplashScreen(const NetworkStyle *networkStyle)
 {
     SplashScreen *splash = new SplashScreen(m_node, 0, networkStyle);
     // We don't hold a direct pointer to the splash screen after creation, but the splash
-    // screen will take care of deleting itself when slotFinish happens.
+    // screen will take care of deleting itself when finish() happens.
     splash->show();
-    connect(this, SIGNAL(splashFinished(QWidget*)), splash, SLOT(slotFinish(QWidget*)));
-    connect(this, SIGNAL(requestedShutdown()), splash, SLOT(close()));
+    connect(this, &BitcoinApplication::splashFinished, splash, &SplashScreen::finish);
+    connect(this, &BitcoinApplication::requestedShutdown, splash, &QWidget::close);
 }
 
 void BitcoinApplication::startThread()
@@ -503,9 +504,9 @@ void BitcoinApplication::initializeResult(bool success)
         }
         else
         {
-            window->show();
+             window->show();
         }
-        Q_EMIT splashFinished(window);
+         Q_EMIT splashFinished();
 
 #ifdef ENABLE_WALLET
         // Now that initialization/startup is done, process any command-line
@@ -520,7 +521,7 @@ void BitcoinApplication::initializeResult(bool success)
 #endif
         pollShutdownTimer->start(200);
     } else {
-        Q_EMIT splashFinished(window); // Make sure splash screen doesn't stick around during shutdown
+        Q_EMIT splashFinished(); // Make sure splash screen doesn't stick around during shutdown
         quit(); // Exit first main loop invocation
     }
 }
@@ -604,10 +605,7 @@ int main(int argc, char *argv[])
             QObject::tr("Error parsing command line arguments: %1.").arg(QString::fromStdString(error)));
         return EXIT_FAILURE;
     }
-
-    // Now that the QApplication is setup and we have parsed our parameters, we can set the platform style
-    app.setupPlatformStyle();
-
+    
     /// 3. Application identification
     // must be set before OptionsModel is initialized or translations are loaded,
     // as it is used to locate QSettings
@@ -670,6 +668,8 @@ int main(int argc, char *argv[])
     assert(!networkStyle.isNull());
     // Allow for separate UI settings for testnets
     QApplication::setApplicationName(networkStyle->getAppName());
+    // Now that the QApplication is setup and we have parsed our parameters, we can set the platform style
+    app.setupPlatformStyle();
     // Re-initialize translations after changing application name (language in network-specific settings can be different)
     initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
 
@@ -721,6 +721,7 @@ int main(int argc, char *argv[])
     int rv = EXIT_SUCCESS;
     try
     {
+        SetObjectStyleSheet(&app, StyleSheetNames::App);
         app.createWindow(networkStyle.data());
         // Perform base initialization before spinning up initialization/shutdown thread
         // This is acceptable because this function only contains steps that are quick to execute,

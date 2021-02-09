@@ -16,6 +16,8 @@
 #include <qt/transactionrecord.h>
 #include <qt/transactiontablemodel.h>
 #include <qt/walletmodel.h>
+#include <qt/walletmodel.h>
+#include <qt/styleSheet.h>
 
 #include <ui_interface.h>
 
@@ -48,18 +50,18 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
     hlayout->setContentsMargins(0,0,0,0);
 
     if (platformStyle->getUseExtraSpacing()) {
-        hlayout->setSpacing(5);
+        hlayout->setSpacing(7);
         hlayout->addSpacing(26);
     } else {
-        hlayout->setSpacing(0);
+        hlayout->setSpacing(6);
         hlayout->addSpacing(23);
     }
 
     watchOnlyWidget = new QComboBox(this);
     watchOnlyWidget->setFixedWidth(24);
     watchOnlyWidget->addItem("", TransactionFilterProxy::WatchOnlyFilter_All);
-    watchOnlyWidget->addItem(platformStyle->SingleColorIcon(":/icons/eye_plus"), "", TransactionFilterProxy::WatchOnlyFilter_Yes);
-    watchOnlyWidget->addItem(platformStyle->SingleColorIcon(":/icons/eye_minus"), "", TransactionFilterProxy::WatchOnlyFilter_No);
+    watchOnlyWidget->addItem(platformStyle->TableColorIcon(":/icons/eye_plus", PlatformStyle::Normal), "", TransactionFilterProxy::WatchOnlyFilter_Yes);
+    watchOnlyWidget->addItem(platformStyle->TableColorIcon(":/icons/eye_minus", PlatformStyle::Normal), "", TransactionFilterProxy::WatchOnlyFilter_No);
     hlayout->addWidget(watchOnlyWidget);
 
     dateWidget = new QComboBox(this);

@@ -22,15 +22,16 @@ static const bool DEFAULT_SPLASHSCREEN = true;
 /* Transaction list -- unconfirmed transaction */
 #define COLOR_UNCONFIRMED QColor(128, 128, 128)
 /* Transaction list -- negative amount */
-#define COLOR_NEGATIVE QColor(188, 143, 58)
+#define COLOR_NEGATIVE QColor(255, 255, 255)
 /* Transaction list -- bare address (without label) */
-#define COLOR_BAREADDRESS QColor(0, 0, 0)
+#define COLOR_BAREADDRESS QColor(140, 140, 140)
 /* Transaction list -- TX status decoration - open until date */
 #define COLOR_TX_STATUS_OPENUNTILDATE QColor(64, 64, 255)
 /* Transaction list -- TX status decoration - danger, tx needs attention */
 #define COLOR_TX_STATUS_DANGER QColor(200, 100, 100)
 /* Transaction list -- TX status decoration - default color */
 #define COLOR_BLACK QColor(0, 0, 0)
+
 
 /* Tooltips longer than this (in characters) are converted into rich text,
    so that they can be word-wrapped.
@@ -51,5 +52,9 @@ static const int MAX_URI_LENGTH = 255;
 #define QAPP_APP_NAME_DEFAULT "SIN-Qt"
 #define QAPP_APP_NAME_TESTNET "SIN-Qt-testnet"
 #define QAPP_APP_NAME_REGTEST "SIN-Qt-regtest"
+
+/* Mainnet SINOVATE explorer uri */
+#define SINOVATE_EXPLORER_MAINNET "<a style= color:#2d9ad0; href='https://explorer.sinovate.io/tx/"
+#define SINOVATE_EXPLORER_TESTNET "<a style= color:#2d9ad0; href='https://testnet.sinovate.io/tx/"
 
 #endif // BITCOIN_QT_GUICONSTANTS_H

@@ -7,17 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>780</width>
-    <height>500</height>
+    <height>400</height>
    </rect>
   </property>
   <property name="maximumSize">
    <size>
     <width>16777215</width>
-    <height>500</height>
+    <height>16777215</height>
    </size>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">#okButton *[text=&quot;OK&quot;] {
+  min-width: 80px;
+}</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <property name="spacing">
@@ -41,15 +43,18 @@
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>0</number>
+      <number>20</number>
      </property>
      <property name="rightMargin">
       <number>0</number>
      </property>
+     <property name="bottomMargin">
+      <number>10</number>
+     </property>
      <item>
-      <widget class="QLabel" name="aboutLogo">
+      <widget class="QFrame" name="aboutLogo">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+        <sizepolicy hsizetype="Fixed" vsizetype="Ignored">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -57,32 +62,20 @@
        <property name="minimumSize">
         <size>
          <width>96</width>
-         <height>464</height>
+         <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>96</width>
-         <height>564</height>
+         <height>16777215</height>
         </size>
        </property>
-       <property name="baseSize">
-        <size>
-         <width>96</width>
-         <height>564</height>
-        </size>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
        </property>
-       <property name="autoFillBackground">
-        <bool>false</bool>
-       </property>
-       <property name="pixmap">
-        <pixmap>:/images/about</pixmap>
-       </property>
-       <property name="scaledContents">
-        <bool>false</bool>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
        </property>
       </widget>
      </item>
@@ -93,7 +86,7 @@
      <item>
       <widget class="QTextEdit" name="helpMessage">
        <property name="styleSheet">
-        <string notr="true">color:#333333;</string>
+        <string notr="true"/>
        </property>
        <property name="readOnly">
         <bool>true</bool>
@@ -117,7 +110,7 @@
           <x>0</x>
           <y>0</y>
           <width>642</width>
-          <height>215</height>
+          <height>138</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -127,7 +120,7 @@
             <cursorShape>IBeamCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">color:#333333;</string>
+            <string notr="true">background-color: transparent;</string>
            </property>
            <property name="textFormat">
             <enum>Qt::PlainText</enum>
@@ -183,9 +176,9 @@
  <connections>
   <connection>
    <sender>okButton</sender>
-   <signal>accepted()</signal>
+   <signal>rejected()</signal>
    <receiver>HelpMessageDialog</receiver>
-   <slot>accept()</slot>
+   <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>20</x>
@@ -199,9 +192,9 @@
   </connection>
   <connection>
    <sender>okButton</sender>
-   <signal>rejected()</signal>
+   <signal>accepted()</signal>
    <receiver>HelpMessageDialog</receiver>
-   <slot>reject()</slot>
+   <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>20</x>
