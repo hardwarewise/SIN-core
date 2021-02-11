@@ -87,6 +87,14 @@ void CChainParams::UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64
     consensus.vDeployments[d].nTimeout = nTimeout;
 }
 
+int CChainParams::getNodeDelta(int nHeight) const {
+    if (nHeight > nDeltaChangeHeight) {
+        return 2000;
+    } else {
+        return 1000;
+    }
+}
+
 /**
  * Main network
  */
@@ -246,10 +254,12 @@ public:
         m_fallback_fee_enabled = true;
         nMaxReorganizationDepth = 55; // 55 at 2 minute block timespan is +/- 120 minutes/2h.
         nMinReorganizationPeers = 3;
+        nDeltaChangeHeight = 607558; // height at which we change node deltas
 
 
         consensus.lwmaStartHeight = 262000;
-        consensus.lwmaAveragingWindow = 96;    }
+        consensus.lwmaAveragingWindow = 96;    
+    }
 };
 
 /**
@@ -384,6 +394,7 @@ public:
         m_fallback_fee_enabled = true;
         nMaxReorganizationDepth = 14; // 5 at 2 minute block timespan is +/- 10 minutes.
         nMinReorganizationPeers = 3;
+        nDeltaChangeHeight = 0; // height at which we change node deltas
 
         consensus.lwmaStartHeight = 150;
         consensus.lwmaAveragingWindow = 96;
@@ -522,6 +533,7 @@ public:
         m_fallback_fee_enabled = true;
         nMaxReorganizationDepth = 5; // 5 at 2 minute block timespan is +/- 10 minutes.
         nMinReorganizationPeers = 3;
+        nDeltaChangeHeight = 0; // height at which we change node deltas
 
         consensus.lwmaStartHeight = 260000;
         consensus.lwmaAveragingWindow = 96;
@@ -636,6 +648,7 @@ public:
         m_fallback_fee_enabled = true;
         nMaxReorganizationDepth = 5; // 5 at 2 minute block timespan is +/- 10 minutes.
         nMinReorganizationPeers = 3;
+        nDeltaChangeHeight = 0; // height at which we change node deltas
 
         consensus.lwmaStartHeight = 260000;
         consensus.lwmaAveragingWindow = 96;
