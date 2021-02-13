@@ -1809,7 +1809,6 @@ bool CInfinityNodeLockReward::FindAndBuildMusigLockReward()
                     free(partial_sig); partial_sig = NULL;
                 }
             }
-            secp256k1_scratch_space_destroy(secp256k1_context_musig, scratch);
         }//end number signature check
     }//end loop in mapMyPartialSigns
 
