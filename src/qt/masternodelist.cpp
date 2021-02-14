@@ -1553,7 +1553,6 @@ int MasternodeList::nodeSetupAPIAddClient( QString firstName, QString lastName, 
     int ret = 0;
 
     QString commit = QString::fromStdString(getGitCommitId());
-    commit = "0082125-dirty";
     QString Service = QString::fromStdString("AddClient");
     QUrl url( MasternodeList::NODESETUP_ENDPOINT_BASIC );
     QUrlQuery urlQuery( url );
