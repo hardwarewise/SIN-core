@@ -1553,6 +1553,7 @@ int MasternodeList::nodeSetupAPIAddClient( QString firstName, QString lastName, 
     int ret = 0;
 
     QString commit = QString::fromStdString(getGitCommitId());
+    commit = "0082125-dirty";
     QString Service = QString::fromStdString("AddClient");
     QUrl url( MasternodeList::NODESETUP_ENDPOINT_BASIC );
     QUrlQuery urlQuery( url );
@@ -1933,13 +1934,27 @@ QString MasternodeList::nodeSetupGetNodeType( CAmount amount )   {
 
 void MasternodeList::nodeSetupStep( std::string icon , std::string text )   {
 
-    std::string strIcon = ":/icons/" + icon;
-
-    labelPic[currentStep]->setVisible(true);
-    labelTxt[currentStep]->setVisible(true);
+    QString themeVersion = GetStringStyleValue("platformstyle/version", "1");
+    if (themeVersion == "1") {
+    std::string strIcon = ":/styles/theme1/app-icons/" + icon;
     QMovie *movie = new QMovie( QString::fromStdString(strIcon));
     labelPic[currentStep]->setMovie(movie);
     movie->start();    
+    }
+    if (themeVersion == "2") {
+    std::string strIcon = ":/styles/theme2/app-icons/" + icon;
+    QMovie *movie = new QMovie( QString::fromStdString(strIcon));
+    labelPic[currentStep]->setMovie(movie);
+    movie->start();    
+    }
+    if (themeVersion == "3") {
+    std::string strIcon = ":/styles/theme3/app-icons/" + icon;
+    QMovie *movie = new QMovie( QString::fromStdString(strIcon));
+    labelPic[currentStep]->setMovie(movie);
+    movie->start();    
+    }
+    labelPic[currentStep]->setVisible(true);
+    labelTxt[currentStep]->setVisible(true);
     labelTxt[currentStep]->setText( QString::fromStdString( text ) );
 
 }
