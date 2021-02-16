@@ -254,7 +254,7 @@ public:
         m_fallback_fee_enabled = true;
         nMaxReorganizationDepth = 55; // 55 at 2 minute block timespan is +/- 120 minutes/2h.
         nMinReorganizationPeers = 3;
-        nDeltaChangeHeight = 615000; // height at which we change node deltas
+        nDeltaChangeHeight = 617000; // height at which we change node deltas
 
 
         consensus.lwmaStartHeight = 262000;
