@@ -20,7 +20,7 @@
 - [Whitepaper Light](https://sinovate.io/light-whitepaper/)
 - [X25X PoW Algorithm Whitepaper](https://sinovate.io/x25x.pdf)
 - **Troubleshooting**
-- [Transaction too high](transactiontoohigh)
+- [Transaction too large](transactiontoohigh)
 - **Links**
 - [![Home ](https://icongr.am/feather/home.svg?size=16&color=808080)Sinovate Home](https://www.sinovate.io)
 - [![Explorer ](https://icongr.am/clarity/block.svg?size=16&color=808080)Block Explorer](https://explorer.sinovate.io)
