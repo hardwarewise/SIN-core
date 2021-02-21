@@ -1,4 +1,6 @@
-**Transaction too high**
+**Transaction too large / Transaction too hight / Transaction creation failed**
+
+![](assets/img/transactiontoohigh/005.png) ![](assets/img/transactiontoohigh/006.png)
 
 Transaction too high error is regular miners limit error.
 ![](assets/img/transactiontoohigh/000.png)
